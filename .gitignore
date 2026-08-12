@@ -1,0 +1,6 @@
+# Legacy API-скрипт и сетапы: содержат ключи в открытом виде — НЕ коммитить.
+qwen_agent.py
+QWEN_AGENT_SETUP.md
+QWEN_VSCODE_SETUP.md
+test_qwen.py
+test_simple.py

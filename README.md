@@ -204,9 +204,10 @@ D:\System2\
 ├── QWEN.md                      # инструкция для Qwen (VS Code расширение)
 ├── QUICKSTART.md                # быстрый старт
 ├── QWEN_VSCODE_SETUP.md         # настройка расширения Qwen Code
+├── TICKET_TEMPLATE.md           # обязательный шаблон тикета (со ссылками на файлы)
 ├── issues/                      # готовые тикеты T1-T5
 ├── templates/
-│   ├── ticket-template.md       # шаблон тикета под Qwen
+│   ├── ticket-template.md       # старый шаблон (заменён TICKET_TEMPLATE.md)
 │   └── review-template.md       # шаблон проверки
 ├── docs/
 │   └── usage-guide.md           # пошаговая инструкция
