@@ -199,7 +199,8 @@ Opus: [проверяет git diff]
 
 ```
 D:\System2\
-├── README.md                    # этот файл
+├── CLAUDE.md                    # главная инструкция для Claude Code (читается первой)
+├── README.md                    # этот файл — полное описание
 ├── OPUS.md                      # инструкция для Opus
 ├── QWEN.md                      # инструкция для Qwen (VS Code расширение)
 ├── QUICKSTART.md                # быстрый старт
