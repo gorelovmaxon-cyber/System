@@ -33,6 +33,59 @@ npx skills add mattpocock/skills
 
 ## The Pipeline
 
+**Полный цикл:** Phase 0 (bootstrap) → Phase 1 (grill) → Phase 2 (spec) → Phase 3 (tickets) → Phase 3.5 (проверка режима) → Phase 4 (implement) → Phase 5 (finish) → Phase 8 (learn & update)
+
+### Phase 0 — Bootstrap (новый проект)
+
+Если это первая работа с проектом и файл `CLAUDE.md` не существует в корне:
+
+1. **Прочитай проект:**
+   - README.md (если есть)
+   - package.json / requirements.txt / Cargo.toml / go.mod (определить стек)
+   - Структура папок (src/, tests/, docs/, config/)
+   - Основные файлы кода (3-5 файлов)
+
+2. **Создай CLAUDE.md в корне проекта** с секциями:
+   ```markdown
+   # CLAUDE.md — [Название проекта]
+   
+   ## Что это
+   [1-2 предложения описания проекта]
+   
+   ## Стек технологий
+   - Язык: [язык и версия]
+   - Фреймворк: [если есть]
+   - Зависимости: [основные библиотеки]
+   - Тесты: [фреймворк тестирования]
+   
+   ## Структура проекта
+   ```
+   [корень]/
+   ├── src/          — [описание]
+   ├── tests/        — [описание]
+   └── docs/         — [описание]
+   ```
+   
+   ## Команды для работы
+   - **Dev:** `[команда запуска dev-сервера]`
+   - **Test:** `[команда запуска тестов]`
+   - **Build:** `[команда сборки]`
+   - **Deploy:** `[команда деплоя или "manual"]`
+   
+   ## Специфика проекта
+   [Что важно знать: особенности архитектуры, ограничения, зависимости от внешних сервисов]
+   ```
+
+3. **Коммит:**
+   ```bash
+   git add CLAUDE.md
+   git commit -m "docs: add CLAUDE.md project bootstrap"
+   ```
+
+**Готово, когда:** CLAUDE.md создан и закоммичен, или проект уже имеет CLAUDE.md.
+
+---
+
 ### Phase 1 — Grill (the only human gate)
 
 Run `/grilling` on the dictated idea. Autopilot adds three rules:
@@ -58,7 +111,7 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 Сохранены: `.scratch/[project]/issues/`
 
 Передавай T1 в Qwen Code (VS Code расширение).
-Документация: D:\System2\QWEN.md
+Документация: ../../QWEN.md
 ```
 
 **🛑 СТОП.** Не запускай Phase 4 (Implementation). Жди результата от Qwen.
@@ -78,9 +131,31 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 
 ### Phase 5 — Finish
 
-Full test suite once, then **before the final report** → `/auto-learn` (asks what to remember from this task, saves to `D:\System\memory/`). If user says "nothing" / "разовое" — continue to report without blocking.
+Full test suite once, then **before the final report** → `/auto-learn` (asks what to remember from this task, saves to `.claude/memory/`). If user says "nothing" / "разовое" — continue to report without blocking.
 
 Final report in the user's language: what was built and the exact command to run it; what was NOT built (the spec's Out of Scope list); open items — placeholders, keys to add, manual steps left.
+
+### Phase 8 — Learn & Update (после завершения)
+
+После финального отчёта Phase 5:
+
+1. **Проверить CLAUDE.md:**
+   - Появилась ли новая информация о проекте? (новые команды, структура, зависимости)
+   - Нужно ли обновить секции?
+   - Если да → обновить CLAUDE.md и сделать коммит:
+     ```bash
+     git add CLAUDE.md
+     git commit -m "docs: update CLAUDE.md after [краткое описание задачи]"
+     ```
+
+2. **Запустить `/auto-learn`:**
+   - auto-learn спросит: "Что запомнить из этой задачи?"
+   - Если найдены паттерны стиля → auto-learn вызовет `/profile-update`
+   - Если пользователь сказал "ничего" / "разовое" → продолжить без записи
+
+**Готово, когда:** CLAUDE.md актуален (или обновлений не было), auto-learn завершён.
+
+---
 
 ### Для режима systemqwen
 
