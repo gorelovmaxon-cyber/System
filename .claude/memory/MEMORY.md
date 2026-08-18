@@ -9,16 +9,20 @@
 - [Work Patterns](user-profile/work-patterns.md) — ритм работы, workflow с AI, организация файлов
 
 ## Patterns (Что работает хорошо)
-*(будет заполняться через auto-learn)*
+- [Model Separation by Cognitive Load](patterns/model-separation-by-cognitive-load.md) — Opus думает, Sonnet/Qwen реализует
+- [Explicit Stop Gates](patterns/explicit-stop-gates.md) — явные остановки между фазами
+- [Sequential Subagent Pipeline](patterns/sequential-subagent-pipeline.md) — 1 тикет = 1 агент = 1 коммит
 
 ## Facts (Данные о проектах и технологиях)
-*(будет заполняться через auto-learn)*
+- [Technology Stack](facts/technology-stack.md) — языки, фреймворки, tools, APIs
+- [Projects Overview](facts/projects-overview.md) — активные проекты, статус, эволюция систем
 
 ## Gotchas (Ошибки и workarounds)
-*(будет заполняться через auto-learn)*
+- [Git + Node.js на Windows](gotchas/git-node-windows.md) — типичные проблемы и решения
 
 ## Decisions (Принятые архитектурные решения)
-*(будет заполняться через auto-learn)*
+- [2026-08-17: SystemQwen Architecture](decisions/2026-08-17-systemqwen-architecture.md) — гибридная система Opus+Qwen
+- [2026-08-18: SystemQwen Этап 1 Completion](decisions/2026-08-18-systemqwen-etap1-completion.md) — завершение фундамента
 
 ---
 
