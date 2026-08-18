@@ -372,5 +372,5 @@ D:\System2 (SystemQwen + explicit stops + model separation)
 6. **Explicit stops** — 🛑 STOP between phases, no automation
 7. **Token economy** — detailed planning saves implementation cost
 8. **Quality over parallelism** — lean solutions over multi-agent
-9. **Sequential pipeline** — /clear между тикетами, one at a time
+9. **Sequential pipeline** — /clear between tickets, one at a time
 10. **Model separation** — Opus thinks, Sonnet/Qwen executes
