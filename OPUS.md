@@ -137,6 +137,9 @@ SystemQwen работает с **явными остановками** межд�
 
 ## Формат тикета под Qwen
 
+**📖 ОБЯЗАТЕЛЬНО ПРОЧИТАЙ ПЕРЕД СОЗДАНИЕМ ТИКЕТОВ:**
+[.claude/skills/writing-tickets-for-qwen/SKILL.md](.claude/skills/writing-tickets-for-qwen/SKILL.md) — как писать тикеты экономно для Qwen
+
 Используй шаблон [TICKET_TEMPLATE.md](D:\System2\TICKET_TEMPLATE.md). Обязательные блоки:
 
 **ВАЖНО: Обязательные ссылки на файлы**
