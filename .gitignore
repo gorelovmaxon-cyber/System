@@ -4,3 +4,5 @@ QWEN_AGENT_SETUP.md
 QWEN_VSCODE_SETUP.md
 test_qwen.py
 test_simple.py
+system2-export.tar.gz
+system2-export/
