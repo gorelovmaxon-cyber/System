@@ -1,0 +1,2 @@
+delegation-test: T1
+implemented-by: delegated-agent
