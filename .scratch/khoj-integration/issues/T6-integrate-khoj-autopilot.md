@@ -1,15 +1,13 @@
-# T6 — Интегрировать Khoj API в autopilot (Phase 0)
+# T6 — Интегрировать Khoj API в autopilot (Phase 0.5)
 
-**What to build:** Модификация `/autopilot` скилла для автоматического запроса контекста из Khoj перед Grill
+**What to build:** Добавить в autopilot скилл новую фазу 0.5 для запроса контекста из Khoj перед Grill
 
-**Blocked by:** T5 (Khoj должен быть установлен)
+**Blocked by:** T5 (документация должна быть готова)
 
 **Status:** ready-for-agent
 
 **Перед началом работы:**
 Открой VS Code в папке `e:\System2` (File > Open Folder).
-
----
 
 ## Контекст
 
@@ -20,204 +18,164 @@
 - С Khoj: Opus получает только релевантное (~5k токенов)
 - **Экономия: 90% токенов на Phase 0**
 
----
-
 ## Файлы для изменения
 
-- [.claude/skills/autopilot/SKILL.md](../../.claude/skills/autopilot/SKILL.md) — добавить Phase 0.5 (Khoj query)
-
----
+- `.claude/skills/autopilot/SKILL.md` — добавить Phase 0.5
 
 ## Файлы для чтения (контекст)
 
-- [.claude/skills/autopilot/SKILL.md](../../.claude/skills/autopilot/SKILL.md) — текущая версия
-- [.claude/memory/patterns/model-separation-by-cognitive-load.md](../../.claude/memory/patterns/model-separation-by-cognitive-load.md) — паттерн экономии токенов
+- [.claude/skills/autopilot/SKILL.md](../../../.claude/skills/autopilot/SKILL.md) — текущая версия autopilot
+- [docs/khoj-integration.md](../../docs/khoj-integration.md) — спецификация интеграции (после T5)
+- [.scratch/khoj-integration/spec.md](../spec.md) — полная спецификация
 
----
+## ⚠️ Файлы НЕЛЬЗЯ трогать
+
+- `CLAUDE.md` — основная инструкция, не менять
+- `OPUS.md` — инструкция для Opus, не менять
+- Любые другие фазы в autopilot/SKILL.md (только ДОБАВИТЬ Phase 0.5)
 
 ## Алгоритм (шаг за шагом)
 
-### Шаг 1: Найти Phase 0 в autopilot/SKILL.md
+### Шаг 1: Найти место для Phase 0.5
 
-Открыть файл `.claude/skills/autopilot/SKILL.md` и найти секцию:
+1. **Открыть файл** `.claude/skills/autopilot/SKILL.md`
+
+2. **Найти секцию Phase 0** (примерно строки 50-100):
+   ```markdown
+   ## Phase 0 — context-setting
+   ```
+
+3. **Найти где заканчивается Phase 0** и начинается Phase 1:
+   ```markdown
+   ## Phase 1 — grilling
+   ```
+
+4. **Запомнить:** Phase 0.5 должна быть МЕЖДУ Phase 0 и Phase 1
+
+### Шаг 2: Вставить Phase 0.5
+
+**Добавить ПОСЛЕ Phase 0, ПЕРЕД Phase 1:**
 
 ```markdown
-## Phase 0 — context-setting (optional)
-```
 
-Эта фаза идёт **перед** Phase 1 (Grill).
-
----
-
-### Шаг 2: Добавить Phase 0.5 (Khoj Query)
-
-**Сразу после Phase 0**, перед Phase 1, добавить новую фазу:
-
-```markdown
-## Phase 0.5 — Khoj Context Retrieval (automatic)
+## Phase 0.5 — khoj-context-retrieval (automatic)
 
 **Цель:** Подтянуть релевантный опыт из прошлых проектов через Khoj.
 
 **Когда:** Автоматически перед каждым Grill (Phase 1).
 
-**Как работает:**
+**Если Khoj недоступен:** Пропустить эту фазу, продолжить с Phase 1.
 
-1. **Сформировать query для Khoj** на основе задачи пользователя:
-   ```
-   Задача: "добавить JWT авторизацию"
-   
-   Query для Khoj: "JWT authorization, authentication patterns, user-profile architecture"
-   ```
+### Алгоритм для Opus
 
-2. **Отправить запрос к Khoj API:**
+1. **Проверить доступность Khoj:**
    ```bash
-   # Если Khoj запущен локально на http://localhost:42110
-   curl -X POST http://localhost:42110/api/search \
+   curl -s http://localhost:42110/health || echo "unavailable"
+   ```
+   
+   Если unavailable → skip Phase 0.5, go to Phase 1.
+
+2. **Сформировать query** на основе задачи пользователя:
+   - Задача: "добавить JWT авторизацию"
+   - Query: "JWT authorization authentication patterns"
+
+3. **Запрос к Khoj API:**
+   ```bash
+   curl -s http://localhost:42110/api/search \
      -H "Content-Type: application/json" \
-     -d '{"q": "JWT authorization architecture", "n": 3}'
+     -d '{"q": "JWT authorization", "n": 3}'
    ```
 
-3. **Получить ответ:**
+4. **Получить топ-3 релевантных файла:**
    ```json
    {
      "results": [
-       {
-         "entry": "JWT с refresh tokens в Redis",
-         "file": "user-profile/architecture-prefs.md",
-         "score": 0.89
-       },
-       {
-         "entry": "bcrypt для паролей",
-         "file": "user-profile/coding-style.md",
-         "score": 0.76
-       }
+       {"entry": "JWT + refresh tokens", "file": "user-profile/architecture-prefs.md", "score": 0.89},
+       {"entry": "bcrypt для паролей", "file": "user-profile/coding-style.md", "score": 0.76}
      ]
    }
    ```
 
-4. **Включить результаты в контекст Grill:**
-   - Вместо чтения всех файлов `D:\System\memory\`
-   - Читать только топ-3 релевантных куска из Khoj
+5. **Прочитать ТОЛЬКО релевантные файлы** (не весь D:\System\memory\)
 
-**Пример использования:**
+### Пример использования
 
 ```
 User: "/start добавить JWT авторизацию"
 
-→ Phase 0: определить проект
+→ Phase 0: определить проект (e:\trenya-auth)
 → Phase 0.5: Khoj query "JWT authorization"
-   ✅ Найдено в памяти:
-   - "Предпочитаю JWT + refresh tokens" (architecture-prefs.md)
-   - "bcrypt для паролей обязателен" (coding-style.md)
+   ✅ Найдено: architecture-prefs.md, coding-style.md
    
 → Phase 1: Grill (с контекстом из Khoj)
-   - Opus: "Вижу ты предпочитаешь JWT + refresh tokens. Redis или in-memory?"
-   - [вопросы с учётом прошлого опыта]
+   Opus: "Вижу ты предпочитаешь JWT + refresh. Redis или in-memory?"
 ```
 
-**Fallback:** Если Khoj не запущен (порт недоступен), пропустить Phase 0.5 и работать как обычно.
+### Fallback Logic
 
----
+Если Khoj вернул `{"results": []}` (ничего не найдено):
+- Читать `D:\System\memory\MEMORY.md` (index файл)
+- Продолжить с Phase 1 как обычно
 
-### Шаг 3: Добавить инструкцию для Opus
-
-В секции **Phase 0.5**, после алгоритма, добавить:
-
-```markdown
-### Для Opus (как использовать)
-
-**Вместо:**
-```
-Читаю D:\System\memory\user-profile\*.md...
-Читаю D:\System\memory\patterns\*.md...
-[загружаем всё в контекст]
 ```
 
-**Делай:**
-```
-Запрос к Khoj: "JWT authorization patterns"
-Получено 3 результата:
-1. JWT + refresh tokens (architecture-prefs.md)
-2. bcrypt обязателен (coding-style.md)
-3. Explicit stop gates (patterns/explicit-stop-gates.md)
+### Шаг 3: Обновить список фаз
 
-Читаю только эти 3 файла (релевантные куски).
-```
+1. **Найти в начале файла** список фаз (примерно строки 20-40)
 
-**Команда для запроса (через bash tool):**
-```bash
-curl -s http://localhost:42110/api/search \
-  -H "Content-Type: application/json" \
-  -d "{\"q\": \"${QUERY}\", \"n\": 3}" \
-  || echo "Khoj unavailable"
-```
+2. **Найти:**
+   ```markdown
+   - Phase 0: context-setting (optional)
+   - Phase 1: grilling
+   ```
 
-**Если Khoj недоступен:** Fallback к чтению `user-profile/` напрямую (как раньше).
-```
-
----
-
-### Шаг 4: Обновить порядок фаз
-
-В начале файла `autopilot/SKILL.md` найти список фаз:
-
-```markdown
-## Фазы работы
-
-- Phase 0: context-setting (optional)
-- Phase 1: grilling
-- Phase 2: spec
-- ...
-```
-
-Обновить:
-
-```markdown
-## Фазы работы
-
-- Phase 0: context-setting (optional)
-- **Phase 0.5: khoj-context-retrieval (automatic)** ← НОВОЕ
-- Phase 1: grilling
-- Phase 2: spec
-- Phase 3: ticket-breakdown
-- Phase 4: agent-execution
-- Phase 5: auto-learn
-```
-
----
+3. **Заменить на:**
+   ```markdown
+   - Phase 0: context-setting (optional)
+   - Phase 0.5: khoj-context-retrieval (automatic)
+   - Phase 1: grilling
+   ```
 
 ## Критерии приёмки
 
 - [ ] Phase 0.5 добавлена в `autopilot/SKILL.md`
-- [ ] Алгоритм Khoj query описан step-by-step
-- [ ] Fallback на случай если Khoj недоступен
-- [ ] Инструкция для Opus как использовать Khoj API
-- [ ] Порядок фаз обновлён (Phase 0.5 перед Phase 1)
-- [ ] Примеры query → results включены
+- [ ] Phase 0.5 находится ПОСЛЕ Phase 0, ПЕРЕД Phase 1
+- [ ] Алгоритм включает 5 шагов (check health → query → API call → parse results → read files)
+- [ ] Есть fallback если Khoj недоступен или results пустые
+- [ ] Пример использования включен (JWT case)
+- [ ] Список фаз обновлён в начале файла
+- [ ] curl команды валидны для Git Bash
+- [ ] JSON примеры корректны
+
+## Ограничения
+
+- Не изменять Phase 0, Phase 1 или другие существующие фазы
+- Только ВСТАВИТЬ Phase 0.5 между Phase 0 и Phase 1
+- Не менять нумерацию других фаз
+- Не добавлять зависимости или установки (только документация)
+
+## Как закончить
+
+1. Проверка:
+   ```bash
+   grep -n "Phase 0.5" .claude/skills/autopilot/SKILL.md
+   ```
+   Должна найтись строка с "Phase 0.5 — khoj-context-retrieval"
+
+2. Коммит:
+   ```bash
+   git add .claude/skills/autopilot/SKILL.md
+   git commit -m "T6: интегрировать Khoj API в autopilot Phase 0.5
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+   ```
+
+3. Финальный ответ (максимум 6 строк):
+   - Phase 0.5 добавлена между Phase 0 и Phase 1
+   - Алгоритм: health check → query → API → parse → read files
+   - Fallback: Khoj unavailable → skip Phase 0.5
+   - Экономия: 90% токенов (50k → 5k)
 
 ---
 
-## Команда для коммита
-
-```bash
-git add .claude/skills/autopilot/SKILL.md
-git commit -m "T6: интегрировать Khoj API в autopilot Phase 0.5"
-git push origin master
-```
-
----
-
-## Тестирование
-
-**После реализации проверить:**
-
-1. Запустить Khoj: `cd D:\System\khoj && venv\Scripts\activate && khoj`
-2. В Claude Code: `/start добавить JWT авторизацию`
-3. Проверить: Opus делает запрос к Khoj перед Grill
-4. Проверить: В выводе Opus упоминает "из прошлого опыта" или "вижу ты предпочитаешь"
-
----
-
-## Следующий тикет
-
-После T6 → T7 (установить Activepieces для автообновления профиля)
+**Команда запуска тестов:** нет (тестирование вручную после установки Khoj)

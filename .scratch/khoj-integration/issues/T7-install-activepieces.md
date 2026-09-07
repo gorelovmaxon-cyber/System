@@ -1,152 +1,83 @@
-# T7 — Установить Activepieces локально
+# T7 — Установить и настроить Activepieces (Docker)
 
-**What to build:** Установка Activepieces (автоматизация workflow) + настройка базового flow для автообновления user-profile
+**What to build:** Развернуть Activepieces локально через Docker для автоматизации обновления профиля
 
 **Blocked by:** none
 
 **Status:** ready-for-agent
 
-**Executor:** GPT Luna (через инструкции, выполнение вручную)
-
----
+**Перед началом работы:**
+Открой VS Code в папке `e:\System2` (File > Open Folder).
 
 ## Контекст
 
-Activepieces — это open-source аналог Zapier/Make для автоматизации workflow. 
+Activepieces — это open-source аналог Zapier/Make для автоматизации. Нужен для автоматического обновления user-profile при коммитах.
 
 **Зачем нужен:**
-- Git push → Activepieces видит новый коммит
-- Activepieces анализирует diff (что изменилось)
-- Если это исправление кода → автоматически обновляет `user-profile/common-mistakes.md`
-- Заменяет ручной вызов `/profile-update`
+- Отслеживать git commits → анализировать diff → обновлять user-profile
+- Автоматизация: сейчас `/profile-update` вручную, будет автоматически
+- Экономия времени: профиль растет без вашего участия
 
 **Ссылки:**
 - GitHub: https://github.com/activepieces/activepieces
 - Документация: https://www.activepieces.com/docs
 
----
-
 ## Файлы для создания
 
-- `D:\System\activepieces\` — папка установки
-- `D:\System\activepieces\docker-compose.yml` — конфигурация Docker
-- `D:\System\activepieces\install.md` — инструкция установки
+- `docs/activepieces-setup.md` — инструкция по установке
+- `.scratch/activepieces/docker-compose.yml` — конфигурация Docker
 
----
+## Файлы для чтения (контекст)
+
+- [.scratch/khoj-integration/spec.md](../khoj-integration/spec.md) — раздел про Activepieces
+- [CLAUDE.md](../../CLAUDE.md) — понять структуру SystemQwen
+
+## ⚠️ Файлы НЕЛЬЗЯ трогать
+
+- `CLAUDE.md` — только читать
+- `.claude/memory/` — не изменять файлы профиля (это делает Activepieces)
+- `.git/` — не трогать Git конфигурацию
 
 ## Алгоритм (шаг за шагом)
 
-### Шаг 1: Проверить Docker
+### Шаг 1: Создать docker-compose.yml
 
-Activepieces работает через Docker. Проверить установлен ли Docker:
+1. **Создать папку:**
+   ```bash
+   mkdir -p .scratch/activepieces
+   ```
 
-```bash
-docker --version
-docker-compose --version
-```
+2. **Создать файл** `.scratch/activepieces/docker-compose.yml` с конфигурацией из спецификации
 
-**Если не установлен:**
-- Скачать Docker Desktop: https://www.docker.com/products/docker-desktop/
-- Установить и запустить
+### Шаг 2: Создать документацию activepieces-setup.md
 
-**Ожидаемый вывод:**
-```
-Docker version 24.x.x
-Docker Compose version 2.x.x
-```
+**Структура файла:**
+- Prerequisites (Docker Desktop, Git Bash)
+- Installation (5 шагов: create folder → docker-compose up → open browser → create account → test)
+- Configuration (создание первого flow)
+- Testing (проверка работы)
+- Troubleshooting (порты заняты, Docker не запущен, ошибки подключения)
 
----
+### Шаг 3: Добавить секцию Integration
 
-### Шаг 2: Создать папку и конфигурацию
-
-```bash
-# Создать папку
-mkdir D:\System\activepieces
-cd D:\System\activepieces
-```
-
-Создать файл `docker-compose.yml`:
-
-```yaml
-version: "3.8"
-
-services:
-  activepieces:
-    image: activepieces/activepieces:latest
-    container_name: activepieces
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    environment:
-      - AP_ENCRYPTION_KEY=generate-random-key-32-chars
-      - AP_JWT_SECRET=generate-another-key-32-chars
-      - AP_POSTGRES_DATABASE=activepieces
-      - AP_POSTGRES_HOST=postgres
-      - AP_POSTGRES_PORT=5432
-      - AP_POSTGRES_USERNAME=postgres
-      - AP_POSTGRES_PASSWORD=postgres
-    depends_on:
-      - postgres
-    volumes:
-      - activepieces_data:/data
-
-  postgres:
-    image: postgres:14-alpine
-    container_name: activepieces-postgres
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=activepieces
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  activepieces_data:
-  postgres_data:
-```
-
-**Важно:** Заменить ключи на реальные (32 символа).
-
----
-
-### Шаг 3: Запустить Activepieces
-
-```bash
-cd D:\System\activepieces
-docker-compose up -d
-```
-
----
-
-### Шаг 4: Открыть Web UI
-
-Открыть: **http://localhost:8080**
-
-1. Создать аккаунт
-2. Войти в dashboard
-
----
-
-### Шаг 5: Создать тестовый flow
-
-В UI:
-1. Create New Flow
-2. Trigger: Webhook
-3. Action: HTTP Request (test)
-4. Save Flow
-
----
+В `docs/activepieces-setup.md` включить пример интеграции с git hooks
 
 ## Критерии приёмки
 
-- [ ] Docker установлен
-- [ ] Activepieces запущен
-- [ ] Web UI доступен
-- [ ] Тестовый flow работает
+- [ ] docker-compose.yml создан с 3 сервисами
+- [ ] Порт 8642 настроен
+- [ ] docs/activepieces-setup.md создан
+- [ ] Все команды для Git Bash
+
+## Как закончить
+
+```bash
+git add .scratch/activepieces/ docs/activepieces-setup.md
+git commit -m "T7: установить и настроить Activepieces
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
+```
 
 ---
 
-## Следующий тикет
-
-T8 (создать flow для автообновления профиля)
+**Команда запуска тестов:** `docker-compose config` (валидация)
