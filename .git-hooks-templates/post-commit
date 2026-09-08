@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# System2 portable post-commit hook: capture only; never push.
+set +e
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+cd "$ROOT" || exit 0
+MESSAGE="$(git log -1 --pretty=%B 2>/dev/null)"
+case "$MESSAGE" in
+  auto-learn:*|system2-index:*) exit 0 ;;
+esac
+SHA="$(git rev-parse HEAD 2>/dev/null)" || exit 0
+PROJECT_ID="${SYSTEM2_PROJECT_ID:-$(node scripts/memory/project-id.js 2>/dev/null)}"
+[ -n "$PROJECT_ID" ] || PROJECT_ID=systemqwen
+mkdir -p .local/hook
+DIFF_FILE=".local/hook/diff-${SHA}.txt"
+git diff --no-ext-diff HEAD^ HEAD 2>/dev/null > "$DIFF_FILE"
+(
+  node scripts/memory/capture.js commit --project "$PROJECT_ID" --sha "$SHA" --message "$MESSAGE" --diff "$DIFF_FILE" >> .local/hook/capture.log 2>&1
+  rm -f "$DIFF_FILE"
+) &
+exit 0
