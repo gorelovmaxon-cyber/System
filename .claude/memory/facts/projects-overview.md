@@ -224,3 +224,6 @@ Git. Исходные пути выше сохранены как историч
 | `site-portfolio` | C-portfolio | `D:\Sait` | `client-site` |
 | `trading-dev` | Binance Trading System | `D:\dev` | `dev` |
 | `autopilot-framework` | Autopilot Framework | `D:\System` | `dev` |
+
+Bootstrap status 2026-09-08: `systemqwen` подключён через `E:\System2\HANDOFF.md`;
+внешние проекты не инициализировались.

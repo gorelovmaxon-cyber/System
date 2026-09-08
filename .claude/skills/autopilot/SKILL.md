@@ -37,7 +37,11 @@ npx skills add mattpocock/skills
 
 ### Phase 0 — Bootstrap (новый проект)
 
-Если это первая работа с проектом и файл `CLAUDE.md` не существует в корне:
+Если проект явно подключается к System2 или это первая работа с ним, сначала
+используй `node scripts/memory/init-project.js --root <project-root> --project
+<project_id>`. Скилл создаёт/обновляет только маркированную секцию `CLAUDE.md`
+и `HANDOFF.md`; новую запись реестра добавляй только после подтверждения.
+Если `CLAUDE.md` отсутствует, его базовое содержимое дополняется этой секцией:
 
 1. **Прочитай проект:**
    - README.md (если есть)
@@ -179,13 +183,19 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 
 ### Phase 5 — Finish
 
-Full test suite once, then **before the final report** → `/auto-learn` (asks what to remember from this task, saves to `.claude/memory/`). If user says "nothing" / "разовое" — continue to report without blocking.
+Full test suite once. Before the final report, if the session stops before the
+task is complete, update the project `HANDOFF.md` with `НЕ ЗАКОММИЧЕНО`,
+`Незавершённое` and a concrete `Следующий шаг`. Write exactly one SC-07
+`session-summary` event for this session; it is separate from knowledge capture.
+Then run `/auto-learn` once for confirmed knowledge only. If the user says
+"nothing" / "разовое" — continue without a memory entry.
 
 Final report in the user's language: what was built and the exact command to run it; what was NOT built (the spec's Out of Scope list); open items — placeholders, keys to add, manual steps left.
 
 ### Phase 8 — Learn & Update (после завершения)
 
-После финального отчёта Phase 5:
+После финального отчёта Phase 5 не запускай второй раз тот же auto-learn или
+session-summary:
 
 1. **Проверить CLAUDE.md:**
    - Появилась ли новая информация о проекте? (новые команды, структура, зависимости)
@@ -196,10 +206,8 @@ Final report in the user's language: what was built and the exact command to run
      git commit -m "docs: update CLAUDE.md after [краткое описание задачи]"
      ```
 
-2. **Запустить `/auto-learn`:**
-   - auto-learn спросит: "Что запомнить из этой задачи?"
-   - Если найдены паттерны стиля → auto-learn вызовет `/profile-update`
-   - Если пользователь сказал "ничего" / "разовое" → продолжить без записи
+2. **Проверить разделение записей:** session-summary уже записан в Phase 5,
+   auto-learn уже обработал только выбранное знание; повторный разбор не делать.
 
 **Готово, когда:** CLAUDE.md актуален (или обновлений не было), auto-learn завершён.
 

@@ -1,16 +1,32 @@
 ---
 name: handoff
-description: Compact the current conversation into a handoff document for another agent to pick up.
-argument-hint: "What will the next session be used for?"
+description: Сохраняет компактный HANDOFF текущего проекта для следующей сессии.
+argument-hint: "Что будет следующим шагом?"
 disable-model-invocation: true
 ---
 
-Write a handoff document summarising the current conversation so a fresh agent can continue the work. Save to the temporary directory of the user's OS - not the current workspace.
+# handoff
 
-Include a "suggested skills" section in the document, which suggests skills that the agent should invoke.
+Сохрани или обнови `HANDOFF.md` в корне явно выбранного проекта. Не используй
+временную папку ОС и не создавай вторую глобальную память.
 
-Do not duplicate content already captured in other artifacts (specs, plans, ADRs, issues, commits, diffs). Reference them by path or URL instead.
+Обновляй только секцию между `<!-- systemqwen:start -->` и
+`<!-- systemqwen:end -->`; ручной текст вне маркеров не трогай. Секция обязана
+содержать:
 
-Redact any sensitive information, such as API keys, passwords, or personally identifiable information.
+- задачу и выполненное;
+- текущие изменения/коммит, включая явное `НЕ ЗАКОММИЧЕНО: ...`;
+- подтверждённые решения и результаты проверок;
+- незавершённое и конкретный следующий шаг.
 
-If the user passed arguments, treat them as a description of what the next session will focus on and tailor the doc accordingly.
+Перед записью проверь `git status`, `git log -1` и фактические результаты
+проверок. Секреты и API-ключи редактируй. После сохранения краткий статус
+ссылается на `HANDOFF.md` и не дублирует весь документ. Одновременно для
+завершения сессии создай ровно одно событие:
+
+```powershell
+node scripts/memory/capture.js session-summary --project <project_id> --session <id> --revision 1 --text "..."
+```
+
+Это событие не запускает повторный auto-learn: подтверждённые знания и
+session-summary — разные записи.

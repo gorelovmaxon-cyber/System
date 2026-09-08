@@ -45,3 +45,10 @@ force-push и сброс чужих изменений запрещены.
 - Не считать написанный, но не проверенный результат готовым.
 - Не удалять пользовательские изменения и не включать в коммит чужие черновики.
 - Факты о внешних сервисах и версиях подтверждать официальным источником и датой.
+
+<!-- systemqwen:start -->
+## System2 project integration
+- project_id: systemqwen
+- shared_memory: <SYSTEM2_ROOT>/.claude/memory
+- HANDOFF: HANDOFF.md
+<!-- systemqwen:end -->
