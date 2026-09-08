@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "figma": {
+      "command": "node",
+      "args": ["E:/System2/.claude/mcp-servers/figma/server.js"],
+      "env": {
+        "FIGMA_API_KEY": "<SET_LOCALLY>"
+      }
+    }
+  }
+}
+

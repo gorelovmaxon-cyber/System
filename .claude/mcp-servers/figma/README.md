@@ -1,0 +1,63 @@
+# Figma MCP server
+
+Локальный MCP-сервер на официальном `@modelcontextprotocol/sdk` с транспортом
+stdio. Он предоставляет инструмент `figma_get_design_tokens`, который читает
+файл Figma через REST API и извлекает поддерживаемое подмножество токенов:
+цвета, типографику, отступы/gap и радиусы углов. Каждый результат содержит
+имя, node path и `node_id`, поэтому одинаковые имена не теряются.
+
+## Установка
+
+Нужны Node.js 24 LTS или совместимая актуальная LTS-версия и Personal Access
+Token Figma со scope `file_content:read`.
+
+```powershell
+cd E:\System2\.claude\mcp-servers\figma
+Copy-Item .env.example .env
+# Заполните FIGMA_API_KEY в .env только локально
+npm install
+npm test
+```
+
+Сервер запускается MCP-клиентом, а не отдельным HTTP-портом:
+
+```powershell
+node server.js
+```
+
+Ключ файла можно передать как `fileKey` или извлечь из URL `/file/KEY/` или
+`/design/KEY/`. Необязательный `nodeId` ограничивает запрос к Figma API.
+`scope` принимает `colors`, `typography`, `spacing`, `radii` или `all`.
+
+## Регистрация в MCP-клиенте
+
+Готовый пример находится в `.mcp.example.json`. Для Claude Code:
+
+```powershell
+claude mcp add figma -- node E:\System2\.claude\mcp-servers\figma\server.js
+```
+
+Переменная `FIGMA_API_KEY` должна быть доступна процессу MCP-сервера. Не
+записывайте реальный ключ в git и не добавляйте его в тикеты, логи или отчёты.
+
+## Локальный fixture и тесты
+
+Для проверки протокола без доступа к Figma используется fixture:
+
+```powershell
+$env:FIGMA_FIXTURE_PATH = "$PWD\test\fixtures\tokens.json"
+npm test
+```
+
+Тест запускает настоящий MCP Client через stdio и проверяет `initialize`,
+`tools/list` и `tools/call`; отдельный тест проверяет извлечение и provenance.
+
+## Ограничения и ошибки
+
+Сервер намеренно не угадывает значения из эффектов, градиентов и изображений:
+несолидные fills попадают в `ignored`. API-ошибки 401/403, 404 и 429
+возвращаются с понятным сообщением; токен никогда не включается в ответ.
+
+Проверка с реальным файлом Figma требует локального `FIGMA_API_KEY` и доступа к
+конкретному макету, поэтому в репозитории подтверждены fixture и MCP-контракт,
+а live-проверка остаётся `awaiting-validation`.

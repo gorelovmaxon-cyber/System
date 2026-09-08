@@ -11,3 +11,7 @@ system2-export/
 config/system.local.json
 .local/
 .local-*
+
+# Local MCP credentials and dependencies
+.claude/mcp-servers/figma/.env
+.claude/mcp-servers/figma/node_modules/
