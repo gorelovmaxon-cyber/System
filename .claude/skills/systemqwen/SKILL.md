@@ -1,44 +1,23 @@
 ---
 name: systemqwen
-description: Use when the user wants the economical SystemQwen mode — Opus creates detailed tickets and stops, Qwen implements them through the VS Code extension, Opus reviews each result. Invoked with /systemqwen or "экономичный режим", "через Qwen", "SystemQwen". Alias for autopilot --mode=systemqwen.
+description: Режим с явными остановками: планирование, тикеты, реализация GPT Luna через VS Code и приёмка каждого тикета.
 ---
 
-# systemqwen — Экономичный режим через Qwen Code расширение
+# systemqwen — экономичный режим с исполнителем VS Code
 
-## Что это
+Единый контракт: [docs/system-workflow.md](../../../docs/system-workflow.md).
 
-Альтернатива subagent-pipeline: вместо параллельных агентов используем Qwen через VS Code расширение. Opus создаёт детальные тикеты → Qwen реализует локально → Opus проверяет.
+Поток:
 
-**Экономия:** ~5-7× по сравнению с чистым Sonnet.
+1. Планировщик проводит grill, пишет spec и план.
+2. После гейта автор тикетов (в текущем процессе Sonnet) готовит тикеты по
+   [TICKET_TEMPLATE.md](../../../TICKET_TEMPLATE.md).
+3. После гейта пользователь передаёт исполнителю GPT Luna через VS Code ровно один
+   тикет.
+4. Исполнитель проверяет результат, делает один scoped-коммит и сообщает
+   awaiting-review.
+5. Приёмщик проверяет diff/evidence и переводит тикет в done либо возвращает
+   конкретную доработку.
+6. Цикл повторяется в порядке зависимостей.
 
-## Когда использовать
-
-- Когда хочешь контроль на каждом шаге (явные остановки)
-- Когда проект большой и нужна экономия токенов
-- Когда Qwen через расширение видит весь проект локально
-
-## Как работает
-
-1. Запускаешь: `/systemqwen [задача]`
-2. Opus делает grill → spec → тикеты
-3. **🛑 СТОП:** "Передавай T1 в Qwen"
-4. Ты даёшь тикет Qwen через VS Code
-5. Qwen реализует, ты возвращаешь результат Opus
-6. Opus проверяет → даёт T2
-7. Цикл до конца
-
-## Документация
-
-Полное описание: `../../README.md`
-- Инструкция для Opus: `../../OPUS.md`
-- Инструкция для Qwen: `../../QWEN.md`
-- Настройка Qwen: `../../QWEN_VSCODE_SETUP.md`
-
-## Реализация
-
-Вызов скилла:
-```
-/systemqwen [задача]
-```
-
-Это автоматически вызывает `autopilot --mode=systemqwen` внутри.
+Не объединяй тикеты, не пропускай приёмку и не обещай экономию без измерений.

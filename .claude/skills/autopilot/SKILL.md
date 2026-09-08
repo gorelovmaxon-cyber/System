@@ -17,11 +17,11 @@ This skill only orchestrates — the phases below **invoke the pipeline skills a
 npx skills add mattpocock/skills
 ```
 
-**Для режима `--mode=systemqwen` prerequisite НЕ нужны** — используется только создание тикетов (grilling, to-spec, to-tickets), реализацию делает Qwen.
+**Для режима `--mode=systemqwen` prerequisite НЕ нужны** — используется только создание тикетов (grilling, to-spec, to-tickets), реализацию делает исполнитель GPT Luna через VS Code.
 
 ## Параметры (опционально)
 
-- `--mode=systemqwen` — экономичный режим: создать тикеты и остановиться, не реализовывать самому. Реализацию делает Qwen через VS Code расширение (документация: `../../README.md`).
+- `--mode=systemqwen` — режим с явными остановками: создать тикеты и остановиться, не реализовывать самому. Реализацию делает GPT Luna через VS Code (документация: `../../README.md`).
 
 ## When to Use
 
@@ -33,7 +33,7 @@ npx skills add mattpocock/skills
 
 ## The Pipeline
 
-**Полный цикл:** Phase 0 (bootstrap) → Phase 1 (grill) → Phase 2 (spec) → Phase 3 (tickets) → Phase 3.5 (проверка режима) → Phase 4 (implement) → Phase 5 (finish) → Phase 8 (learn & update)
+**Полный цикл:** Phase 0 (bootstrap) → Phase 0.5 (Khoj context retrieval) → Phase 1 (grill) → Phase 2 (spec) → Phase 3 (tickets) → Phase 3.5 (проверка режима) → Phase 4 (implement) → Phase 5 (finish) → Phase 8 (learn & update)
 
 ### Phase 0 — Bootstrap (новый проект)
 
@@ -86,6 +86,43 @@ npx skills add mattpocock/skills
 
 ---
 
+### Phase 0.5 — khoj-context-retrieval (automatic)
+
+**Цель:** перед Grill получить из Khoj только релевантный опыт прошлых проектов.
+Эта фаза необязательна и не должна блокировать workflow.
+
+Выполняй непосредственно после Phase 0 и перед Phase 1:
+
+1. Проверь доступность Khoj: `curl -fsS --max-time 2 http://127.0.0.1:42110/health`.
+2. Если health-check неуспешен — запиши `Khoj unavailable; skipping` и переходи к Phase 1.
+3. Сформируй query из задачи пользователя (например,
+   `JWT authorization refresh tokens patterns`).
+4. Запроси максимум три результата:
+
+   ```bash
+   curl -sS --max-time 5 http://127.0.0.1:42110/api/search \
+     -H 'Content-Type: application/json' \
+     -d '{"q":"<query>","n":3}'
+   ```
+
+5. Проверь ответ, нормализуй список `results` и прочитай только найденные
+   файлы внутри `.claude/memory/`. Не загружай всю память и не доверяй путям,
+   выходящим за пределы этого каталога.
+
+Если ответ содержит `results: []`, прочитай только индекс
+`.claude/memory/MEMORY.md` и продолжай Phase 1. Найденный контекст передай в
+Grill как справочную информацию; он не заменяет вопросы о неизвестных
+требованиях и не изменяет файлы памяти.
+
+Пример: для «добавить JWT-авторизацию» найди записи по
+`JWT authorization`, покажи Grill предпочтение JWT + refresh tokens и уточни
+только нерешённые детали.
+
+Подробная настройка и fallback описаны в
+[`docs/khoj-integration.md`](../../docs/khoj-integration.md).
+
+---
+
 ### Phase 1 — Grill (the only human gate)
 
 Run `/grilling` on the dictated idea. Autopilot adds three rules:
@@ -110,7 +147,8 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 ✅ Тикеты готовы: T1, T2, T3
 Сохранены: `.scratch/[project]/issues/`
 
-Передавай T1 в Qwen Code (VS Code расширение).
+Автор тикетов завершил нарезку. Передавай T1 исполнителю GPT Luna через VS Code
+(совместимое имя интерфейса — Qwen Code).
 Документация: ../../QWEN.md
 ```
 
@@ -122,7 +160,10 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 
 ### Phase 4 — Implement (через subagent-pipeline)
 
-**Вызывает `/subagent-pipeline` для последовательного исполнения тикетов.** Один тикет = один субагент Sonnet = один свежий контекст. Оркестратор (Opus) нарезает, запускает и принимает; исполнитель (Sonnet) пишет код по готовому тикету с явными критериями приёмки.
+**Вызывает `/subagent-pipeline` для последовательного исполнения тикетов.** Один тикет
+получает один свежий контекст и один коммит. Планировщик/приёмщик не смешивается с
+исполнителем; модель исполнителя выбирается конфигурацией запуска. В текущем процессе
+роль исполнителя выполняет GPT Luna через VS Code.
 
 - **No git repo yet → `git init` at the start of this phase.** One commit per ticket — commits are the user's rollback points.
 - Тикеты исполняются **последовательно** (экономия ~3–5× по сравнению с параллельными агентами). Параллельность можно включить явно для непересекающихся файлов через параметр в subagent-pipeline.
@@ -159,15 +200,15 @@ Final report in the user's language: what was built and the exact command to run
 
 ### Для режима systemqwen
 
-Пользователь передаст результат от Qwen после реализации тикета.
+Пользователь передаст отчёт исполнителя после реализации тикета.
 
 Проверь:
-1. Прочитай ответ Qwen
+1. Прочитай отчёт исполнителя GPT Luna
 2. `git diff` для проверки изменений
 3. Результат тестов
 
 Ответ:
-- ✅ "T[N] проверен: [вывод]. Передавай T[N+1] в Qwen."
+- ✅ "T[N] проверен: [вывод]. Передавай T[N+1] исполнителю."
 - ⚠️ "T[N]: нужна доработка — [замечания]"
 
 Повторяй для каждого тикета.
