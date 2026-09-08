@@ -49,3 +49,20 @@ status и evidence настолько, насколько это известн�
 
 Эти механизмы используют один разрешённый memory root и не создают собственные
 каталоги памяти.
+
+## Событие
+
+Событие имеет `schema_version`, детерминированный `event_id`, `project_id`, `kind`
+(`commit` или `session-summary`), UTC `timestamp`, `source`, `summary`, `decisions`,
+`user_corrections`, `checks` и `next_action`. Для commit source содержит `sha`, для
+session-summary — `session_id` и целочисленный `revision`. Diff необязателен и
+ограничен `events.max_diff_bytes`; браузерные чаты автоматически не собираются.
+
+## Очередь
+
+Очередь хранится вне Git в `data_dir/queue/events.jsonl`. Состояния: `pending` →
+`in-flight` → `delivered` или `failed`. Enqueue долговечен до подтверждения,
+доставка имеет ограниченные повторы и экспоненциальный backoff из конфигурации.
+При старте незавершённые `in-flight` возвращаются в `pending`; получатель должен быть
+идемпотентен по `event_id`. `queue-status.js` показывает ошибки и поддерживает
+`--redeliver`.

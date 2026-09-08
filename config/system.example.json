@@ -44,6 +44,15 @@
     "activepieces": {
       "webhook_url_placeholder": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
     }
+  },
+  "events": {
+    "max_diff_bytes": 20000
+  },
+  "queue": {
+    "retries_max": 5,
+    "backoff_ms": 1000
+  },
+  "delivery": {
+    "endpoint": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
   }
 }
-
