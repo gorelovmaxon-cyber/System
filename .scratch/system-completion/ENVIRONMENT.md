@@ -30,7 +30,7 @@
 | Компонент | Базовая версия/тег | Основание |
 |---|---|---|
 | Node.js | 24.x LTS; локально 24.14.0 | [официальная таблица релизов](https://nodejs.org/en/about/previous-releases), проверено 2026-09-08; страница указывает v24 как LTS |
-| Khoj | 2.0.0-beta.28, только как кандидат SC-04 | [официальный релиз](https://github.com/khoj-ai/khoj/releases/tag/2.0.0-beta.28) и [официальная установка](https://github.com/khoj-ai/khoj/blob/master/documentation/docs/get-started/setup.mdx) |
+| Khoj | не установлен; stable PyPI `1.42.10` несовместим с локальным Python 3.14 (`<3.13`) | [PyPI metadata](https://pypi.org/project/khoj/), [официальные releases](https://github.com/khoj-ai/khoj/releases) и [setup](https://github.com/khoj-ai/khoj/blob/master/documentation/docs/get-started/setup.mdx), сверено 2026-09-08 |
 | Activepieces | `ghcr.io/activepieces/activepieces:0.86.3`, канонический compose SC-06 | [официальный compose](https://github.com/activepieces/activepieces/blob/main/docker-compose.yml), сверено 2026-09-08; живой pull невозможен без Docker |
 | PostgreSQL | `postgres:16.15-alpine` | [официальный Docker Hub image](https://hub.docker.com/_/postgres), тег проверен 2026-09-08 |
 | Redis | `redis:7.4.11-alpine` | [официальный Docker Hub image](https://hub.docker.com/_/redis), тег проверен 2026-09-08 |

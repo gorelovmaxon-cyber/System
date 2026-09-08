@@ -16,3 +16,5 @@ config/system.local.json
 .claude/mcp-servers/figma/.env
 .claude/mcp-servers/figma/node_modules/
 services/activepieces/.env
+services/khoj/config.local.yml
+services/khoj/data/
