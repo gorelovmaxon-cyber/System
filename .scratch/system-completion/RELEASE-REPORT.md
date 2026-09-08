@@ -49,3 +49,31 @@ Activepieces are not running. No mock/fixture is counted as live success.
 
 No real push was made. The remote profile is not deployed. Existing user
 uncommitted files are preserved and are not release evidence.
+
+## Publication status (2026-09-08)
+
+All local work is now pushed to `github.com/gorelovmaxon-cyber/System` (branch
+`master`): the full SC-01…SC-18 package (SPEC/PLAN/SONNET_PROMPT, tickets,
+SUMMARY), every ticket report, this release report, and all code/docs the
+executor produced. Commit series `e4fe4aa` (SC-01) and `38ab421…a45b515`
+(SC-02…SC-18).
+
+What is honest to claim: SC-01 is accepted by the planner (its report records
+the verdict). Everything else is executor-verified locally only — summary
+statuses in `issues/SUMMARY.md` reflect the executor's own checks, NOT an
+independent acceptance pass. Live items (Khoj on a compatible Python,
+Docker/Activepieces stack, AI connection, real Figma file, second PC) were
+never exercised and stay `blocked`/`awaiting-validation`.
+
+What to check next (each needs external access or a manual step — see the
+blocker list above and ticket reports):
+1. Khoj: install on Python 3.12, run health/index/search, record real reindex API (SC-04/SC-05/SC-10).
+2. Activepieces: Docker Desktop/WSL, pinned 0.86.3 stack, owner + AI key, live flow event→writer (SC-06/SC-09/SC-11).
+3. Figma MCP against a permitted file/API key (SC-14), then route workflows (SC-15).
+4. Second-PC recovery drill incl. conflict/restore evidence (SC-13/SC-17).
+5. Independent acceptance review by the planner of SC-02…SC-18 diffs against tickets.
+
+Where to move next: perform the independent acceptance review first (item 5,
+no code writing), then resolve blockers 1–4 in order; each fix gets its own
+ticket and commit. Do not mark v1 ready until the full event→…→second-device
+cycle runs against live services.
