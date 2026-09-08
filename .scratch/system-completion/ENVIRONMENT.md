@@ -55,4 +55,5 @@ AI-подключение Activepieces не создано: ключ и owner UI
 
 Имена доступов: Docker Desktop/WSL, API-ключ AI-провайдера Activepieces, API-токен
 Figma, доступ к выбранному второму ПК/репозиторию. Значения и секреты в этом документе
-отсутствуют.
+отсутствуют. Activepieces webhook/AI connection не созданы; flow SC-09 live
+не проверен.

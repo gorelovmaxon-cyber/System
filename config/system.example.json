@@ -48,7 +48,8 @@
       "enabled": false
     },
     "activepieces": {
-      "webhook_url_placeholder": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
+      "webhook_url_placeholder": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>",
+      "compose_file": "services/activepieces/docker-compose.yml"
     }
   },
   "events": {
