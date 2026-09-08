@@ -1,3 +1,12 @@
+---
+status: observation
+category: user-profile
+scope: user
+source: исторический профиль пользователя, проверено 2026-09-08
+evidence: Сводка повторяющихся ошибок из прошлых задач; не все случаи независимо проверены
+confidence: 0.5
+---
+
 # Common Mistakes & Anti-Patterns
 
 ## Top 10 Mistakes (from Laptop Analysis)

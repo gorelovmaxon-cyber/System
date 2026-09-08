@@ -1,4 +1,14 @@
-# Coding Style
+---
+status: superseded
+category: user-profile
+scope: user
+source: SC-03 migration, 2026-09-08
+evidence: Легаси-копия заменена канонической записью в .claude/memory/user-profile/coding-style.md
+supersedes: .claude/memory/user-profile/coding-style.md
+superseded_by: .claude/memory/user-profile/coding-style.md
+---
+
+# Coding Style (legacy; superseded)
 
 ## Languages & Stack
 

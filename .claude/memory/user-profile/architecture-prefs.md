@@ -1,3 +1,12 @@
+---
+status: observation
+category: user-profile
+scope: user
+source: исторический профиль пользователя, проверено 2026-09-08
+evidence: Предпочтения импортированы из предыдущего анализа; прямое подтверждение в этой сессии отсутствует
+confidence: 0.6
+---
+
 # Architecture Preferences
 
 ## Core Philosophy

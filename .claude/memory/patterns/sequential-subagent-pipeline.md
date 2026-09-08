@@ -1,3 +1,12 @@
+---
+status: observation
+category: patterns
+scope: user
+source: историческая запись workflow, 2026-09-08
+evidence: Последовательность и приёмка закреплены в docs/system-workflow.md
+confidence: 0.7
+---
+
 # Sequential Subagent Pipeline
 
 **Дата:** 2026-08-17  

@@ -1,4 +1,16 @@
+---
+status: observation
+category: gotchas
+scope: systemqwen
+source: историческая запись и локальная проверка, 2026-09-08
+evidence: Правила относятся к Windows, конкретные версии среды зафиксированы в ENVIRONMENT.md
+confidence: 0.7
+---
+
 # Git + Node.js на Windows
+
+> Исторический fallback на `.system-memory/` в этом документе superseded: единый
+> корень теперь разрешается через SC-02; старые примеры сохранены как evidence gotcha.
 
 **Дата:** 2026-08-17  
 **Контекст:** Windows 10, Node 24, Git Bash  

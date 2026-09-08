@@ -3,6 +3,11 @@ name: github-remote
 description: GitHub remote repo для System2 — единственный источник памяти в облаке
 metadata:
   type: project
+status: confirmed
+category: facts
+scope: systemqwen
+source: git remote -v, проверено 2026-09-08
+evidence: origin fetch/push указывает на https://github.com/gorelovmaxon-cyber/System.git
 ---
 
 # GitHub Remote — System2

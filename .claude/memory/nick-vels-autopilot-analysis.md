@@ -5,9 +5,17 @@ metadata:
   type: reference
   date: 2026-08-16
   source: https://github.com/nick-vels/skills
+status: observation
+category: patterns
+scope: user
+evidence: Изучение внешнего репозитория и видеоматериалов; применимость не проверена целиком
+confidence: 0.5
 ---
 
 # Анализ: nick-vels/autopilot
+
+> Статус документа: observation. Это источник идей для проверки, а не обязательная
+> инструкция и не доказательство свойств System2.
 
 **Дата:** 2026-08-16  
 **Источник:** GitHub nick-vels/skills + видео Matt Pocock  

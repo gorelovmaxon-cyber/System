@@ -1,3 +1,12 @@
+---
+status: observation
+category: facts
+scope: user
+source: исторический аудит файлов и Git, проверено 2026-09-08
+evidence: Содержимое сохранено; локальная доступность внешних каталогов отдельно не подтверждена
+confidence: 0.5
+---
+
 # Projects Overview — Максим Горелов
 
 **Дата:** 2026-08-17  
@@ -178,6 +187,13 @@ D:\System2 (SystemQwen: Opus+Qwen, explicit stops, VS Code integration)
 ---
 
 ## Применимость
+
+## Аудит доступности (SC-03)
+
+Каталоги `D:\dev`, `D:\Sait` и `D:\System` не доступны в текущем окружении.
+Сведения о них выше сохранены как исторические observations; текущий статус их
+внутренностей — `not-audited`/`unknown`. Новые факты об этих проектах без источника
+не добавлять.
 
 ✅ **Для нового проекта:**
 1. Скопировать структуру из D:\System2 (CLAUDE.md, FACTS.md, DECISIONS.md)

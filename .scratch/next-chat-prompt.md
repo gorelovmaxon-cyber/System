@@ -15,7 +15,7 @@
 **Задача:** Прочитать findings и понять контекст.
 
 **Файлы:**
-- [.scratch/memory-analysis-findings.md](.scratch/memory-analysis-findings.md) — главный source
+- [.scratch/memory-analysis-findings.md](.scratch/memory-analysis-findings.md) — источник наблюдений для проверки, не source of truth
 - [system2-export/NEXT_SESSION_PROMPT.md](system2-export/NEXT_SESSION_PROMPT.md) — оригинальный план
 
 **Что делать:**
@@ -133,7 +133,7 @@
 
 ## Главные правила для тебя (Opus)
 
-1. **Читай findings как source of truth** — всё уже проанализировано Sonnet субагентами
+1. **Читай findings как источник наблюдений** — выводы Sonnet требуют проверки по первичным источникам
 2. **Не додумывай** — если в findings неясно, спроси (grill)
 3. **Explicit stops** — после grill (если нужен), после spec, после tickets
 4. **Детальные алгоритмы в тикетах** — Sonnet будет следовать строго
@@ -147,7 +147,7 @@
 ## Файлы для тебя
 
 **Обязательно прочитать:**
-1. `.scratch/memory-analysis-findings.md` — главный source данных
+1. `.scratch/memory-analysis-findings.md` — исторический источник наблюдений, не канон данных
 2. `system2-export/NEXT_SESSION_PROMPT.md` — оригинальный план (для контекста)
 
 **Опционально (если нужен контекст):**

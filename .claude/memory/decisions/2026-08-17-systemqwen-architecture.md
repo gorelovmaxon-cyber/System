@@ -1,3 +1,11 @@
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: decision record 2026-08-17 and Git history
+evidence: Архитектурное решение сохранено в этом файле; актуальные ограничения уточняются последующими SC
+---
+
 # 2026-08-17 — SystemQwen Architecture
 
 **Дата:** 2026-08-17  

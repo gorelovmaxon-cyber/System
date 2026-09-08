@@ -1,3 +1,12 @@
+---
+status: observation
+category: patterns
+scope: user
+source: исторический анализ, 2026-09-08
+evidence: Это гипотеза распределения ролей; фактический контракт теперь в docs/system-workflow.md
+confidence: 0.5
+---
+
 # Model Separation by Cognitive Load
 
 **Дата:** 2026-08-17  

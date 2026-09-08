@@ -1,3 +1,12 @@
+---
+status: observation
+category: patterns
+scope: user
+source: историческая запись workflow, 2026-09-08
+evidence: Паттерн закреплён в docs/system-workflow.md; пользовательское подтверждение отдельно не зафиксировано
+confidence: 0.7
+---
+
 # Explicit Stop Gates
 
 **Дата:** 2026-08-17  

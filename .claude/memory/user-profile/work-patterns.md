@@ -1,3 +1,12 @@
+---
+status: observation
+category: user-profile
+scope: user
+source: исторический профиль workflow, проверено 2026-09-08
+evidence: Паттерны работы сохранены; прямое подтверждение конкретного предпочтения требуется при обновлении
+confidence: 0.6
+---
+
 # Work Patterns
 
 ## Project Memory System (FACTS/DECISIONS/CLAUDE)

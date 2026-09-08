@@ -1,3 +1,11 @@
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: completion record 2026-08-18 and Git history
+evidence: Запись о состоянии на дату; не заменяет текущую проверку среды
+---
+
 # SystemQwen — Статус реализации Этап 1 (Фундамент)
 
 **Дата:** 2026-08-18  

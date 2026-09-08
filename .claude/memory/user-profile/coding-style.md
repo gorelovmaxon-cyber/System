@@ -1,3 +1,13 @@
+---
+status: observation
+category: user-profile
+scope: user
+source: исторический профиль пользователя, проверено 2026-09-08
+evidence: Стиль сохранён из канонической записи; новые предпочтения требуют подтверждения пользователя
+confidence: 0.6
+supersedes: memory/user-profile/coding-style.md
+---
+
 # Coding Style
 
 ## Languages & Stack
