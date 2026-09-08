@@ -32,6 +32,12 @@
     "decisions",
     "gotchas"
   ],
+  "search": {
+    "result_limit": 3,
+    "budget_tokens_per_item": 1200,
+    "timeout_ms": 1500,
+    "local_fallback": true
+  },
   "integrations": {
     "khoj": {
       "base_url": "http://127.0.0.1:42110",

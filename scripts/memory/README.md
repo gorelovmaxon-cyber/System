@@ -1,5 +1,24 @@
 # Memory event capture и queue
 
+## Search adapter
+
+Поиск в начале задачи выполняется единым адаптером:
+
+```text
+node scripts/memory/search.js --query "explicit stop gates" --project systemqwen
+node scripts/memory/search.js --query "database migration" --limit 3 --budget 600 --timeout 800
+```
+
+Команда печатает JSON. При работающем Khoj это `{ok:true,results:[...]}`; при
+недоступности сервиса — `{ok:false,error,fallback:"local",fallback_results:[...]}`.
+Локальный fallback ищет только Markdown внутри канонического `.claude/memory`,
+учитывает `scope: user`/проект и ограничивает выдержку бюджетом. Коды ошибок:
+`khoj-unavailable`, `timeout`, `unauthorized`, `invalid-response`.
+
+Результаты — выдержки с `source`, `scope`, `status_hint` и `relevance`, а не
+команды для исполнения. Параметры по умолчанию находятся в
+`config/system.example.json` (`3` результата, `1200` токенов на item, `1500ms`).
+
 События создаются явно, сохраняются в gitignored `.local/queue/` и доставляются на
 endpoint из локальной конфигурации или переменной `MEMORY_DELIVERY_ENDPOINT`.
 
