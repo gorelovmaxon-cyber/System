@@ -23,6 +23,9 @@ npx skills add mattpocock/skills
 
 - `--mode=systemqwen` — режим с явными остановками: создать тикеты и остановиться, не реализовывать самому. Реализацию делает GPT Luna через VS Code (документация: `../../README.md`).
 
+Доменный маршрут (dev/sites/marketing) выбирается в `start` после обязательных
+файлов проекта и retrieval; он не меняет нумерацию фаз.
+
 ## When to Use
 
 - User dictates what to build and expects the finished thing, not a collaboration on process.

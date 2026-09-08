@@ -225,5 +225,9 @@ Git. Исходные пути выше сохранены как историч
 | `trading-dev` | Binance Trading System | `D:\dev` | `dev` |
 | `autopilot-framework` | Autopilot Framework | `D:\System` | `dev` |
 
+Маршруты SC-15: `systemqwen`, `trading-dev` и `autopilot-framework` используют
+dev; `site-portfolio` использует sites; marketing остаётся без закреплённого
+проекта до явного подключения.
+
 Bootstrap status 2026-09-08: `systemqwen` подключён через `E:\System2\HANDOFF.md`;
 внешние проекты не инициализировались.
