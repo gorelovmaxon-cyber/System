@@ -31,7 +31,7 @@
 |---|---|---|
 | Node.js | 24.x LTS; локально 24.14.0 | [официальная таблица релизов](https://nodejs.org/en/about/previous-releases), проверено 2026-09-08; страница указывает v24 как LTS |
 | Khoj | 2.0.0-beta.28, только как кандидат SC-04 | [официальный релиз](https://github.com/khoj-ai/khoj/releases/tag/2.0.0-beta.28) и [официальная установка](https://github.com/khoj-ai/khoj/blob/master/documentation/docs/get-started/setup.mdx) |
-| Activepieces | 0.85.0, кандидат образа SC-06 | [официальные версии container package](https://github.com/activepieces/activepieces/pkgs/container/activepieces/versions) и [официальная Compose-документация](https://github.com/activepieces/activepieces/blob/main/docs/install/options/docker-compose.mdx) |
+| Activepieces | `ghcr.io/activepieces/activepieces:0.86.3`, канонический compose SC-06 | [официальный compose](https://github.com/activepieces/activepieces/blob/main/docker-compose.yml), сверено 2026-09-08; живой pull невозможен без Docker |
 | PostgreSQL | `postgres:16.15-alpine` | [официальный Docker Hub image](https://hub.docker.com/_/postgres), тег проверен 2026-09-08 |
 | Redis | `redis:7.4.11-alpine` | [официальный Docker Hub image](https://hub.docker.com/_/redis), тег проверен 2026-09-08 |
 
@@ -44,11 +44,12 @@
 проверка TCP:80 неуспешна, потому что на порту нет сервиса. Docker-контейнер проверить
 невозможно: Docker Desktop и WSL отсутствуют.
 
-Для SC-06 выбран кандидат подключения `host.docker.internal:<порт bridge>`, а не
+Для SC-06 выбран адрес подключения `host.docker.internal:<порт bridge>`, а не
 `localhost` контейнера, на основании [официального Docker host-gateway](https://docs.docker.com/reference/cli/dockerd/)
 и [документации Docker Desktop WSL 2](https://docs.docker.com/desktop/features/wsl/).
-Статус сетевой связности: **awaiting-validation**. После установки Docker нужно выполнить
+Статус сетевой связности: **blocked** (Docker отсутствует). После установки Docker нужно выполнить
 живую проверку из контейнера к тестовому host-порту и только затем закрепить адрес flow.
+AI-подключение Activepieces не создано: ключ и owner UI недоступны.
 
 ## Доступы, необходимые позже
 

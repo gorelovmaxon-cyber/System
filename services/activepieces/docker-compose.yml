@@ -1,0 +1,76 @@
+services:
+  app:
+    image: ghcr.io/activepieces/activepieces:0.86.3
+    container_name: system2-activepieces-app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${AP_PORT:-8642}:80"
+    env_file:
+      - .env
+    environment:
+      AP_CONTAINER_TYPE: APP
+      AP_HOST_BRIDGE_URL: ${AP_HOST_BRIDGE_URL:-http://host.docker.internal:8643}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - activepieces-cache:/usr/src/app/cache
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/api/v1/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  worker:
+    image: ghcr.io/activepieces/activepieces:0.86.3
+    container_name: system2-activepieces-worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      AP_CONTAINER_TYPE: WORKER
+      AP_HOST_BRIDGE_URL: ${AP_HOST_BRIDGE_URL:-http://host.docker.internal:8643}
+    depends_on:
+      app:
+        condition: service_healthy
+    volumes:
+      - activepieces-cache:/usr/src/app/cache
+
+  postgres:
+    image: pgvector/pgvector:0.8.0-pg14
+    container_name: system2-activepieces-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${AP_POSTGRES_DATABASE:-activepieces}
+      POSTGRES_USER: ${AP_POSTGRES_USERNAME:-activepieces}
+      POSTGRES_PASSWORD: ${AP_POSTGRES_PASSWORD:?AP_POSTGRES_PASSWORD must be set in .env}
+    volumes:
+      - activepieces-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7.0.7
+    container_name: system2-activepieces-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - activepieces-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  activepieces-cache:
+  activepieces-postgres:
+  activepieces-redis:

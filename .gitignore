@@ -15,3 +15,4 @@ config/system.local.json
 # Local MCP credentials and dependencies
 .claude/mcp-servers/figma/.env
 .claude/mcp-servers/figma/node_modules/
+services/activepieces/.env
