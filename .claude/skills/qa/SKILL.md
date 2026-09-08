@@ -5,6 +5,11 @@ description: Interactive QA session where user reports bugs or issues conversati
 
 # QA Session
 
+При проверке задачи используй [evidence report](../../templates/evidence-report.md):
+сверяй поведение с исходным брифом с первого тикета, фиксируй позитивный,
+негативный и регрессионный сценарии и не принимай наличие файла/синтаксис за
+функциональное доказательство.
+
 Run an interactive QA session. The user describes problems they're encountering. You clarify, explore the codebase for context, and file GitHub issues that are durable, user-focused, and use the project's domain language.
 
 ## For each issue the user raises
