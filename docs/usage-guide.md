@@ -40,4 +40,5 @@ ID: SC-xx
 для этого можно использовать `node scripts/memory/sync.js --status`, затем
 `node scripts/memory/sync.js --push --branch <branch>`. Hook capture работает
 fail-open и не делает push.
-результат считается готовым только после фактической проверки и запуска.
+результат считается готовым только после фактической проверки и запуска. Полный
+runbook: [docs/system-operations.md](system-operations.md).

@@ -1,6 +1,7 @@
 # System2 — краткий запуск
 
-Единый процесс: [docs/system-workflow.md](docs/system-workflow.md).
+Единый процесс: [docs/system-workflow.md](docs/system-workflow.md). Для запуска,
+диагностики и восстановления см. [docs/system-operations.md](docs/system-operations.md).
 
 | Роль | Ответственность | Остановка |
 |---|---|---|

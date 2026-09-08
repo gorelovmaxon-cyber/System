@@ -58,3 +58,9 @@ Figma, доступ к выбранному второму ПК/репозито
 отсутствуют. Activepieces webhook/AI connection не созданы; flow SC-09 live
 не проверен. Изолированный clone/hook smoke-test проверен SC-11; реальный
 второй ПК отсутствует, его проверка `awaiting-validation`.
+
+## Эксплуатация
+
+Порядок запуска и восстановления: `docs/system-operations.md`; health-порты:
+bridge `127.0.0.1:8643`, Khoj `127.0.0.1:42110`, Activepieces `localhost:8642`.
+Docker/Khoj/AI connection не подтверждены в этой среде.
