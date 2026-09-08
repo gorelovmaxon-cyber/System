@@ -50,3 +50,20 @@ node scripts/memory/save.js --category facts --statement "..." --evidence "..." 
 массивом `proposals`. Токен задаётся переменной `MEMORY_BRIDGE_TOKEN` или в
 gitignored local config; значение никогда не коммитится. Writer сам выбирает файл
 только по allow-list категории, проверяет scope, пишет атомарно и учитывает event_id.
+
+## Index freshness
+
+После `persisted` writer ставит одну задачу на каждый изменённый файл в
+`.local/indexer/tasks.jsonl`. Это производный индекс: запись не откатывается,
+если Khoj недоступен. Команды:
+
+```text
+node scripts/memory/indexer.js --status
+node scripts/memory/indexer.js --run
+node scripts/memory/indexer.js --requeue-failed
+node scripts/memory/indexer.js --file .claude/memory/facts/example.md --event-id evt_manual
+```
+
+Пока SC-04 не подтвердил API переиндексации, `indexer.reindex_url` остаётся
+placeholder и `--run` помечает задачи `failed` с причиной, не создавая цикл.
+Статусы `persisted` и `indexed` независимы; синхронизация Git относится к SC-11.

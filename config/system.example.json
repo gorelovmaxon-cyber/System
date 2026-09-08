@@ -68,5 +68,10 @@
   },
   "writer": {
     "categories": ["user-profile", "facts", "patterns", "decisions", "gotchas"]
+  },
+  "indexer": {
+    "retries_max": 5,
+    "timeout_ms": 5000,
+    "reindex_url": "<CONFIGURE_FROM_KHOJ_RELEASE>"
   }
 }

@@ -16,7 +16,7 @@ function records() {
   for (const line of fs.readFileSync(file, 'utf8').split(/\r?\n/)) {
     if (!line.trim()) continue;
     const record = JSON.parse(line);
-    result.set(record.event_id, record);
+    result.set(record.event_id, record.indexed === undefined ? { ...record, indexed: false } : record);
   }
   return result;
 }
@@ -24,7 +24,8 @@ function records() {
 function append(record) {
   const file = logPath();
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.appendFileSync(file, JSON.stringify({ ...record, timestamp: new Date().toISOString() }) + '\n', 'utf8');
+  const value = record.event_id ? { indexed: false, ...record } : record;
+  fs.appendFileSync(file, JSON.stringify({ ...value, timestamp: new Date().toISOString() }) + '\n', 'utf8');
 }
 
 function get(eventId) {
@@ -32,4 +33,3 @@ function get(eventId) {
 }
 
 module.exports = { append, get, logPath, records };
-

@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { resolvePaths } = require('./resolve-paths');
 const writerLog = require('./writer-log');
+const { queueIndex } = require('./indexer');
 
 const CATEGORIES = ['user-profile', 'facts', 'patterns', 'decisions', 'gotchas'];
 const STATUSES = ['observation', 'confirmed', 'superseded'];
@@ -114,7 +115,7 @@ function writeProposal(eventId, input) {
     release = acquireLock();
     const files = [];
     const revisions = [];
-    writerLog.append({ event_id: eventId, hash, status: 'intent' });
+    writerLog.append({ event_id: eventId, hash, status: 'intent', indexed: false });
     for (const proposal of proposals) {
       const file = targetFile(proposal.category);
       const existing = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
@@ -129,7 +130,12 @@ function writeProposal(eventId, input) {
     }
     const revision = crypto.createHash('sha256').update(revisions.join('|')).digest('hex').slice(0, 12);
     const result = { status: 'persisted', written_files: files.map(file => path.relative(paths.system_root, file).replaceAll(path.sep, '/')), revision };
-    writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision });
+    writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision, indexed: false });
+    try {
+      queueIndex(eventId, files);
+    } catch {
+      // Persistence must not fail because the derived index queue is unavailable.
+    }
     return result;
   } finally {
     if (release) release();
@@ -138,4 +144,3 @@ function writeProposal(eventId, input) {
 }
 
 module.exports = { CATEGORIES, STATUSES, validateProposal, writeProposal };
-
