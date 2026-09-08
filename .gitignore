@@ -18,3 +18,9 @@ config/system.local.json
 services/activepieces/.env
 services/khoj/config.local.yml
 services/khoj/data/
+
+# Machine-specific editor settings (CodeGPT/Luna provider config)
+.vscode/
+
+# Local pre-migration safety snapshots (SC-02/SC-03); content duplicates tracked memory
+.scratch/system-completion/backup/
