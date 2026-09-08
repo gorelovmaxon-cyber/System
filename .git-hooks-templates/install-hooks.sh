@@ -25,6 +25,8 @@ if [ -f "$LEGACY" ]; then
   echo "Backed up existing hook to $BACKUP"
 fi
 
-chmod +x "$TARGET/post-commit"
+if type chmod >/dev/null 2>&1; then
+  chmod +x "$TARGET/post-commit"
+fi
 git -C "$ROOT" config core.hooksPath .git-hooks-templates
 echo "Installed portable hooksPath: .git-hooks-templates"
