@@ -54,5 +54,12 @@
   },
   "delivery": {
     "endpoint": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
+  },
+  "bridge": {
+    "port": 8643,
+    "token": "<GENERATE_LOCALLY>"
+  },
+  "writer": {
+    "categories": ["user-profile", "facts", "patterns", "decisions", "gotchas"]
   }
 }

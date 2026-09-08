@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+'use strict';
+
+const crypto = require('node:crypto');
+const fs = require('node:fs');
+const path = require('node:path');
+const { resolvePaths } = require('./resolve-paths');
+const writerLog = require('./writer-log');
+
+const CATEGORIES = ['user-profile', 'facts', 'patterns', 'decisions', 'gotchas'];
+const STATUSES = ['observation', 'confirmed', 'superseded'];
+const MAX_FIELD_BYTES = 20000;
+let busy = false;
+
+function lockPath() {
+  return path.join(resolvePaths().data_dir, 'writer', 'memory.lock');
+}
+
+function acquireLock() {
+  const file = lockPath();
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    try {
+      const fd = fs.openSync(file, 'wx');
+      return () => { fs.closeSync(fd); fs.unlinkSync(file); };
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error;
+      const wait = new Int32Array(new SharedArrayBuffer(4));
+      Atomics.wait(wait, 0, 0, 10);
+    }
+  }
+  throw new Error('writer lock timeout');
+}
+
+function text(value, field) {
+  if (typeof value !== 'string' || !value.trim()) throw new Error(field + ' must be a non-empty string');
+  if (Buffer.byteLength(value, 'utf8') > MAX_FIELD_BYTES) throw new Error(field + ' is too large');
+  return value.trim();
+}
+
+function validateProposal(proposal) {
+  if (!proposal || !CATEGORIES.includes(proposal.category)) throw new Error('invalid category');
+  if (!STATUSES.includes(proposal.status)) throw new Error('invalid status');
+  const paths = resolvePaths();
+  if (proposal.scope !== 'user' && !paths.registry.some(item => item.project_id === proposal.scope)) {
+    throw new Error('invalid scope');
+  }
+  const statement = text(proposal.statement, 'statement');
+  const evidence = text(proposal.evidence, 'evidence');
+  if (proposal.source !== undefined) text(String(proposal.source), 'source');
+  if (proposal.confidence !== undefined && (typeof proposal.confidence !== 'number' || proposal.confidence < 0 || proposal.confidence > 1)) {
+    throw new Error('confidence must be between 0 and 1');
+  }
+  return { ...proposal, statement, evidence };
+}
+
+function proposalHash(eventId, proposals) {
+  return crypto.createHash('sha256').update(JSON.stringify({ eventId, proposals })).digest('hex');
+}
+
+function targetFile(category) {
+  return path.join(resolvePaths().memory_root, category, 'writer-entries.md');
+}
+
+function entryText(eventId, proposal) {
+  const fields = [
+    '---',
+    'status: ' + proposal.status,
+    'category: ' + proposal.category,
+    'scope: ' + proposal.scope,
+    'source: ' + String(proposal.source || 'writer'),
+    'evidence: ' + proposal.evidence.replaceAll('\n', ' '),
+    'event_id: ' + eventId,
+  ];
+  if (proposal.supersedes) fields.push('supersedes: ' + String(proposal.supersedes));
+  if (proposal.confidence !== undefined) fields.push('confidence: ' + proposal.confidence);
+  fields.push('---', '', '## ' + proposal.statement, '');
+  return fields.join('\n');
+}
+
+function pathInsideMemory(file) {
+  const root = path.resolve(resolvePaths().memory_root);
+  const target = path.resolve(file);
+  return target === root || target.startsWith(root + path.sep);
+}
+
+function writeAtomic(file, content) {
+  if (!pathInsideMemory(file)) throw new Error('writer target escapes memory root');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  const tmp = file + '.tmp-' + process.pid + '-' + Date.now();
+  const previous = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+  fs.writeFileSync(tmp, previous + (previous && !previous.endsWith('\n') ? '\n' : '') + content, 'utf8');
+  fs.renameSync(tmp, file);
+  return fs.readFileSync(file, 'utf8');
+}
+
+function writeProposal(eventId, input) {
+  if (busy) throw new Error('writer busy; retry');
+  busy = true;
+  let release;
+  try {
+    const proposals = Array.isArray(input) ? input.map(validateProposal) : [validateProposal(input)];
+    const hash = proposalHash(eventId, proposals);
+    const previous = writerLog.get(eventId);
+    if (previous) {
+      if (previous.hash !== hash) {
+        const error = new Error('event_id already persisted with different content');
+        error.code = 'CONFLICT';
+        throw error;
+      }
+      return { status: 'persisted', written_files: previous.written_files, revision: previous.revision, idempotent: true };
+    }
+    const paths = resolvePaths();
+    release = acquireLock();
+    const files = [];
+    const revisions = [];
+    writerLog.append({ event_id: eventId, hash, status: 'intent' });
+    for (const proposal of proposals) {
+      const file = targetFile(proposal.category);
+      const existing = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+      if (existing.includes('event_id: ' + eventId)) {
+        files.push(file);
+        revisions.push(crypto.createHash('sha256').update(existing).digest('hex').slice(0, 12));
+        continue;
+      }
+      const content = writeAtomic(file, entryText(eventId, proposal));
+      files.push(file);
+      revisions.push(crypto.createHash('sha256').update(content).digest('hex').slice(0, 12));
+    }
+    const revision = crypto.createHash('sha256').update(revisions.join('|')).digest('hex').slice(0, 12);
+    const result = { status: 'persisted', written_files: files.map(file => path.relative(paths.system_root, file).replaceAll(path.sep, '/')), revision };
+    writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision });
+    return result;
+  } finally {
+    if (release) release();
+    busy = false;
+  }
+}
+
+module.exports = { CATEGORIES, STATUSES, validateProposal, writeProposal };
+
