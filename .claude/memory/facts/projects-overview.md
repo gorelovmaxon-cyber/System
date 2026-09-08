@@ -195,3 +195,16 @@ D:\System2 (SystemQwen: Opus+Qwen, explicit stops, VS Code integration)
 1. D:\System\memory/ в Git
 2. HANDOFF.md в каждом проекте
 3. _transfer/ для экспортов между машинами
+
+## Стабильный реестр проектов (SC-02)
+
+Идентичность проекта определяется `project_id`, а не буквой диска или локальным
+путём. Машино-специфичные пути хранятся только в `config/system.local.json` вне
+Git. Исходные пути выше сохранены как исторический контекст аудита.
+
+| project_id | Название | Историческая локальная привязка | kind |
+|---|---|---|---|
+| `systemqwen` | SystemQwen (система разработки) | `D:\System2` / текущая копия репозитория | `meta` |
+| `site-portfolio` | C-portfolio | `D:\Sait` | `client-site` |
+| `trading-dev` | Binance Trading System | `D:\dev` | `dev` |
+| `autopilot-framework` | Autopilot Framework | `D:\System` | `dev` |

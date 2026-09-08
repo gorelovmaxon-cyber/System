@@ -6,3 +6,8 @@ test_qwen.py
 test_simple.py
 system2-export.tar.gz
 system2-export/
+
+# Machine-specific System2 configuration and runtime data
+config/system.local.json
+.local/
+.local-*

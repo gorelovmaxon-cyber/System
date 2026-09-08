@@ -1,0 +1,21 @@
+{
+  "schema_version": "1",
+  "system_root": "<ABSOLUTE_SYSTEM2_ROOT>",
+  "local_paths": {
+    "site-portfolio": "<ABSOLUTE_SITE_PORTFOLIO_ROOT>",
+    "trading-dev": "<ABSOLUTE_TRADING_ROOT>",
+    "autopilot-framework": "<ABSOLUTE_AUTOPILOT_ROOT>"
+  },
+  "integrations": {
+    "khoj": {
+      "base_url": "http://127.0.0.1:42110"
+    },
+    "bridge": {
+      "base_url": "http://127.0.0.1:8643"
+    },
+    "activepieces": {
+      "webhook_url": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
+    }
+  }
+}
+

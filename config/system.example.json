@@ -1,0 +1,49 @@
+{
+  "schema_version": "1",
+  "system_name": "System2",
+  "memory_root": ".claude/memory",
+  "data_dir": ".local",
+  "registry": [
+    {
+      "project_id": "systemqwen",
+      "title": "SystemQwen (система разработки)",
+      "kind": "meta"
+    },
+    {
+      "project_id": "site-portfolio",
+      "title": "C-portfolio",
+      "kind": "client-site"
+    },
+    {
+      "project_id": "trading-dev",
+      "title": "Binance Trading System",
+      "kind": "dev"
+    },
+    {
+      "project_id": "autopilot-framework",
+      "title": "Autopilot Framework",
+      "kind": "dev"
+    }
+  ],
+  "memory_categories": [
+    "user-profile",
+    "facts",
+    "patterns",
+    "decisions",
+    "gotchas"
+  ],
+  "integrations": {
+    "khoj": {
+      "base_url": "http://127.0.0.1:42110",
+      "enabled": false
+    },
+    "bridge": {
+      "base_url": "http://127.0.0.1:8643",
+      "enabled": false
+    },
+    "activepieces": {
+      "webhook_url_placeholder": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
+    }
+  }
+}
+
