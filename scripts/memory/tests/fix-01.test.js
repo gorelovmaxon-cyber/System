@@ -9,6 +9,7 @@ const { fixture, proposal, memoryFile, mod } = require('./helpers');
 const writer = mod('writer');
 const writerLog = mod('writer-log');
 const indexerLog = mod('indexer-log');
+const search = mod('search');
 
 function proposalHash(eventId, proposals) {
   return crypto.createHash('sha256').update(JSON.stringify({ eventId, proposals })).digest('hex');
@@ -191,4 +192,111 @@ test('control: exact repeat keeps revision and does not add intent lines; differ
   const log = fs.readFileSync(writerLog.logPath(), 'utf8');
   const intents = log.split(/\r?\n/).filter(l => l.includes('"event_id":"evt_ctl"') && l.includes('"status":"intent"')).length;
   assert.equal(intents, 1);
+});
+
+// ---------- S2: однозначная сериализация полей frontmatter ----------
+
+test('S2: CR/LF in source, evidence, supersedes and event_id is rejected', () => {
+  const root = fixture('fix01-s2-newline');
+  // репродукция ревьюера: source с переносом строки внедрял вторую строку scope
+  assert.throws(
+    () => writer.writeProposal('evt_ok', proposal('PRIVATE_B_VALUE', 'B', 'facts', { source: 'source text\nscope: user' })),
+    /source/
+  );
+  for (const bad of ['a\nb', 'a\r\nb', 'a\rb']) {
+    assert.throws(() => writer.writeProposal('evt_ok', proposal('S', 'user', 'facts', { source: bad })), /source/);
+    assert.throws(() => writer.writeProposal('evt_ok', proposal('S', 'user', 'facts', { evidence: bad })), /evidence/);
+    assert.throws(() => writer.writeProposal('evt_ok', proposal('S', 'user', 'facts', { supersedes: bad })), /supersedes/);
+    assert.throws(() => writer.writeProposal('evt\nbad', proposal('S')), /event_id/);
+    assert.throws(() => writer.writeProposal('evt\r\nbad', proposal('S')), /event_id/);
+  }
+});
+
+test('S2: statement line starting with --- (record boundary) is rejected', () => {
+  const root = fixture('fix01-s2-boundary');
+  assert.throws(() => writer.writeProposal('evt_ok', proposal('---\nSNEAKY')), /statement/);
+  assert.throws(() => writer.writeProposal('evt_ok', proposal('---')), /statement/);
+});
+
+test('S2: round-trip of all fields through write and re-parse is lossless; repeat idempotent', () => {
+  const root = fixture('fix01-s2-roundtrip');
+  const input = proposal('RT_STATEMENT\nsecond line', 'B', 'patterns', {
+    status: 'confirmed', evidence: 'RT evidence', source: 'RT source', confidence: 0.7, supersedes: 'evt_old',
+  });
+  writer.writeProposal('evt_rt', input);
+  const records = search.entries(fs.readFileSync(memoryFile(root, 'patterns'), 'utf8'));
+  assert.equal(records.length, 1);
+  const meta = records[0].meta;
+  assert.equal(meta.status, 'confirmed');
+  assert.equal(meta.category, 'patterns');
+  assert.equal(meta.scope, 'B');
+  assert.equal(meta.source, 'RT source');
+  assert.equal(meta.evidence, 'RT evidence');
+  assert.equal(meta.event_id, 'evt_rt');
+  assert.equal(meta.supersedes, 'evt_old');
+  assert.equal(Number(meta.confidence), 0.7);
+  assert.equal(records[0].body, '## RT_STATEMENT\nsecond line');
+  const again = writer.writeProposal('evt_rt', input);
+  assert.equal(again.idempotent, true);
+});
+
+// ---------- S3: каноническая форма содержимого — LF ----------
+
+test('S3: CRLF multiline statement is stored once in LF; repeat is idempotent', () => {
+  const root = fixture('fix01-s3-crlf-input');
+  const proposals = [proposal('FIRST_LINE\r\nSECOND_LINE')];
+  writer.writeProposal('evt_s3_crlf', proposals);
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal((text.match(/## FIRST_LINE/g) || []).length, 1);
+  assert.equal(text.includes('\r\n'), false, 'file must be stored in LF');
+  const again = writer.writeProposal('evt_s3_crlf', proposals);
+  assert.equal(again.idempotent, true);
+  assert.equal((fs.readFileSync(memoryFile(root), 'utf8').match(/## FIRST_LINE/g) || []).length, 1);
+});
+
+test('S3: mixed EOL in multiline statement is normalized to LF; repeat idempotent', () => {
+  const root = fixture('fix01-s3-mixed');
+  const proposals = [proposal('MIXED_A\r\nMIXED_B\nMIXED_C')];
+  writer.writeProposal('evt_s3_mixed', proposals);
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal((text.match(/## MIXED_A/g) || []).length, 1);
+  assert.equal(text.includes('\r\n'), false);
+  const again = writer.writeProposal('evt_s3_mixed', proposals);
+  assert.equal(again.idempotent, true);
+  assert.equal((fs.readFileSync(memoryFile(root), 'utf8').match(/## MIXED_A/g) || []).length, 1);
+});
+
+test('S3: LF and CRLF forms of the same content hash identically (idempotent, not CONFLICT)', () => {
+  const root = fixture('fix01-s3-hash');
+  writer.writeProposal('evt_s3_hash', [proposal('HASH_A\r\nHASH_B')]);
+  const again = writer.writeProposal('evt_s3_hash', [proposal('HASH_A\nHASH_B')]);
+  assert.equal(again.idempotent, true);
+  assert.equal((fs.readFileSync(memoryFile(root), 'utf8').match(/## HASH_A/g) || []).length, 1);
+});
+
+test('S3: partial recovery after CRLF input completes without duplicates', () => {
+  const root = fixture('fix01-s3-partial');
+  const proposals = [proposal('CRLF_PART_A\r\nCRLF_PART_A2'), proposal('CRLF_PART_B\r\nCRLF_PART_B2')];
+  writer.writeProposal('evt_s3_partial', [proposals[0]]);
+  // hash считается по нормализованным предложениям (S3): intent, созданный
+  // до падения, должен совпасть с hash повтора, иначе — ложный CONFLICT
+  const hash = crypto.createHash('sha256').update(JSON.stringify({
+    eventId: 'evt_s3_partial',
+    proposals: proposals.map(writer.validateProposal),
+  })).digest('hex');
+  writerLog.append({ event_id: 'evt_s3_partial', hash, status: 'intent' });
+  const result = writer.writeProposal('evt_s3_partial', proposals);
+  assert.equal(result.status, 'persisted');
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal((text.match(/## CRLF_PART_A/g) || []).length, 1);
+  assert.equal((text.match(/## CRLF_PART_B/g) || []).length, 1);
+});
+
+test('S3: normalization does not hide real content differences (CONFLICT preserved)', () => {
+  const root = fixture('fix01-s3-conflict');
+  writer.writeProposal('evt_s3_conflict', [proposal('CONTENT_A\nCONTENT_B')]);
+  assert.throws(
+    () => writer.writeProposal('evt_s3_conflict', [proposal('CONTENT_A\nCONTENT_C')]),
+    (err) => err.code === 'CONFLICT'
+  );
 });

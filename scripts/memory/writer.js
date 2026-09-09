@@ -125,6 +125,22 @@ function text(value, field) {
   return value.trim();
 }
 
+function singleLine(value, field) {
+  const line = text(String(value), field);
+  if (/[\r\n]/.test(line)) throw new Error(field + ' must be a single line (no CR/LF)');
+  return line;
+}
+
+function validateEventId(eventId) {
+  if (typeof eventId !== 'string' || !eventId.trim()) throw new Error('event_id must be a non-empty string');
+  if (/[\r\n]/.test(eventId)) throw new Error('event_id must be a single line (no CR/LF)');
+  return eventId;
+}
+
+// Валидация возвращает нормализованные значения (S2/S3): frontmatter-поля
+// однострочные, statement нормализован к LF и не содержит границ записей.
+// Hash считается по нормализованным предложениям — LF и CRLF формы одного
+// содержимого дают один hash (идемпотентный повтор, не CONFLICT).
 function validateProposal(proposal) {
   if (!proposal || !CATEGORIES.includes(proposal.category)) throw new Error('invalid category');
   if (!STATUSES.includes(proposal.status)) throw new Error('invalid status');
@@ -132,13 +148,17 @@ function validateProposal(proposal) {
   if (proposal.scope !== 'user' && !paths.registry.some(item => item.project_id === proposal.scope)) {
     throw new Error('invalid scope');
   }
-  const statement = text(proposal.statement, 'statement');
-  const evidence = text(proposal.evidence, 'evidence');
-  if (proposal.source !== undefined) text(String(proposal.source), 'source');
+  const statement = normalizeEol(text(proposal.statement, 'statement'));
+  if (statement.split('\n').some(line => line.startsWith('---'))) {
+    throw new Error('statement must not contain a line starting with ---');
+  }
+  const evidence = singleLine(proposal.evidence, 'evidence');
+  const source = proposal.source === undefined ? undefined : singleLine(proposal.source, 'source');
+  const supersedes = proposal.supersedes === undefined ? undefined : singleLine(proposal.supersedes, 'supersedes');
   if (proposal.confidence !== undefined && (typeof proposal.confidence !== 'number' || proposal.confidence < 0 || proposal.confidence > 1)) {
     throw new Error('confidence must be between 0 and 1');
   }
-  return { ...proposal, statement, evidence };
+  return { ...proposal, statement, evidence, source, supersedes };
 }
 
 function proposalHash(eventId, proposals) {
@@ -155,11 +175,11 @@ function entryText(eventId, proposal) {
     'status: ' + proposal.status,
     'category: ' + proposal.category,
     'scope: ' + proposal.scope,
-    'source: ' + String(proposal.source || 'writer'),
-    'evidence: ' + proposal.evidence.replaceAll('\n', ' '),
+    'source: ' + (proposal.source === undefined ? 'writer' : proposal.source),
+    'evidence: ' + proposal.evidence,
     'event_id: ' + eventId,
   ];
-  if (proposal.supersedes) fields.push('supersedes: ' + String(proposal.supersedes));
+  if (proposal.supersedes !== undefined) fields.push('supersedes: ' + proposal.supersedes);
   if (proposal.confidence !== undefined) fields.push('confidence: ' + proposal.confidence);
   fields.push('---', '', '## ' + proposal.statement, '');
   return fields.join('\n');
@@ -181,7 +201,7 @@ function entryBlocks(text) {
 function entryPresent(file, eventId, proposal) {
   if (!fs.existsSync(file)) return false;
   const existing = fs.readFileSync(file, 'utf8');
-  const expected = entryText(eventId, proposal).trim();
+  const expected = normalizeEol(entryText(eventId, proposal)).trim();
   return entryBlocks(existing).some(block => block.trim() === expected);
 }
 
@@ -222,6 +242,7 @@ function writeProposal(eventId, input) {
   busy = true;
   let release;
   try {
+    validateEventId(eventId);
     const proposals = Array.isArray(input) ? input.map(validateProposal) : [validateProposal(input)];
     const hash = proposalHash(eventId, proposals);
     const paths = resolvePaths();
