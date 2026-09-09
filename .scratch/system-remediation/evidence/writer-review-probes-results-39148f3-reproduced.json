@@ -1,0 +1,89 @@
+{
+  "revision": "39148f3",
+  "node": "v24.18.0",
+  "results": [
+    {
+      "name": "R1-same-text-different-scope",
+      "reproduced": true,
+      "evidence": {
+        "status": "persisted",
+        "scopeBMissing": true
+      }
+    },
+    {
+      "name": "R2-khoj-success-leaks",
+      "reproduced": true,
+      "evidence": {
+        "ok": true,
+        "results": [
+          {
+            "snippet": "PRIVATE_B",
+            "source": ".claude/memory/facts/writer-entries.md",
+            "scope": "user",
+            "status_hint": "observation",
+            "relevance": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "R3-crlf-fallback-leaks",
+      "reproduced": true,
+      "evidence": [
+        {
+          "snippet": "---\r\nstatus: observation\r\ncategory: facts\r\nscope: user\r\nsource: test\r\nevidence: synthetic fixture\r\nevent_id: evt_A\r\n---\r\n\r\n## PUBLIC\r\n---\r\nstatus: observation\r\ncategory: facts\r\nscope: B\r\nsource: test\r\nevidence: synthetic fixture\r\nevent_id: evt_B\r\n---\r\n\r\n## PRIVATE_B",
+          "source": ".claude/memory/facts/writer-entries.md",
+          "scope": "unknown",
+          "status_hint": "unknown",
+          "relevance": 0.99
+        }
+      ]
+    },
+    {
+      "name": "R4-crlf-repeat-duplicates",
+      "reproduced": true,
+      "evidence": {
+        "result": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "9642265f1892"
+        },
+        "copies": 2
+      }
+    },
+    {
+      "name": "R5-live-empty-lock-stolen",
+      "reproduced": true,
+      "evidence": {
+        "twoLiveHolders": true,
+        "firstReleaseRemovedSecondLock": true,
+        "child": {
+          "code": 0,
+          "out": "child acquired and released\n",
+          "err": ""
+        }
+      }
+    },
+    {
+      "name": "R6-conflict-check-before-lock",
+      "reproduced": true,
+      "evidence": {
+        "parent": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "b80524543d28"
+        },
+        "child": {
+          "code": 0,
+          "out": "{\"status\":\"persisted\",\"written_files\":[\".claude/memory/facts/writer-entries.md\"],\"revision\":\"f670c109b51d\"}\n",
+          "err": ""
+        },
+        "sameEventDifferentContentBothPersisted": true
+      }
+    }
+  ]
+}

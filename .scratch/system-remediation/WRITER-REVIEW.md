@@ -1,10 +1,10 @@
-# WRITER-REVIEW — внешняя приёмка блока F01–F04 и немедленного сохранения
+# WRITER-REVIEW — внешняя приёмка блока F01–F04 (доработка по R1–R6)
 
-**Статус пакета:** `awaiting-review`
+**Статус пакета:** `awaiting-review` (повторная подача)
 **Подготовлен:** Sonnet (автор+исполнитель), 2026-09-09
 **Для:** независимого проверяющего (планировщик/приёмщик), передаётся через пользователя
 **База сравнения:** `69a257c5e6b6b97dbca1f0afe1d8ffbf9292919f` (verified, до правок)
-**Текущий master:** `9c47f8e` (+4 scoped-коммита ниже)
+**Текущий master:** `a8574f6`
 
 > Этот пакет НЕ закрывается автором. До внешнего положительного заключения запрещены:
 > миграция настоящей памяти, подключение исправленного writer к рабочему потоку и
@@ -12,69 +12,77 @@
 
 ## 1. Состав блока: FIX-ID → коммиты → изменения
 
-| FIX | Коммит | Файлы | Что исправляет |
+| FIX | Коммиты | Файлы | Что исправляет |
 |---|---|---|---|
-| FIX-01 | `67f2b38` | `scripts/memory/writer.js`, `scripts/memory/tests/fix-01.test.js`, `scripts/memory/tests/helpers.js` | F01 пакетная потеря, F02 ложный persisted по intent / частичная запись |
-| FIX-02 | `5fe4a7b` | `scripts/memory/writer.js`, `scripts/memory/tests/fix-02-holder.cjs`, `scripts/memory/tests/fix-02.test.js` | F03 осиротевшая блокировка: владение (pid+hostname+nonce), steal только мёртвых, liveness по pid |
-| FIX-03 | `aa2bfa5` | `scripts/memory/search.js`, `scripts/memory/tests/fix-03.test.js` | F04 утечка записей проектов между проектами в общих файлах памяти |
-| FIX-04 | `9c47f8e` | `scripts/memory/writer.js`, `scripts/memory/tests/fix-04.test.js`, `fix-04-crash.cjs`, `helpers.js`, `docs/memory-contract.md`, `.scratch/system-completion/SPEC.md`, тикеты/матрица | Немедленное сохранение без сервисов; fsync tmp до rename; подчистка tmp; видимый `index_error`; границы persisted |
+| FIX-01 | `67f2b38` + `eb06524` | `scripts/memory/writer.js`, `tests/fix-01.test.js`, `tests/helpers.js` | F01 пакетная потеря, F02 ложный persisted по intent/частичная запись; R1 идентичность предложения по полному содержимому (event_id+category+scope+status+source+evidence+supersedes+confidence+statement); R4 CRLF-идемпотентность (нормализация EOL) |
+| FIX-02 | `5fe4a7b` + `8f4809a` | `scripts/memory/writer.js`, `tests/fix-02-holder.cjs`, `tests/fix-02-pause.cjs`, `tests/fix-02.test.js` | F03 осиротевшая блокировка; R5 безопасная публикация владельца (wx→writeOwner→publish-verify pid+nonce), освобождение удаляет lock только своего поколения, EPERM при проверке pid трактуется как живой процесс; R6 проверка CONFLICT и идемпотентного повтора — внутри acquireLock, журнал перечитывается под блокировкой |
+| FIX-03 | `aa2bfa5` + `1b6e1e9` | `scripts/memory/search.js`, `tests/fix-03.test.js` | F04 утечка записей между проектами; R2 перитмическая верификация: каждый хит Khoj атрибутируется к локальной записи (matchEntry), snippet пересобирается из тела записи, отсутствующий файл/неатрибутируемый хит отбрасывается; R3 CRLF-разбор entries/frontmatter, проектный запрос видит только scope 'user' или свой project_id, исправление relativeSource (`/^\.\//`) |
+| FIX-04 | `9c47f8e` + `a8574f6` | `scripts/memory/writer.js`, `tests/fix-04.test.js`, `fix-04-crash.cjs`, `helpers.js`, `docs/memory-contract.md`, SPEC, тикеты/матрица | Немедленное сохранение без сервисов; fsync tmp до rename; подчистка tmp; видимый `index_error`; границы persisted; доказательства: crashPoint в реальном writeProposal (after-lock/after-intent/after-write/after-persisted под `SYSTEM2_CRASH_AT`, exit 23), настоящий content-конфликт при pull и разрешение с сохранением обеих версий |
 
-Общий новый тест-инфраструктурный файл: `scripts/memory/tests/helpers.js` (синтетическая фикстура + `SYSTEM2_ROOT`).
+Общий новый тест-инфраструктурный файл: `scripts/memory/tests/helpers.js` (синтетическая фикстура + `SYSTEM2_ROOT`; `.gitignore` с `.local/` для remote-тестов).
 
-## 2. Регрессионные команды (на этой машине, Windows, Node v24.18.0, Git 2.55.0)
+## 2. Регрессионные команды (эта машина, Windows, Node v24.18.0, Git 2.55.0)
 
 ```bash
-# Полный набор (21 тест, ожидаемо 21/21 зелёных):
+# Полный набор (39 тестов, 39/39 зелёных):
 node --test scripts/memory/tests/*.test.js
 
 # По фиксам:
-node --test scripts/memory/tests/fix-01.test.js   # 5/5
-node --test scripts/memory/tests/fix-02.test.js   # 4/4
-node --test scripts/memory/tests/fix-03.test.js   # 6/6
-node --test scripts/memory/tests/fix-04.test.js   # 6/6
+node --test scripts/memory/tests/fix-01.test.js   # 10/10 (R1, R4)
+node --test scripts/memory/tests/fix-02.test.js   # 9/9   (R5, R6)
+node --test scripts/memory/tests/fix-03.test.js   # 13/13 (R2, R3)
+node --test scripts/memory/tests/fix-04.test.js   # 7/7   (crash-стадии, remote-конфликт)
 
-# Аудит дефектов (exit 1 = дефекты ещё воспроизводятся):
-node .scratch/system-remediation/evidence/core-audit.cjs
+# Сценарии независимого ревью (ревизия a8574f6):
+node .scratch/system-remediation/evidence/writer-review-probes.cjs
+# Код 0 = заявленные дефекты R1–R6 воспроизведены; после исправлений ожидается
+# reproduced:false по всем шести и код 1 (дефекты НЕ воспроизведены).
+# Исторический writer-review-probes-results.json сохранён рядом до повтора.
 ```
 
-Ожидание по аудиту: `F01-batch-loss`, `F02-intent-false-success`, `F03-stale-lock`,
-`F04-project-leak` → `reproduced: false` (исправлены); `controls-writer-and-http-auth` →
-`reproduced: true` (контроль: правильное поведение не сломано); F05–F10 → `reproduced: true`
-(очередь FIX-05…08). Доказательства в `.scratch/system-remediation/evidence/`:
-`core-audit-results-original-2026-09-09.json` (база: все 10 дефектов воспроизведены) и
-`core-audit-results-after-fix0{1,2,3,4}-2026-09-09.json`.
-
-Примечание по RED: регрессионные те��ты FIX-01…04 — новые файлы, которых нет на `69a257c`;
-RED зафиксирован во время исполнения (списки в тикетах FIX-01…04, раздел «Результаты»),
-а исходная картина дефектов — снапшотом аудита `-original-`. Для повторного RED по FIX-04
-(например): временно вернуть `writeAtomic` из `git show aa2bfa5:scripts/memory/writer.js`
-и запустить `fix-04.test.js` — упадёт «writeAtomic cleans up its temp file».
+Роли инструментов: `core-audit.cjs` — снятие дефектов и их отсутствия (harness ловит любое
+исключение, поэтому отрицательный результат сам по себе не является доказательством).
+Положительная приёмка — `node --test` с явными ожиданиями и зафиксированным RED/GREEN:
+по каждому замечанию R1–R6 новый тест падает на ревизии до фикса и проходит после.
+Списки RED-падений — в тикетах FIX-01…04 (раздел «Доработка по ревью»).
 
 ## 3. Результаты до/после
 
-| Сценарий | До (`69a257c`) | После (`9c47f8e`) |
+| Сценарий | До (база / первая подача) | После (a8574f6) |
 |---|---|---|
 | Пакет из 2 предложений одной категории | в файле только 1-е (F01) | оба; повтор → `idempotent:true`, 1 вхождение каждого |
-| Intent без файла | «persisted» без файла (F02) | intent доводится до записи; повтор идемпотентен |
-| Частичная запись | ENOENT второй категории (F02) | дописывается без дублей |
-| Блокировка после kill | вечный timeout, lock не отдаётся (F03) | empty/dead/garbage lock восстанавливаются; живой lock не крадётся |
-| Поиск по общим файлам | запись B видна из A (F04) | изоляция по scope/entry; fallback тоже изолирован |
-| `save.js` без Khoj/AP/AI | запись шла, но durability не гарантирована | `persisted` только после fsync+rename; отдельный процесс находит запись |
-| Kill mid-save [0,10,30,60] мс + повтор | ложный persisted/дубли возможны | инвариант «persisted ⇒ файл существует», дублей нет |
-| Сбой очереди индекса | причина молчаливо глоталась | запись persisted; `index_error` в журнале; отката нет |
-| Сбой rename в writeAtomic | `.tmp-*` оставался в каталоге памяти | tmp подчищается, ошибка пробрасывается |
-| Offline-remote | — | persisted ≠ synced (`clean:false`); push только явный; merge сохраняет обе версии |
+| Intent без файла / частичная запись | «persisted» без файла / ENOENT (F02) | intent доводится до записи без дублей |
+| R1: одинаковый statement, разный scope/evidence | вторая запись терялась | обе записи сохранены, идентичность по полному содержимому; полностью одинаковые — одна |
+| R4: LF→CRLF затем повтор | повтор добавлял вторую копию | идемпотентен; частичное восстановление после CRLF работает |
+| Блокировка после kill / живой владелец | вечный timeout / кража lock (F03) | empty/dead/garbage восстанавливаются (5×50 мс grace, recheck перед unlink); живой не крадётся |
+| R5: пауза между openSync и публикацией владельца | второй процесс получал release и удалял чужой lock | второй процесс не может захватить чужой lock; release удаляет только своё поколение; «child-acquired» не появляется |
+| R6: два процесса, один event_id, разное содержимое | оба `persisted`, в памяти два содержания | второй получает CONFLICT (журнал перечитан под блокировкой); точный повтор идемпотентен |
+| R2: Khoj возвращает snippet записи B для проекта A | ok:true, PRIVATE_B с scope:user | хит атрибутируется к локальной записи: из A не виден, из B — со scope B; отсутствующий файл/неатрибутируемый сниппет/неизвестный scope отбрасываются |
+| R3: CRLF-файл в fallback | одна «запись» без meta, весь файл открыт | CRLF-разбор корректный; неизвестный scope виден только на пользовательском уровне; все формы source нормализуются |
+| `save.js` без Khoj/AP/AI | запись шла, durability не гарантирована | `persisted` только после fsync+rename; отдельный процесс находит запись |
+| Crash реального writer | задержки не доказывали точку останова | детерминированные стадии after-lock/after-intent/after-write/after-persisted (exit 23); повтор восстанавливает lock и завершает запись без дублей, финальный повтор идемпотентен |
+| Сбой очереди индекса | причина молчаливо глоталась | запись persisted; `index_error` в журнале; восстановление задач индекса — FIX-07 (запланировано) |
+| Сбой rename в writeAtomic | `.tmp-*` оставался | tmp подчищается, ошибка пробрасывается |
+| Divergence remote | pull без конфликта не доказывал расхождение | A и B пишут в один файл; pull — настоящий content-конфликт; разрешение сохраняет обе версии; persisted ≠ synced (`clean:false`); push только явный |
 
 ## 4. Аварийные точки (порядок операций сохранения)
 
-`validate → hash → conflict-check → fast-path(entryPresent) → acquireLock → intent(log) →
-writeAtomic(файл: tmp → write → fsync → close → rename) → revision → queueIndex → persisted(log) → ответ`
+Фактический порядок в `writeProposal` (a8574f6):
+`validate → hash → acquireLock → conflict-check(журнал свежий) → fast-path(entryPresent) →
+intent(log) → writeAtomic(файл: tmp → write → fsync → close → rename) → revision →
+queueIndex → persisted(log) → ответ`
 
-1. **До intent** (kill сразу): ничего не записано, `persisted` не обещался; повтор = обычная запись.
-2. **После intent, до writeAtomic**: повтор по event_id доводит запись; fast-path вернёт persisted только если записи реально есть в файле.
-3. **Внутри writeAtomic** (tmp записан, rename не выполнен): файл либо прежний, либо полностью новый (rename атомарен); повтор дописывает; на жёстком kill возможен остаточный `.tmp-*` (безвреден, при штатной ошибке подчищается).
-4. **После rename, до ответа**: запись в файле есть; повтор находит entry → `idempotent:true` с той же revision.
-5. **После ответа, при queueIndex**: запись уже `persisted`; потерянная задача индекса восстанавливается (FIX-07, в очереди); причина сбоя очереди видна в `index_error`.
+Детерминированные стадии (реальный writer, `SYSTEM2_CRASH_AT`, `process.exit(23)`, тесты):
+
+1. **after-lock** — после захвата блокировки, до чтения журнала: ничего не записано; lock мёртвого владельца восстанавливается следующим запуском.
+2. **after-intent** — intent в журнале, файлов нет: повтор доводит запись до persisted.
+3. **Внутри writeAtomic** — файл либо прежний, либо полностью новый (rename); остаточный `.tmp-*` возможен только при жёстком kill, при штатной ошибке подчищается.
+4. **after-write** — файлы записаны, журнал ещё intent: повтор находит entryPresent → без дублей → persisted.
+5. **after-persisted** — persisted-журнал записан, до ответа: повтор возвращает `idempotent:true`.
+
+Примечание к п.5: `queueIndex` вызывается ДО persisted-журнала и ответа (исправлено по
+замечанию ревью). Потерянная задача индекса НЕ восстанавливается автоматически — это
+FIX-07 в очереди (запланировано, не реализовано); причина сбоя очереди видна в `index_error`.
 
 Окно «решение только во внутреннем контексте модели» (до обращения к writer) принципиально
 невосстановимо — это граница гарантии, сокращается немедленным сохранением, а не обещанием
@@ -82,17 +90,17 @@ writeAtomic(файл: tmp → write → fsync → close → rename) → revision
 
 ## 5. Схема восстановления
 
-- **Идемпотентность:** стабильный `event_id`; hash содержимого; при повторном событии другой контент → 409 (CONFLICT), тот же → повторный результат.
-- **Присутствие записи:** блочный разбор файла памяти; fast-path `persisted` только если все предложения события реально в файле (не по одному факту intent).
-- **Блокировка:** `wx`-файл с владельцем `{pid, hostname, created, nonce}`; fsync владельца; EEXIST → мёртвый/пустой/мусорный lock отдаётся (50 мс grace для окна «файл создан, владелец не записан»), живой — ожидание 10 мс × 100 → «writer lock timeout»; kill не оставляет блокировку навсегда.
-- **Долговечность:** `fsync` tmp перед `rename`; после ответа `persisted` запись завершена rename'ом на диске (гарантия уровня ФС/ОС при отказе питания).
+- **Идемпотентность:** стабильный `event_id`; hash содержимого; при повторном событии другой контент → 409 (CONFLICT), тот же → повторный результат. Решение о конфликте и изменение журнала — внутри `acquireLock` (R6).
+- **Присутствие записи:** блочный разбор с нормализацией CRLF; fast-path `persisted` только если все предложения события реально в файле (идентичность по полному содержимому записи, R1/R4).
+- **Блокировка (R5):** `wx`-файл с владельцем `{pid, hostname, created, nonce}`; после записи владельца — publish-verify (файл всё ещё наш, иначе повторяем попытку); пустой/мусорный lock — 5×50 мс grace перед восстановлением; мёртвый владелец — повторное чтение непосредственно перед unlink (pid не сменился и всё ещё мёртв); живой — ожидание 10 мс × 100 → «writer lock timeout»; `pidAlive` считает ESRCH мёртвым, EPERM/прочие — живым; `release()` удаляет lock только если содержимое совпадает с нашим pid+nonce.
+- **Долговечность:** `fsync` tmp перед `rename` обеспечивает консистентность содержимого файла памяти до подтверждения `persisted`. Журнал writer использует `appendFileSync` без fsync; метаданные каталога и гарантии конкретной ФС отдельно не обоснованы; отказ питания в ревью НЕ воспроизводился и полной гарантии при нём не объявляется (границы — в `docs/memory-contract.md`).
 
 ## 6. Совместимость
 
-- Формат файлов памяти не менялся (frontmatter-записи `---` + `## statement`); старые записи перечитываются как раньше.
-- Формат журнала writer (`data_dir/writer/processed.jsonl`) не менялся (`intent`/`persisted`, тот же hash-алгоритм — проверяется повторной обработкой).
+- Формат файлов памяти не менялся (frontmatter-записи `---` + `## statement`); CRLF читается наравне с LF; старые записи перечитываются как раньше.
+- Формат журнала writer (`data_dir/writer/processed.jsonl`) не менялся (`intent`/`persisted`, тот же hash-алгоритм).
 - CLI `save.js` (флаги, ответ `{status, written_files, revision}`) и контракт bridge/webhook — без изменений.
-- `search.js` парсит много-записные файлы и фильтрует scope по записи (FIX-03) — формат-совместимо; Khoj-адаптер использует первое frontmatter как раньше (задокументированное ограничение).
+- `search.js`: много-записные файлы и scope по записи (FIX-03/R3); Khoj-адаптер теперь верифицирует каждый хит локально (R2): snippet пересобирается из подтверждённой записи, без локального файла результат отбрасывается. Старое «ограничение первой записи файла» устранено.
 - Конфиг/пути/каталоги (`resolve-paths`, `.local/`) не менялись; `SYSTEM2_ROOT` — как раньше.
 
 ## 7. План миграции (НЕ выполнен — после положительного ревью)
@@ -106,6 +114,6 @@ writeAtomic(файл: tmp → write → fsync → close → rename) → revision
 
 ## 8. Вопросы проверяющему
 
-1. Прогнать команды раздела 2 и сверить с ожиданиями.
-2. Сверить RED-доказательства (снапшот `-original-` + списки �� тикетах).
+1. Прогнать команды раздела 2 (39/39; пробы: `reproduced:false` по R1–R6, код 1) и сверить с ожиданиями.
+2. Сверить RED-доказательства по R1–R6 (списки в тикетах, раздел «Доработка по ревью»).
 3. Подтвердить/отклонить готовность к шагам 3–6 раздела 7.
