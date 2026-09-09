@@ -12,6 +12,7 @@ const writer = mod('writer');
 
 const HOLDER = path.join(__dirname, 'fix-02-holder.cjs');
 const PAUSE = path.join(__dirname, 'fix-02-pause.cjs');
+const RECLAIM_PAUSE = path.join(__dirname, 'fix-02-reclaim-pause.cjs');
 
 function spawnPausedChild(mode, root, eventId, statement) {
   const child = spawn(process.execPath, [PAUSE, mode, eventId, statement].filter(Boolean), {
@@ -206,4 +207,96 @@ test('R6: exact repeat of the same event_id in another process is idempotent', a
   const text = fs.readFileSync(memoryFile(root), 'utf8');
   assert.equal((text.match(/## IDEM_CONTENT/g) || []).length, 1);
   paused.child.kill();
+});
+
+test('S1: stale reclaimer paused before its destructive action cannot delete the live lock of a new owner', async () => {
+  const root = fixture('fix02-s1-reclaim');
+  const gone = spawnSync(process.execPath, ['-e', ''], { encoding: 'utf8' });
+  writeLockFile(root, { pid: gone.pid, hostname: os.hostname(), created: new Date().toISOString(), nonce: 'dead-nonce' });
+  const reclaimer = spawn(process.execPath, [RECLAIM_PAUSE], {
+    env: { ...process.env, SYSTEM2_ROOT: root },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  let err = '';
+  reclaimer.stderr.on('data', d => { err += d; });
+  const done = new Promise(resolve => reclaimer.on('close', code => resolve({ code, err })));
+  let release;
+  try {
+    await waitFor(() => fs.existsSync(path.join(root, 'ready')));
+    // пока реклаймер замер перед разрушающим действием, другой процесс штатно
+    // восстанавливает тот же lock и публикует своё поколение
+    release = writer.acquireLock();
+    const file = lockFile(root);
+    assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, process.pid);
+    fs.writeFileSync(path.join(root, 'resume'), '1');
+    const r = await waitForExit(done);
+    // RED on original: реклаймер по пути удалял живой lock нового поколения
+    // и входил в критическую секцию при неосвобождённой блокировке
+    assert.equal(fs.existsSync(path.join(root, 'child-acquired')), false, r.err);
+    assert.equal(
+      JSON.parse(fs.readFileSync(file, 'utf8')).pid,
+      process.pid,
+      'stale reclaimer must not delete the live lock of the new generation'
+    );
+  } finally {
+    fs.writeFileSync(path.join(root, 'resume'), '1');
+    if (release) release();
+    reclaimer.kill();
+  }
+});
+
+test('S1: a second reclaiming process cannot enter the critical section while the first holds the lock', async () => {
+  const root = fixture('fix02-s1-second-reclaimer');
+  const gone = spawnSync(process.execPath, ['-e', ''], { encoding: 'utf8' });
+  writeLockFile(root, { pid: gone.pid, hostname: os.hostname(), created: new Date().toISOString(), nonce: 'dead-nonce' });
+  // первый реклаймер восстанавливает мёртвый lock и удерживает его до release-me
+  const first = spawn(process.execPath, [RECLAIM_PAUSE, 'hold'], {
+    env: { ...process.env, SYSTEM2_ROOT: root },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  try {
+    // реклаймер приостанавливается перед своим разрушающим действием
+    // (устаревшее решение) — отпускаем его, чтобы он завершил восстановление
+    await waitFor(() => fs.existsSync(path.join(root, 'ready')));
+    fs.writeFileSync(path.join(root, 'resume'), '1');
+    await waitFor(() => fs.existsSync(path.join(root, 'first-acquired')));
+    // второй реклаймер того же мёртвого lock стартует, пока первый держит lock
+    const second = spawn(process.execPath, [RECLAIM_PAUSE], {
+      env: { ...process.env, SYSTEM2_ROOT: root },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let err = '';
+    second.stderr.on('data', d => { err += d; });
+    const done = new Promise(resolve => second.on('close', code => resolve({ code, err })));
+    try {
+      const r = await waitForExit(done);
+      assert.notEqual(r.code, 0, 'second reclaimer must not acquire: ' + r.err);
+      assert.match(r.err, /writer lock timeout/);
+      assert.equal(fs.existsSync(path.join(root, 'child-acquired')), false);
+      assert.equal(
+        JSON.parse(fs.readFileSync(lockFile(root), 'utf8')).pid,
+        first.pid,
+        'first holder lock must survive'
+      );
+    } finally {
+      second.kill();
+    }
+  } finally {
+    fs.writeFileSync(path.join(root, 'resume'), '1');
+    fs.writeFileSync(path.join(root, 'release-me'), '1');
+    await waitForExit(new Promise(resolve => first.on('close', code => resolve({ code, err: '' }))));
+  }
+  assert.equal(fs.existsSync(lockFile(root)), false, 'lock is removed after the holder releases');
+});
+
+test('S1: reclaim of a dead lock leaves no quarantine files behind', () => {
+  const root = fixture('fix02-s1-clean');
+  const gone = spawnSync(process.execPath, ['-e', ''], { encoding: 'utf8' });
+  writeLockFile(root, { pid: gone.pid, hostname: os.hostname(), created: new Date().toISOString(), nonce: 'dead-nonce' });
+  const release = writer.acquireLock();
+  const dir = path.dirname(lockFile(root));
+  // после quarantine-rename путь не остаётся замусоренным: только живой lock
+  assert.deepEqual(fs.readdirSync(dir).filter(f => f.includes('memory.lock')), ['memory.lock']);
+  release();
+  assert.equal(fs.existsSync(lockFile(root)), false);
 });

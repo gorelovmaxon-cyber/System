@@ -50,6 +50,44 @@ function sameOwner(a, owner) {
   return a !== null && a.pid === owner.pid && a.nonce === owner.nonce;
 }
 
+// Устаревшее решение (восстановление пустого/мёртвого lock) никогда не
+// выполняет разрушающее действие по каноническому пути (S1): текущий
+// occupant пути атомарно перемещается в уникальный карантин, содержимое
+// перемещённого файла проверяется, и только verified-карантин удаляется.
+// Иной occupant (живой владелец, сменившееся поколение) возвращается на
+// место. Карантин владением не является: если вернуть его нельзя, удаление
+// безопасно — его владелец publish-verify на каноническом пути не прошёл
+// и повторит попытку.
+function reclaimStale(file, stale) {
+  const quarantine = file + '.reclaim-' + process.pid + '-' + crypto.randomBytes(4).toString('hex');
+  try {
+    fs.renameSync(file, quarantine);
+  } catch {
+    return; // путь уже освобождён/занят другим реклаймером — повторим wx
+  }
+  const moved = lockOwner(quarantine);
+  const verifiedStale = moved === null ||
+    (stale !== null && moved.pid === stale.pid && !pidAlive(moved.pid));
+  if (verifiedStale) {
+    try { fs.unlinkSync(quarantine); } catch {}
+  } else {
+    restoreQuarantine(quarantine, file);
+  }
+}
+
+function restoreQuarantine(quarantine, file) {
+  for (let i = 0; i < 5; i += 1) {
+    if (!fs.existsSync(file)) {
+      try { fs.renameSync(quarantine, file); return; } catch (error) {
+        if (error.code !== 'ENOENT' && error.code !== 'EEXIST') break;
+      }
+    }
+    const wait = new Int32Array(new SharedArrayBuffer(4));
+    Atomics.wait(wait, 0, 0, 10);
+  }
+  try { fs.unlinkSync(quarantine); } catch {}
+}
+
 // Захват блокировки с безопасной публикацией владельца (R5):
 // 1. wx-создание, запись владельца, закрытие, затем подтверждение, что файл
 //    всё ещё наш. Если между созданием и публикацией файл удалили/заменили
@@ -86,14 +124,16 @@ function acquireLock() {
           if (lockOwner(file) !== null) { empty = false; break; }
         }
         if (empty) {
-          try { fs.unlinkSync(file); } catch {}
+          // S1: устаревшее решение не выполняет разрушающее действие по
+          // каноническому пути — occupant перемещается в карантин и проверяется.
+          reclaimStale(file, null);
         }
       } else if (!pidAlive(current.pid)) {
-        // Мёртвый владелец: повторное чтение перед удалением — владелец мог
-        // смениться между чтениями; живой lock другого поколения не трогаем.
+        // Мёртвый владелец: повторное чтение перед восстановлением — владелец
+        // мог смениться между чтениями; живой lock другого поколения не трогаем.
         const recheck = lockOwner(file);
         if (recheck !== null && recheck.pid === current.pid && !pidAlive(recheck.pid)) {
-          try { fs.unlinkSync(file); } catch {}
+          reclaimStale(file, current);
         }
       } else {
         const wait = new Int32Array(new SharedArrayBuffer(4));
