@@ -1,0 +1,321 @@
+{
+  "revision": "ffe215a",
+  "node": "v24.18.0",
+  "results": [
+    {
+      "id": "B01-missing-evidence-accepted",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B01-missing-evidence-accepted-sMw75g",
+      "evidence": {
+        "result": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "723364040f5f"
+        },
+        "undefinedEvidenceWritten": true
+      }
+    },
+    {
+      "id": "B02-junction-write-escape",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B02-junction-write-escape-Y6OGRO",
+      "evidence": {
+        "result": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "e83d0d9490f0"
+        },
+        "outsideWrite": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-external-target-ZTRoCD\\writer-entries.md"
+      }
+    },
+    {
+      "id": "B03-explicit-root-overridden",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B03-explicit-root-overridden-f7bpJe",
+      "evidence": {
+        "explicitRoot": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B03-explicit-root-overridden-f7bpJe",
+        "resolved": {
+          "system_root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-alternate-root-RrTjU1",
+          "memory_root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-alternate-root-RrTjU1\\.claude\\memory",
+          "data_dir": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-alternate-root-RrTjU1\\.local",
+          "localConfig": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B03-explicit-root-overridden-f7bpJe\\config\\system.local.json",
+          "registry": [
+            {
+              "project_id": "A"
+            },
+            {
+              "project_id": "B"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "B04-local-config-drops-search-defaults",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B04-local-config-drops-search-defaults-cmZpuQ",
+      "evidence": {
+        "exampleKhojEnabled": false,
+        "localConfig": {
+          "local_paths": {}
+        },
+        "unexpectedNetworkCalls": 1,
+        "result": {
+          "ok": false,
+          "error": "khoj-unavailable",
+          "message": "synthetic unavailable",
+          "fallback": "local",
+          "fallback_results": []
+        }
+      }
+    },
+    {
+      "id": "B05-custom-memory-khoj-misses",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B05-custom-memory-khoj-misses-0FNwo1",
+      "evidence": {
+        "memoryFile": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B05-custom-memory-khoj-misses-0FNwo1\\custom-memory\\facts\\writer-entries.md",
+        "result": {
+          "ok": true,
+          "results": []
+        }
+      }
+    },
+    {
+      "id": "B06-reinit-erases-handoff",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B06-reinit-erases-handoff-eWDZfa",
+      "evidence": {
+        "savedStateLost": true,
+        "manualOutsidePreserved": true
+      }
+    },
+    {
+      "id": "B07-reindex-same-file-not-rescheduled",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B07-reindex-same-file-not-rescheduled-H0QGVG",
+      "evidence": {
+        "queued": [
+          {
+            "task_id": "idx_218ece3d6a071ef5",
+            "event_id": "manual",
+            "file": ".claude/memory/facts/writer-entries.md",
+            "status": "indexed",
+            "attempts": 1,
+            "timestamp": "2026-09-09T13:42:28.293Z"
+          }
+        ],
+        "secondRun": [],
+        "changedFileNotReindexed": true
+      }
+    },
+    {
+      "id": "B08-index-retries-without-backoff",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B08-index-retries-without-backoff-PDuysI",
+      "evidence": {
+        "calls": 2,
+        "requestedBackoffMs": 60000,
+        "elapsedMs": 21,
+        "status": [
+          {
+            "task_id": "idx_e64315909727c540",
+            "event_id": "evt_backoff",
+            "file": ".claude/memory/facts/writer-entries.md",
+            "status": "failed",
+            "attempts": 2,
+            "timestamp": "2026-09-09T13:42:28.342Z",
+            "reason": "Khoj reindex HTTP 503"
+          }
+        ]
+      }
+    },
+    {
+      "id": "B09-truncated-writer-and-index-logs",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B09-truncated-writer-and-index-logs-JkGmE8",
+      "evidence": {
+        "writerBlocked": true,
+        "indexStatusBlocked": true
+      }
+    },
+    {
+      "id": "B10-truncate-corrupts-utf8",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B10-truncate-corrupts-utf8-0H2FML",
+      "evidence": {
+        "output": "я�...",
+        "limit": 6,
+        "bytes": 8
+      }
+    },
+    {
+      "id": "B11-event-validator-missing-id-and-wrong-arrays",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B11-event-validator-missing-id-and-wrong-arrays-vCzk7T",
+      "evidence": {
+        "acceptedMissingId": true,
+        "acceptedObjectDecisions": true,
+        "count": 1
+      }
+    },
+    {
+      "id": "B12-hook-installer-overrides-custom",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B12-hook-installer-overrides-custom-9UagtH",
+      "evidence": {
+        "previous": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B12-hook-installer-overrides-custom-9UagtH\\custom-hooks",
+        "actual": ".git-hooks-templates",
+        "withoutForce": true
+      }
+    },
+    {
+      "id": "B13-project-id-ignores-local-registry",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B13-project-id-ignores-local-registry-Mluasd",
+      "evidence": {
+        "expected": "proj-a",
+        "actual": "systemqwen"
+      }
+    },
+    {
+      "id": "B14-forbidden-best-hit-hides-allowed",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B14-forbidden-best-hit-hides-allowed-g3lTEw",
+      "evidence": {
+        "result": {
+          "ok": true,
+          "results": []
+        },
+        "allowedFallback": [
+          {
+            "snippet": "## SHARED_QUERY allowed details",
+            "source": ".claude/memory/facts/writer-entries.md",
+            "scope": "A",
+            "status_hint": "observation",
+            "relevance": 0.99
+          }
+        ]
+      }
+    },
+    {
+      "id": "B15-legacy-normalization-conflicts",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B15-legacy-normalization-conflicts-BxxCls",
+      "evidence": {
+        "oldValidIntentSameInputRejected": true
+      }
+    },
+    {
+      "id": "B16-index-duplicate-records-per-batch",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B16-index-duplicate-records-per-batch-PgCCfW",
+      "evidence": {
+        "rawPendingRecords": 2,
+        "uniqueTaskIds": 1
+      }
+    },
+    {
+      "id": "B17-empty-batch-locks-event-id",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B17-empty-batch-locks-event-id-ydpZTo",
+      "evidence": {
+        "first": {
+          "status": "persisted",
+          "written_files": [],
+          "revision": "e3b0c44298fc"
+        },
+        "laterDataRejected": true
+      }
+    },
+    {
+      "id": "B18-figma-extractor-ignores-nodeId",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B18-figma-extractor-ignores-nodeId-95QtU1",
+      "evidence": {
+        "requestedNode": "1",
+        "returnedNodes": [
+          "1",
+          "2"
+        ]
+      }
+    },
+    {
+      "id": "B19-index-invalid-absolute-dotdot-accepted",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B19-index-invalid-absolute-dotdot-accepted-Brp2zA",
+      "evidence": {
+        "input": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B19-index-invalid-absolute-dotdot-accepted-Brp2zA\\.claude\\memory\\..\\..\\outside.md",
+        "accepted": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B19-index-invalid-absolute-dotdot-accepted-Brp2zA\\.claude\\memory\\..\\..\\outside.md",
+        "resolved": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-B19-index-invalid-absolute-dotdot-accepted-Brp2zA\\outside.md"
+      }
+    },
+    {
+      "id": "F05-index-job-lost-on-write",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-F05-index-job-lost-on-write-LOvVOb",
+      "evidence": {
+        "afterRetryTasks": 0
+      }
+    },
+    {
+      "id": "F06-inflight-index-stuck",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-F06-inflight-index-stuck-bBEx7v",
+      "evidence": {
+        "run": [],
+        "requeued": 0,
+        "status": "in-flight"
+      }
+    },
+    {
+      "id": "F07-partial-index-false-success",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-F07-partial-index-false-success-67g66e",
+      "evidence": {
+        "run": [
+          {
+            "task_id": "idx_c5379b41b52157db",
+            "status": "indexed"
+          },
+          {
+            "task_id": "idx_940ae903812a30cd",
+            "status": "failed",
+            "reason": "Khoj reindex HTTP 503"
+          }
+        ],
+        "eventIndexed": true
+      }
+    },
+    {
+      "id": "F08-queue-concurrent-status-loss",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-F08-queue-concurrent-status-loss-qUY2D6",
+      "evidence": {
+        "deliveries": 2,
+        "finalStatus": "failed"
+      }
+    },
+    {
+      "id": "F09-recapture-timestamp-conflict",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-F09-recapture-timestamp-conflict-DDVk1p",
+      "evidence": {
+        "sameId": true,
+        "rejected": true
+      }
+    },
+    {
+      "id": "F10-queue-corrupt-tail-blocks",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-extended-F10-queue-corrupt-tail-blocks-Unra7u",
+      "evidence": {
+        "previousValidEventUnavailable": true
+      }
+    }
+  ]
+}
