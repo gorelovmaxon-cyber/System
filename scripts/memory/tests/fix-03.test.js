@@ -228,3 +228,27 @@ test('R3: relativeSource normalizes all allowed forms', () => {
   assert.equal(relativeSource(memoryRoot, 'C:/outside/memory.md'), null);
   assert.equal(relativeSource(memoryRoot, '..\\..\\evil.md'), null);
 });
+
+test('S2: duplicate scope in a record is fail-closed (hidden from every project; user level sees unknown)', () => {
+  const root = fixture('fix03-s2-dup-scope');
+  // повреждённый/ручной файл: две строки scope (B и user). Последнее значение
+  // не выигрывает — scope двусмыслен и не выводится наружу (запись не
+  // открывается ни одному проекту).
+  writeMemory(root, '---\nstatus: observation\ncategory: facts\nscope: B\nscope: user\nsource: test\nevidence: synthetic\nevent_id: evt_dup\n---\n\n## DUP_SCOPE_MARKER\n');
+  // RED on original: last-wins 'user' открывал запись проекту A
+  assert.equal(localResults('DUP_SCOPE_MARKER', 'A').length, 0);
+  assert.equal(localResults('DUP_SCOPE_MARKER', 'B').length, 0);
+  const user = localResults('DUP_SCOPE_MARKER');
+  assert.equal(user.length, 1);
+  assert.equal(user[0].scope, 'unknown');
+});
+
+test('S2: duplicate status in a record is fail-closed (status_hint unknown)', () => {
+  const root = fixture('fix03-s2-dup-status');
+  writeMemory(root, '---\nstatus: observation\nstatus: confirmed\ncategory: facts\nscope: user\nsource: test\nevidence: synthetic\nevent_id: evt_ds\n---\n\n## DUP_STATUS_MARKER\n');
+  const res = localResults('DUP_STATUS_MARKER', 'A');
+  assert.equal(res.length, 1);
+  // RED on original: last-wins 'confirmed' выдавался наружу как подтверждённый
+  assert.equal(res[0].status_hint, 'unknown');
+  assert.equal(res[0].scope, 'user');
+});

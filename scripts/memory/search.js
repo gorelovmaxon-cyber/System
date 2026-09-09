@@ -27,20 +27,33 @@ function relativeSource(memoryRoot, candidate) {
   return '.claude/memory/' + relative.replaceAll(path.sep, '/');
 }
 
+// Дубликат ключа — двусмысленность (S2): значение не выбирается (fail-closed),
+// ключ удаляется из fields и фиксируется в duplicated. Writer дубликаты не
+// создаёт (валидация S2 в FIX-01); защита — для ручных/повреждённых файлов:
+// дубликат scope/status не выводится наружу (проект запись не получает,
+// пользовательский уровень видит 'unknown').
 function parseFields(text) {
   const fields = {};
+  const counts = new Map();
   for (const line of text.split(/\r?\n/)) {
     const match = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
-    if (match) fields[match[1]] = match[2].replace(/^['"]|['"]$/g, '');
+    if (!match) continue;
+    const key = match[1];
+    const count = (counts.get(key) || 0) + 1;
+    counts.set(key, count);
+    if (count === 1) fields[key] = match[2].replace(/^['"]|['"]$/g, '');
   }
-  return fields;
+  for (const [key, count] of counts) {
+    if (count > 1) delete fields[key];
+  }
+  return { fields, duplicated: [...counts].filter(([, count]) => count > 1).map(([key]) => key) };
 }
 
 function frontmatter(text) {
   const normalized = text.replace(/\r\n/g, '\n');
-  if (!normalized.startsWith('---')) return {};
+  if (!normalized.startsWith('---')) return { fields: {}, duplicated: [] };
   const end = normalized.indexOf('\n---', 3);
-  if (end < 0) return {};
+  if (end < 0) return { fields: {}, duplicated: [] };
   return parseFields(normalized.slice(3, end));
 }
 
@@ -51,16 +64,18 @@ function frontmatter(text) {
 // не зависит от окончаний строк (R3).
 function entries(text) {
   const parts = text.replace(/\r\n/g, '\n').split(/^---\n(?=\S)/m);
-  if (parts.length === 1) return [{ meta: {}, body: text.trim() }];
+  if (parts.length === 1) return [{ meta: {}, duplicated: [], body: text.trim() }];
   const result = [];
   for (let i = 1; i < parts.length; i += 1) {
     const part = parts[i];
     const end = part.indexOf('\n---');
     if (end < 0) {
-      result.push({ meta: parseFields(part), body: '' });
+      const parsed = parseFields(part);
+      result.push({ meta: parsed.fields, duplicated: parsed.duplicated, body: '' });
       continue;
     }
-    result.push({ meta: parseFields(part.slice(0, end)), body: part.slice(end + 4).trim() });
+    const parsed = parseFields(part.slice(0, end));
+    result.push({ meta: parsed.fields, duplicated: parsed.duplicated, body: part.slice(end + 4).trim() });
   }
   return result;
 }
