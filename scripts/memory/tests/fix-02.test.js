@@ -11,6 +11,26 @@ const { fixture, proposal, memoryFile, mod } = require('./helpers');
 const writer = mod('writer');
 
 const HOLDER = path.join(__dirname, 'fix-02-holder.cjs');
+const PAUSE = path.join(__dirname, 'fix-02-pause.cjs');
+
+function spawnPausedChild(mode, root, eventId, statement) {
+  const child = spawn(process.execPath, [PAUSE, mode, eventId, statement].filter(Boolean), {
+    env: { ...process.env, SYSTEM2_ROOT: root },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  let out = '', err = '';
+  child.stdout.on('data', d => { out += d; });
+  child.stderr.on('data', d => { err += d; });
+  const done = new Promise(resolve => child.on('close', code => resolve({ code, out, err })));
+  return { child, done, resume: () => fs.writeFileSync(path.join(root, 'resume'), '1') };
+}
+
+function waitForExit(done, timeoutMs = 10000) {
+  return Promise.race([
+    done,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('child exit timeout')), timeoutMs)),
+  ]);
+}
 
 function lockFile(root) {
   return path.join(root, '.local', 'writer', 'memory.lock');
@@ -85,4 +105,105 @@ test('F03: live lock is not stolen; write times out; after holder exit write suc
   assert.equal(b2.status, 0, 'holder write after release must succeed: ' + b2.stderr);
   assert.match(b2.stdout, /"status":"persisted"/);
   assert.equal(childErr, '');
+});
+
+test('R5: holder paused after open; main acquires lock; child fails and keeps main lock intact', async () => {
+  const root = fixture('fix02-r5-steal');
+  const paused = spawnPausedChild('pause-after-open', root);
+  let release;
+  try {
+    await waitFor(() => fs.existsSync(path.join(root, 'ready')));
+    // главный процесс ждёт окно публикации владельца (5×50 мс), снимает пустую
+    // блокировку и публикует собственного владельца
+    release = writer.acquireLock();
+    const file = lockFile(root);
+    assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, process.pid);
+    assert.equal(fs.existsSync(path.join(root, 'child-acquired')), false);
+    paused.resume();
+    const r = await waitForExit(paused.done);
+    // RED on original: второй процесс получал release и при освобождении удалял
+    // блокировку первого живого владельца
+    assert.notEqual(r.code, 0, 'child must not acquire a second live lock: ' + r.err);
+    assert.match(r.err, /writer lock timeout/);
+    assert.equal(fs.existsSync(path.join(root, 'child-acquired')), false);
+    assert.equal(
+      JSON.parse(fs.readFileSync(file, 'utf8')).pid,
+      process.pid,
+      'child must not delete the lock of the live owner'
+    );
+  } finally {
+    paused.resume();
+    if (release) release();
+    paused.child.kill();
+  }
+});
+
+test('R5: release deletes only its own lock; foreign lock of another generation survives', () => {
+  const root = fixture('fix02-r5-foreign');
+  const release = writer.acquireLock();
+  const file = lockFile(root);
+  assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, process.pid);
+
+  // другой владелец (следующее поколение) заменил lock; release старого поколения
+  // не должен его трогать
+  const gone = spawnSync(process.execPath, ['-e', ''], { encoding: 'utf8' });
+  writeLockFile(root, { pid: gone.pid, hostname: 'other', created: new Date().toISOString(), nonce: 'foreign-nonce' });
+  release();
+  assert.ok(fs.existsSync(file), 'release must not delete a foreign lock');
+  assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, gone.pid);
+
+  // собственный lock своего поколения освобождается штатно
+  const release2 = writer.acquireLock();
+  release2();
+  assert.equal(fs.existsSync(file), false);
+});
+
+test('R6: conflict decision is made under the lock; racing process gets CONFLICT', async () => {
+  const root = fixture('fix02-r6-race');
+  const paused = spawnPausedChild('pause-before-open', root);
+  try {
+    await waitFor(() => fs.existsSync(path.join(root, 'ready')));
+    // родитель сохраняет первым, пока ребёнок ещё до создания lock
+    const parent = writer.writeProposal('evt_race', [proposal('PARENT_CONTENT')]);
+    assert.equal(parent.status, 'persisted');
+    paused.resume();
+    const r = await waitForExit(paused.done);
+    // RED on original: журнал не перечитывался под блокировкой — оба процесса
+    // возвращали persisted с разным содержимым одного event_id
+    assert.notEqual(r.code, 0, 'child must fail with CONFLICT: ' + r.out);
+    assert.match(r.err, /different content/);
+    const text = fs.readFileSync(memoryFile(root), 'utf8');
+    assert.match(text, /## PARENT_CONTENT/);
+    assert.equal((text.match(/## CHILD_CONTENT/g) || []).length, 0);
+  } finally {
+    paused.resume();
+    paused.child.kill();
+  }
+});
+
+test('R6: sequential write of different content to same event_id in another process conflicts', async () => {
+  const root = fixture('fix02-r6-seq');
+  writer.writeProposal('evt_seq', [proposal('SEQ_PARENT')]);
+  // без гонки: ребёнок стартует после завершённой записи родителя
+  const paused = spawnPausedChild('pause-before-open', root, 'evt_seq');
+  paused.resume();
+  const r = await waitForExit(paused.done);
+  assert.notEqual(r.code, 0, 'child must fail with CONFLICT: ' + r.out);
+  assert.match(r.err, /different content/);
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal((text.match(/## CHILD_CONTENT/g) || []).length, 0);
+  paused.child.kill();
+});
+
+test('R6: exact repeat of the same event_id in another process is idempotent', async () => {
+  const root = fixture('fix02-r6-idem');
+  writer.writeProposal('evt_idem', [proposal('IDEM_CONTENT')]);
+  const paused = spawnPausedChild('pause-before-open', root, 'evt_idem', 'IDEM_CONTENT');
+  paused.resume();
+  const r = await waitForExit(paused.done);
+  assert.equal(r.code, 0, r.err);
+  assert.match(r.out, /"idempotent":true/);
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal((text.match(/## IDEM_CONTENT/g) || []).length, 1);
+  paused.child.kill();
 });

@@ -29,12 +29,15 @@ function lockOwner(file) {
   }
 }
 
+// Живой pid — только ESRCH (нет такого процесса) трактуется как мёртвый.
+// EPERM/прочие ошибки доступа означают «процесс существует, но недоступен
+// проверке» — блокировку не крадём (R5).
 function pidAlive(pid) {
   try {
     process.kill(pid, 0);
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    return error.code === 'ESRCH' ? false : true;
   }
 }
 
@@ -43,6 +46,19 @@ function writeOwner(fd, owner) {
   fs.fsyncSync(fd);
 }
 
+function sameOwner(a, owner) {
+  return a !== null && a.pid === owner.pid && a.nonce === owner.nonce;
+}
+
+// Захват блокировки с безопасной публикацией владельца (R5):
+// 1. wx-создание, запись владельца, закрытие, затем подтверждение, что файл
+//    всё ещё наш. Если между созданием и публикацией файл удалили/заменили
+//    (конкурентное восстановление «пустой» блокировки) — захват потерян:
+//    чужую блокировку не удаляем, повторяем попытку.
+// 2. Пустая/мусорная блокировка: несколько чтений в окне (~250 мс), прежде
+//    чем считать её осиротевшей; владелец мог ещё не успеть опубликоваться.
+// 3. Освобождение удаляет lock-файл только если он всё ещё принадлежит нам;
+//    блокировку другого поколения не трогаем.
 function acquireLock() {
   const file = lockPath();
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -53,31 +69,52 @@ function acquireLock() {
     nonce: crypto.randomBytes(8).toString('hex'),
   };
   for (let attempt = 0; attempt < 100; attempt += 1) {
+    let fd;
     try {
-      const fd = fs.openSync(file, 'wx');
-      writeOwner(fd, owner);
-      return () => {
-        try { fs.closeSync(fd); } catch {}
-        try { fs.unlinkSync(file); } catch {}
-      };
+      fd = fs.openSync(file, 'wx');
     } catch (error) {
       if (error.code !== 'EEXIST') throw error;
-      if (lockOwner(file) === null) {
-        // Окно «файл открыт, владелец ещё не записан»: дать владельцу дописать
-        // и проверить повторно, прежде чем считать блокировку осиротевшей.
-        const wait = new Int32Array(new SharedArrayBuffer(4));
-        Atomics.wait(wait, 0, 0, 50);
-        if (lockOwner(file) === null) {
-          try { fs.unlinkSync(file); } catch {}
-          continue;
+      const current = lockOwner(file);
+      if (current === null) {
+        // Окно «файл открыт, владелец ещё не записан»: несколько перечитываний,
+        // прежде чем считать блокировку осиротевшей (таймаут-пауза не является
+        // доказательством смерти процесса).
+        let empty = true;
+        for (let i = 0; i < 5; i += 1) {
+          const wait = new Int32Array(new SharedArrayBuffer(4));
+          Atomics.wait(wait, 0, 0, 50);
+          if (lockOwner(file) !== null) { empty = false; break; }
         }
-      } else if (!pidAlive(lockOwner(file).pid)) {
-        try { fs.unlinkSync(file); } catch {}
-        continue;
+        if (empty) {
+          try { fs.unlinkSync(file); } catch {}
+        }
+      } else if (!pidAlive(current.pid)) {
+        // Мёртвый владелец: повторное чтение перед удалением — владелец мог
+        // смениться между чтениями; живой lock другого поколения не трогаем.
+        const recheck = lockOwner(file);
+        if (recheck !== null && recheck.pid === current.pid && !pidAlive(recheck.pid)) {
+          try { fs.unlinkSync(file); } catch {}
+        }
+      } else {
+        const wait = new Int32Array(new SharedArrayBuffer(4));
+        Atomics.wait(wait, 0, 0, 10);
       }
-      const wait = new Int32Array(new SharedArrayBuffer(4));
-      Atomics.wait(wait, 0, 0, 10);
+      continue;
     }
+    try {
+      writeOwner(fd, owner);
+      fs.closeSync(fd);
+    } catch (error) {
+      try { fs.closeSync(fd); } catch {}
+      throw error;
+    }
+    if (!sameOwner(lockOwner(file), owner)) continue;
+    return () => {
+      const current = lockOwner(file);
+      if (sameOwner(current, owner)) {
+        try { fs.unlinkSync(file); } catch {}
+      }
+    };
   }
   throw new Error('writer lock timeout');
 }
@@ -183,6 +220,11 @@ function writeProposal(eventId, input) {
   try {
     const proposals = Array.isArray(input) ? input.map(validateProposal) : [validateProposal(input)];
     const hash = proposalHash(eventId, proposals);
+    const paths = resolvePaths();
+    // Решение о конфликте/повторе и изменение журнала — внутри блокировки (R6):
+    // проверка журнала «до» блокировки пропускала конфликт одного event_id
+    // между процессами — оба возвращали persisted с разным содержимым.
+    release = acquireLock();
     const previous = writerLog.get(eventId);
     if (previous && previous.hash !== hash) {
       const error = new Error('event_id already persisted with different content');
@@ -193,8 +235,6 @@ function writeProposal(eventId, input) {
         proposals.every(proposal => entryPresent(targetFile(proposal.category), eventId, proposal))) {
       return { status: 'persisted', written_files: previous.written_files, revision: previous.revision, idempotent: true };
     }
-    const paths = resolvePaths();
-    release = acquireLock();
     const files = [];
     const revisions = [];
     writerLog.append({ event_id: eventId, hash, status: 'intent', indexed: false });
