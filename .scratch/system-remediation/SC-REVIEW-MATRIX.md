@@ -1,0 +1,59 @@
+# SC-REVIEW-MATRIX — перепроверка SC-01…SC-18 (2026-09-09)
+
+Ревизия проверки: `69a257c` (HEAD совпадает с проверенной ревизией аудита).
+Метод: тексты SC-тикетов/отчётов сверены с текущим кодом (`scripts/memory/`, `config/`, hooks, Figma MCP)
+и harness-воспроизведением дефектов. Статусы из исходных документов фиксируются историей; здесь —
+актуальная классификация проверяющего (автора+исполнителя), не замена независимой приёмки.
+
+Сокращения классификации: **код** — дефект реализации; **тикет** — дефект документации/статусов/критериев;
+**непроверено** — не подтверждено результатами; **внешн** — внешняя блокировка (сервис/доступ/второй ПК);
+**готово** — подтверждено на этой машине или локальными тестами.
+
+| SC | R | Критерии (кратко) | Фактическая реализация | Доказательства | Классификация | Связанные FIX |
+|---|---|---|---|---|---|---|
+| SC-01 Процесс и среда | R01,R12 | роли/шаблон согласованы; ENVIRONMENT с датами; без безусловного push | workflow, шаблон, ENVIRONMENT.md существуют и согласованы; роли в docs/system-workflow.md | ENVIRONMENT.md — результаты команд; приёмка исполнителя внутри отчёта (не независимая) | готово (локально); замечание: Phase 0.5 в общем коммите `e4fe4aa`, не отдельным | FIX-10 |
+| SC-02 Корень и реестр | R02 | resolver даёт единый корень; init-local-config без дублей; registry стабилен; backup до правок | resolve-paths.js, init-local-config.js существуют; .gitignore покрывает system.local.json и .local/; код сверен | нет SC-02-REPORT; только коммит `38ab421` и строка матрицы; проверки не записаны | непроверено (evidence); код работает по моим тестам | FIX-10 (статус), FIX-11 (проверка) |
+| SC-03 Качество памяти | R03 | статусы observation/confirmed/superseded; конфликт → supersedes в обе стороны; source/evidence; unverified+дата | .claude/memory/README.md канон формата существует; writer валидирует статусы/categories | нет SC-03-REPORT; только коммит `f0a2628`; сценарии 2,3 не задокументированы | непроверено (evidence); контракт superseded/удаление не описан явно | FIX-09, FIX-10 |
+| SC-04 Khoj | R04 | health/search реальные; версия = ENVIRONMENT; нет секретов в индексе | ничего не установлено; services/khoj/README.md — runbook с гейтом Python 3.12; config.example.yml НЕ создан | отчёт честный: khoj нет, py 3.14, PyPI требует <3.13, dry-run остановлен | внешн (Python 3.12/Docker); тикет: контракт конфигурации не зафиксирован в ENVIRONMENT | FIX-11 |
+| SC-05 Retrieval | R05,R04 | 5 контрольных вопросов; fallback при отказе; budget; нет путей вне memory | search.js адаптер + localResults существуют; fallback работает (проверено ��а этой машине) | отчёт: fallback `ok:false,error:khoj-unavailable`; «5 вопросов» не задокументированы; `node --check` подан как успех | код: F04 (утечка проектов) воспроизведена; тикет: противоречие node --check | FIX-03, FIX-10 |
+| SC-06 Activepieces | R06 | compose healthy; flow без ключей; контейнер→host связность; секреты вне Git | docker-compose.yml (0.86.3) и .env.example с AP_HOST_BRIDGE_URL существуют | Docker/WSL не установлены — ни одна проверка не выполнена; честно помечено | внешн (Docker/WSL) | FIX-11 |
+| SC-07 Capture/queue | R07 | долговечная очередь; повторы без дублей; обрыв до ack; queue-status; без `.local/` в Git | events.js/queue.js/capture.js/deliver.js/queue-status.js существуют; `.local` gitignored | отчёт: UTF-8 события, pending при недоступном endpoint, повторный event_id без дубля | код: F08, F09, F10 воспроизведены; тикет: 4 разных статуса у одного тикета | FIX-05, FIX-06, FIX-10 |
+| SC-08 Writer/bridge | R03,R07 | 200 persisted; повтор без дубля; параллельные /write; 400/401/409; перезапуск без дубля | writer.js/bridge-server.js/writer-log.js/save.js существуют; контракт в memory-contract.md | нет SC-08-REPORT; SC-09-REPORT ссылается «tested independently» без выводов | код: F01, F02, F03 воспроизведены; непроверено (нет отчёта) | FIX-01, FIX-02, FIX-04 |
+| SC-09 AI-flow | R06,R07 | полный flow событие→AI→writer; ошибочный AI JSON; повторы без дубля | memory-event-to-writer.json — **blueprint** (HANDOFF подтверждает), не импортируемый экспорт | ни один сценарий не выполнялся (AP не запущен, нет AI-ключа) | внешн (Docker/AP/AI-ключ); тикет: blueprint вместо flow, контракт webhook не уточнён | FIX-09, FIX-11 |
+| SC-10 Индекс | R08 | новое знание находится; изменение/удаление/superseded; отказ Khoj → persisted; без циклов | indexer.js/indexer-log.js существуют; контракт persisted/indexed разделён | отчёт: одна задача на event, `--run` → failed с причиной «not configured»; live не проверялось | код: F05, F06, F07 воспроизведены; непроверено (live reindex) | FIX-07, FIX-08, FIX-09 |
+| SC-11 Hooks/sync | R07,R09 | install-hooks идемпотентен; commit → одно событие; divergence без потерь; один источник hook | .git-hooks-templates/{post-commit,install-hooks.sh}, sync.js, project-id.js существуют | отчёт: клон — установщик 2 раза, пустой commit → одно pending-событие; divergence-сценарий НЕ описан; на этой машине hooksPath не установлен | непроверено (divergence); тикет: критерий 5 без результата | FIX-11, FIX-10 |
+| SC-12 Bootstrap/HANDOFF | R02,R07,R09 | init проекта; идемпотентность; ручная правка в маркерах; одно session-summary | init-project.js, скилл project-memory-init, маркеры в CLAUDE.md/HANDOFF.md (1/1, проверено) | отчёт: init идемпотентен, .system-memory не создан; полный сценарий ручной правки не повторён в чистом клоне | непроверено (частично); код работает по проверкам отчёта | FIX-11 |
+| SC-13 Второй ПК | R09,R13 | doctor; клон → bootstrap → поиск; конфликт merge без force; второй ПК | doctor.js, bootstrap.js, docs/second-pc.md существуют | отчёт: doctor честно сообщает отсутствие сервисов; клон bootstrap прошёл; живой второй ПК не проверялся | внешн (второй ПК); код работает локально | FIX-11 |
+| SC-14 Figma MCP | R10 | fixture-тесты; реальный SDK-клиент; ошибки nodeId; README; .env вне Git | stdio MCP на @modelcontextprotocol/sdk 1.30.0, tool figma_get_design_tokens | отчёт: `npm test` 2/2 (fixture + SDK-клиент); live-запрос невозможен (нет ключа/макета) | готово (локально); внешн (live Figma) | FIX-11 (повторный прогон) |
+| SC-15 Маршруты | R11 | 3 примера выбирают маршруты; общая память без смешивания; Gemini внешний | route.js, docs/routes/{dev,sites,marketing}-workflow.md существуют; start/system-workflow ссылаются | отчёт: 4 dry-run прошли; RELEASE-REPORT ставит R11 done при awaiting-validation в отчёте | тикет: расхождение статусов R11; живые клиентские проекты недоступны | FIX-10, FIX-11 |
+| SC-16 Evidence/экономика | R12 | дефект-инъекция ловится; node --check ≠ успех; затраты реальные или unknown | templates/evidence-report.md, review-template.md, evidence-check/qa обновлены | отчёт: синтетический отчёт с пропущенным требованием отклонён; wall-clock/retries — unknown с причиной | готово (локально); тикет: отчёт SC-05 сам нарушает правило node --check | FIX-10 |
+| SC-17 Эксплуатация | R13 | runbook до health; restore; перестройка инд��кса; ручная настройка | docs/system-operations.md переписан; ссылки из QUICKSTART/usage | отчёт: doctor.js --json, sync.js --status запущены; живые прогоны блокированы | внешн (Khoj/Docker для restore); готово (документация) | FIX-11 |
+| SC-18 Приёмка | R01–R13 | полный цикл; повторы; конфликты; RELEASE-REPORT с evidence; NOT READY | RELEASE-REPORT.md с матрицей R01–R13 и честным NOT READY | acceptance runs локальные (Figma 2/2, fallback, hook, route dry-runs); полный цикл не пройден | внешн (весь live-стек); тикет: внутренние несогласованности матрицы | FIX-10, все FIX |
+
+## Итог по R01…R13 (актуальный, не заменяет независимую приёмку)
+
+| R | Статус | Основание |
+|---|---|---|
+| R01 | готово (локально) | workflow/шаблон согласованы; перепроверено |
+| R02 | непроверено→проверяется | resolver работает (тесты FIX-11); evidence-отчёт отсутствовал |
+| R03 | частично | формат/статусы есть; контракт superseded/удаление уточняется (FIX-09); сохранность старых записей проверяется |
+| R04 | внешн | нет Python 3.12/Docker; Khoj не установлен |
+| R05 | код F04 исправляется | fallback работает; изоляция проектов чинится (FIX-03) |
+| R06 | внешн | нет Docker/WSL; flow не запущен |
+| R07 | код F08–F10 исправляется | очередь работает на happy-path; владение/восстановление чинятся (FIX-05/06) |
+| R08 | код F05–F07 исправляется | индекс��ый контракт чинится (FIX-07/08); live reindex внешн |
+| R09 | внешн | второй ПК недоступен; hooks/divergence проверяются на клоне (FIX-11) |
+| R10 | готово локально / внешн live | тесты 2/2 повторно прогоняются; live Figma требует ключ+макет |
+| R11 | готово (dry-run) / внешн live | маршруты работают; клиентские проекты недоступны |
+| R12 | готово (механизм) | evidence-шаблоны работают; реальные затраты — unknown |
+| R13 | частично / внешн | runbook и doctor есть; restore сервисов блокирован |
+
+## Общие дефекты отчётности (исправляются в FIX-10)
+
+1. Шапки SC-02…SC-18 — «Status: planned» при выполненных работах.
+2. SC-07: SUMMARY=done, отчёт=awaiting-review, шапка=planned, RELEASE R07=awaiting-validation.
+3. SC-15: RELEASE R11=done, отчёт/SUMMARY=awaiting-validation.
+4. SUMMARY: историческая вводная «тикеты не выполнялись» противоречит выполненным scoped-коммитам.
+5. SC-02/03/08 «done» без отчётных файлов и задокументированных проверок.
+6. SC-05: `node --check` подан как прошедшая проверка (противоречит SC-16).
+7. Все тикеты предписывают `E:\System2`; актуальный корень — `D:\SystemTheBest\System`.
