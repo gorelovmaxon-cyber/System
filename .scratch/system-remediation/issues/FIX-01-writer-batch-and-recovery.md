@@ -3,7 +3,7 @@
 **What to build:** Writer сохраняет все предложения одного события (включая несколько предложений одной категории) без потерь и без дублей; незавершённая запись (intent без файлов, частичная запись нескольких файлов) восстанавливается повторным вызовом, а не выдаётся за успех.
 **Requirement IDs:** SC-08 (R03, R07), дефекты F01, F02.
 **Blocked by:** none
-**Status:** planned
+**Status:** awaiting-review
 **Перед началом работы:** корень `D:\SystemTheBest\System`, HEAD `69a257c`.
 
 ## Контекст
@@ -40,10 +40,33 @@
 
 1. `hash = proposalHash(eventId, proposals)` (существующий, по всем предложениям). `previous = writerLog.get(eventId)`.
 2. Если `previous` и `previous.hash !== hash` → `CONFLICT` (как сейчас).
-3. Быстрый путь идемпотентности: `previous.status === 'persisted'` и hash совпал и **все записи присутствуют** в целевых файлах (проверка: `existing.includes(entryText(eventId, proposal))` по каждому предложению в `targetFile(category)`) → вернуть `{..., written_files: previous.written_files, revision: previous.revision, idempotent:true}`. (Индексная сверка — в FIX-07.)
-4. Иначе — путь записи/восстановления: под блокировкой для каждого предложения: если точный текст его записи (`entryText`) уже есть в файле → пропустить (это и устраняет F01, и не создаёт дублей при восстановлении); иначе `writeAtomic` (существующая атомарная запись).
+3. Быстрый путь идемпотентности: `previous.status === 'persisted'` и hash совпал и **все записи присутствуют** в целевых файлах (проверка по entry-блоку: `entryPresent(file, eventId, proposal)` — блок с `event_id` и точным statement) → вернуть `{..., written_files: previous.written_files, revision: previous.revision, idempotent:true}`. (Индексная сверка — в FIX-07.)
+4. Иначе — путь записи/восстановления: под блокировкой для каждого предложения: если `entryPresent` истинно → пропустить (это и устраняет F01, и не создаёт дублей при восстановлении); иначе `writeAtomic` (существующая атомарная запись).
 5. В журнал: intent при входе в путь записи; по завершении — persisted с written_files/revision. Повтор intent при восстановлении допустим (журнал append-only, последняя запись выигрывает).
-6. Очередь индексации — без изменений здесь (см. FIX-07), существующий try/catch сохранить.
+6. Очередь индексации: существующий вызов сохранён; при падении `queueIndex` в журнал persisted дописывается `index_error: <причина>` (видимая причина), запись не теряется.
+
+## Результаты (2026-09-09)
+
+**Красный на исходной реализации `69a257c`** (до правки), `node --test scripts/memory/tests/fix-01.test.js`:
+- ✖ F01 batch: в файле только `## FIRST_MARKER`, `## SECOND_MARKER` отсутствует (дефект F01 воспроизведён).
+- ✖ F02 intent: `fs.existsSync(memoryFile)` — false: intent выдан за persisted без файла (дефект F02 воспроизведён).
+- ✖ F02 partial: ENOENT для `decisions/writer-entries.md` — частичная запись не восстановлена.
+- ✔ control + queue: точный повтор/конфликт/валидация/задачи индекса — работают.
+
+**Зелёный после правки** (5/5):
+- F01: оба маркера в файле; повтор → `idempotent:true`, число вхождений каждого маркера = 1.
+- F02 intent: файл создан, `## NEVER_WRITTEN` присутствует; повтор без дублей.
+- F02 partial: facts не дублируется, decisions дописан; повтор → idempotent.
+- F01 queue: 2 pending-задачи индекса; повторный вызов не добавляет задач.
+- control: revision стабильна, intent-строк не прибавилось, CONFLICT для другого содержимого.
+
+**Что изменено в `scripts/memory/writer.js`:** добавлены `entryBlocks`/`entryStatement`/`entryPresent` (разбиение файла на записи по границе `---\n` начала frontmatter; проверка наличия конкретной записи по `event_id` + полному statement). `writeProposal`: быстрый путь идемпотентности только при `previous.status==='persisted'` И всех присутствующих записях; иначе путь восстановления (пропуск уже записанных, допись недостающих); `index_error` в журнал при падении `queueIndex`. Контракт ответа (persisted/written_files/revision/idempotent, CONFLICT 409, валидация 400) не изменён.
+
+**П��оверка соседних сценариев:** CLI `save.js` на синтетической памяти — запись `{status:"persisted"}`; повтор `{..., idempotent:true}` с той же revision; одно вхождение маркера.
+
+**Аудит-харнесс после фикса** (`node .scratch/system-remediation/evidence/core-audit.cjs`, exit 1, evidence `core-audit-results-after-fix01-2026-09-09.json`): `F01-batch-loss → fixed`, `F02-intent-false-success → fixed`, `controls-writer-and-http-auth → прошёл` (поведение не сломано); F03–F10 по-прежнему воспроизводятся (очередь FIX-02…08).
+
+**Ограничение реализации:** проверка по entry-блоку корректна для записей, создаваемых writer'ом (statement не содержит строк, начинающихся с `---`).
 
 ## Критерии приёмки
 

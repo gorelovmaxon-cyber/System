@@ -79,6 +79,23 @@ function entryText(eventId, proposal) {
   return fields.join('\n');
 }
 
+function entryBlocks(text) {
+  return text.split(/\n(?=---\n(?!\n))/).filter(block => block.trim().length > 0);
+}
+
+function entryStatement(block) {
+  const marker = block.indexOf('\n## ');
+  return marker >= 0 ? block.slice(marker + 4).replace(/\n$/, '') : null;
+}
+
+function entryPresent(file, eventId, proposal) {
+  if (!fs.existsSync(file)) return false;
+  const existing = fs.readFileSync(file, 'utf8');
+  return entryBlocks(existing).some(block =>
+    block.includes('event_id: ' + eventId) && entryStatement(block) === proposal.statement
+  );
+}
+
 function pathInsideMemory(file) {
   const root = path.resolve(resolvePaths().memory_root);
   const target = path.resolve(file);
@@ -103,12 +120,13 @@ function writeProposal(eventId, input) {
     const proposals = Array.isArray(input) ? input.map(validateProposal) : [validateProposal(input)];
     const hash = proposalHash(eventId, proposals);
     const previous = writerLog.get(eventId);
-    if (previous) {
-      if (previous.hash !== hash) {
-        const error = new Error('event_id already persisted with different content');
-        error.code = 'CONFLICT';
-        throw error;
-      }
+    if (previous && previous.hash !== hash) {
+      const error = new Error('event_id already persisted with different content');
+      error.code = 'CONFLICT';
+      throw error;
+    }
+    if (previous && previous.status === 'persisted' &&
+        proposals.every(proposal => entryPresent(targetFile(proposal.category), eventId, proposal))) {
       return { status: 'persisted', written_files: previous.written_files, revision: previous.revision, idempotent: true };
     }
     const paths = resolvePaths();
@@ -118,10 +136,9 @@ function writeProposal(eventId, input) {
     writerLog.append({ event_id: eventId, hash, status: 'intent', indexed: false });
     for (const proposal of proposals) {
       const file = targetFile(proposal.category);
-      const existing = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
-      if (existing.includes('event_id: ' + eventId)) {
+      if (entryPresent(file, eventId, proposal)) {
         files.push(file);
-        revisions.push(crypto.createHash('sha256').update(existing).digest('hex').slice(0, 12));
+        revisions.push(crypto.createHash('sha256').update(fs.readFileSync(file, 'utf8')).digest('hex').slice(0, 12));
         continue;
       }
       const content = writeAtomic(file, entryText(eventId, proposal));
@@ -130,11 +147,12 @@ function writeProposal(eventId, input) {
     }
     const revision = crypto.createHash('sha256').update(revisions.join('|')).digest('hex').slice(0, 12);
     const result = { status: 'persisted', written_files: files.map(file => path.relative(paths.system_root, file).replaceAll(path.sep, '/')), revision };
-    writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision, indexed: false });
     try {
       queueIndex(eventId, files);
-    } catch {
+      writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision, indexed: false });
+    } catch (error) {
       // Persistence must not fail because the derived index queue is unavailable.
+      writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision, indexed: false, index_error: error.message });
     }
     return result;
   } finally {
