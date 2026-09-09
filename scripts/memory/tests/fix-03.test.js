@@ -6,7 +6,16 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { fixture, mod } = require('./helpers');
 
-const { localResults, searchKhoj } = mod('search');
+const { localResults, searchKhoj, relativeSource } = mod('search');
+
+function stubKhoj(resultsPayload) {
+  const originalFetch = global.fetch;
+  global.fetch = async (url) => {
+    if (String(url).includes('/health')) return { ok: true, text: async () => '{}' };
+    return { ok: true, text: async () => JSON.stringify({ results: resultsPayload }) };
+  };
+  return () => { global.fetch = originalFetch; };
+}
 
 function entry(scope, status, statement) {
   return '---\nstatus: ' + status + '\ncategory: facts\nscope: ' + scope + '\nsource: test\nevidence: synthetic\nevent_id: evt_' + statement + '\n---\n\n## ' + statement + '\n';
@@ -44,13 +53,15 @@ test('F04: isolation holds with reversed order (project entry written first)', (
   assert.equal(localResults('PUBLIC_LATER', 'B').length, 1);
 });
 
-test('F04: hand-written single-entry file without frontmatter still found', () => {
+test('R3: hand-written single-entry file without frontmatter is visible only at user level', () => {
   const root = fixture('fix03-hand');
   const file = path.join(root, '.claude/memory/user-profile/note.md');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, '# Personal note\nHAND_NOTE_MARKER body', 'utf8');
 
-  const res = localResults('HAND_NOTE_MARKER', 'A');
+  // RED on original: неизвестный scope открывался любому проекту
+  assert.equal(localResults('HAND_NOTE_MARKER', 'A').length, 0);
+  const res = localResults('HAND_NOTE_MARKER');
   assert.equal(res.length, 1);
   assert.equal(res[0].scope, 'unknown');
   assert.equal(res[0].source, '.claude/memory/user-profile/note.md');
@@ -93,4 +104,127 @@ test('F04: searchKhoj local fallback is isolated per project', async () => {
   const fromB = await searchKhoj('PRIVATE_FB', 'B');
   assert.equal(fromB.fallback_results.length, 1);
   assert.equal(fromB.fallback_results[0].scope, 'B');
+});
+
+test('R2: Khoj positive path attributes each hit to the local entry and keeps project isolation', async () => {
+  const root = fixture('fix03-r2-khoj');
+  writeMemory(root, entry('user', 'observation', 'PUBLIC_KHOJ') + entry('B', 'confirmed', 'PRIVATE_B'));
+  const restore = stubKhoj([
+    { source: 'facts/writer-entries.md', snippet: 'PRIVATE_B', score: 0.9 },
+  ]);
+  try {
+    // RED on original: snippet брался из сервиса, scope — первой записи файла (user)
+    const fromA = await searchKhoj('PRIVATE_B', 'A', { force: true });
+    assert.equal(fromA.ok, true, JSON.stringify(fromA));
+    assert.equal(fromA.results.length, 0, 'project A must not see B entry: ' + JSON.stringify(fromA));
+
+    const fromB = await searchKhoj('PRIVATE_B', 'B', { force: true });
+    assert.equal(fromB.ok, true, JSON.stringify(fromB));
+    assert.equal(fromB.results.length, 1);
+    assert.equal(fromB.results[0].scope, 'B');
+    assert.equal(fromB.results[0].status_hint, 'confirmed');
+    assert.match(fromB.results[0].snippet, /PRIVATE_B/);
+  } finally {
+    restore();
+  }
+});
+
+test('R2: all allowed source forms resolve to the same local file', async () => {
+  const root = fixture('fix03-r2-forms');
+  writeMemory(root, entry('user', 'observation', 'FORM_ENTRY'));
+  const restore = stubKhoj([
+    { source: '.claude/memory/facts/writer-entries.md', snippet: 'FORM_ENTRY', score: 0.8 },
+    { source: './facts/writer-entries.md', snippet: 'FORM_ENTRY', score: 0.8 },
+    { source: './.claude/memory/facts/writer-entries.md', snippet: 'FORM_ENTRY', score: 0.8 },
+    { source: 'facts/writer-entries.md', snippet: 'FORM_ENTRY', score: 0.8 },
+  ]);
+  try {
+    const r = await searchKhoj('FORM_ENTRY', 'A', { force: true, limit: 10 });
+    assert.equal(r.ok, true, JSON.stringify(r));
+    // RED on original: './.claude/...' не нормализовался, файл не читался
+    assert.equal(r.results.length, 4);
+    assert.ok(r.results.every(x => x.source === '.claude/memory/facts/writer-entries.md'));
+  } finally {
+    restore();
+  }
+});
+
+test('R2: hit whose local file is missing is dropped; service text is not trusted', async () => {
+  const root = fixture('fix03-r2-missing');
+  writeMemory(root, entry('user', 'observation', 'PRESENT_ENTRY'));
+  const restore = stubKhoj([
+    { source: 'facts/writer-entries.md', snippet: 'PRESENT_ENTRY', score: 0.9 },
+    { source: 'patterns/missing.md', snippet: 'GHOST_MARKER', score: 0.9 },
+  ]);
+  try {
+    const r = await searchKhoj('GHOST_MARKER', 'A', { force: true, limit: 10 });
+    assert.equal(r.ok, true, JSON.stringify(r));
+    assert.equal(r.results.length, 0, 'missing local file must not produce results');
+  } finally {
+    restore();
+  }
+});
+
+test('R2: hit not confirmed by any local entry is dropped', async () => {
+  const root = fixture('fix03-r2-unattrib');
+  writeMemory(root, entry('user', 'observation', 'REAL_ENTRY'));
+  const restore = stubKhoj([
+    { source: 'facts/writer-entries.md', snippet: 'GHOST_MARKER', score: 0.9 },
+  ]);
+  try {
+    const r = await searchKhoj('GHOST_MARKER', 'A', { force: true });
+    assert.equal(r.ok, true, JSON.stringify(r));
+    assert.equal(r.results.length, 0, 'unconfirmed hit must be dropped');
+  } finally {
+    restore();
+  }
+});
+
+test('R2: hit with unknown scope is hidden from projects, visible at user level', async () => {
+  const root = fixture('fix03-r2-unknown-scope');
+  const file = path.join(root, '.claude/memory/patterns/manual.md');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, '# manual\nUNKNOWN_SCOPE_MARKER body', 'utf8');
+  const restore = stubKhoj([
+    { source: 'patterns/manual.md', snippet: 'UNKNOWN_SCOPE_MARKER', score: 0.9 },
+  ]);
+  try {
+    const fromA = await searchKhoj('UNKNOWN_SCOPE_MARKER', 'A', { force: true });
+    assert.equal(fromA.ok, true, JSON.stringify(fromA));
+    assert.equal(fromA.results.length, 0, 'unknown scope must not open to a project');
+
+    const user = await searchKhoj('UNKNOWN_SCOPE_MARKER', undefined, { force: true });
+    assert.equal(user.ok, true, JSON.stringify(user));
+    assert.equal(user.results.length, 1);
+    assert.equal(user.results[0].scope, 'unknown');
+  } finally {
+    restore();
+  }
+});
+
+test('R3: CRLF file does not break entry splitting nor project isolation', () => {
+  const root = fixture('fix03-r3-crlf');
+  const file = path.join(root, '.claude/memory/facts/writer-entries.md');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, (entry('user', 'observation', 'PUBLIC_CRLF') + entry('B', 'observation', 'PRIVATE_B_CRLF')).replace(/\n/g, '\r\n'), 'utf8');
+
+  // RED on original: LF-only разделитель видел CRLF-файл одной записью без meta
+  assert.equal(localResults('PRIVATE_B_CRLF', 'A').length, 0);
+  const fromB = localResults('PRIVATE_B_CRLF', 'B');
+  assert.equal(fromB.length, 1);
+  assert.equal(fromB[0].scope, 'B');
+  assert.equal(localResults('PUBLIC_CRLF', 'A').length, 1);
+});
+
+test('R3: relativeSource normalizes all allowed forms', () => {
+  const root = fixture('fix03-r3-relative');
+  const memoryRoot = path.join(root, '.claude/memory');
+  const want = '.claude/memory/facts/writer-entries.md';
+  // RED on original: /^\.\/??/ съедал ведущую точку '.claude/...'
+  assert.equal(relativeSource(memoryRoot, '.claude/memory/facts/writer-entries.md'), want);
+  assert.equal(relativeSource(memoryRoot, 'facts/writer-entries.md'), want);
+  assert.equal(relativeSource(memoryRoot, './facts/writer-entries.md'), want);
+  assert.equal(relativeSource(memoryRoot, './.claude/memory/facts/writer-entries.md'), want);
+  assert.equal(relativeSource(memoryRoot, 'C:/outside/memory.md'), null);
+  assert.equal(relativeSource(memoryRoot, '..\\..\\evil.md'), null);
 });

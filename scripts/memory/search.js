@@ -19,7 +19,8 @@ function configFor(root) {
 function relativeSource(memoryRoot, candidate) {
   if (typeof candidate !== 'string' || !candidate.trim()) return null;
   const normalized = candidate.replaceAll('\\', '/');
-  const withoutPrefix = normalized.replace(/^\.\/??/, '').replace(/^\.claude\/memory\//, '');
+  // только префикс './'; /^\.\/??/ съедал ведущую точку у '.claude/memory/...'
+  const withoutPrefix = normalized.replace(/^\.\//, '').replace(/^\.claude\/memory\//, '');
   const absolute = path.resolve(memoryRoot, withoutPrefix);
   const relative = path.relative(memoryRoot, absolute);
   if (!relative || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) return null;
@@ -36,18 +37,20 @@ function parseFields(text) {
 }
 
 function frontmatter(text) {
-  if (!text.startsWith('---')) return {};
-  const end = text.indexOf('\n---', 3);
+  const normalized = text.replace(/\r\n/g, '\n');
+  if (!normalized.startsWith('---')) return {};
+  const end = normalized.indexOf('\n---', 3);
   if (end < 0) return {};
-  return parseFields(text.slice(3, end));
+  return parseFields(normalized.slice(3, end));
 }
 
 // Разбивает файл памяти на записи: каждая начинается со строки '---'
 // (frontmatter до закрывающего '---', затем тело). Файл без '---'
 // возвращается одной записью с пустым meta — сохраняет поведение для
-// ручных файлов без frontmatter.
+// ручных файлов без frontmatter. CRLF нормализуется, поэтому разделитель
+// не зависит от окончаний строк (R3).
 function entries(text) {
-  const parts = text.split(/^---\n(?=\S)/m);
+  const parts = text.replace(/\r\n/g, '\n').split(/^---\n(?=\S)/m);
   if (parts.length === 1) return [{ meta: {}, body: text.trim() }];
   const result = [];
   for (let i = 1; i < parts.length; i += 1) {
@@ -102,7 +105,10 @@ function localResults(query, projectId, options = {}) {
     const text = fs.readFileSync(file, 'utf8');
     for (const record of entries(text)) {
       const meta = record.meta;
-      if (projectId && meta.scope && meta.scope !== 'user' && meta.scope !== projectId) continue;
+      // Проектный запрос видит только записи с подтверждённым scope 'user'
+      // или своим project_id; неизвестный/отсутствующий scope не открывает
+      // файл проекту (R3) — виден только на пользовательском уровне.
+      if (projectId && meta.scope !== 'user' && meta.scope !== projectId) continue;
       const lower = record.body.toLowerCase();
       const hits = queryWords.filter(word => lower.includes(word)).length;
       if (!hits) continue;
@@ -140,6 +146,27 @@ function classify(error) {
   return 'khoj-unavailable';
 }
 
+// Атрибуция сниппета сервиса к локальной записи: запись должна содержать хотя
+// бы одно слово запроса (подтверждение локальным содержимым), среди кандидатов
+// выбирается та, где больше слов запроса и токенов сниппета в теле. Возвращает
+// запись или null, если ни одна локальная запись не подтверждает сниппет
+// (R2: scope и snippet берутся из локального файла, текст сервиса как источник
+// доверия не используется).
+function matchEntry(records, query, snippet) {
+  const queryWords = words(query);
+  const tokens = new Set(String(snippet || '').toLowerCase().match(/[\p{L}\p{N}_-]{2,}/gu) || []);
+  let best = null;
+  for (const record of records) {
+    const lower = record.body.toLowerCase();
+    const hits = queryWords.filter(word => lower.includes(word)).length;
+    if (!hits) continue;
+    const overlap = [...tokens].filter(token => lower.includes(token)).length;
+    const score = hits * 1000 + overlap;
+    if (!best || score > best.score) best = { record, score };
+  }
+  return best ? best.record : null;
+}
+
 async function searchKhoj(query, projectId, options = {}) {
   const paths = options.paths || resolvePaths({ root: options.root });
   const config = options.config || configFor(paths.system_root);
@@ -160,12 +187,17 @@ async function searchKhoj(query, projectId, options = {}) {
     const results = payload.results.map(item => {
       const source = relativeSource(paths.memory_root, item.source || item.file || item.path);
       if (!source) return null;
-      const localFile = path.join(paths.system_root, source.replace(/^\.claude[\\/]memory[\\/]/, '.claude/memory' + path.sep));
-      const text = fs.existsSync(localFile) ? fs.readFileSync(localFile, 'utf8') : String(item.snippet || item.text || '');
-      // Khoj индексирует файл целиком; для фильтрации используем meta первой записи файла (документированное ограничение).
-      const meta = (entries(text)[0] || {}).meta || {};
-      if (projectId && meta.scope && meta.scope !== 'user' && meta.scope !== projectId) return null;
-      return { snippet: snippetFor(item.snippet || item.text || text, query, budget), source, scope: meta.scope || projectId || 'unknown', status_hint: meta.status || 'unknown', relevance: Number(item.score ?? item.relevance ?? 0) };
+      // Без локального файла scope записи проверить нельзя — сниппет сервиса
+      // не является подтверждением (R2).
+      const localFile = path.resolve(paths.system_root, source);
+      if (!fs.existsSync(localFile)) return null;
+      const record = matchEntry(entries(fs.readFileSync(localFile, 'utf8')), query, item.snippet || item.text);
+      if (!record) return null;
+      const scope = record.meta.scope || 'unknown';
+      if (projectId && scope !== 'user' && scope !== projectId) return null;
+      // snippet пересобирается из тела подтверждённой локальной записи;
+      // чужому результату scope запрашивающего проекта не присваивается.
+      return { snippet: snippetFor(record.body, query, budget), source, scope, status_hint: record.meta.status || 'unknown', relevance: Number(item.score ?? item.relevance ?? 0) };
     }).filter(Boolean).slice(0, limit);
     return { ok: true, results };
   } catch (error) {
@@ -203,4 +235,4 @@ if (require.main === module) main().catch(error => {
   process.exitCode = 0;
 });
 
-module.exports = { searchKhoj, localResults, relativeSource, snippetFor, frontmatter, entries };
+module.exports = { searchKhoj, localResults, relativeSource, snippetFor, frontmatter, entries, matchEntry };
