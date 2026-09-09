@@ -213,6 +213,10 @@ function writeAtomic(file, content) {
   return fs.readFileSync(file, 'utf8');
 }
 
+function crashPoint(stage) {
+  if (process.env.SYSTEM2_CRASH_AT === stage) process.exit(23);
+}
+
 function writeProposal(eventId, input) {
   if (busy) throw new Error('writer busy; retry');
   busy = true;
@@ -225,6 +229,7 @@ function writeProposal(eventId, input) {
     // проверка журнала «до» блокировки пропускала конфликт одного event_id
     // между процессами — оба возвращали persisted с разным содержимым.
     release = acquireLock();
+    crashPoint('after-lock');
     const previous = writerLog.get(eventId);
     if (previous && previous.hash !== hash) {
       const error = new Error('event_id already persisted with different content');
@@ -238,6 +243,7 @@ function writeProposal(eventId, input) {
     const files = [];
     const revisions = [];
     writerLog.append({ event_id: eventId, hash, status: 'intent', indexed: false });
+    crashPoint('after-intent');
     for (const proposal of proposals) {
       const file = targetFile(proposal.category);
       if (entryPresent(file, eventId, proposal)) {
@@ -249,6 +255,7 @@ function writeProposal(eventId, input) {
       files.push(file);
       revisions.push(crypto.createHash('sha256').update(content).digest('hex').slice(0, 12));
     }
+    crashPoint('after-write');
     const revision = crypto.createHash('sha256').update(revisions.join('|')).digest('hex').slice(0, 12);
     const result = { status: 'persisted', written_files: [...new Set(files.map(file => path.relative(paths.system_root, file).replaceAll(path.sep, '/')))], revision };
     try {
@@ -258,6 +265,7 @@ function writeProposal(eventId, input) {
       // Persistence must not fail because the derived index queue is unavailable.
       writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision, indexed: false, index_error: error.message });
     }
+    crashPoint('after-persisted');
     return result;
   } finally {
     if (release) release();
