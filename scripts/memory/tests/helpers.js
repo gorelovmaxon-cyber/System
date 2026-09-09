@@ -20,6 +20,8 @@ function fixture(name, options = {}) {
     indexer: { retries_max: 5, timeout_ms: 1000, reindex_url: '<CONFIGURE_FROM_KHOJ_RELEASE>' },
   };
   fs.writeFileSync(path.join(root, 'config/system.example.json'), JSON.stringify(example));
+  // зеркало реального репозитория: каталог данных (.local) не отслеживается git
+  fs.writeFileSync(path.join(root, '.gitignore'), '.local/\n.local-*\n');
   process.env.SYSTEM2_ROOT = root;
   return root;
 }

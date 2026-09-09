@@ -3,7 +3,7 @@
 **What to build:** Важные решения и исправления сохраняются сразу по ходу работы через единый writer/`save.js` без работающих Activepieces, Khoj или AI-провайдера; `persisted` возвращается только после долговечной локальной фиксации; границы гарантий при остановке процесса и при отказе питания описаны честно и отдельно; требование задокументировано в SPEC и контракте с датированным источником.
 **Requirement IDs:** SC-08 (R03, R07), R05; требование ревью Opus от 2026-09-09 (восстановлено исходное намерение пользователя).
 **Blocked by:** FIX-01 (семантика восстановления), частично FIX-07 (видимость сбоя очереди индекса)
-**Status:** planned
+**Status:** awaiting-review
 
 ## Контекст
 
@@ -55,6 +55,31 @@ CLI: `node scripts/memory/save.js --category facts --statement "..." --evidence 
 ## Ограничения
 
 Отказ питания: fsync до rename — гарантия уровня ФС/ОС (на NTFS обычно долговечно); «никогда не теряется» не обещается. Сценарии — только синтетические; к настоящей памяти не применяются до внешней приёмки блока.
+
+## Результаты (2026-09-09)
+
+**Красный на исходной реализации `69a257c`** (до правки, 4/6):
+- ✖ F04 tmp: при сбое `rename` после создания временного файла `.tmp-*` остаётся в каталоге памяти (исходный `writeAtomic` без подчистки).
+- ✖ F04 offline-remote: фикстура без `.gitignore` для `.local/` — `git pull` прерывается из-за незатрекованных файлов очередей (несоответствие фикстуры реальному контракту репозитория).
+- ✔ CLI-без-сервисов, crash-intent, kill-stress, index-fail — зелёные на `69a257c`+FIX-01..03 (семантика восстановления FIX-01 уже работает).
+
+**Зелёный после правки (6/6):**
+- CLI без сервисов: `save.js` → `persisted`; файл существует; отдельный процесс `search.js --query` находит запись (fallback, scope A).
+- Crash-intent: `fix-04-crash.cjs` (intent + exit 1) → повтор `save.js` доводит запись до `persisted` с реальным файлом; повтор `idempotent:true`, 1 вхождение маркера.
+- Kill-stress на задержках [0,10,30,60] мс: инвариант «persisted ⇒ файл существует», дублей нет.
+- Index-fail: `.local/indexer` занят файлом → запись остаётся `persisted`, `index_error` в журнале writer содержит `ENOTDIR|EEXIST|not a directory`, задач индекса 0.
+- writeAtomic: детерминированный сбой `rename` (патч fs.renameSync) → tmp подчищен, ошибка пробрасывается.
+- Offline-remote: `persisted ≠ synced` (status показывает изменения, `clean:false`); push только явный; merge после pull сохраняет обе версии (REMOTE_A_MARKER + REMOTE_B_MARKER); `sync.js --push` → `pushed:true`.
+
+**Изменения:** `scripts/memory/writer.js` — `writeAtomic`: `openSync(tmp)` → `writeFileSync(fd)` → `fsyncSync(fd)` → `closeSync(fd)` → `renameSync`; при ошибке tmp подчищается и ошибка пробрасывается. `scripts/memory/tests/helpers.js` — фикстура получает `.gitignore` (`.local/`, зеркало реального репозитория). `scripts/memory/tests/fix-04.test.js` — фикс регекса `"pushed": true` (пробел в JSON).
+
+**Проверка соседних сценариев:** полный прогон `node --test scripts/memory/tests/*.test.js` — 21/21 зелёные (FIX-01/02/03 без регрессий).
+
+**Аудит-харнесс после фикса** (`node .scratch/system-remediation/evidence/core-audit.cjs`, evidence `core-audit-results-after-fix04-2026-09-09.json`): `F01-batch-loss → fixed`, `F02-intent-false-success → fixed`, `F03-stale-lock → fixed`, `F04-project-leak → fixed`; `controls-writer-and-http-auth → прошёл`; F05–F10 по-прежнему воспроизводятся (очередь FIX-05…08).
+
+**Документация:** SPEC.md — секция «Немедленное сохранение (добавлено 2026-09-09)» (требование, границы persisted при остановке процесса/отказе питания, persisted≠synced≠indexed); memory-contract.md — Writer: fsync до rename, восстановление intent/частичной записи, границы; Актуальность индекса: `index_error` виден, запись не отменяется сбоем Khoj, немедленное сохранение без сервисов.
+
+**Ограничения:** fsync — гарантия уровня ФС/ОС (NTFS); «никогда не теряется» не обещается. Сценарии — синтетические; к настоящей памяти не применяются до внешней приёмки блока (WRITER-REVIEW).
 
 ## Как закончить
 

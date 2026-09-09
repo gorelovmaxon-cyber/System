@@ -1,0 +1,133 @@
+{
+  "repo": "D:\\SystemTheBest\\System",
+  "revision": "69a257c",
+  "node": "v24.18.0",
+  "fixtureRoot": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-audit-msYz3Q",
+  "results": [
+    {
+      "name": "F01-batch-loss",
+      "reproduced": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!text.includes('SECOND_MARKER'))\n\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:34:44\n    at test (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:21:61)\n    at main (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:31:9)\n    at Object.<anonymous> (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:128:1)\n    at Module._compile (node:internal/modules/cjs/loader:1871:14)\n    at Object..js (node:internal/modules/cjs/loader:2002:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)"
+    },
+    {
+      "name": "F02-intent-false-success",
+      "reproduced": false,
+      "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(!fs.existsSync(memoryFile()))\n\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:42:46\n    at test (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:21:61)\n    at main (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:37:9)"
+    },
+    {
+      "name": "F03-stale-lock",
+      "reproduced": false,
+      "error": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:48:12\n    at test (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:21:61)\n    at main (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\core-audit.cjs:45:9)"
+    },
+    {
+      "name": "F04-project-leak",
+      "reproduced": true,
+      "evidence": {
+        "queryProject": "A",
+        "results": [
+          {
+            "snippet": "---\nstatus: observation\ncategory: facts\nscope: user\nsource: audit\nevidence: synthetic audit fixture\nevent_id: evt_public\n---\n\n## PUBLIC_MARKER\n---\nstatus: observation\ncategory: facts\nscope: B\nsource: audit\nevidence: synthetic audit fixture\nevent_id: evt_private\n---\n\n## PRIVATE_B_MARKER…",
+            "source": ".claude/memory/facts/writer-entries.md",
+            "scope": "user",
+            "status_hint": "observation",
+            "relevance": 0.99
+          }
+        ]
+      }
+    },
+    {
+      "name": "F05-index-queue-loss",
+      "reproduced": true,
+      "evidence": {
+        "first": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "4c4e5dd51c8e"
+        },
+        "retry": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "4c4e5dd51c8e",
+          "idempotent": true
+        },
+        "indexTasks": []
+      }
+    },
+    {
+      "name": "F06-index-inflight-stuck",
+      "reproduced": true,
+      "evidence": {
+        "run": [],
+        "requeued": 0,
+        "tasks": [
+          {
+            "task_id": "idx_381fb353c15e59a8",
+            "event_id": "evt_stuck",
+            "file": ".claude/memory/facts/writer-entries.md",
+            "status": "in-flight",
+            "attempts": 1,
+            "timestamp": "2026-09-09T09:47:26.448Z"
+          }
+        ]
+      }
+    },
+    {
+      "name": "F07-partial-index-success",
+      "reproduced": true,
+      "evidence": {
+        "run": [
+          {
+            "task_id": "idx_92422e539845b737",
+            "status": "indexed"
+          },
+          {
+            "task_id": "idx_4c4477b0984baa77",
+            "status": "failed",
+            "reason": "Khoj reindex HTTP 503"
+          }
+        ],
+        "eventIndexed": true
+      }
+    },
+    {
+      "name": "F08-duplicate-concurrent-delivery",
+      "reproduced": true,
+      "evidence": {
+        "deliveries": 2,
+        "finalStatus": "failed"
+      }
+    },
+    {
+      "name": "F09-recapture-conflict",
+      "reproduced": true,
+      "evidence": {
+        "sameEventId": true,
+        "error": "event_id already exists with different content"
+      }
+    },
+    {
+      "name": "F10-truncated-queue-log",
+      "reproduced": true,
+      "evidence": {
+        "previousValidEventInaccessible": true,
+        "error": "SyntaxError on partial last JSONL line"
+      }
+    },
+    {
+      "name": "controls-writer-and-http-auth",
+      "reproduced": true,
+      "evidence": {
+        "repeat": true,
+        "conflictRejected": true,
+        "invalidScopeRejected": true,
+        "pathCategoryRejected": true,
+        "noAuthStatus": 401,
+        "authorizedStatus": 200
+      }
+    }
+  ]
+}

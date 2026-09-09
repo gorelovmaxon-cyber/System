@@ -1,0 +1,170 @@
+'use strict';
+
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawn, spawnSync } = require('node:child_process');
+const { fixture, proposal, memoryFile, mod, REPO } = require('./helpers');
+
+const writer = mod('writer');
+const writerLog = mod('writer-log');
+const indexerLog = mod('indexer-log');
+const SAVE = path.join(REPO, 'save.js');
+const SEARCH = path.join(REPO, 'search.js');
+const SYNC = path.join(REPO, 'sync.js');
+const CRASH = path.join(__dirname, 'fix-04-crash.cjs');
+
+function runSave(args) {
+  return spawnSync(process.execPath, [SAVE, ...args], { env: process.env, encoding: 'utf8' });
+}
+
+function runGit(dir, args, options = {}) {
+  const result = spawnSync('git', ['-C', dir, ...args], { encoding: 'utf8', ...options });
+  return result;
+}
+
+test('F04: CLI save without services persists; a new process finds the record', () => {
+  const root = fixture('fix04-cli');
+  const args = ['--event-id', 'evt_imm', '--statement', 'IMMEDIATE_MARKER', '--category', 'facts', '--evidence', 'fixture', '--scope', 'A'];
+
+  const r = runSave(args);
+  assert.equal(r.status, 0, r.stderr);
+  const result = JSON.parse(r.stdout);
+  assert.equal(result.status, 'persisted');
+  assert.ok(fs.existsSync(memoryFile(root)));
+
+  // «перезапуск»: отдельный процесс search находит запись через локальный fallback
+  const s = spawnSync(process.execPath, [SEARCH, '--query', 'IMMEDIATE_MARKER', '--project', 'A'], { env: process.env, encoding: 'utf8' });
+  const out = JSON.parse(s.stdout);
+  const hits = out.ok ? out.results : out.fallback_results;
+  assert.equal(hits.length, 1);
+  assert.equal(hits[0].scope, 'A');
+  assert.equal(hits[0].source, '.claude/memory/facts/writer-entries.md');
+});
+
+test('F04: interrupted save (intent only, process died) is recovered, not falsely persisted', () => {
+  const root = fixture('fix04-crash');
+  const args = ['--event-id', 'evt_interrupted', '--statement', 'NEVER_PERSISTED_FOR_REAL', '--category', 'facts', '--evidence', 'fixture'];
+
+  const crash = spawnSync(process.execPath, [CRASH, ...args], { env: process.env, encoding: 'utf8' });
+  assert.equal(crash.status, 1);
+
+  // RED on original: repeat reports persisted while no memory file exists
+  const r = runSave(args);
+  assert.equal(r.status, 0, r.stderr);
+  const result = JSON.parse(r.stdout);
+  assert.equal(result.status, 'persisted');
+  assert.ok(fs.existsSync(memoryFile(root)));
+  assert.match(fs.readFileSync(memoryFile(root), 'utf8'), /NEVER_PERSISTED_FOR_REAL/);
+
+  const r2 = runSave(args);
+  assert.equal(JSON.parse(r2.stdout).idempotent, true);
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal((text.match(/NEVER_PERSISTED_FOR_REAL/g) || []).length, 1);
+});
+
+test('F04: kill mid-save then repeat never yields false persisted or duplicates', async () => {
+  for (const delay of [0, 10, 30, 60]) {
+    const root = fixture('fix04-kill-' + delay);
+    const eventId = 'evt_kill_' + delay;
+    const args = ['--event-id', eventId, '--statement', 'KILL_MARKER_' + delay, '--category', 'facts', '--evidence', 'fixture'];
+
+    const child = spawn(process.execPath, [SAVE, ...args], { env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
+    await new Promise(resolve => setTimeout(resolve, delay));
+    child.kill();
+    await new Promise(resolve => child.on('exit', resolve));
+
+    const r = runSave(args);
+    assert.equal(r.status, 0, r.stderr);
+    const result = JSON.parse(r.stdout);
+    if (result.status === 'persisted') {
+      assert.ok(fs.existsSync(memoryFile(root)), 'no false persisted without file (delay ' + delay + ')');
+      const text = fs.readFileSync(memoryFile(root), 'utf8');
+      assert.equal((text.match(new RegExp('KILL_MARKER_' + delay, 'g')) || []).length, 1);
+    }
+  }
+});
+
+test('F04: index queue failure keeps write persisted and records a visible cause', () => {
+  const root = fixture('fix04-index-fail');
+  // .local/indexer превращаем в файл — очередь индекса не сможет создать каталог
+  fs.mkdirSync(path.join(root, '.local'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.local', 'indexer'), 'not a directory', 'utf8');
+
+  const result = writer.writeProposal('evt_idx_fail', [proposal('INDEX_FAIL_MARKER')]);
+  assert.equal(result.status, 'persisted');
+  assert.match(fs.readFileSync(memoryFile(root), 'utf8'), /INDEX_FAIL_MARKER/);
+
+  // RED on original: причина сбоя очереди не записывается (пустой catch)
+  const record = writerLog.get('evt_idx_fail');
+  assert.match(record.index_error || '', /ENOTDIR|EEXIST|ENOENT|not a directory/i);
+  assert.equal([...indexerLog.records().values()].length, 0);
+});
+
+test('F04: writeAtomic cleans up its temp file when the rename fails', () => {
+  const root = fixture('fix04-tmp');
+  const originalRename = fs.renameSync;
+  // детерминированный сбой rename ПОСЛЕ создания tmp: на исходной реализации
+  // writeAtomic tmp остаётся (RED), после фикса — подчищается (GREEN)
+  fs.renameSync = () => { throw new Error('simulated rename failure'); };
+  try {
+    assert.throws(() => writer.writeProposal('evt_tmp', [proposal('TMP_FAIL')]), /simulated rename failure/);
+  } finally {
+    fs.renameSync = originalRename;
+  }
+  const leftovers = fs.readdirSync(path.join(root, '.claude/memory/facts')).filter(name => name.includes('.tmp-'));
+  assert.equal(leftovers.length, 0);
+});
+
+test('F04: persisted is not synced; push stays explicit; merge preserves both versions', () => {
+  const root = fixture('fix04-remote');
+  const remoteRoot = fs.mkdtempSync(path.join(os.tmpdir(), 's2-remote-'));
+  const remotePath = path.join(remoteRoot, 'origin.git');
+  assert.equal(runGit(root, ['init', '--bare', remotePath]).status, 0);
+
+  runGit(root, ['init', '-b', 'master']);
+  runGit(root, ['config', 'user.email', 'test@example.com']);
+  runGit(root, ['config', 'user.name', 'Test']);
+  runGit(root, ['add', '.']);
+  runGit(root, ['commit', '-m', 'base']);
+  runGit(root, ['remote', 'add', 'origin', remotePath]);
+  assert.equal(runGit(root, ['push', '-u', 'origin', 'master']).status, 0);
+
+  // запись памяти в A
+  const r = runSave(['--event-id', 'evt_remote_a', '--statement', 'REMOTE_A_MARKER', '--category', 'facts', '--evidence', 'fixture', '--scope', 'A']);
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(JSON.parse(r.stdout).status, 'persisted');
+
+  // persisted != synced: никакой push не выполнился, статус показывает изменения
+  const s = spawnSync(process.execPath, [SYNC, '--status'], { env: process.env, encoding: 'utf8' });
+  const status = JSON.parse(s.stdout);
+  assert.ok(status.memory_changes.length > 0);
+  assert.equal(status.clean, false);
+
+  // копия B: другой процесс записывает другую категорию в тот же файл памяти, пушит
+  const other = path.join(remoteRoot, 'other');
+  assert.equal(runGit(remoteRoot, ['clone', remotePath, other]).status, 0);
+  runGit(other, ['config', 'user.email', 'test2@example.com']);
+  runGit(other, ['config', 'user.name', 'Test2']);
+  const envB = { ...process.env, SYSTEM2_ROOT: other };
+  const b = spawnSync(process.execPath, [SAVE, '--event-id', 'evt_remote_b', '--statement', 'REMOTE_B_MARKER', '--category', 'decisions', '--evidence', 'fixture'], { env: envB, encoding: 'utf8' });
+  assert.equal(b.status, 0, b.stderr);
+  runGit(other, ['add', '.']);
+  runGit(other, ['commit', '-m', 'memory from B']);
+  assert.equal(runGit(other, ['push', 'origin', 'master']).status, 0);
+
+  // A тянет: merge без потерь, обе версии сохраняются
+  const pull = runGit(root, ['pull', 'origin', 'master']);
+  assert.equal(pull.status, 0, pull.stderr);
+  const text = fs.readFileSync(path.join(root, '.claude/memory/facts/writer-entries.md'), 'utf8') +
+    fs.readFileSync(path.join(root, '.claude/memory/decisions/writer-entries.md'), 'utf8');
+  assert.match(text, /REMOTE_A_MARKER/);
+  assert.match(text, /REMOTE_B_MARKER/);
+
+  // явный push из A после merge
+  const pushed = spawnSync(process.execPath, [SYNC, '--push'], { env: process.env, encoding: 'utf8' });
+  assert.equal(pushed.status, 0, pushed.stderr);
+  assert.match(pushed.stdout, /"pushed"\s*:\s*true/);
+});

@@ -156,8 +156,20 @@ function writeAtomic(file, content) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const tmp = file + '.tmp-' + process.pid + '-' + Date.now();
   const previous = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
-  fs.writeFileSync(tmp, previous + (previous && !previous.endsWith('\n') ? '\n' : '') + content, 'utf8');
-  fs.renameSync(tmp, file);
+  const next = previous + (previous && !previous.endsWith('\n') ? '\n' : '') + content;
+  try {
+    const fd = fs.openSync(tmp, 'w');
+    try {
+      fs.writeFileSync(fd, next, 'utf8');
+      fs.fsyncSync(fd);
+    } finally {
+      fs.closeSync(fd);
+    }
+    fs.renameSync(tmp, file);
+  } catch (error) {
+    try { fs.unlinkSync(tmp); } catch {}
+    throw error;
+  }
   return fs.readFileSync(file, 'utf8');
 }
 
