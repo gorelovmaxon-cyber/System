@@ -26,16 +26,40 @@ function relativeSource(memoryRoot, candidate) {
   return '.claude/memory/' + relative.replaceAll(path.sep, '/');
 }
 
-function frontmatter(text) {
-  if (!text.startsWith('---')) return {};
-  const end = text.indexOf('\n---', 3);
-  if (end < 0) return {};
+function parseFields(text) {
   const fields = {};
-  for (const line of text.slice(3, end).split(/\r?\n/)) {
+  for (const line of text.split(/\r?\n/)) {
     const match = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
     if (match) fields[match[1]] = match[2].replace(/^['"]|['"]$/g, '');
   }
   return fields;
+}
+
+function frontmatter(text) {
+  if (!text.startsWith('---')) return {};
+  const end = text.indexOf('\n---', 3);
+  if (end < 0) return {};
+  return parseFields(text.slice(3, end));
+}
+
+// Разбивает файл памяти на записи: каждая начинается со строки '---'
+// (frontmatter до закрывающего '---', затем тело). Файл без '---'
+// возвращается одной записью с пустым meta — сохраняет поведение для
+// ручных файлов без frontmatter.
+function entries(text) {
+  const parts = text.split(/^---\n(?=\S)/m);
+  if (parts.length === 1) return [{ meta: {}, body: text.trim() }];
+  const result = [];
+  for (let i = 1; i < parts.length; i += 1) {
+    const part = parts[i];
+    const end = part.indexOf('\n---');
+    if (end < 0) {
+      result.push({ meta: parseFields(part), body: '' });
+      continue;
+    }
+    result.push({ meta: parseFields(part.slice(0, end)), body: part.slice(end + 4).trim() });
+  }
+  return result;
 }
 
 function words(query) {
@@ -73,22 +97,26 @@ function localResults(query, projectId, options = {}) {
     }
   }
   walk(paths.memory_root);
-  return files.map(file => {
+  const results = [];
+  for (const file of files) {
     const text = fs.readFileSync(file, 'utf8');
-    const meta = frontmatter(text);
-    if (projectId && meta.scope && meta.scope !== 'user' && meta.scope !== projectId) return null;
-    const lower = text.toLowerCase();
-    const hits = queryWords.filter(word => lower.includes(word)).length;
-    if (!hits) return null;
-    const source = relativeSource(paths.memory_root, file);
-    return {
-      snippet: snippetFor(text, query, budget),
-      source,
-      scope: meta.scope || 'unknown',
-      status_hint: meta.status || 'unknown',
-      relevance: Math.min(0.99, hits / queryWords.length),
-    };
-  }).filter(Boolean).sort((a, b) => b.relevance - a.relevance || a.source.localeCompare(b.source)).slice(0, limit);
+    for (const record of entries(text)) {
+      const meta = record.meta;
+      if (projectId && meta.scope && meta.scope !== 'user' && meta.scope !== projectId) continue;
+      const lower = record.body.toLowerCase();
+      const hits = queryWords.filter(word => lower.includes(word)).length;
+      if (!hits) continue;
+      const source = relativeSource(paths.memory_root, file);
+      results.push({
+        snippet: snippetFor(record.body, query, budget),
+        source,
+        scope: meta.scope || 'unknown',
+        status_hint: meta.status || 'unknown',
+        relevance: Math.min(0.99, hits / queryWords.length),
+      });
+    }
+  }
+  return results.sort((a, b) => b.relevance - a.relevance || a.source.localeCompare(b.source)).slice(0, limit);
 }
 
 function httpJson(url, init, timeout) {
@@ -134,7 +162,8 @@ async function searchKhoj(query, projectId, options = {}) {
       if (!source) return null;
       const localFile = path.join(paths.system_root, source.replace(/^\.claude[\\/]memory[\\/]/, '.claude/memory' + path.sep));
       const text = fs.existsSync(localFile) ? fs.readFileSync(localFile, 'utf8') : String(item.snippet || item.text || '');
-      const meta = frontmatter(text);
+      // Khoj индексирует файл целиком; для фильтрации используем meta первой записи файла (документированное ограничение).
+      const meta = (entries(text)[0] || {}).meta || {};
       if (projectId && meta.scope && meta.scope !== 'user' && meta.scope !== projectId) return null;
       return { snippet: snippetFor(item.snippet || item.text || text, query, budget), source, scope: meta.scope || projectId || 'unknown', status_hint: meta.status || 'unknown', relevance: Number(item.score ?? item.relevance ?? 0) };
     }).filter(Boolean).slice(0, limit);
@@ -174,4 +203,4 @@ if (require.main === module) main().catch(error => {
   process.exitCode = 0;
 });
 
-module.exports = { searchKhoj, localResults, relativeSource, snippetFor, frontmatter };
+module.exports = { searchKhoj, localResults, relativeSource, snippetFor, frontmatter, entries };
