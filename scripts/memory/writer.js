@@ -128,21 +128,24 @@ function entryText(eventId, proposal) {
   return fields.join('\n');
 }
 
+function normalizeEol(text) {
+  return text.replace(/\r\n/g, '\n');
+}
+
 function entryBlocks(text) {
-  return text.split(/\n(?=---\n(?!\n))/).filter(block => block.trim().length > 0);
+  return normalizeEol(text).split(/\n(?=---\n(?!\n))/).filter(block => block.trim().length > 0);
 }
 
-function entryStatement(block) {
-  const marker = block.indexOf('\n## ');
-  return marker >= 0 ? block.slice(marker + 4).replace(/\n$/, '') : null;
-}
-
+// Идентичность записи — полное содержимое записи, которое создаёт writer
+// (event_id, категория, scope, status, source, evidence, supersedes,
+// confidence и statement): предложения с одинаковым statement, но разным
+// scope/evidence и т.п. — разные записи и сохраняются все (R1). CRLF
+// нормализуется, поэтому повтор после LF->CRLF идемпотентен (R4).
 function entryPresent(file, eventId, proposal) {
   if (!fs.existsSync(file)) return false;
   const existing = fs.readFileSync(file, 'utf8');
-  return entryBlocks(existing).some(block =>
-    block.includes('event_id: ' + eventId) && entryStatement(block) === proposal.statement
-  );
+  const expected = entryText(eventId, proposal).trim();
+  return entryBlocks(existing).some(block => block.trim() === expected);
 }
 
 function pathInsideMemory(file) {
@@ -155,7 +158,7 @@ function writeAtomic(file, content) {
   if (!pathInsideMemory(file)) throw new Error('writer target escapes memory root');
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const tmp = file + '.tmp-' + process.pid + '-' + Date.now();
-  const previous = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+  const previous = fs.existsSync(file) ? normalizeEol(fs.readFileSync(file, 'utf8')) : '';
   const next = previous + (previous && !previous.endsWith('\n') ? '\n' : '') + content;
   try {
     const fd = fs.openSync(tmp, 'w');
@@ -207,7 +210,7 @@ function writeProposal(eventId, input) {
       revisions.push(crypto.createHash('sha256').update(content).digest('hex').slice(0, 12));
     }
     const revision = crypto.createHash('sha256').update(revisions.join('|')).digest('hex').slice(0, 12);
-    const result = { status: 'persisted', written_files: files.map(file => path.relative(paths.system_root, file).replaceAll(path.sep, '/')), revision };
+    const result = { status: 'persisted', written_files: [...new Set(files.map(file => path.relative(paths.system_root, file).replaceAll(path.sep, '/')))], revision };
     try {
       queueIndex(eventId, files);
       writerLog.append({ event_id: eventId, hash, status: 'persisted', written_files: result.written_files, revision, indexed: false });
