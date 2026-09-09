@@ -1,0 +1,21 @@
+{
+  "revision": "980d331",
+  "node": "v24.18.0",
+  "results": [
+    {
+      "name": "S1-reclaim-check-unlink-race",
+      "reproduced": false,
+      "error": "Error: writer lock timeout\n    at Object.acquireLock (D:\\SystemTheBest\\System\\scripts\\memory\\writer.js:159:9)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:35:19\n    at async probe (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:25:120)\n    at async main (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:26:2)"
+    },
+    {
+      "name": "S2-source-newline-overrides-scope",
+      "reproduced": false,
+      "error": "Error: source must be a single line (no CR/LF)\n    at singleLine (D:\\SystemTheBest\\System\\scripts\\memory\\writer.js:170:34)\n    at validateProposal (D:\\SystemTheBest\\System\\scripts\\memory\\writer.js:196:62)\n    at Object.writeProposal (D:\\SystemTheBest\\System\\scripts\\memory\\writer.js:286:77)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:42:23\n    at probe (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:25:126)\n    at main (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:41:8)"
+    },
+    {
+      "name": "S3-crlf-input-retry-duplicates",
+      "reproduced": false,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 2\n\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:49:101\n    at probe (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:25:126)\n    at main (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\writer-review-round2.cjs:46:8)"
+    }
+  ]
+}

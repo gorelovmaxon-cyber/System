@@ -1,10 +1,10 @@
-# WRITER-REVIEW — внешняя приёмка блока F01–F04 (доработка по R1–R6)
+# WRITER-REVIEW — внешняя приёмка блока F01–F04 (доработка по R1–R6 и S1–S3)
 
-**Статус пакета:** `awaiting-review` (повторная подача)
+**Статус пакета:** `awaiting-review` (третья подача)
 **Подготовлен:** Sonnet (автор+исполнитель), 2026-09-09
 **Для:** независимого проверяющего (планировщик/приёмщик), передаётся через пользователя
 **База сравнения:** `69a257c5e6b6b97dbca1f0afe1d8ffbf9292919f` (verified, до правок)
-**Текущий master:** `a8574f6`
+**Текущий master:** `c258c75`
 
 > Этот пакет НЕ закрывается автором. До внешнего положительного заключения запрещены:
 > миграция настоящей памяти, подключение исправленного writer к рабочему потоку и
@@ -14,9 +14,9 @@
 
 | FIX | Коммиты | Файлы | Что исправляет |
 |---|---|---|---|
-| FIX-01 | `67f2b38` + `eb06524` | `scripts/memory/writer.js`, `tests/fix-01.test.js`, `tests/helpers.js` | F01 пакетная потеря, F02 ложный persisted по intent/частичная запись; R1 идентичность предложения по полному содержимому (event_id+category+scope+status+source+evidence+supersedes+confidence+statement); R4 CRLF-идемпотентность (нормализация EOL) |
-| FIX-02 | `5fe4a7b` + `8f4809a` | `scripts/memory/writer.js`, `tests/fix-02-holder.cjs`, `tests/fix-02-pause.cjs`, `tests/fix-02.test.js` | F03 осиротевшая блокировка; R5 безопасная публикация владельца (wx→writeOwner→publish-verify pid+nonce), освобождение удаляет lock только своего поколения, EPERM при проверке pid трактуется как живой процесс; R6 проверка CONFLICT и идемпотентного повтора — внутри acquireLock, журнал перечитывается под блокировкой |
-| FIX-03 | `aa2bfa5` + `1b6e1e9` | `scripts/memory/search.js`, `tests/fix-03.test.js` | F04 утечка записей между проектами; R2 перитмическая верификация: каждый хит Khoj атрибутируется к локальной записи (matchEntry), snippet пересобирается из тела записи, отсутствующий файл/неатрибутируемый хит отбрасывается; R3 CRLF-разбор entries/frontmatter, проектный запрос видит только scope 'user' или свой project_id, исправление relativeSource (`/^\.\//`) |
+| FIX-01 | `67f2b38` + `eb06524` + `18924d9` | `scripts/memory/writer.js`, `tests/fix-01.test.js`, `tests/helpers.js` | F01 пакетная потеря, F02 ложный persisted по intent/частичная запись; R1 идентичность предложения по полному содержимому (event_id+category+scope+status+source+evidence+supersedes+confidence+statement); R4 CRLF-идемпотентность (нормализация EOL); S2 однозначная сериализация полей frontmatter (singleLine/reject CR/LF для source/evidence/supersedes, event_id однострочный, statement без строк `---`, round-trip без потерь); S3 канонизация EOL до hash (LF≡CRLF → идемпотентный повтор, содержательное различие — CONFLICT) |
+| FIX-02 | `5fe4a7b` + `8f4809a` + `72e3163` | `scripts/memory/writer.js`, `tests/fix-02-holder.cjs`, `tests/fix-02-pause.cjs`, `tests/fix-02.test.js` | F03 осиротевшая блокировка; R5 безопасная публикация владельца (wx→writeOwner→publish-verify pid+nonce), освобождение удаляет lock только своего поколения, EPERM при проверке pid трактуется как живой процесс; R6 проверка CONFLICT и идемпотентного повтора — внутри acquireLock, журнал перечитывается под блокировкой; S1 карантин-восстановление lock (устаревшее решение не выполняет разрушающее действие по каноническому пути: occupant → уникальный карантин → проверка → verified удаляется / живое поколение возвращается на место) |
+| FIX-03 | `aa2bfa5` + `1b6e1e9` + `c258c75` | `scripts/memory/search.js`, `tests/fix-03.test.js` | F04 утечка записей между проектами; R2 перитмическая верификация: каждый хит Khoj атрибутируется к локальной записи (matchEntry), snippet пересобирается из тела записи, отсутствующий файл/неатрибутируемый хит отбрасывается; R3 CRLF-разбор entries/frontmatter, проектный запрос видит только scope 'user' или свой project_id, исправление relativeSource (`/^\.\//`); S2 дубликат ключа frontmatter fail-closed на чтении (`parseFields` → `{fields, duplicated}`, нет last-wins) |
 | FIX-04 | `9c47f8e` + `a8574f6` | `scripts/memory/writer.js`, `tests/fix-04.test.js`, `fix-04-crash.cjs`, `helpers.js`, `docs/memory-contract.md`, SPEC, тикеты/матрица | Немедленное сохранение без сервисов; fsync tmp до rename; подчистка tmp; видимый `index_error`; границы persisted; доказательства: crashPoint в реальном writeProposal (after-lock/after-intent/after-write/after-persisted под `SYSTEM2_CRASH_AT`, exit 23), настоящий content-конфликт при pull и разрешение с сохранением обеих версий |
 
 Общий новый тест-инфраструктурный файл: `scripts/memory/tests/helpers.js` (синтетическая фикстура + `SYSTEM2_ROOT`; `.gitignore` с `.local/` для remote-тестов).
@@ -24,20 +24,23 @@
 ## 2. Регрессионные команды (эта машина, Windows, Node v24.18.0, Git 2.55.0)
 
 ```bash
-# Полный набор (39 тестов, 39/39 зелёных):
+# Полный набор (52 теста, 52/52 зелёных):
 node --test scripts/memory/tests/*.test.js
 
 # По фиксам:
-node --test scripts/memory/tests/fix-01.test.js   # 10/10 (R1, R4)
-node --test scripts/memory/tests/fix-02.test.js   # 9/9   (R5, R6)
-node --test scripts/memory/tests/fix-03.test.js   # 13/13 (R2, R3)
+node --test scripts/memory/tests/fix-01.test.js   # 18/18 (R1, R4, S2, S3)
+node --test scripts/memory/tests/fix-02.test.js   # 12/12 (R5, R6, S1)
+node --test scripts/memory/tests/fix-03.test.js   # 15/15 (R2, R3, S2)
 node --test scripts/memory/tests/fix-04.test.js   # 7/7   (crash-стадии, remote-конфликт)
 
-# Сценарии независимого ревью (ревизия a8574f6):
+# Сценарии независимого ревью (ревизия a8574f6, R1–R6):
 node .scratch/system-remediation/evidence/writer-review-probes.cjs
-# Код 0 = заявленные дефекты R1–R6 воспроизведены; после исправлений ожидается
-# reproduced:false по всем шести и код 1 (дефекты НЕ воспроизведены).
-# Исторический writer-review-probes-results.json сохранён рядом до повтора.
+# Сценарии независимого ревью (ревизия c258c75, S1–S3):
+node .scratch/system-remediation/evidence/writer-review-round2.cjs
+# Код 0 = заявленные дефекты воспроизведены; после исправлений ожидается
+# reproduced:false по всем пунктам и код 1 (дефекты НЕ воспроизведены).
+# Исторический writer-review-round2-results.json сохранён рядом до повтора
+# (writer-review-round2-results.pre-round2-fix.json).
 ```
 
 Роли инструментов: `core-audit.cjs` — снятие дефектов и их отсутствия (harness ловит любое
@@ -112,8 +115,45 @@ FIX-07 в очереди (запланировано, не реализован�
 5. Push — только явный `sync.js --push` после проверки статуса (никакого фонового push).
 6. Только после этого — объявление блока принятым и продолжение перепроверки SC на живой памяти.
 
-## 8. Вопросы проверяющему
+## 8. Раунд 2 (S1–S3): доработка по повторному ревью
 
-1. Прогнать команды раздела 2 (39/39; пробы: `reproduced:false` по R1–R6, код 1) и сверить с ожиданиями.
-2. Сверить RED-доказательства по R1–R6 (списки в тикетах, раздел «Доработка по ревью»).
+Второе независимое ревью ([WRITER-INDEPENDENT-REVIEW-ROUND2.md](WRITER-INDEPENDENT-REVIEW-ROUND2.md),
+ревизия `980d331`) вернуло блок с тремя замечаниями; исправления — scoped-коммитами в
+существующих тикетах (прежние исправления сохранены):
+
+- **S1 (P1, FIX-02/R5):** окно «recheck → unlink» в восстановлении мёртвого lock позволяло
+  устаревшему решению удалить живой lock нового поколения (два успешных `acquireLock` при
+  неосвобождённой блокировке). Исправление — карантин-восстановление: устаревшее решение
+  никогда не выполняет разрушающее действие по каноническому пути — occupant атомарно
+  перемещается в уникальный карантин (`rename`), содержимое проверяется: verified-карантин
+  (пусто/тот же мёртвый pid) удаляется, иное (живой владелец, смена поколения) возвращается
+  на место (повторы 5×10 мс при занятом пути, затем подчистка карантина — он владением не
+  является). Инварианты протокола (единственный владелец; владение только через
+  publish-verify; поколение `{pid, nonce}`; устаревшее решение не разрушает новое поколение;
+  разрушение непроверенного карантина безопасно; документированное трёхпроцессное окно без
+  OS-примитива условного unlink/swap) — в тикете FIX-02.
+- **S2 (P1, FIX-01/03):** перенос строки в `source` вставлялся в frontmatter и подменял scope
+  (две строки scope; parseFields — last-wins). Writer (FIX-01): `singleLine` для
+  source/evidence/supersedes и `validateEventId` (reject CR/LF), statement нормализуется к LF
+  и отклоняется при строке `---`, `entryText` использует провалидированные значения напрямую;
+  round-trip proposal → текст → запись без потерь и без новых границ. Read-side (FIX-03):
+  `parseFields` → `{fields, duplicated}` — дубликат ключа не выбирается (fail-closed, нет
+  last-wins); дубликат scope не открывает запись проекту, дубликат status → `unknown`.
+  Writer дубликаты не создаёт; защита — для ручных/повреждённых файлов.
+- **S3 (P2, FIX-01/R4):** CRLF в `expected`-стороне entryPresent давал дубли при повторе.
+  Исправление: канонизация EOL (`normalizeEol`) применяется к обеим сравниваемым сторонам и
+  до вычисления hash — LF и CRLF формы одного содержимого дают один hash (идемпотентный
+  повтор, не CONFLICT); содержательное различие по-прежнему CONFLICT (контрольный тест).
+
+**RED/GREEN:** регрессии написаны на ревизии `980d331` — 10 падений по трём файлам
+(S1: ребёнок-реклаймер удалял живой lock родителя и входил в секцию; S2: инъекция scope
+и дубликаты ключей; S3: дубли при CRLF-повторе). После коммитов `18924d9`/`72e3163`/`c258c75`:
+`fix-01` 18/18, `fix-02` 12/12, `fix-03` 15/15, весь набор **52/52**. Проба ревью
+`writer-review-round2.cjs` на `c258c75`: `reproduced:false` по S1–S3, код 1; исторический
+результат (980d331, reproduced:true ×3) — в `writer-review-round2-results.pre-round2-fix.json`.
+
+## 9. Вопросы проверяющему
+
+1. Прогнать команды раздела 2 (52/52; пробы round2: `reproduced:false` по S1–S3, код 1) и сверить с ожиданиями.
+2. Сверить RED-доказательства по R1–R6 и S1–S3 (списки в тикетах, раздел «Доработка по ревью»).
 3. Подтвердить/отклонить готовность к шагам 3–6 раздела 7.

@@ -1,0 +1,53 @@
+{
+  "revision": "980d331",
+  "node": "v24.18.0",
+  "results": [
+    {
+      "name": "S1-reclaim-check-unlink-race",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-round2-S1-reclaim-check-unlink-race-JjhAAo",
+      "evidence": {
+        "twoAcquiredWhileParentNotReleased": true,
+        "parentLiveLockDeleted": true
+      }
+    },
+    {
+      "name": "S2-source-newline-overrides-scope",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-round2-S2-source-newline-overrides-scope-HcoOUq",
+      "evidence": {
+        "result": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "ef6e07dc302c"
+        },
+        "hits": [
+          {
+            "snippet": "## PRIVATE_B_VALUE",
+            "source": ".claude/memory/facts/writer-entries.md",
+            "scope": "user",
+            "status_hint": "observation",
+            "relevance": 0.99
+          }
+        ]
+      }
+    },
+    {
+      "name": "S3-crlf-input-retry-duplicates",
+      "reproduced": true,
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-round2-S3-crlf-input-retry-duplicates-tdckL8",
+      "evidence": {
+        "copies": 2,
+        "result": {
+          "status": "persisted",
+          "written_files": [
+            ".claude/memory/facts/writer-entries.md"
+          ],
+          "revision": "3ebc1750d00d"
+        }
+      }
+    }
+  ]
+}
