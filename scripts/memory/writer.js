@@ -3,6 +3,7 @@
 
 const crypto = require('node:crypto');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const { resolvePaths } = require('./resolve-paths');
 const writerLog = require('./writer-log');
@@ -17,15 +18,63 @@ function lockPath() {
   return path.join(resolvePaths().data_dir, 'writer', 'memory.lock');
 }
 
+function lockOwner(file) {
+  try {
+    const raw = fs.readFileSync(file, 'utf8').trim();
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Number.isInteger(parsed.pid) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function pidAlive(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function writeOwner(fd, owner) {
+  fs.writeFileSync(fd, JSON.stringify(owner) + '\n', 'utf8');
+  fs.fsyncSync(fd);
+}
+
 function acquireLock() {
   const file = lockPath();
   fs.mkdirSync(path.dirname(file), { recursive: true });
+  const owner = {
+    pid: process.pid,
+    hostname: os.hostname(),
+    created: new Date().toISOString(),
+    nonce: crypto.randomBytes(8).toString('hex'),
+  };
   for (let attempt = 0; attempt < 100; attempt += 1) {
     try {
       const fd = fs.openSync(file, 'wx');
-      return () => { fs.closeSync(fd); fs.unlinkSync(file); };
+      writeOwner(fd, owner);
+      return () => {
+        try { fs.closeSync(fd); } catch {}
+        try { fs.unlinkSync(file); } catch {}
+      };
     } catch (error) {
       if (error.code !== 'EEXIST') throw error;
+      if (lockOwner(file) === null) {
+        // Окно «файл открыт, владелец ещё не записан»: дать владельцу дописать
+        // и проверить повторно, прежде чем считать блокировку осиротевшей.
+        const wait = new Int32Array(new SharedArrayBuffer(4));
+        Atomics.wait(wait, 0, 0, 50);
+        if (lockOwner(file) === null) {
+          try { fs.unlinkSync(file); } catch {}
+          continue;
+        }
+      } else if (!pidAlive(lockOwner(file).pid)) {
+        try { fs.unlinkSync(file); } catch {}
+        continue;
+      }
       const wait = new Int32Array(new SharedArrayBuffer(4));
       Atomics.wait(wait, 0, 0, 10);
     }
@@ -161,4 +210,4 @@ function writeProposal(eventId, input) {
   }
 }
 
-module.exports = { CATEGORIES, STATUSES, validateProposal, writeProposal };
+module.exports = { CATEGORIES, STATUSES, validateProposal, writeProposal, acquireLock };

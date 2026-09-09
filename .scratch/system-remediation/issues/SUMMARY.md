@@ -11,7 +11,7 @@
 | FIX | Содержание | Дефекты | Исходные SC/R | Блокируется | Статус |
 |---|---|---|---|---|---|
 | [FIX-01](FIX-01-writer-batch-and-recovery.md) | Writer: пакетная запись, восстановление intent/частичной записи | F01, F02 | SC-08 (R03, R07) | — | awaiting-review |
-| [FIX-02](FIX-02-writer-lock-ownership.md) | Writer: владение блокировкой, steal осиротевших, liveness по pid | F03 | SC-08 (R07) | — | planned |
+| [FIX-02](FIX-02-writer-lock-ownership.md) | Writer: владение блокировкой, steal осиротевших, liveness по pid | F03 | SC-08 (R07) | — | awaiting-review |
 | [FIX-03](FIX-03-search-project-isolation.md) | Поиск: изоляция проектов по записям в общих файлах | F04 | SC-05/08 (R04, R05) | — | planned |
 | [FIX-04](FIX-04-immediate-save-durability.md) | Немедленное сохранение без сервисов; fsync; границы durability; SPEC/контракт | — (требование ревью Opus 2026-09-09) | SC-08, R03, R05 | FIX-01 | planned |
 | [FIX-05](FIX-05-queue-ownership.md) | Очередь: владение задачей, защита подтверждённого результата | F08 | SC-07 (R07) | — | planned |
