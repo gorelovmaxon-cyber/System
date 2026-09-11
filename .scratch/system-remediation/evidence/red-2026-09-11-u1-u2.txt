@@ -1,0 +1,237 @@
+# RED: новые регрессии U1/U2 против до-фиксовой реконструкции
+
+reconstructed tree: C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi
+
+✖ U1: a killed keeper does not admit a second owner while the writer lives (2516.2625ms)
+✔ U1: a paused live owner keeps authority for the whole critical section (6905.5688ms)
+✔ U1: the death of the writer releases authority for the next owner (2211.2073ms)
+✖ U1: a keeper that cannot start fails closed without publishing ownership (2282.5168ms)
+✖ U1: assertHeld rejects a replaced ownership record (168.544ms)
+✔ U1: a normal release hands the resource to the next owner (1801.9958ms)
+✔ B10: UTF-8 truncation preserves code points and the byte limit (3.7861ms)
+✔ B11: event validation rejects missing identity and malformed list fields (43.027ms)
+✔ B11: queue validates direct API input before append (23.7184ms)
+✔ B09/F10: truncated tails are quarantined and valid writer/indexer/queue records survive (4059.5493ms)
+✔ B09: corruption in the middle is fail-closed and is not silently removed (236.3819ms)
+✔ F09: recapture of the same commit ignores timestamp-only differences (1174.9707ms)
+✔ F08: only one concurrent worker delivers a live lease (4895.7142ms)
+✔ F08: an expired worker cannot overwrite a newer delivered generation (5978.2285ms)
+✔ U2: a failed quarantine write leaves the journal byte-identical (321.107ms)
+✖ U2: a failed repaired-copy write keeps prefix and tail recoverable (840.7602ms)
+✖ U2: a failed replacement leaves the journal intact and no repair leftovers (1161.7134ms)
+✖ U2: process death at a repair boundary keeps both parts recoverable (817.6836ms)
+✖ U2: the canonical journal is only replaced by an atomic rename of a prepared sibling (1488.4659ms)
+✖ U2: a valid final record without LF is not rewritten and stays appendable (209.1656ms)
+✖ U2: an append is flushed to disk through its own fd (193.59ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 12
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21778.986
+
+✖ failing tests:
+
+test at scripts\memory\tests\fix-02-keeper.test.js:52:1
+✖ U1: a killed keeper does not admit a second owner while the writer lives (2516.2625ms)
+  AssertionError [ERR_ASSERTION]: a second owner must not be admitted: ACQUIRED
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-02-keeper.test.js:75:12)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 0,
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-02-keeper.test.js:157:1
+✖ U1: a keeper that cannot start fails closed without publishing ownership (2282.5168ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /lock keeper script is missing/. Input:
+  
+  'lock timeout'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-02-keeper.test.js:165:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'lock timeout',
+    expected: /lock keeper script is missing/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-02-keeper.test.js:176:1
+✖ U1: assertHeld rejects a replaced ownership record (168.544ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-02-keeper.test.js:184:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:180:1
+✖ U2: a failed repaired-copy write keeps prefix and tail recoverable (840.7602ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-06.test.js:184:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:190:1
+✖ U2: a failed replacement leaves the journal intact and no repair leftovers (1161.7134ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-06.test.js:194:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:199:1
+✖ U2: process death at a repair boundary keeps both parts recoverable (817.6836ms)
+  AssertionError [ERR_ASSERTION]: death-before-replace: 
+  
+  0 !== 23
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-06.test.js:203:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 23,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:209:1
+✖ U2: the canonical journal is only replaced by an atomic rename of a prepared sibling (1488.4659ms)
+  AssertionError [ERR_ASSERTION]: the canonical journal is never written in place
+  + actual - expected
+  
+  + [
+  +   'writeFileSync'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-06.test.js:250:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'writeFileSync' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:260:1
+✖ U2: a valid final record without LF is not rewritten and stays appendable (209.1656ms)
+  AssertionError [ERR_ASSERTION]: a complete final record without LF is not damage
+  + actual - expected
+  ... Skipped lines
+  
+  + Buffer(16) [Uint8Array] [
+  - Buffer(15) [Uint8Array] [
+      123,
+      34,
+      97,
+      34,
+      58,
+  ...
+      125,
+  +   10
+    ]
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-06.test.js:266:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: <Buffer 7b 22 61 22 3a 31 7d 0a 7b 22 62 22 3a 32 7d 0a>,
+    expected: <Buffer 7b 22 61 22 3a 31 7d 0a 7b 22 62 22 3a 32 7d>,
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:273:1
+✖ U2: an append is flushed to disk through its own fd (193.59ms)
+  AssertionError [ERR_ASSERTION]: durability must not rest on appendFileSync
+  + actual - expected
+  
+  + [
+  +   'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-u2-durable-Andxh3\\journal.jsonl'
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-reconstruction-RaVxVi\scripts\memory\tests\fix-06.test.js:300:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [ 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-u2-durable-Andxh3\\journal.jsonl' ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+

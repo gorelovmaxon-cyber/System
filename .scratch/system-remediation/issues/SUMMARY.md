@@ -10,17 +10,17 @@
 
 | FIX | Содержание | Дефекты | Исходные SC/R | Блокируется | Статус |
 |---|---|---|---|---|---|
-| [FIX-01](FIX-01-writer-batch-and-recovery.md) | Writer: пакетная запись, восстановление intent/частичной записи; R1 идентичность по полному содержимому, R4 CRLF-идемпотентность | F01, F02 (+R1, R4) | SC-08 (R03, R07) | — | доработка (T1/B-пакет) |
-| [FIX-02](FIX-02-writer-lock-ownership.md) | Writer: владение блокировкой, steal осиротевших, liveness по pid; R5 publish-verify/освобождение своего поколения, R6 конфликт под блокировкой | F03 (+R5, R6) | SC-08 (R07) | — | доработка (T1/B-пакет) |
-| [FIX-03](FIX-03-search-project-isolation.md) | Поиск: изоляция проектов по записям в общих файлах; R2 перитмическая верификация Khoj, R3 CRLF-разбор и строгая изоляция scope | F04 (+R2, R3) | SC-05/08 (R04, R05) | — | доработка (T1/B-пакет) |
-| [FIX-04](FIX-04-immediate-save-durability.md) | Немедленное сохранение без сервисов; fsync; границы durability; SPEC/контракт; crash-точки реального writer, настоящий remote-конфликт | — (требование ревью Opus 2026-09-09) | SC-08, R03, R05 | FIX-01 | доработка (T1/B-пакет) |
-| [FIX-05](FIX-05-queue-ownership.md) | Очередь: владение задачей, защита подтверждённого результата | F08 | SC-07 (R07) | — | planned |
-| [FIX-06](FIX-06-queue-recapture-and-corrupt-tail.md) | Очередь/журналы: повторный capture без конфликта по времени; оборванный JSONL-хвост; карантин | F09, F10 | SC-07 (R07) | FIX-05 (общий jsonl.js) | planned |
-| [FIX-07](FIX-07-index-task-recovery.md) | Индекс: повторная постановка задач, reconcile, возобновление in-flight | F05, F06 | SC-10 (R08) | FIX-01, FIX-06 | planned |
-| [FIX-08](FIX-08-index-honest-status.md) | Индекс: indexed только при успехе всех задач события | F07 | SC-10 (R08) | FIX-07 | planned |
-| [FIX-09](FIX-09-webhook-and-superseded-contracts.md) | Контракты: webhook 2xx ≠ persisted; superseded vs удаление | — (уточнение контрактов) | SC-09, SC-03/10 | — | planned |
-| [FIX-10](FIX-10-reporting-status-alignment.md) | Отчётность: согласование статусов SC-01…18, SUMMARY, RELEASE-REPORT | — (дефекты отчётности) | R12, R01 | FIX-01…08 (фактические статусы) | planned |
-| [FIX-11](FIX-11-environment-and-portability.md) | Среда/переносимость: ENVIRONMENT, hooks на клоне, Figma, маршруты, внешние блокировки | — (проверка среды) | SC-01/02/04/06/11–15/17 | FIX-10 | planned |
+| [FIX-01](FIX-01-writer-batch-and-recovery.md) | Writer: пакетная запись, восстановление intent/частичной записи; R1 идентичность по полному содержимому, R4 CRLF-идемпотентность | F01, F02 (+R1, R4) | SC-08 (R03, R07) | — | awaiting-review |
+| [FIX-02](FIX-02-writer-lock-ownership.md) | Writer: владение блокировкой, steal осиротевших, liveness по pid; R5 publish-verify/освобождение своего поколения, R6 конфликт под блокировкой | F03 (+R5, R6) | SC-08 (R07) | — | awaiting-review |
+| [FIX-03](FIX-03-search-project-isolation.md) | Поиск: изоляция проектов по записям в общих файлах; R2 перитмическая верификация Khoj, R3 CRLF-разбор и строгая изоляция scope | F04 (+R2, R3) | SC-05/08 (R04, R05) | — | awaiting-review |
+| [FIX-04](FIX-04-immediate-save-durability.md) | Немедленное сохранение без сервисов; fsync; границы durability; SPEC/контракт; crash-точки реального writer, настоящий remote-конфликт | — (требование ревью Opus 2026-09-09) | SC-08, R03, R05 | FIX-01 | awaiting-review |
+| [FIX-05](FIX-05-queue-ownership.md) | Очередь: владение задачей, защита подтверждённого результата | F08 | SC-07 (R07) | — | awaiting-review |
+| [FIX-06](FIX-06-queue-recapture-and-corrupt-tail.md) | Очередь/журналы: повторный capture без конфликта по времени; оборванный JSONL-хвост; карантин | F09, F10 | SC-07 (R07) | FIX-05 (общий jsonl.js) | awaiting-review |
+| [FIX-07](FIX-07-index-task-recovery.md) | Индекс: повторная постановка задач, reconcile, возобновление in-flight | F05, F06 | SC-10 (R08) | FIX-01, FIX-06 | awaiting-review |
+| [FIX-08](FIX-08-index-honest-status.md) | Индекс: indexed только при успехе всех задач события | F07 | SC-10 (R08) | FIX-07 | awaiting-review |
+| [FIX-09](FIX-09-webhook-and-superseded-contracts.md) | Контракты: webhook 2xx ≠ persisted; superseded vs удаление | — (уточнение контрактов) | SC-09, SC-03/10 | — | awaiting-validation (live AP/Khoj) |
+| [FIX-10](FIX-10-reporting-status-alignment.md) | Отчётность: согласование статусов SC-01…18, SUMMARY, RELEASE-REPORT | — (дефекты отчётности) | R12, R01 | FIX-01…08 (фактические статусы) | awaiting-review |
+| [FIX-11](FIX-11-environment-and-portability.md) | Среда/переносимость: ENVIRONMENT, hooks на клоне, Figma, маршруты, внешние блокировки | — (проверка среды) | SC-01/02/04/06/11–15/17 | FIX-10 | awaiting-validation (external) |
 
 ## Доработка по независимому ревью (2026-09-09, ревизия `a8574f6`)
 
@@ -74,6 +74,40 @@
 и без подключения writer к рабочему потоку.** Публикация в GitHub — снимок промежуточной работы,
 не снятие рубежа. Исторические отчёты, RED/GREEN и коммиты не переписаны; статусы строк таблицы
 выше отражают фактическую точку остановки.
+
+## Четвёртая приёмка (2026-09-11): U1/U2 исправлены, блок подан повторно
+
+Четвёртое независимое ревью ([INDEPENDENT-REVIEW-2026-09-11.md](../INDEPENDENT-REVIEW-2026-09-11.md))
+подтвердило прохождение текущего набора (87/87), но **отклонило блок по двум P1** и отметило, что
+старые матрицы заявляют green по сценариям, которых тесты не покрывают.
+
+- **U1 (FIX-02):** гибель keeper'а освобождала OS-endpoint живого writer'а — второй процесс
+  получал право входа без release первого (`SECOND_OWNER_ACQUIRED`). Исправлено: authority —
+  каноническая запись владения живого процесса, endpoint — только право на шаг публикации;
+  под своим bind'ом претендент сначала проверяет, не называет ли запись живого владельца
+  (`REFUSED:live-owner`), и только затем публикует. `hold.assertHeld()` даёт владельцу
+  fail-closed (`LOCK_AUTHORITY_LOST`), `writer.js` вызывает его на всех границах записи.
+- **U2 (FIX-06):** ремонт оборванного хвоста переписывал журнал на месте усекающим флагом `w` и
+  при I/O-отказе терял корректный prefix. Исправлено: карантин хвоста первым (durable, `'wx'`),
+  подготовка исправленной копии с fsync, затем атомарный `rename`; канонический путь никогда не
+  открывается на запись. Дозапись — `open 'a'` + write + fsync (вместо `appendFileSync`).
+
+**RED:** `evidence/red-reconstruction-2026-09-11.cjs` восстанавливает до-фиксовое поведение в
+TEMP-копии (исторической ревизии в git нет): неподделанная проба рецензента — exit 0, оба дефекта;
+новые регрессии U1 падают 3/6, U2 — 6/7 (`evidence/red-2026-09-11-u1-u2.txt`). Исторический
+результат пробы — `evidence/review-2026-09-11-results.pre-fix.json` (сохранён до повтора пробы,
+как требовало ревью). **GREEN:** проба exit 1, `reproduced:false` для обоих; новые регрессии
+`fix-02-keeper.test.js` 6/6 и U2 7/7; полный набор `node --test scripts/memory/tests/*.test.js`
+— **100/100**.
+
+Тикеты [FIX-02](FIX-02-writer-lock-ownership.md) и [FIX-06](FIX-06-queue-recapture-and-corrupt-tail.md)
+актуализированы (гарантии при независимой смерти writer/keeper, реально поставленная реализация и
+её расхождение с планом, RED/GREEN, ограничения), матрица
+[EXTENDED-FIX-MATRIX.md](../EXTENDED-FIX-MATRIX.md) — строки U1/U2, пакет приёмки
+[WRITER-REVIEW.md](../WRITER-REVIEW.md) — раздел U1/U2. **Примитив блокировки не переводится в
+accepted автором**: он используется журналами (`jsonl.js` → writer-log/indexer-log/queue), область
+влияния шире writer. FIX-09/11 и SC остаются `awaiting-validation` — live AP/Khoj/Figma/второй ПК
+не объявляются выполненными.
 
 ## Порядок исполнения
 

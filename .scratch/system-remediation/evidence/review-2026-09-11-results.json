@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-11",
+  "baseHead": "c0b345932ec9446de13c9d8233888adc00ccc1c8",
+  "reviewed": "uncommitted working tree, not the published base",
+  "results": [
+    {
+      "id": "U1",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\review-sept11-keeper-lMd28a",
+      "firstOwnerPid": 25296,
+      "keeperPid": 19096,
+      "firstOwnerHasNotReleased": true,
+      "secondExit": 1,
+      "stdout": "",
+      "stderr": "D:\\SystemTheBest\\System\\scripts\\memory\\ipc-lock.js:186\r\n  throw error;\r\n  ^\r\n\r\nError: lock timeout\r\n    at acquireProcessLock (D:\\SystemTheBest\\System\\scripts\\memory\\ipc-lock.js:183:17)\r\n    at [eval]:1:110\r\n    at runScriptInThisContext (node:internal/vm:219:10)\r\n    at node:internal/process/execution:451:12\r\n    at [eval]-wrapper:6:24\r\n    at runScriptInContext (node:internal/process/execution:449:60)\r\n    at evalFunction (node:internal/process/execution:283:30)\r\n    at evalTypeScript (node:internal/process/execution:295:3)\r\n    at node:internal/main/eval_string:71:3 {\r\n  code: 'LOCK_TIMEOUT',\r\n  reason: 'live-owner'\r\n}\r\n\r\nNode.js v24.18.0\r\n",
+      "reproduced": false
+    },
+    {
+      "id": "U2",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\review-sept11-jsonl-Vz5T4I",
+      "injected": false,
+      "before": "{\"event_id\":\"already-confirmed\"}\n{\"broken\":",
+      "after": "{\"event_id\":\"already-confirmed\"}\n",
+      "quarantine": [
+        "{\"broken\":"
+      ],
+      "reproduced": false
+    }
+  ]
+}

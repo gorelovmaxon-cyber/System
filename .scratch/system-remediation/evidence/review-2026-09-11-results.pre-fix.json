@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-11",
+  "baseHead": "c0b345932ec9446de13c9d8233888adc00ccc1c8",
+  "reviewed": "uncommitted working tree, not the published base",
+  "results": [
+    {
+      "id": "U1",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\review-sept11-keeper-Gk9mUH",
+      "firstOwnerPid": 25624,
+      "keeperPid": 3760,
+      "firstOwnerHasNotReleased": true,
+      "secondExit": 0,
+      "stdout": "SECOND_OWNER_ACQUIRED\n",
+      "stderr": "",
+      "reproduced": true
+    },
+    {
+      "id": "U2",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\review-sept11-jsonl-QhAOqY",
+      "injected": true,
+      "error": "injected EIO after opening with truncation",
+      "before": "{\"event_id\":\"already-confirmed\"}\n{\"broken\":",
+      "after": "",
+      "quarantine": [
+        "{\"broken\":"
+      ],
+      "reproduced": true
+    }
+  ],
+  "reconstructed": true,
+  "note": "Получено прогоном неподделанной пробы против TEMP-копии scripts/memory с восстановленным до-фиксовым поведением (red-reconstruction-2026-09-11.cjs). Исторический прогон до правки был перезаписан при повторном запуске пробы."
+}
