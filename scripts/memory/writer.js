@@ -8,6 +8,8 @@ const path = require('node:path');
 const { resolvePaths } = require('./resolve-paths');
 const writerLog = require('./writer-log');
 const { queueIndex } = require('./indexer');
+const { assertSafePath } = require('./path-safety');
+const { acquireProcessLock } = require('./ipc-lock');
 
 const CATEGORIES = ['user-profile', 'facts', 'patterns', 'decisions', 'gotchas'];
 const STATUSES = ['observation', 'confirmed', 'superseded'];
@@ -18,145 +20,18 @@ function lockPath() {
   return path.join(resolvePaths().data_dir, 'writer', 'memory.lock');
 }
 
-function lockOwner(file) {
-  try {
-    const raw = fs.readFileSync(file, 'utf8').trim();
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return Number.isInteger(parsed.pid) ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-// Живой pid — только ESRCH (нет такого процесса) трактуется как мёртвый.
-// EPERM/прочие ошибки доступа означают «процесс существует, но недоступен
-// проверке» — блокировку не крадём (R5).
-function pidAlive(pid) {
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch (error) {
-    return error.code === 'ESRCH' ? false : true;
-  }
-}
-
-function writeOwner(fd, owner) {
-  fs.writeFileSync(fd, JSON.stringify(owner) + '\n', 'utf8');
-  fs.fsyncSync(fd);
-}
-
-function sameOwner(a, owner) {
-  return a !== null && a.pid === owner.pid && a.nonce === owner.nonce;
-}
-
-// Устаревшее решение (восстановление пустого/мёртвого lock) никогда не
-// выполняет разрушающее действие по каноническому пути (S1): текущий
-// occupant пути атомарно перемещается в уникальный карантин, содержимое
-// перемещённого файла проверяется, и только verified-карантин удаляется.
-// Иной occupant (живой владелец, сменившееся поколение) возвращается на
-// место. Карантин владением не является: если вернуть его нельзя, удаление
-// безопасно — его владелец publish-verify на каноническом пути не прошёл
-// и повторит попытку.
-function reclaimStale(file, stale) {
-  const quarantine = file + '.reclaim-' + process.pid + '-' + crypto.randomBytes(4).toString('hex');
-  try {
-    fs.renameSync(file, quarantine);
-  } catch {
-    return; // путь уже освобождён/занят другим реклаймером — повторим wx
-  }
-  const moved = lockOwner(quarantine);
-  const verifiedStale = moved === null ||
-    (stale !== null && moved.pid === stale.pid && !pidAlive(moved.pid));
-  if (verifiedStale) {
-    try { fs.unlinkSync(quarantine); } catch {}
-  } else {
-    restoreQuarantine(quarantine, file);
-  }
-}
-
-function restoreQuarantine(quarantine, file) {
-  for (let i = 0; i < 5; i += 1) {
-    if (!fs.existsSync(file)) {
-      try { fs.renameSync(quarantine, file); return; } catch (error) {
-        if (error.code !== 'ENOENT' && error.code !== 'EEXIST') break;
-      }
-    }
-    const wait = new Int32Array(new SharedArrayBuffer(4));
-    Atomics.wait(wait, 0, 0, 10);
-  }
-  try { fs.unlinkSync(quarantine); } catch {}
-}
-
-// Захват блокировки с безопасной публикацией владельца (R5):
-// 1. wx-создание, запись владельца, закрытие, затем подтверждение, что файл
-//    всё ещё наш. Если между созданием и публикацией файл удалили/заменили
-//    (конкурентное восстановление «пустой» блокировки) — захват потерян:
-//    чужую блокировку не удаляем, повторяем попытку.
-// 2. Пустая/мусорная блокировка: несколько чтений в окне (~250 мс), прежде
-//    чем считать её осиротевшей; владелец мог ещё не успеть опубликоваться.
-// 3. Освобождение удаляет lock-файл только если он всё ещё принадлежит нам;
-//    блокировку другого поколения не трогаем.
+// The atomic right-of-entry event is a successful OS bind performed by a
+// dedicated keeper, combined with the ownership guard in acquireProcessLock:
+// while the bind is ours, no other live process may be recorded as the owner.
+// No contender ever renames or removes another owner's authority. If the writer
+// stops at any boundary, the keeper observes its death (or dies with the
+// session) and the OS releases the endpoint. The memory.lock file below carries
+// the generation that holds authority; a recorded live owner keeps it even when
+// the endpoint is free because its keeper died. assertHeld() lets the write
+// path fail closed instead of mutating under an endpoint it no longer holds.
 function acquireLock() {
   const file = lockPath();
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  const owner = {
-    pid: process.pid,
-    hostname: os.hostname(),
-    created: new Date().toISOString(),
-    nonce: crypto.randomBytes(8).toString('hex'),
-  };
-  for (let attempt = 0; attempt < 100; attempt += 1) {
-    let fd;
-    try {
-      fd = fs.openSync(file, 'wx');
-    } catch (error) {
-      if (error.code !== 'EEXIST') throw error;
-      const current = lockOwner(file);
-      if (current === null) {
-        // Окно «файл открыт, владелец ещё не записан»: несколько перечитываний,
-        // прежде чем считать блокировку осиротевшей (таймаут-пауза не является
-        // доказательством смерти процесса).
-        let empty = true;
-        for (let i = 0; i < 5; i += 1) {
-          const wait = new Int32Array(new SharedArrayBuffer(4));
-          Atomics.wait(wait, 0, 0, 50);
-          if (lockOwner(file) !== null) { empty = false; break; }
-        }
-        if (empty) {
-          // S1: устаревшее решение не выполняет разрушающее действие по
-          // каноническому пути — occupant перемещается в карантин и проверяется.
-          reclaimStale(file, null);
-        }
-      } else if (!pidAlive(current.pid)) {
-        // Мёртвый владелец: повторное чтение перед восстановлением — владелец
-        // мог смениться между чтениями; живой lock другого поколения не трогаем.
-        const recheck = lockOwner(file);
-        if (recheck !== null && recheck.pid === current.pid && !pidAlive(recheck.pid)) {
-          reclaimStale(file, current);
-        }
-      } else {
-        const wait = new Int32Array(new SharedArrayBuffer(4));
-        Atomics.wait(wait, 0, 0, 10);
-      }
-      continue;
-    }
-    try {
-      writeOwner(fd, owner);
-      fs.closeSync(fd);
-    } catch (error) {
-      try { fs.closeSync(fd); } catch {}
-      throw error;
-    }
-    if (!sameOwner(lockOwner(file), owner)) continue;
-    return () => {
-      const current = lockOwner(file);
-      if (sameOwner(current, owner)) {
-        try { fs.unlinkSync(file); } catch {}
-      }
-    };
-  }
-  throw new Error('writer lock timeout');
+  return acquireProcessLock(file, { metadataFile: file, attempts: 20, timeoutMessage: 'writer lock timeout' });
 }
 
 function text(value, field) {
@@ -166,7 +41,7 @@ function text(value, field) {
 }
 
 function singleLine(value, field) {
-  const line = text(String(value), field);
+  const line = text(value, field);
   if (/[\r\n]/.test(line)) throw new Error(field + ' must be a single line (no CR/LF)');
   return line;
 }
@@ -238,22 +113,21 @@ function entryBlocks(text) {
 // confidence и statement): предложения с одинаковым statement, но разным
 // scope/evidence и т.п. — разные записи и сохраняются все (R1). CRLF
 // нормализуется, поэтому повтор после LF->CRLF идемпотентен (R4).
-function entryPresent(file, eventId, proposal) {
+function entryPresent(file, eventId, proposal, legacyProposal) {
   if (!fs.existsSync(file)) return false;
   const existing = fs.readFileSync(file, 'utf8');
   const expected = normalizeEol(entryText(eventId, proposal)).trim();
-  return entryBlocks(existing).some(block => block.trim() === expected);
-}
-
-function pathInsideMemory(file) {
-  const root = path.resolve(resolvePaths().memory_root);
-  const target = path.resolve(file);
-  return target === root || target.startsWith(root + path.sep);
+  const legacyExpected = legacyProposal ? normalizeEol(entryText(eventId, legacyProposal)).trim() : null;
+  return entryBlocks(existing).some(block => block.trim() === expected || (legacyExpected !== null && block.trim() === legacyExpected));
 }
 
 function writeAtomic(file, content) {
-  if (!pathInsideMemory(file)) throw new Error('writer target escapes memory root');
+  const memoryRoot = resolvePaths().memory_root;
+  assertSafePath(memoryRoot, file, 'writer target');
   fs.mkdirSync(path.dirname(file), { recursive: true });
+  // Recheck after creating missing parents so a pre-existing junction cannot
+  // hide below the first missing component.
+  assertSafePath(memoryRoot, file, 'writer target');
   const tmp = file + '.tmp-' + process.pid + '-' + Date.now();
   const previous = fs.existsSync(file) ? normalizeEol(fs.readFileSync(file, 'utf8')) : '';
   const next = previous + (previous && !previous.endsWith('\n') ? '\n' : '') + content;
@@ -266,6 +140,7 @@ function writeAtomic(file, content) {
       fs.closeSync(fd);
     }
     fs.renameSync(tmp, file);
+    assertSafePath(memoryRoot, file, 'writer target');
   } catch (error) {
     try { fs.unlinkSync(tmp); } catch {}
     throw error;
@@ -283,40 +158,59 @@ function writeProposal(eventId, input) {
   let release;
   try {
     validateEventId(eventId);
-    const proposals = Array.isArray(input) ? input.map(validateProposal) : [validateProposal(input)];
+    if (Array.isArray(input) && input.length === 0) throw new Error('proposals must be a non-empty array');
+    const legacyProposals = Array.isArray(input) ? input : [input];
+    const proposals = legacyProposals.map(validateProposal);
     const hash = proposalHash(eventId, proposals);
+    // Before S2/S3, the intent hash was calculated from the validated but
+    // unnormalised request. Accept that exact legacy identity during recovery,
+    // then publish the canonical hash. This is not a wildcard: any substantive
+    // request difference still conflicts.
+    const legacyHash = proposalHash(eventId, legacyProposals);
     const paths = resolvePaths();
     // Решение о конфликте/повторе и изменение журнала — внутри блокировки (R6):
     // проверка журнала «до» блокировки пропускала конфликт одного event_id
     // между процессами — оба возвращали persisted с разным содержимым.
     release = acquireLock();
     crashPoint('after-lock');
+    release.assertHeld();
     const previous = writerLog.get(eventId);
-    if (previous && previous.hash !== hash) {
+    if (previous && previous.hash !== hash && previous.hash !== legacyHash) {
       const error = new Error('event_id already persisted with different content');
       error.code = 'CONFLICT';
       throw error;
     }
     if (previous && previous.status === 'persisted' &&
-        proposals.every(proposal => entryPresent(targetFile(proposal.category), eventId, proposal))) {
+        proposals.every((proposal, index) => entryPresent(targetFile(proposal.category), eventId, proposal, legacyProposals[index]))) {
+      // Index tasks are derived state. Reconcile them on every idempotent
+      // writer retry so a prior enqueue failure cannot lose persisted data.
+      const existingFiles = proposals.map(proposal => targetFile(proposal.category));
+      try {
+        queueIndex(eventId, existingFiles);
+        if (previous.index_error) writerLog.append({ ...previous, hash, indexed: false, index_error: null });
+      } catch (error) {
+        writerLog.append({ ...previous, hash, indexed: false, index_error: error.message });
+      }
       return { status: 'persisted', written_files: previous.written_files, revision: previous.revision, idempotent: true };
     }
     const files = [];
     const revisions = [];
     writerLog.append({ event_id: eventId, hash, status: 'intent', indexed: false });
     crashPoint('after-intent');
-    for (const proposal of proposals) {
+    for (const [index, proposal] of proposals.entries()) {
       const file = targetFile(proposal.category);
-      if (entryPresent(file, eventId, proposal)) {
+      if (entryPresent(file, eventId, proposal, legacyProposals[index])) {
         files.push(file);
         revisions.push(crypto.createHash('sha256').update(fs.readFileSync(file, 'utf8')).digest('hex').slice(0, 12));
         continue;
       }
+      release.assertHeld();
       const content = writeAtomic(file, entryText(eventId, proposal));
       files.push(file);
       revisions.push(crypto.createHash('sha256').update(content).digest('hex').slice(0, 12));
     }
     crashPoint('after-write');
+    release.assertHeld();
     const revision = crypto.createHash('sha256').update(revisions.join('|')).digest('hex').slice(0, 12);
     const result = { status: 'persisted', written_files: [...new Set(files.map(file => path.relative(paths.system_root, file).replaceAll(path.sep, '/')))], revision };
     try {
