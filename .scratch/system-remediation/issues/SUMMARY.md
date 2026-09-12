@@ -191,8 +191,8 @@ writer не подключается к рабочему потоку, live-ин
 
 | PUB | Содержание | Блокируется | Статус |
 |---|---|---|---|
-| [PUB-01](PUB-01-memory-artifact.md) | Зафиксировать артефакт живой проверки W1 в общей памяти | — | planned |
-| [PUB-02](PUB-02-handoff-and-scope.md) | Актуализировать HANDOFF и зафиксировать объём публикации | PUB-01 | planned |
+| [PUB-01](PUB-01-memory-artifact.md) | Зафиксировать артефакт живой проверки W1 в общей памяти | — | awaiting-review (`09c841f`) |
+| [PUB-02](PUB-02-handoff-and-scope.md) | Актуализировать HANDOFF и зафиксировать объём публикации | PUB-01 | awaiting-review |
 | [PUB-03](PUB-03-pre-push-backup.md) | Резервная копия перед публикацией (bundle + инвентаризация) | PUB-01, PUB-02 | planned |
 | [PUB-04](PUB-04-publish-and-verify.md) | Публикация и проверка свежим клоном | PUB-01…03 | planned |
 

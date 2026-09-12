@@ -1,33 +1,49 @@
 # HANDOFF — systemqwen
 
-## Актуальная передача: пакет общего аудита 2026-09-12 подан на приёмку
+## Актуальная передача: снимок 2026-09-12, публикация пакетом PUB; пакет аудита принят не целиком
 
-Точка остановки на 2026-09-12, ветка `master`. Последний коммит пакета приёмки — `31e3f32`
-(WRITER-REVIEW, раздел 12); коммиты HANDOFF идут следом.
+Точка остановки на 2026-09-12, ветка `master`. Публикация выполняется пакетом
+[PUB-01…PUB-04](.scratch/system-remediation/issues/SUMMARY.md); фактический SHA remote и результат
+прогона на свежем клоне — в отчёте публикации
+[publish-2026-09-12.md](.scratch/system-remediation/evidence/publish-2026-09-12.md).
 
-- **Что сделано.** По пятому ревью (V1/G15) и общему аудиту 2026-09-12 закрыты V1, G15 и
-  G01–G19, а также плановые команды FIX-06 (`corrupt_count`/`--quarantine`) и контракт Figma
-  при `nodeId` (G16). Пять блоков, scoped-коммиты: `b1607ff`/`ece1b24` (блок 1),
-  `a8344ab` (блок 2), `52f2a8c`/`a8bfaf4` (блок 3), `53e5282`/`81f44db`/`91bdada` (блок 4),
-  `4168dee`/`f04d3f8`/`c13f11c` (блок 5).
-- **Проверки.** `node --test scripts/memory/tests/*.test.js` → **150/150**; `npm test` в
-  `.claude/mcp-servers/figma` → **7/7** (157 проверок). На каждый блок есть RED из git-ревизии
-  и сохранённый до повтора результат harness-а (`evidence/red-2026-09-12-*.txt`,
-  `evidence/pre-block*/`).
-- **Не принято.** Блок остаётся `awaiting-review`: `READY` выставляет только независимая
-  приёмка. **До положительного вердикта — без миграции настоящей памяти и без подключения
-  writer к рабочему потоку.** FIX-09/11 и SC-xx остаются `awaiting-validation`.
-- **Открытые наблюдения** (предъявлены как есть, не повышены до исправлений): G12 — проба
-  аудита бьёт по `drain()`; G15 — проба не завершается на исправленном дереве; G08/G09 —
-  `harness_error` из-за отказа на границе; G16 — текст `classification` в пробе не переписан.
-- **Внешние блокировки:** live Khoj/Docker/Activepieces, реальный Figma-файл, второй ПК и
-  restore — требуют отдельной среды и доступов.
-- **Хвосты:** в TEMP остаётся registered worktree `s2-red-block4` (detached `a8bfaf4`) —
-  RED-база блока 4; untracked `evidence/status-check-current-tests.txt` (UTF-16 вывод
-  PowerShell, в Git не включается).
+**Что принято.** Только участок W1 (FIX-05, `scripts/memory/queue-worker.js`): независимая проверка
+подтвердила ожидание повторной доставки после оживления `failed` — 5/5 (W1 ×2, G12 ×3). Вердикт и его
+границы — [INDEPENDENT-ACCEPTANCE-2026-09-12.md](.scratch/system-remediation/INDEPENDENT-ACCEPTANCE-2026-09-12.md),
+отчёт об исправлении — [W1-REVIVE-AWAIT-REPORT-2026-09-12.md](.scratch/system-remediation/W1-REVIVE-AWAIT-REPORT-2026-09-12.md).
 
-Пакет приёмки: [WRITER-REVIEW.md](.scratch/system-remediation/WRITER-REVIEW.md) раздел 12,
-матрицы [EXTENDED-FIX-MATRIX.md](.scratch/system-remediation/EXTENDED-FIX-MATRIX.md) и
+**Что не принято.** Пакет общего аудита 2026-09-12 (V1, G15, G01–G19) независимой приёмки целиком **не
+проходил**: проверялся только участок W1 и его регрессии, общий повторный аудит не выполнялся.
+FIX-01…08 и FIX-10 остаются `awaiting-review`, FIX-09/11 и SC-xx — `awaiting-validation`.
+`READY` выставляет только независимая проверка.
+
+**Рубеж.** Пользователь разрешил запуск сервисов и публикацию после приёмки W1. Выполнена одна живая
+запись в настоящую память (см. ниже); миграция настоящей памяти и подключение writer к рабочему потоку
+не выполнялись.
+
+**Живая проверка.** Bridge запущен: `127.0.0.1:8643`, health `ready`. Запись создана самим writer'ом, а
+не вручную: `.claude/memory/facts/writer-entries.md`, ревизия `0a471effda65`, в коммите `09c841f`.
+Задача индексатора `idx_175666186629781b` — `pending`: Khoj не поднят, поиск по записи ещё не проверен
+и за проиндексированный не выдаётся.
+
+**Проверки.** `node --test scripts/memory/tests/*.test.js` → **152/152**; Figma `npm test` → **7/7**.
+RED на каждый блок пакета снят из git-ревизии, результаты сохранены в `evidence/pre-block*/`.
+
+**Среда.** Python 3.12.10 установлен. Khoj 1.42.10 ставится в отдельный venv вне репозитория
+(`D:/SystemTheBest/runtime/khoj-1.42.10`); установка на момент передачи не завершена.
+Activepieces заблокирован: Docker не установлен, WSL не работает, включение виртуализации требует прав
+администратора. Figma — нужен ключ и доступ к макету. Второй ПК, миграция памяти и restore — отдельная
+среда. Всё перечисленное остаётся `awaiting-validation` с причиной.
+
+**Хвосты.** Вне публикации остались untracked: черновик
+[ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md](.scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md)
+(решение — оставить вне Git; тема отдельной задачи после приёмки, не блокер) и
+`evidence/status-check-current-tests.txt` (UTF-16 вывод PowerShell, в Git не включается).
+В TEMP остаётся registered worktree `s2-red-block4` (detached `a8bfaf4`) — RED-база блока 4, держится,
+пока приёмка может перепроверять происхождение.
+
+Пакет приёмки: [WRITER-REVIEW.md](.scratch/system-remediation/WRITER-REVIEW.md) раздел 12, матрицы
+[EXTENDED-FIX-MATRIX.md](.scratch/system-remediation/EXTENDED-FIX-MATRIX.md) и
 [SC-REVIEW-MATRIX.md](.scratch/system-remediation/SC-REVIEW-MATRIX.md),
 [issues/SUMMARY.md](.scratch/system-remediation/issues/SUMMARY.md).
 
