@@ -1,0 +1,287 @@
+✔ F01: batch of two proposals in same category persists both; repeat is idempotent (1906.2084ms)
+✔ F01: batch write queues one pending index task per written file; repeat does not duplicate (1944.243ms)
+✔ F02: intent without memory file is recovered into a real persisted entry (2162.9107ms)
+✔ F02: partial write (one category already present) is completed without duplicates (3154.4988ms)
+✔ R1: same statement with different scope persists both proposals of one event (1717.2261ms)
+✔ R1: same statement and scope but different evidence persists both (949.567ms)
+✔ R1: fully identical proposals in one event are written once, repeat is idempotent (1669.2235ms)
+✔ R4: repeat after LF->CRLF conversion is idempotent, no duplicate entries (1649.8501ms)
+✔ R4: partial recovery works after LF->CRLF conversion (writer normalizes EOL) (2106.8299ms)
+✔ control: exact repeat keeps revision and does not add intent lines; different content conflicts (1957.1337ms)
+✔ S2: CR/LF in source, evidence, supersedes and event_id is rejected (17.8931ms)
+✔ S2: statement line starting with --- (record boundary) is rejected (7.6769ms)
+✔ S2: round-trip of all fields through write and re-parse is lossless; repeat idempotent (1660.3883ms)
+✔ S3: CRLF multiline statement is stored once in LF; repeat is idempotent (1680.501ms)
+✔ S3: mixed EOL in multiline statement is normalized to LF; repeat idempotent (1664.9398ms)
+✔ S3: LF and CRLF forms of the same content hash identically (idempotent, not CONFLICT) (1682.5546ms)
+✔ S3: partial recovery after CRLF input completes without duplicates (2088.0902ms)
+✔ S3: normalization does not hide real content differences (CONFLICT preserved) (1196.5355ms)
+✔ B01: required evidence rejects missing and non-string values (10.2851ms)
+✔ B17: empty batch is rejected without reserving the event id (933.8632ms)
+✔ B15: exact legacy intent with edge whitespace recovers under canonical hash (2258.1675ms)
+✔ B02: writer rejects a junction that redirects a category outside memory root (301.3176ms)
+✖ G07: the order of JSON keys does not change proposal identity (1194.4061ms)
+✔ G07: an explicit optional default equals the omitted one (1667.3602ms)
+✖ G07: an unknown proposal field is rejected instead of changing identity invisibly (867.692ms)
+✔ G07: a substantive difference still conflicts (1451.2794ms)
+✖ G07: an interrupted legacy intent is recoverable and republished canonically (1347.1349ms)
+✔ F04: entry of project B in a shared file is not visible from project A (33.0297ms)
+✔ F04: isolation holds with reversed order (project entry written first) (55.1443ms)
+✔ R3: hand-written single-entry file without frontmatter is visible only at user level (16.7703ms)
+✔ F04: status_hint and scope come from the matching entry, not the file first entry (12.0381ms)
+✔ F04: one file with several entries can yield several results; limit applies (34.4065ms)
+✔ F04: searchKhoj local fallback is isolated per project (20.5331ms)
+✔ R2: Khoj positive path attributes each hit to the local entry and keeps project isolation (20.3127ms)
+✔ R2: all allowed source forms resolve to the same local file (18.4662ms)
+✔ R2: hit whose local file is missing is dropped; service text is not trusted (12.6703ms)
+✔ R2: hit not confirmed by any local entry is dropped (13.3367ms)
+✔ R2: hit with unknown scope is hidden from projects, visible at user level (20.2422ms)
+✔ R3: CRLF file does not break entry splitting nor project isolation (18.1229ms)
+✔ R3: relativeSource normalizes all allowed forms (6.4439ms)
+✔ S2: duplicate scope in a record is fail-closed (hidden from every project; user level sees unknown) (20.0007ms)
+✔ S2: duplicate status in a record is fail-closed (status_hint unknown) (11.0852ms)
+✔ B04: minimal local config preserves nested search and Khoj defaults (12.134ms)
+✔ B05: Khoj hit resolves against a configured custom memory root (16.7091ms)
+✔ B14: an allowed record is selected before a better forbidden record (13.8818ms)
+✖ G05: a Khoj hit through a junction inside memory root is not read outside it (19.6117ms)
+✔ G05: the local walk does not descend into a junction inside memory root (17.0408ms)
+✖ G09: an unregistered project_id is rejected on the positive Khoj path, before HTTP (15.9453ms)
+✖ G09: the verdict for an unknown project does not depend on Khoj availability (106.3136ms)
+✔ B10: UTF-8 truncation preserves code points and the byte limit (5.3833ms)
+✔ B11: event validation rejects missing identity and malformed list fields (27.6461ms)
+✔ B11: queue validates direct API input before append (44.2702ms)
+✖ G08: capture rejects a wrongly typed list instead of silently emptying it (9.6951ms)
+✔ G08: correct arrays and absent optional fields keep the documented meaning (12.8351ms)
+✖ G08: capture --file with a wrongly typed field fails loudly and enqueues nothing (1137.5723ms)
+✔ B09/F10: truncated tails are quarantined and valid writer/indexer/queue records survive (967.0461ms)
+✔ B09: corruption in the middle is fail-closed and is not silently removed (176.9366ms)
+✔ F09: recapture of the same commit ignores timestamp-only differences (480.7922ms)
+✔ F08: only one concurrent worker delivers a live lease (1563.9243ms)
+✔ F08: an expired worker cannot overwrite a newer delivered generation (2400.2925ms)
+✔ U2: a failed quarantine write leaves the journal byte-identical (265.5038ms)
+✔ U2: a failed repaired-copy write keeps prefix and tail recoverable (270.7397ms)
+✔ U2: a failed replacement leaves the journal intact and no repair leftovers (257.7255ms)
+✔ U2: process death at a repair boundary keeps both parts recoverable (479.9346ms)
+✔ U2: the canonical journal is only replaced by an atomic rename of a prepared sibling (160.4094ms)
+✔ U2: a valid final record without LF is not rewritten and stays appendable (465.1297ms)
+✔ U2: an append is flushed to disk through its own fd (326.4346ms)
+✔ B16: one batch creates one raw pending index record per unique file revision (1258.2737ms)
+✔ B19: indexer rejects dot-dot and junction escapes (12.2312ms)
+✔ B07: changed file creates a new manual index revision (1786.9229ms)
+✔ B08: failed index task observes backoff before retry (1864.9272ms)
+✔ F06: legacy in-flight task without a lease is recovered by run (1032.2498ms)
+✔ F07: writer event is indexed only after every file succeeds (2533.9552ms)
+✔ F05: idempotent writer retry recreates a lost index task (1785.4177ms)
+✖ G06: run refuses a journal path that escapes memory root and never reaches the adapter (905.0841ms)
+✖ G13: a directory replaced by a junction between enqueue and run is not indexed (729.7794ms)
+ℹ tests 76
+ℹ suites 0
+ℹ pass 66
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 39445.7387
+
+✖ failing tests:
+
+test at scripts\memory\tests\fix-01.test.js:354:1
+✖ G07: the order of JSON keys does not change proposal identity (1194.4061ms)
+  Error: event_id already persisted with different content
+      at Object.writeProposal (D:\SystemTheBest\s2-red-block3\scripts\memory\writer.js:186:21)
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-01.test.js:360:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    code: 'CONFLICT'
+  }
+
+test at scripts\memory\tests\fix-01.test.js:377:1
+✖ G07: an unknown proposal field is rejected instead of changing identity invisibly (867.692ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-01.test.js:380:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unknown proposal field: extra_note/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-01.test.js:399:1
+✖ G07: an interrupted legacy intent is recoverable and republished canonically (1347.1349ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
+  
+  '45ef7dd06f62de77351c8fecac6c5de088828718eed6e703d97b9953edad52b1'
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-01.test.js:408:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '45ef7dd06f62de77351c8fecac6c5de088828718eed6e703d97b9953edad52b1',
+    expected: '45ef7dd06f62de77351c8fecac6c5de088828718eed6e703d97b9953edad52b1',
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-03.test.js:319:1
+✖ G05: a Khoj hit through a junction inside memory root is not read outside it (19.6117ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   {
+  +     relevance: 0.9,
+  +     scope: 'user',
+  +     snippet: '## OUTSIDE_SECRET_MARKER',
+  +     source: '.claude/memory/linked/outside.md',
+  +     status_hint: 'observation'
+  +   }
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-03.test.js:330:12)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { snippet: '## OUTSIDE_SECRET_MARKER', source: '.claude/memory/linked/outside.md', scope: 'user', status_hint: 'observation', relevance: 0.9 } ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-03.test.js:349:1
+✖ G09: an unregistered project_id is rejected on the positive Khoj path, before HTTP (15.9453ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-03.test.js:357:5)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unknown project_id: ghost-project/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-03.test.js:362:1
+✖ G09: the verdict for an unknown project does not depend on Khoj availability (106.3136ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-03.test.js:369:3)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /unknown project_id/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:51:1
+✖ G08: capture rejects a wrongly typed list instead of silently emptying it (9.6951ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: decisions = "KEEP_THIS_DECISION"
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-06.test.js:57:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /decisions must be an array of strings/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-06.test.js:81:1
+✖ G08: capture --file with a wrongly typed field fails loudly and enqueues nothing (1137.5723ms)
+  AssertionError [ERR_ASSERTION]: {
+    "event": {
+      "schema_version": "1",
+      "event_id": "evt_cd0b00ffebaa",
+      "project_id": "A",
+      "kind": "session-summary",
+      "timestamp": "2026-09-12T10:50:59.835Z",
+      "source": {
+        "session_id": "g08file",
+        "revision": 1
+      },
+      "summary": "from file",
+      "decisions": [],
+      "user_corrections": [],
+      "checks": [],
+      "next_action": ""
+    },
+    "status": "pending",
+    "attempts": 1
+  }
+  
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-06.test.js:90:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-07.test.js:114:1
+✖ G06: run refuses a journal path that escapes memory root and never reaches the adapter (905.0841ms)
+  AssertionError [ERR_ASSERTION]: непроверенный путь не передаётся адаптеру
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-07.test.js:124:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-07.test.js:134:1
+✖ G13: a directory replaced by a junction between enqueue and run is not indexed (729.7794ms)
+  AssertionError [ERR_ASSERTION]: путь через junction не передаётся адаптеру
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block3\scripts\memory\tests\fix-07.test.js:147:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

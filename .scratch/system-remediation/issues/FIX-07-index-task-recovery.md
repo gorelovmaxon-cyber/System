@@ -65,6 +65,29 @@ Reindex по-прежнему требует реального механизм
 
 **GREEN.** На исправленном дереве `node --test scripts/memory/tests/fix-07.test.js` → **7/7**; полный набор → **118/118** ([вывод](evidence/unit-118-after-block2-2026-09-12.txt)). Повторный прогон аудита: G04 `reproduced: false`.
 
+## Блок 3: перепроверка пути index-задачи по факту (G06/G13) — 2026-09-12
+
+**Проблемы.** G06 (P1): задача берётся из журнала и путь не перепроверяется — запись журнала могла быть восстановлена или изменена вручную (`file: '../../outside.md'`), и такой путь передавался адаптеру, то есть за пределы корня памяти. G13 (P2): законный файл мог оказаться за каталогом, переименованным и заменённым junction между постановкой задачи и прогоном; чтение уходило наружу, а задача завершалась `indexed`.
+
+**Что изменено в `scripts/memory/indexer.js`:** в `reindex` путь задачи перепроверяется по факту перед обращением к адаптеру — `assertSafePath(memory_root, absolute, 'indexer file')`; непрошедший путь даёт задаче `failed` с причиной `indexer file crosses a symbolic link or junction` и до адаптера не доходит. `currentRevision(root, file)` теперь оборачивает `fileRevision` в `assertSafePath` и возвращает `null` при отказе, поэтому нечитаемый/уведённый за корень путь честно **не подтверждает** актуальность и не может удержать агрегат `indexed`.
+
+**RED.** База — дерево `6b22b60` без правок блока 3 (отдельный worktree). На базе падают
+`G06: run refuses a journal path that escapes memory root and never reaches the adapter` и
+`G13: a directory replaced by a junction between enqueue and run is not indexed`; прогон аудита
+даёт `G06 sent:{"file":"../../outside.md",…}, reproduced:true` и
+`G13 calls:1, result:[{status:"indexed"}], reproduced:true`
+([вывод тестов](evidence/red-2026-09-12-block3.txt),
+[результаты аудита](evidence/red-2026-09-12-block3-harness-results.json),
+[доп. пробы](evidence/red-2026-09-12-block3-extra-results.json)).
+
+**GREEN.** `node --test scripts/memory/tests/fix-07.test.js` → **9/9**; полный набор →
+**132/132** ([вывод](evidence/unit-after-block3-2026-09-12.txt)). Повторный прогон аудита:
+`G06 reproduced:false` (адаптер не вызван вообще), `G13 reproduced:false`
+(`calls:0`, `status:"failed"`, причина — граница пути)
+([основные пробы](evidence/block3-harness-post-fix.txt),
+[доп. пробы](evidence/block3-extra-harness-post-fix.txt)). Тест G13 дополнительно проверяет
+восстановление: после возврата настоящего каталога задача с корректной арендой становится `indexed`.
+
 ## Как закончить
 
 1. Тест → красный. 2. Правки writer/indexer. 3. Зелёный + прогоны FIX-01, FIX-06. 4. Scoped-коммит `FIX-07`. 5. `awaiting-validation`; независимая приёмка.

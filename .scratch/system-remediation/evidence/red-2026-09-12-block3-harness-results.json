@@ -1,0 +1,133 @@
+{
+  "date": "2026-09-12",
+  "head": "6b22b609890da8eca81cfac8b09062c46a462b9d",
+  "dirtyTree": true,
+  "results": [
+    {
+      "id": "G01",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G01-5TyO8k",
+      "before": true,
+      "after": false,
+      "pending": 1,
+      "reproduced": false
+    },
+    {
+      "id": "G02",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G02-x1B5OO",
+      "injected": true,
+      "first": [
+        {
+          "task_id": "idx_04b400028593b97b",
+          "status": "indexed",
+          "reason": null
+        }
+      ],
+      "retry": [],
+      "indexedTasks": [
+        "indexed"
+      ],
+      "writerIndexed": true,
+      "reproduced": false
+    },
+    {
+      "id": "G03",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G03-jYtvBb",
+      "calls": 2,
+      "leaseExpiry": "2026-09-12T10:52:37.736Z",
+      "now": "2026-09-12T10:52:36.736Z",
+      "overlapping": false,
+      "reproduced": false
+    },
+    {
+      "id": "G04",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G04-XKtWHm",
+      "calls": 2,
+      "expiredOnStart": false,
+      "reproduced": false
+    },
+    {
+      "id": "G05",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G05-81ruzN",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-outside-c2F3TS",
+      "response": {
+        "ok": true,
+        "results": [
+          {
+            "snippet": "OUTSIDE_SECRET_MARKER",
+            "source": ".claude/memory/linked/outside.md",
+            "scope": "user",
+            "status_hint": "confirmed",
+            "relevance": 0
+          }
+        ]
+      },
+      "reproduced": true
+    },
+    {
+      "id": "G06",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-WPfztN",
+      "sent": {
+        "file": "../../outside.md",
+        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-WPfztN\\.claude\\memory"
+      },
+      "reproduced": true
+    },
+    {
+      "id": "G07",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G07-Xt3VGT",
+      "error": "CONFLICT",
+      "reproduced": true
+    },
+    {
+      "id": "G08",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G08-MgD7A2",
+      "inputDecisions": "KEEP_THIS_DECISION",
+      "outputDecisions": [],
+      "reproduced": true
+    },
+    {
+      "id": "G09",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G09-Hb9nju",
+      "remote": {
+        "ok": true,
+        "results": [
+          {
+            "snippet": "GHOST_MARKER",
+            "source": ".claude/memory/facts/ghost.md",
+            "scope": "ghost-project",
+            "status_hint": "confirmed",
+            "relevance": 0
+          }
+        ]
+      },
+      "localError": "unknown-project",
+      "reproduced": true
+    },
+    {
+      "id": "G10",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G10-rZHfBR",
+      "startCount": 2,
+      "reproduced": true
+    },
+    {
+      "id": "G11",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G11-7X79GO",
+      "base": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-XRjyr0",
+      "work": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-XRjyr0-worktree",
+      "exit": 0,
+      "stdout": "Installed hooksPath: C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-XRjyr0-worktree/.git-hooks-templates\n",
+      "stderr": "",
+      "configured": "C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-XRjyr0-worktree/.git-hooks-templates",
+      "reproduced": true
+    },
+    {
+      "id": "G12",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G12-rLMi1k",
+      "calls": 1,
+      "statusAfterWorkerReturned": "pending",
+      "nextAttempt": "2026-09-12T10:52:39.413Z",
+      "reproduced": true,
+      "classification": "one-shot worker; autonomous scheduling is an integration gap"
+    }
+  ]
+}

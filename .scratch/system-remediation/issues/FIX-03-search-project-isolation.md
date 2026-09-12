@@ -68,6 +68,20 @@
 
 **Ограничение:** локальный fallback точен по записям; live-Khoj фильтрует по scope первой записи файла (внешний индекс) — live-проверка в списке awaiting-validation.
 
+## Блок 3: граница чтения памяти и общая проверка project_id (G05/G09) — 2026-09-12
+
+**Проблемы.** G05 (P1): `sourceFile` проверял путь лексически, поэтому junction/symlink внутри памяти уводил чтение за настоящий корень, а имя оставалось «внутренним» — файл снаружи выдавался как обычный источник памяти. G09 (P1): `localResults` отвергал незарегистрированный проект, а положительный путь `searchKhoj` — нет, поэтому файл со `scope: ghost-project` выдавался запросу `ghost-project`; допустимость запроса зависела от доступности Khoj.
+
+**Что изменено в `scripts/memory/search.js`:** `readableSource(memoryRoot, source)` проверяет границу корня тем же примитивом, что и запись (`assertSafePath`: `realpathSync.native` против реальной базы, отказ на любом symlink/junction-компоненте) и возвращает `null` вместо пути; положительный путь Khoj читает файл только через него. `assertKnownProject(paths, projectId)` вынесен на общую входную границу и вызывается и в `localResults`, и в `searchKhoj` **до** HTTP и до fallback; незарегистрированный проект отклоняется одинаково независимо от доступности сервиса. Обход `walk` явно пропускает `entry.isSymbolicLink()`.
+
+**RED.** База — дерево `6b22b60` без правок блока 3 (отдельный worktree, новые тесты скопированы в него). На базе падают `G05: a Khoj hit through a junction inside memory root is not read outside it` и обе пробы G09; прогон аудита даёт `G05 reproduced:true` (запись снаружи возвращалась как `scope:user`) и `G09 reproduced:true` (`remote.results.length===1`) ([вывод тестов](evidence/red-2026-09-12-block3.txt), [результаты аудита](evidence/red-2026-09-12-block3-harness-results.json)).
+
+> Примечание честности: проба `G05: the local walk does not descend into a junction` проходит и на базе — `readdirSync(..., {withFileTypes:true})` отдаёт junction как `isSymbolicLink:true, isDirectory:false` (проверено отдельно), поэтому прежний обход его и так не раскрывал. Это позитивный страж намерения, а не воспроизведение; дефект G05 воспроизводится через путь чтения Khoj, где файл берётся по имени, минуя обход.
+
+> Примечание по первой редакции проб G09: изначально они вызывались без `force`, и на базе отказ приходил из fallback `localResults` — проба «проходила» по неверной причине. Пробы переписаны на `force:true` (положительный путь сервиса) с проверкой `calls===0`; теперь отказ RED подтверждён именно на том пути, где был дефект.
+
+**GREEN.** `node --test scripts/memory/tests/fix-03.test.js` → **22/22**; полный набор → **132/132** ([вывод](evidence/unit-after-block3-2026-09-12.txt)). Повторный прогон аудита: `G05 reproduced:false` (`results: []`), `G09` — проба не доходит до своего утверждения: запрос отклоняется `unknown project_id: ghost-project` до HTTP (в отчёте аудита это видно как `harness_error` с этим текстом, [вывод](evidence/block3-harness-post-fix.txt)).
+
 ## Как закончить
 
 1. Тест → красный. 2. Исправить `search.js`. 3. Зелёный; прогнать базовые запросы fallback (в т.ч. через CLI `node scripts/memory/search.js --query ... --project ...`). 4. Scoped-коммит `FIX-03`. 5. `awaiting-review`; далее FIX-04.

@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-12",
+  "results": [
+    {
+      "id": "G13",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G13-ScZpeO",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-index-outside-f4pH6s",
+      "calls": 1,
+      "result": [
+        {
+          "task_id": "idx_a1a6553cdd3633d6",
+          "status": "indexed",
+          "reason": null
+        }
+      ],
+      "reproduced": true
+    },
+    {
+      "id": "G14",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G14-n45iIP",
+      "registered": {
+        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-ma71Tb",
+        "project_id": "new-project",
+        "claude": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-ma71Tb\\CLAUDE.md",
+        "handoff": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-ma71Tb\\HANDOFF.md",
+        "registry": "registered-in-local-config"
+      },
+      "error": "project_id cannot be determined; register the project or set SYSTEM2_PROJECT_ID",
+      "reproduced": true
+    },
+    {
+      "id": "G15",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G15-dk90mH",
+      "harness_error": "Error: writer lock timeout\n    at acquireProcessLock (D:\\SystemTheBest\\s2-red-block3\\scripts\\memory\\ipc-lock.js:228:17)\n    at acquireLock (D:\\SystemTheBest\\s2-red-block3\\scripts\\memory\\writer.js:37:10)\n    at Object.writeProposal (D:\\SystemTheBest\\s2-red-block3\\scripts\\memory\\writer.js:181:15)\n    at D:\\SystemTheBest\\s2-red-block3\\.scratch\\system-remediation\\evidence\\comprehensive-extra-2026-09-12.cjs:44:19\n    at test (D:\\SystemTheBest\\s2-red-block3\\.scratch\\system-remediation\\evidence\\comprehensive-extra-2026-09-12.cjs:15:95)\n    at D:\\SystemTheBest\\s2-red-block3\\.scratch\\system-remediation\\evidence\\comprehensive-extra-2026-09-12.cjs:34:8\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+    },
+    {
+      "id": "G16",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G16-G9RjFY",
+      "output": {
+        "colors": [],
+        "typography": [
+          {
+            "name": "OUTSIDE_STYLE",
+            "type": "style",
+            "fontFamily": "OutsideFont",
+            "fontSize": null,
+            "fontWeight": null,
+            "lineHeight": null,
+            "node": "styles/OUTSIDE_STYLE",
+            "node_id": "outside"
+          }
+        ],
+        "spacing": [],
+        "radii": [],
+        "ignored": []
+      },
+      "reproduced": true,
+      "classification": "nodeId does not limit file-wide styles; contract decision needed"
+    }
+  ]
+}

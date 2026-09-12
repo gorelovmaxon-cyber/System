@@ -1,11 +1,11 @@
 {
   "date": "2026-09-12",
-  "head": "b1607ff65cd498e9b6514387534b73305823a586",
+  "head": "6b22b609890da8eca81cfac8b09062c46a462b9d",
   "dirtyTree": true,
   "results": [
     {
       "id": "G01",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G01-pt9t8g",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G01-8M8xkz",
       "before": true,
       "after": false,
       "pending": 1,
@@ -13,11 +13,11 @@
     },
     {
       "id": "G02",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G02-rpgYV0",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G02-LjxpUk",
       "injected": true,
       "first": [
         {
-          "task_id": "idx_c86ebd33701891bf",
+          "task_id": "idx_f403f9ab3218e5ef",
           "status": "indexed",
           "reason": null
         }
@@ -31,101 +31,73 @@
     },
     {
       "id": "G03",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G03-cNRDGA",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G03-UzUZ7v",
       "calls": 2,
-      "leaseExpiry": "2026-09-12T10:01:48.396Z",
-      "now": "2026-09-12T10:01:47.396Z",
+      "leaseExpiry": "2026-09-12T10:55:09.507Z",
+      "now": "2026-09-12T10:55:08.507Z",
       "overlapping": false,
       "reproduced": false
     },
     {
       "id": "G04",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G04-NUmmRx",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G04-v7sF0h",
       "calls": 2,
       "expiredOnStart": false,
       "reproduced": false
     },
     {
       "id": "G05",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G05-OU6dCS",
-      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-outside-Sc8iFD",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G05-E0Larn",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-outside-T5b8Vw",
       "response": {
         "ok": true,
-        "results": [
-          {
-            "snippet": "OUTSIDE_SECRET_MARKER",
-            "source": ".claude/memory/linked/outside.md",
-            "scope": "user",
-            "status_hint": "confirmed",
-            "relevance": 0
-          }
-        ]
+        "results": []
       },
-      "reproduced": true
+      "reproduced": false
     },
     {
       "id": "G06",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-BFlJuu",
-      "sent": {
-        "file": "../../outside.md",
-        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-BFlJuu\\.claude\\memory"
-      },
-      "reproduced": true
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-47jcTN",
+      "reproduced": false
     },
     {
       "id": "G07",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G07-iASkdb",
-      "error": "CONFLICT",
-      "reproduced": true
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G07-IwFW4L",
+      "reproduced": false
     },
     {
       "id": "G08",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G08-HChXzt",
-      "inputDecisions": "KEEP_THIS_DECISION",
-      "outputDecisions": [],
-      "reproduced": true
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G08-v1vSnL",
+      "harness_error": "Error: decisions must be an array of strings\n    at validateInput (D:\\SystemTheBest\\System\\scripts\\memory\\events.js:95:13)\n    at createEvent (D:\\SystemTheBest\\System\\scripts\\memory\\events.js:112:3)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:110:15\n    at test (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:23:30)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:109:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
     },
     {
       "id": "G09",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G09-egNxLr",
-      "remote": {
-        "ok": true,
-        "results": [
-          {
-            "snippet": "GHOST_MARKER",
-            "source": ".claude/memory/facts/ghost.md",
-            "scope": "ghost-project",
-            "status_hint": "confirmed",
-            "relevance": 0
-          }
-        ]
-      },
-      "localError": "unknown-project",
-      "reproduced": true
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G09-ZggALY",
+      "harness_error": "Error: unknown project_id: ghost-project\n    at assertKnownProject (D:\\SystemTheBest\\System\\scripts\\memory\\search.js:55:17)\n    at Object.searchKhoj (D:\\SystemTheBest\\System\\scripts\\memory\\search.js:224:3)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:116:33\n    at test (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:23:30)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:113:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
     },
     {
       "id": "G10",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G10-RKL4xJ",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G10-jsHUWX",
       "startCount": 2,
       "reproduced": true
     },
     {
       "id": "G11",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G11-rMYKej",
-      "base": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-vkL0le",
-      "work": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-vkL0le-worktree",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G11-AgF54y",
+      "base": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-4lFLS1",
+      "work": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-4lFLS1-worktree",
       "exit": 0,
-      "stdout": "Installed hooksPath: C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-vkL0le-worktree/.git-hooks-templates\n",
+      "stdout": "Installed hooksPath: C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-4lFLS1-worktree/.git-hooks-templates\n",
       "stderr": "",
-      "configured": "C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-vkL0le-worktree/.git-hooks-templates",
+      "configured": "C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-4lFLS1-worktree/.git-hooks-templates",
       "reproduced": true
     },
     {
       "id": "G12",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G12-fDs2dg",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G12-RgfbXN",
       "calls": 1,
       "statusAfterWorkerReturned": "pending",
-      "nextAttempt": "2026-09-12T10:01:49.920Z",
+      "nextAttempt": "2026-09-12T10:55:11.576Z",
       "reproduced": true,
       "classification": "one-shot worker; autonomous scheduling is an integration gap"
     }

@@ -1,0 +1,66 @@
+{
+  "date": "2026-09-12",
+  "results": [
+    {
+      "id": "G13",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G13-UXKKYZ",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-index-outside-Tb4Oss",
+      "calls": 1,
+      "result": [
+        {
+          "task_id": "idx_8ca7e3276bb620ae",
+          "status": "indexed"
+        }
+      ],
+      "reproduced": true
+    },
+    {
+      "id": "G14",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G14-RGmAen",
+      "registered": {
+        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-FzaLPm",
+        "project_id": "new-project",
+        "claude": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-FzaLPm\\CLAUDE.md",
+        "handoff": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-FzaLPm\\HANDOFF.md",
+        "registry": "registered-in-local-config"
+      },
+      "error": "project_id cannot be determined; register the project or set SYSTEM2_PROJECT_ID",
+      "reproduced": true
+    },
+    {
+      "id": "G15",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G15-Q8rQFR",
+      "other": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G15-other-nZSO6o",
+      "memory": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-shared-memory-K0hZQr",
+      "a": "persisted",
+      "b": "persisted",
+      "containsA": true,
+      "containsB": false,
+      "reproduced": true
+    },
+    {
+      "id": "G16",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G16-6hNBwB",
+      "output": {
+        "colors": [],
+        "typography": [
+          {
+            "name": "OUTSIDE_STYLE",
+            "type": "style",
+            "fontFamily": "OutsideFont",
+            "fontSize": null,
+            "fontWeight": null,
+            "lineHeight": null,
+            "node": "styles/OUTSIDE_STYLE",
+            "node_id": "outside"
+          }
+        ],
+        "spacing": [],
+        "radii": [],
+        "ignored": []
+      },
+      "reproduced": true,
+      "classification": "nodeId does not limit file-wide styles; contract decision needed"
+    }
+  ]
+}

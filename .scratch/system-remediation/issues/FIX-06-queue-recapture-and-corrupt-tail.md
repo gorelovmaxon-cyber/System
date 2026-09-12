@@ -169,3 +169,31 @@ TEMP-файлы):
 - **Тикет не переводится в accepted автором**; приёмка — за независимым проверяющим, включая
   интеграцию с writer/queue/indexer.
 
+## Блок 3: валидация capture до нормализации (G08) — 2026-09-12
+
+**Проблема (G08, P1).** `createEvent({decisions:'KEEP_THIS_DECISION', …})` возвращал валидное
+событие с `decisions: []`: нормализация (`Array.isArray(x) ? x : []`) стирала содержательный вход
+до `validateEvent`, и неверный тип принимался с незаметной потерей решения/коррекции/проверки.
+Прямой enqueue массивы проверяет, а capture через `createEvent` — нет.
+
+**Что изменено в `scripts/memory/events.js`:** добавлен `validateInput(input)`, вызываемый первым
+в `createEvent` — тип проверяется на **исходном** входе, до нормализации. Отсутствующее или явно
+пустое (`undefined`/`null`) необязательное поле означает пустое значение и допустимо;
+присутствующее поле неверного типа отклоняется явно (`decisions must be an array of strings`,
+`summary must be a string`, `revision must be an integer`). Скалярные поля больше не подменяются
+приведением типа. `validateEvent` не изменён.
+
+**RED.** База — дерево `6b22b60` без правок блока 3 (отдельный worktree). На базе падают
+`G08: capture rejects a wrongly typed list instead of silently emptying it` и
+`G08: capture --file with a wrongly typed field fails loudly and enqueues nothing`; прогон аудита
+даёт `G08 inputDecisions:"KEEP_THIS_DECISION", outputDecisions:[], reproduced:true`
+([вывод тестов](evidence/red-2026-09-12-block3.txt),
+[результаты аудита](evidence/red-2026-09-12-block3-harness-results.json)).
+
+**GREEN.** `node --test scripts/memory/tests/fix-06.test.js` → **18/18**; полный набор →
+**132/132** ([вывод](evidence/unit-after-block3-2026-09-12.txt)). Проверены оба входа: прямой API
+и `capture.js --file` (процесс завершается с кодом 1, сообщение в stderr, в очередь ничего не
+попадает). Повторный прогон аудита: проба G08 не доходит до своего утверждения — вход отклоняется
+`decisions must be an array of strings` ([вывод](evidence/block3-harness-post-fix.txt)); это и есть
+устранение дефекта: молчаливой потери больше нет, неверный вход отвергается на границе.
+
