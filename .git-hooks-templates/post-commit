@@ -21,8 +21,33 @@ PROJECT_ID="${SYSTEM2_PROJECT_ID:-$(SYSTEM2_ROOT="$SYSTEM_ROOT_NATIVE" node "$SC
 [ -n "$PROJECT_ID" ] || exit 0
 node -e "require('node:fs').mkdirSync('.local/hook',{recursive:true})" || exit 0
 DIFF_FILE=".local/hook/diff-${SHA}.txt"
-git diff --no-ext-diff HEAD^ HEAD 2>/dev/null > "$DIFF_FILE"
+# База сравнения — первый родитель, которого у первого commit в истории нет:
+# жёсткий HEAD^ падал, ошибка подавлялась, и commit сохранялся без содержимого
+# (G19). Для merge-commit берётся первый родитель — это оговорённая политика, а
+# не «изменений нет». Родитель запрашивается у Git: разбор строки rev-list
+# ломался на root-commit (cut без разделителя возвращал сам sha, и diff шёл
+# между HEAD и HEAD).
+PARENT="$(git rev-parse --verify --quiet HEAD^1 2>/dev/null)"
+if [ -n "$PARENT" ]; then
+  BASE="$PARENT"
+else
+  BASE="$(git hash-object -t tree /dev/null 2>/dev/null)"
+fi
+if [ -n "$BASE" ]; then
+  git diff --no-ext-diff "$BASE" HEAD > "$DIFF_FILE" 2>/dev/null || DIFF_OK=0
+else
+  DIFF_OK=0
+fi
+# Ошибка получения diff не выдаётся за корректный пустой diff; пустой diff
+# пустого commit остаётся допустимым и остаётся пустым.
+if [ "${DIFF_OK:-1}" != 1 ]; then
+  printf '%s\n' "[system2: diff for $SHA could not be computed against ${BASE:-unknown base}]" > "$DIFF_FILE"
+fi
 SYSTEM2_ROOT="$SYSTEM_ROOT_NATIVE" node "$SCRIPT_ROOT/capture.js" commit --project "$PROJECT_ID" --sha "$SHA" --message "$MESSAGE" --diff "$DIFF_FILE" --enqueue-only >> .local/hook/capture.log 2>&1 || exit 0
 node -e "try{require('node:fs').unlinkSync(process.argv[1])}catch{}" "$DIFF_FILE"
-(SYSTEM2_ROOT="$SYSTEM_ROOT_NATIVE" node "$SCRIPT_ROOT/queue-worker.js" >> .local/hook/capture.log 2>&1) &
+# Повторная доставка после перезапуска сервиса без нового commit: worker
+# догоняет backoff очереди в пределах ограниченного окна и завершается сам.
+# Более длительные простои закрывает явный `queue-worker.js --watch` (см.
+# docs/system-operations.md), а не бессрочный фоновый процесс из hook.
+(SYSTEM2_ROOT="$SYSTEM_ROOT_NATIVE" node "$SCRIPT_ROOT/queue-worker.js" --watch --no-revive --max-idle-ms 120000 >> .local/hook/capture.log 2>&1) &
 exit 0

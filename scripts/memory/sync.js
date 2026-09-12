@@ -32,19 +32,48 @@ function status() {
   };
 }
 
+function upstreamRef() {
+  const upstream = git(['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{upstream}']).stdout.trim();
+  if (!upstream) return null;
+  const separator = upstream.indexOf('/');
+  if (separator < 1) return null;
+  return { remote: upstream.slice(0, separator), branch: upstream.slice(separator + 1), name: upstream };
+}
+
+// Пункт назначения — upstream ветка, а не имя локальной ветки: раньше push без
+// аргументов отправлял `origin <local-branch>`, создавая на remote ветку с
+// другим именем и оставляя настоящую ветку синхронизации без изменений —
+// сообщая при этом об успехе (G17). Явное --branch означает ровно это
+// назначение и о нём сообщается в ответе.
 function push(branch) {
   const current = status();
-  const target = branch || current.branch;
-  if (!target) throw new Error('cannot push: detached HEAD');
+  const upstream = upstreamRef();
+  const destination = branch || upstream?.branch || null;
+  if (!destination) {
+    throw new Error('cannot push: there is no upstream branch to sync with; pass --branch <destination> explicitly (nothing was pushed)');
+  }
+  const remote = upstream?.remote || 'origin';
   if (current.upstream && current.behind > 0 && current.ahead > 0) {
     throw new Error('branch diverged; merge/pull first, preserving both versions (no force push)');
   }
   if (current.behind > 0) throw new Error('branch is behind upstream; fetch and merge first (no force push)');
-  const upstreamRemote = current.upstream?.includes('/') ? current.upstream.split('/')[0] : null;
-  const remote = upstreamRemote || 'origin';
-  const result = git(['push', remote, target]);
+  const head = git(['rev-parse', 'HEAD']).stdout.trim();
+  const refspec = `HEAD:refs/heads/${destination}`;
+  const result = git(['push', remote, refspec]);
   if (result.status !== 0) throw new Error((result.stderr || result.stdout || 'git push failed').trim());
-  return { pushed: true, remote, branch: target, output: result.stdout.trim() };
+  const remoteRef = git(['ls-remote', remote, `refs/heads/${destination}`]).stdout.trim().split(/\s+/)[0] || null;
+  return {
+    pushed: true,
+    remote,
+    branch: destination,
+    local_branch: current.branch || null,
+    upstream: upstream?.name || null,
+    refspec,
+    head,
+    destination_sha: remoteRef,
+    verified: remoteRef === head,
+    output: result.stdout.trim(),
+  };
 }
 
 function parseArgs(argv) {

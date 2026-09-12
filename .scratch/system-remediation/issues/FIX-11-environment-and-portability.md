@@ -57,3 +57,63 @@
 ## Как закончить
 
 1. Проверки по алгоритму. 2. Обновить ENVIRONMENT.md, матрицу. 3. Scoped-коммит `FIX-11`. 4. `awaiting-review` для локальных проверок; `awaiting-validation` для внешних. 5. Финальная сводка: обновить SUMMARY, HANDOFF, написать `REMEDIATION-REPORT.md`.
+
+## Блок 4: выполнено и проверено (2026-09-12)
+
+Блок 4 закрывает три находки переносимости этого тикета (G10, G11, G14), перенос
+`transfer`-набора (G17, G19) и повторную доставку очереди (G12).
+
+**Что изменено.**
+
+- `.git-hooks-templates/install-hooks.sh` (G11): действующий каталог hook
+  запрашивается у Git (`rev-parse --path-format=absolute --git-path hooks`), поэтому
+  относительный `core.hooksPath` одного worktree не отключает общий пользовательский
+  hook молча. Активная чужая настройка → отказ (exit 2); существующий пользовательский
+  hook → backup и только с `--force`; отсутствующий шаблон → явная ошибка (exit 1) без
+  настройки мёртвого `hooksPath`; после установки путь и наличие hook проверяются.
+- `.git-hooks-templates/post-commit` (G19): база diff — первый родитель
+  (`rev-parse --verify --quiet HEAD^1`), у первого commit истории — пустое дерево Git;
+  недоступный diff записывается явной пометкой, а не пустым содержимым. Разбор строки
+  `rev-list`/`cut` отвергнут: для root-commit `cut` возвращал сам sha, и diff шёл между
+  `HEAD` и `HEAD` (это и было причиной пустого diff после первой правки — поймано
+  регрессией). Hook также запускает ограниченный `queue-worker.js --watch --no-revive
+  --max-idle-ms 120000`.
+- `scripts/memory/init-project.js` (G10, G14): маркеры проверяются по порядку, оба
+  документа собираются до первой записи, `--register` сохраняет `local_paths[project_id]`,
+  повторная привязка каталога/проекта отклоняется.
+- `scripts/memory/sync.js` (G17): пункт назначения push — ветка upstream (или явный
+  `--branch`), без upstream команда отказывается отправлять; после push SHA ветки
+  назначения на remote сверяется с `HEAD` (`verified`).
+- `scripts/memory/queue-worker.js` (G12): ограниченный `watch` (ожидание
+  `next_attempt_at`, ограниченное оживление, статусы `idle`/`deadline`/`failed`, один
+  worker на очередь через существующий примитив блокировки).
+- `docs/memory-contract.md`, `docs/system-operations.md`: политика diff, семантика
+  назначения push, проверка маркеров/привязки, порядок повторной доставки.
+
+**RED.** База — сам git: `HEAD` (`a8bfaf4`) в отдельном worktree, куда скопированы
+только новые тесты. `node --test fix-11.test.js fix-11-cycle.test.js` → **9 pass, 14 fail**
+([вывод](evidence/red-2026-09-12-block4-unit.txt)); прогон трёх harness'ов на том же
+дереве → `reproduced: true` для G10, G11, G12, G14, G16, G17, G19
+([audit](evidence/red-2026-09-12-block4-harness-results.json),
+[extra](evidence/red-2026-09-12-block4-extra-results.json),
+[transfer](evidence/red-2026-09-12-block4-transfer-results.json)).
+
+**GREEN.** На исправленном дереве `node --test scripts/memory/tests/*.test.js` → **146/146**;
+целевые файлы — **23/23** ([вывод](evidence/green-2026-09-12-block4-suite.txt)). Повторный
+прогон harness'ов: G10, G11, G14, G17, G19 → `not-reproduced`
+(`evidence/comprehensive-*-2026-09-12-results.json`; сохранённые до повтора результаты —
+`evidence/pre-block4/`).
+
+**Открытые наблюдения (не приёмка).**
+
+- Проба G12 вызывает `drain()` — один проход, который по контракту остаётся одним
+  проходом, поэтому её вердикт `reproduced: true` исправлением не меняется. Критерий
+  аудита закрывает `watch()`, проверенный тремя положительными регрессиями.
+- Merge-проба G19 — позитивный страж политики «первый родитель»: `git merge` сам
+  `post-commit` не вызывает (проверено на Git 2.55), поэтому на базе она проходит и до
+  правки. Дефект воспроизводят две другие пробы (root commit и недоступный diff).
+- Живой прогон в изолированном клоне на настоящем remote, `npm ci`/`npm test` Figma,
+  dry-run маршрутов и внешние блокировки (Docker Desktop, Python 3.12, ключ+макет Figma,
+  второй ПК) остаются незакрытыми: они требуют внешней среды или решения пользователя.
+
+Статус остаётся `awaiting-validation`: `READY` выставляет только независимая приёмка.

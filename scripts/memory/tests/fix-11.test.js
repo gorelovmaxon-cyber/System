@@ -117,8 +117,146 @@ test('B18: Figma extractor limits node tokens to the requested subtree', () => {
   assert.throws(() => extractDesignTokens(doc, { nodeId: 'missing' }), /not found/);
 });
 
-test('FIX-11: copied hook in a connected project enqueues into the selected System2 root', async () => {
-  const system = fixture('fix11-connected-system', { registry: [{ project_id: 'proj-a' }] });
+test('G10: reversed managed markers are rejected and the document is left untouched', () => {
+  const system = fixture('g10-system', { registry: [{ project_id: 'test-project' }] });
+  const project = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g10-project-'));
+  const reversed = [END, 'IMPORTANT_STATE', START].join('\n');
+  fs.writeFileSync(path.join(project, 'CLAUDE.md'), reversed, 'utf8');
+  fs.writeFileSync(path.join(project, 'HANDOFF.md'), reversed, 'utf8');
+  assert.throws(() => initProject({ root: project, systemRoot: system, projectId: 'test-project' }), /end marker precedes the start marker/);
+  assert.equal(fs.readFileSync(path.join(project, 'CLAUDE.md'), 'utf8'), reversed);
+  assert.equal(fs.readFileSync(path.join(project, 'HANDOFF.md'), 'utf8'), reversed);
+  assert.equal(fs.readFileSync(path.join(project, 'CLAUDE.md'), 'utf8').split(START).length - 1, 1);
+});
+
+test('G10: a corrupted HANDOFF blocks registration and leaves the registry unwritten', () => {
+  const system = fixture('g10-register', { registry: [{ project_id: 'A' }] });
+  const project = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g10-register-'));
+  const claudeBefore = '# CLAUDE.md\n';
+  fs.writeFileSync(path.join(project, 'CLAUDE.md'), claudeBefore, 'utf8');
+  fs.writeFileSync(path.join(project, 'HANDOFF.md'), [END, 'IMPORTANT_STATE', START].join('\n'), 'utf8');
+  assert.throws(
+    () => initProject({ root: project, systemRoot: system, projectId: 'fresh-project', register: true, title: 'Fresh', kind: 'project' }),
+    /end marker precedes the start marker/,
+  );
+  assert.equal(fs.readFileSync(path.join(project, 'CLAUDE.md'), 'utf8'), claudeBefore);
+  assert.equal(fs.existsSync(path.join(system, 'config/system.local.json')), false);
+});
+
+test('G14: --register links the project directory so project_id resolves without an environment override', () => {
+  const system = fixture('g14-system', { registry: [{ project_id: 'A' }] });
+  const project = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g14-project-'));
+  const result = initProject({ root: project, systemRoot: system, projectId: 'new-project', register: true, title: 'New', kind: 'project' });
+  assert.equal(result.registry, 'registered-in-local-config');
+  assert.equal(result.local_path, path.resolve(project));
+  const saved = JSON.parse(fs.readFileSync(path.join(system, 'config/system.local.json'), 'utf8'));
+  assert.equal(path.resolve(saved.local_paths['new-project']), path.resolve(project));
+  assert.equal(saved.registry.some(item => item.project_id === 'new-project'), true);
+  delete process.env.SYSTEM2_PROJECT_ID;
+  assert.equal(projectId(project), 'new-project');
+});
+
+test('G14: registration refuses a second project for the same directory or a remapped project', () => {
+  const system = fixture('g14-conflict', { registry: [{ project_id: 'A' }] });
+  const project = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g14-conflict-'));
+  initProject({ root: project, systemRoot: system, projectId: 'new-project', register: true, title: 'New', kind: 'project' });
+  assert.throws(
+    () => initProject({ root: project, systemRoot: system, projectId: 'other-project', register: true, title: 'Other', kind: 'project' }),
+    /already registered to project_id new-project/,
+  );
+  const elsewhere = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g14-elsewhere-'));
+  assert.throws(
+    () => initProject({ root: elsewhere, systemRoot: system, projectId: 'new-project', register: true, title: 'New', kind: 'project' }),
+    /already registered to another directory/,
+  );
+  const saved = JSON.parse(fs.readFileSync(path.join(system, 'config/system.local.json'), 'utf8'));
+  assert.equal(path.resolve(saved.local_paths['new-project']), path.resolve(project));
+});
+
+const BASH = 'C:\\Program Files\\Git\\usr\\bin\\bash.exe';
+const hasBash = fs.existsSync(BASH);
+
+function installer(dir, args = []) {
+  return spawnSync(BASH, [path.join(dir, '.git-hooks-templates/install-hooks.sh'), ...args], {
+    cwd: dir, encoding: 'utf8', windowsHide: true, timeout: 30000,
+  });
+}
+
+function hooksPath(dir) {
+  return spawnSync('git', ['-C', dir, 'config', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
+}
+
+function initRepo(dir) {
+  spawnSync('git', ['init', '-q'], { cwd: dir });
+  spawnSync('git', ['config', 'user.email', 'fixture@example.invalid'], { cwd: dir });
+  spawnSync('git', ['config', 'user.name', 'Fixture'], { cwd: dir });
+}
+
+// G11: в linked worktree каталог `.git` — файл, а действующий hooks каталог
+// общий для всех деревьев. Установщик, собиравший путь руками, пользовательский
+// hook не находил, возвращал 0 и молча переключал hooksPath на наши шаблоны.
+test('G11: installer in a linked worktree does not silently disable the shared user hook', { skip: !hasBash }, () => {
+  const base = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g11-base-'));
+  const work = base + '-worktree';
+  initRepo(base);
+  fs.cpSync(path.join(REPO, '..', '..', '.git-hooks-templates'), path.join(base, '.git-hooks-templates'), { recursive: true });
+  spawnSync('git', ['add', '.git-hooks-templates'], { cwd: base });
+  const empty = path.join(base, 'empty-hooks');
+  fs.mkdirSync(empty);
+  spawnSync('git', ['-c', 'core.hooksPath=' + empty, 'commit', '-qm', 'fixture'], { cwd: base });
+  assert.equal(spawnSync('git', ['worktree', 'add', '-qb', 'fixture-work', work], { cwd: base, encoding: 'utf8' }).status, 0);
+  const sharedHook = path.join(base, '.git', 'hooks', 'post-commit');
+  const userHookSource = '#!/usr/bin/env bash\necho USER_HOOK\n';
+  fs.writeFileSync(sharedHook, userHookSource, 'utf8');
+
+  const refused = installer(work);
+  assert.equal(refused.status, 2, refused.stdout + refused.stderr);
+  assert.match(refused.stderr, /Existing user hook found/);
+  assert.equal(hooksPath(work), '');
+  assert.equal(fs.readFileSync(sharedHook, 'utf8'), userHookSource);
+
+  const marker = '#!/usr/bin/env bash\nprintf ran > hook-marker.txt\n';
+  fs.writeFileSync(path.join(work, '.git-hooks-templates', 'post-commit'), marker, 'utf8');
+  const forced = installer(work, ['--force']);
+  assert.equal(forced.status, 0, forced.stdout + forced.stderr);
+  assert.match(forced.stdout, /Backed up existing hook to/);
+  const configured = hooksPath(work);
+  assert.equal(configured, '.git-hooks-templates');
+  assert.equal(path.isAbsolute(configured), false);
+  const backups = fs.readdirSync(path.join(base, '.git', 'hooks')).filter(name => name.startsWith('post-commit.backup-'));
+  assert.equal(backups.length, 1);
+  assert.equal(fs.readFileSync(path.join(base, '.git', 'hooks', backups[0]), 'utf8'), userHookSource);
+
+  fs.writeFileSync(path.join(work, 'tracked.txt'), 'x');
+  spawnSync('git', ['add', 'tracked.txt'], { cwd: work });
+  const commit = spawnSync('git', ['commit', '-qm', 'worktree fixture'], { cwd: work, encoding: 'utf8' });
+  assert.equal(commit.status, 0, commit.stderr);
+  assert.equal(fs.readFileSync(path.join(work, 'hook-marker.txt'), 'utf8'), 'ran');
+
+  const again = installer(work);
+  assert.equal(again.status, 0, again.stdout + again.stderr);
+  assert.match(again.stdout, /already points to/);
+
+  spawnSync('git', ['-C', work, 'config', 'core.hooksPath', path.join(work, '.git-hooks-templates')]);
+  const legacy = installer(work);
+  assert.equal(legacy.status, 0, legacy.stdout + legacy.stderr);
+  assert.match(legacy.stdout, /already points to/);
+});
+
+test('G11: a missing hook template is reported instead of configuring a dead hooks path', { skip: !hasBash }, () => {
+  const source = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g11-source-'));
+  initRepo(source);
+  fs.cpSync(path.join(REPO, '..', '..', '.git-hooks-templates'), path.join(source, '.git-hooks-templates'), { recursive: true });
+  const target = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-g11-target-'));
+  initRepo(target);
+  const result = spawnSync(BASH, [path.join(source, '.git-hooks-templates', 'install-hooks.sh')], { cwd: target, encoding: 'utf8', windowsHide: true, timeout: 30000 });
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stderr, /Hook template is missing/);
+  assert.equal(hooksPath(target), '');
+});
+
+test('FIX-11: init --register then an ordinary commit produces the right project_id', async () => {
+  const system = fixture('fix11-connected-system', { registry: [{ project_id: 'other' }] });
   fs.mkdirSync(path.join(system, 'scripts'), { recursive: true });
   fs.cpSync(REPO, path.join(system, 'scripts', 'memory'), { recursive: true });
   const project = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-fix11-connected-'));
@@ -126,11 +264,10 @@ test('FIX-11: copied hook in a connected project enqueues into the selected Syst
   spawnSync('git', ['config', 'user.email', 'fixture@example.invalid'], { cwd: project });
   spawnSync('git', ['config', 'user.name', 'Fixture'], { cwd: project });
   fs.cpSync(path.join(REPO, '..', '..', '.git-hooks-templates'), path.join(project, '.git-hooks-templates'), { recursive: true });
-  const install = spawnSync('C:\\Program Files\\Git\\usr\\bin\\bash.exe', [path.join(project, '.git-hooks-templates/install-hooks.sh')], { cwd: project, encoding: 'utf8' });
+  initProject({ root: project, systemRoot: system, projectId: 'proj-a', register: true, title: 'Proj A', kind: 'project' });
+  const install = spawnSync(BASH, [path.join(project, '.git-hooks-templates/install-hooks.sh')], { cwd: project, encoding: 'utf8' });
   assert.equal(install.status, 0, install.stderr);
-  fs.writeFileSync(path.join(system, 'config/system.local.json'), JSON.stringify({
-    registry: [{ project_id: 'proj-a' }], local_paths: { 'proj-a': project },
-  }));
+  delete process.env.SYSTEM2_PROJECT_ID;
   fs.writeFileSync(path.join(project, 'tracked.txt'), 'connected');
   spawnSync('git', ['add', 'tracked.txt'], { cwd: project });
   const commit = spawnSync('git', ['commit', '-m', 'connected fixture'], {
