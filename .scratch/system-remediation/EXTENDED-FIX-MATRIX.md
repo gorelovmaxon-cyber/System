@@ -177,7 +177,7 @@ Docker/Activepieces/Khoj/Figma/второй ПК отмечаются `live`, е
 Ревизия 2026-09-12 (блок 5 общего аудита): закрыты G16 (контракт Figma) и плановые
 команды FIX-06 (`corrupt_count`/`quarantine`); добавлены строки G16 и FIX6-P. Набор
 `node --test scripts/memory/tests/*.test.js` — **150/150**; `npm test` в
-`.claude/mcp-servers/figma` — **7/7** (всего 157 проверок). Б��за для RED — снова сам
+`.claude/mcp-servers/figma` — **7/7** (всего 157 проверок). База для RED — снова сам
 git: detached worktree на `91bdada` (HEAD до правок блока 5) с копией только новых
 тестов; там падают ровно новые проверки — `fix-06.test.js` **18 pass / 4 fail**,
 `extract.test.js` **3 pass / 2 fail**, `mcp-client.test.js` **0 pass / 2 fail**

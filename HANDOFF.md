@@ -1,6 +1,36 @@
 # HANDOFF — systemqwen
 
-## Актуальная передача: ноутбук → домашний ПК, 2026-09-09
+## Актуальная передача: пакет общего аудита 2026-09-12 подан на приёмку
+
+Точка остановки на 2026-09-12, ветка `master`, HEAD `c13f11c`.
+
+- **Что сделано.** По пятому ревью (V1/G15) и общему аудиту 2026-09-12 закрыты V1, G15 и
+  G01–G19, а также плановые команды FIX-06 (`corrupt_count`/`--quarantine`) и контракт Figma
+  при `nodeId` (G16). Пять блоков, scoped-коммиты: `b1607ff`/`ece1b24` (блок 1),
+  `a8344ab` (блок 2), `52f2a8c`/`a8bfaf4` (блок 3), `53e5282`/`81f44db`/`91bdada` (блок 4),
+  `4168dee`/`f04d3f8`/`c13f11c` (блок 5).
+- **Проверки.** `node --test scripts/memory/tests/*.test.js` → **150/150**; `npm test` в
+  `.claude/mcp-servers/figma` → **7/7** (157 проверок). На каждый блок есть RED из git-ревизии
+  и сохранённый до повтора результат harness-а (`evidence/red-2026-09-12-*.txt`,
+  `evidence/pre-block*/`).
+- **Не принято.** Блок остаётся `awaiting-review`: `READY` выставляет только независимая
+  приёмка. **До положительного вердикта — без миграции настоящей памяти и без подключения
+  writer к рабочему потоку.** FIX-09/11 и SC-xx остаются `awaiting-validation`.
+- **Открытые наблюдения** (предъявлены как есть, не повышены до исправлений): G12 — проба
+  аудита бьёт по `drain()`; G15 — проба не завершается на исправленном дереве; G08/G09 —
+  `harness_error` из-за отказа на границе; G16 — текст `classification` в пробе не переписан.
+- **Внешние блокировки:** live Khoj/Docker/Activepieces, реальный Figma-файл, второй ПК и
+  restore — требуют отдельной среды и доступов.
+- **Хвосты:** в TEMP остаётся registered worktree `s2-red-block4` (detached `a8bfaf4`) —
+  RED-база блока 4; untracked `evidence/status-check-current-tests.txt` (UTF-16 вывод
+  PowerShell, в Git не включается).
+
+Пакет приёмки: [WRITER-REVIEW.md](.scratch/system-remediation/WRITER-REVIEW.md) раздел 12,
+матрицы [EXTENDED-FIX-MATRIX.md](.scratch/system-remediation/EXTENDED-FIX-MATRIX.md) и
+[SC-REVIEW-MATRIX.md](.scratch/system-remediation/SC-REVIEW-MATRIX.md),
+[issues/SUMMARY.md](.scratch/system-remediation/issues/SUMMARY.md).
+
+## Предыдущая передача: ноутбук → домашний ПК, 2026-09-09
 
 Текущая точка остановки — в [HANDOFF-SYSTEM2-2026-09-09.md](HANDOFF-SYSTEM2-2026-09-09.md). Ниже сохранена историческая запись от 8 сентября.
 
