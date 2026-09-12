@@ -19,6 +19,17 @@ function fileKeyFromUrl(fileUrl) {
   return fileUrl.match(/\/(?:file|design)\/([A-Za-z0-9_-]+)/)?.[1] || null;
 }
 
+// Figma пишет node id в URL через дефис (`?node-id=12-34`), а API и документ
+// используют двоеточие. Без этого выделенный в макете узел не ограничивал ответ.
+function nodeIdFromUrl(fileUrl) {
+  if (!fileUrl || typeof fileUrl !== 'string') return null;
+  let parsed;
+  try { parsed = new URL(fileUrl); } catch { return null; }
+  const raw = parsed.searchParams.get('node-id');
+  if (!raw) return null;
+  return raw.replace(/-/g, ':');
+}
+
 function apiError(error, fileKey) {
   const status = error.status || error.response?.status;
   if (status === 401 || status === 403) return new Error('Figma authentication/permission failed for file ' + fileKey);
@@ -64,7 +75,7 @@ function toolSchema() {
     properties: {
       fileUrl: { type: 'string', description: 'Figma file or design URL' },
       fileKey: { type: 'string', description: 'Figma file key' },
-      nodeId: { type: 'string', description: 'Optional node id' },
+      nodeId: { type: 'string', description: 'Optional node id; limits the answer to that subtree, including styles' },
       scope: { type: 'string', enum: ['colors', 'typography', 'spacing', 'radii', 'all'], default: 'all' },
     },
     additionalProperties: false,
@@ -87,12 +98,13 @@ function createServer() {
     const args = request.params.arguments || {};
     const fileKey = args.fileKey || fileKeyFromUrl(args.fileUrl);
     if (!fileKey) return { isError: true, content: [{ type: 'text', text: 'fileUrl or fileKey is required' }] };
+    const nodeId = args.nodeId || nodeIdFromUrl(args.fileUrl) || undefined;
     try {
-      const file = await fetchFile(fileKey, args.nodeId);
-      if (args.nodeId && !containsNode(file.document, args.nodeId)) {
-        throw new Error('Figma node was not found: ' + args.nodeId);
+      const file = await fetchFile(fileKey, nodeId);
+      if (nodeId && !containsNode(file.document, nodeId)) {
+        throw new Error('Figma node was not found: ' + nodeId);
       }
-      const tokens = extractDesignTokens(file, { scope: args.scope || 'all', nodeId: args.nodeId });
+      const tokens = extractDesignTokens(file, { scope: args.scope || 'all', nodeId });
       return { content: [{ type: 'text', text: JSON.stringify(tokens, null, 2) }] };
     } catch (error) {
       return { isError: true, content: [{ type: 'text', text: error.message }] };
@@ -112,4 +124,4 @@ if (require.main === module) main().catch(error => {
   process.exitCode = 1;
 });
 
-module.exports = { createServer, fileKeyFromUrl, fetchFile, containsNode, SERVER_VERSION };
+module.exports = { createServer, fileKeyFromUrl, nodeIdFromUrl, fetchFile, containsNode, SERVER_VERSION };

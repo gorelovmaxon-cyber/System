@@ -17,18 +17,30 @@ function rgba(color, opacity = 1) {
 
 function extractDesignTokens(file, options = {}) {
   const scope = options.scope || 'all';
+  const scoped = options.nodeId !== undefined && options.nodeId !== null;
   const result = { colors: [], typography: [], spacing: [], radii: [], ignored: [] };
   const add = (key, value) => { if (scope === 'all' || scope === key) result[key].push(value); };
 
+  // File-wide styles собираются заранее, но публикуются после обхода. Ответ с
+  // nodeId ограничен выбранным поддеревом, поэтому стиль попадает в него только
+  // если на него ссылается узел поддерева (node.styles). Прочие не отбрасываются
+  // молча, а перечисляются в ignored с причиной — иначе вызывающий не отличает
+  // «стиля нет» от «стиль вне выбранной области».
+  const pendingStyles = [];
   for (const [styleId, style] of Object.entries(file.styles || {})) {
     const styleOrigin = origin('styles/' + (style.name || styleId), styleId);
+    const entry = { key: null, styleId, name: style.name || styleId, origin: styleOrigin, value: null };
     if (style.styleType === 'FILL') {
       const fill = style.fills?.find(item => item.type === 'SOLID' && item.color);
       const color = fill && rgba(fill.color, fill.opacity ?? 1);
-      if (color) add('colors', { name: style.name || styleId, type: 'style', ...color, ...styleOrigin });
+      if (color) {
+        entry.key = 'colors';
+        entry.value = { name: style.name || styleId, type: 'style', ...color, ...styleOrigin };
+      }
     }
     if (style.styleType === 'TEXT') {
-      add('typography', {
+      entry.key = 'typography';
+      entry.value = {
         name: style.name || styleId,
         type: 'style',
         fontFamily: style.fontFamily || style.fontName?.family || null,
@@ -36,14 +48,18 @@ function extractDesignTokens(file, options = {}) {
         fontWeight: style.fontWeight ?? style.fontName?.style ?? null,
         lineHeight: style.lineHeightPx ?? style.lineHeight?.value ?? null,
         ...styleOrigin,
-      });
+      };
     }
+    if (entry.key) pendingStyles.push(entry);
   }
+
+  const usedStyles = new Set();
 
   function visit(node, parentPath = '') {
     if (!node || typeof node !== 'object') return;
     const currentPath = parentPath ? parentPath + '/' + (node.name || node.id || 'unnamed') : (node.name || node.id || 'document');
     const nodeOrigin = origin(currentPath, node.id);
+    for (const styleId of Object.values(node.styles || {})) usedStyles.add(String(styleId));
     for (const fill of node.fills || []) {
       if (fill.type === 'SOLID' && fill.color) {
         const color = rgba(fill.color, (fill.opacity ?? 1) * (node.opacity ?? 1));
@@ -71,7 +87,9 @@ function extractDesignTokens(file, options = {}) {
       const value = node['padding' + side];
       if (typeof value === 'number') padding[side.toLowerCase()] = value;
     }
-    if (Object.keys(padding).length) {
+    // gap без padding — самостоятельный признак раскладки: без него узел с
+    // одним itemSpacing не попадал в spacing вовсе.
+    if (Object.keys(padding).length || typeof node.itemSpacing === 'number') {
       add('spacing', {
         name: node.name || node.id,
         padding,
@@ -107,6 +125,19 @@ function extractDesignTokens(file, options = {}) {
     : findNode(file.document, options.nodeId);
   if (!selected) throw new Error('Figma nodeId not found: ' + options.nodeId);
   visit(selected);
+  for (const style of pendingStyles) {
+    if (scoped && !usedStyles.has(String(style.styleId))) {
+      result.ignored.push({
+        kind: 'style',
+        style_id: style.styleId,
+        name: style.name,
+        reason: 'not-used-in-scope',
+        ...style.origin,
+      });
+      continue;
+    }
+    add(style.key, style.value);
+  }
   return result;
 }
 
