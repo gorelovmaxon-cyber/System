@@ -35,6 +35,18 @@ docker compose -f services/activepieces/docker-compose.yml logs --tail=100 app w
 а indexer показывает failed; после восстановления используйте `--requeue-failed`
 и `--run`. Не запускайте бесконечные shell-циклы.
 
+`queue-status.js` печатает `corrupt_count` по очереди и обоим журналам
+(`corrupt.writer`, `corrupt.indexer`) и флаг `torn_tail`. Счётчик снимается
+до чтения, поэтому он показывает состояние на момент запуска. Явный ремонт:
+
+```powershell
+node scripts/memory/queue-status.js --quarantine
+```
+
+Команда перечисляет созданные sidecar-`*.corrupt-tail-*`; повреждение в середине
+журнала она не чинит, а сообщает в `quarantine.<журнал>.error` и оставляет файл
+без изменений — такой журнал разбирается вручную.
+
 ## Повторная доставка и планировщик
 
 Один проход (`node scripts/memory/queue-worker.js`) обрабатывает очередь один раз:

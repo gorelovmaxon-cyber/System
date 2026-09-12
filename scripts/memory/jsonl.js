@@ -122,6 +122,59 @@ function readJsonl(file) {
   } finally { hold(); }
 }
 
+// Диагностика до ремонта: сколько записей журнала сейчас нечитаемы. Файл не
+// изменяется — этим inspect отличается от readJsonl, который чинит оборванный
+// хвост. Оборванный хвост (последняя строка без LF) и повреждение в середине
+// считаются отдельно: второе остаётся fail-closed.
+function inspectUnlocked(file) {
+  if (!fs.existsSync(file)) return { records: 0, corrupt: [], corrupt_count: 0, torn_tail: false };
+  const text = fs.readFileSync(file, 'utf8');
+  const lines = text.split(/\r?\n/);
+  if (text.endsWith('\n')) lines.pop();
+  const corrupt = [];
+  let records = 0;
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (!line.trim()) continue;
+    try { JSON.parse(line); records += 1; }
+    catch { corrupt.push({ index, raw: line }); }
+  }
+  const last = lines.length - 1;
+  return {
+    records,
+    corrupt,
+    corrupt_count: corrupt.length,
+    torn_tail: !text.endsWith('\n') && corrupt.some(item => item.index === last),
+  };
+}
+
+function inspectJsonl(file) {
+  const hold = acquireProcessLock(authority(file), { metadataFile: journalLock(file), timeoutMessage: 'JSONL lock timeout' });
+  try {
+    hold.assertHeld();
+    return inspectUnlocked(file);
+  } finally { hold(); }
+}
+
+function quarantineSidecars(file) {
+  const dir = path.dirname(file);
+  if (!fs.existsSync(dir)) return [];
+  const prefix = path.basename(file) + '.corrupt-tail-';
+  return fs.readdirSync(dir).filter(name => name.startsWith(prefix)).sort();
+}
+
+// Ремонт выполняет чтение (под тем же журнальным primitive, что и запись),
+// поэтому --quarantine не отдельный путь записи, а явный запуск восстановления:
+// он фиксирует, что именно попало в карантин, не меняя остальные записи.
+function quarantineJsonl(file) {
+  const before = new Set(quarantineSidecars(file));
+  readJsonl(file);
+  return {
+    quarantined: quarantineSidecars(file).filter(name => !before.has(name)).map(name => path.join(path.dirname(file), name)),
+    sidecars: quarantineSidecars(file).length,
+  };
+}
+
 function appendJsonl(file, record) {
   const hold = acquireProcessLock(authority(file), { metadataFile: journalLock(file), timeoutMessage: 'JSONL lock timeout' });
   try {
@@ -148,4 +201,4 @@ function transactJsonl(file, callback) {
   } finally { hold(); }
 }
 
-module.exports = { appendDurable, appendJsonl, readJsonl, transactJsonl };
+module.exports = { appendDurable, appendJsonl, readJsonl, transactJsonl, inspectJsonl, quarantineJsonl };

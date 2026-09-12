@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
-const { fixture, mod } = require('./helpers');
+const { fixture, mod, REPO } = require('./helpers');
 
 const events = mod('events');
 const jsonl = mod('jsonl');
@@ -347,4 +347,92 @@ test('U2: an append is flushed to disk through its own fd', () => {
   assert.equal(appendOpen.length, 1, 'the record is appended through an explicitly opened fd');
   assert.ok(synced.includes(appendOpen[0].fd), 'the append fd is flushed before the lock is released');
   assert.deepEqual(jsonl.readJsonl(file), [{ a: 1 }]);
+});
+
+test('U2/FIX-06 plan: corrupt_count is reported without touching the journal', () => {
+  // Плановые команды FIX-06 (corrupt_count/quarantine) обязаны считать повреждения
+  // до ремонта: иначе счётчик всегда ноль, потому что чтение уже починило хвост.
+  fixture('fix06-corrupt-count');
+  const writerLog = mod('writer-log');
+  writerLog.append({ event_id: 'evt_ok', hash: 'h', status: 'intent' });
+  const file = writerLog.logPath();
+  const before = fs.readFileSync(file, 'utf8');
+  fs.appendFileSync(file, '{"torn":', 'utf8');
+  const withTail = fs.readFileSync(file, 'utf8');
+
+  const report = jsonl.inspectJsonl(file);
+  assert.equal(report.records, 1);
+  assert.equal(report.corrupt_count, 1);
+  assert.equal(report.torn_tail, true);
+  assert.equal(fs.readFileSync(file, 'utf8'), withTail, 'diagnostics must not repair the journal');
+  assert.equal(fs.readdirSync(path.dirname(file)).some(name => name.includes('.corrupt-tail-')), false);
+
+  const clean = jsonl.inspectJsonl(path.join(path.dirname(file), 'absent.jsonl'));
+  assert.deepEqual([clean.corrupt_count, clean.torn_tail, clean.records], [0, false, 0]);
+  assert.equal(before.endsWith('\n'), true);
+});
+
+test('U2/FIX-06 plan: quarantine moves the torn tail to a sidecar and is idempotent', () => {
+  fixture('fix06-quarantine-cli');
+  const queue = new DurableQueue();
+  const event = events.createEvent({ kind: 'commit', project_id: 'A', sha: 'abcdef9', summary: 'durable' });
+  queue.enqueue(event);
+  fs.appendFileSync(queue.file, '{"unfinished":', 'utf8');
+
+  const result = jsonl.quarantineJsonl(queue.file);
+  assert.equal(result.quarantined.length, 1);
+  assert.equal(fs.readFileSync(result.quarantined[0], 'utf8'), '{"unfinished":');
+  assert.equal(jsonl.inspectJsonl(queue.file).corrupt_count, 0);
+  assert.deepEqual(jsonl.quarantineJsonl(queue.file).quarantined, [], 'a repaired journal has nothing left to quarantine');
+  assert.equal(queue.list().length, 1);
+
+  fs.writeFileSync(queue.file, '{"a":1}\nbroken\n{"b":2}\n', 'utf8');
+  assert.throws(() => jsonl.quarantineJsonl(queue.file), error => error.code === 'JSONL_CORRUPT_MIDDLE');
+  assert.match(fs.readFileSync(queue.file, 'utf8'), /broken/, 'middle corruption is fail-closed and preserved');
+});
+
+test('U2/FIX-06 plan: queue-status reports corrupt_count and quarantines on request', () => {
+  const root = fixture('fix06-status-cli');
+  const queue = new DurableQueue();
+  const event = events.createEvent({ kind: 'commit', project_id: 'A', sha: 'abcdefa', summary: 'status' });
+  queue.enqueue(event);
+  fs.appendFileSync(queue.file, '{"torn":', 'utf8');
+  const run = extra => spawnSync(process.execPath, [path.join(REPO, 'queue-status.js'), ...extra], {
+    encoding: 'utf8', windowsHide: true, env: { ...process.env, SYSTEM2_ROOT: root },
+  });
+
+  const quarantined = run(['--quarantine']);
+  assert.equal(quarantined.status, 0, quarantined.stderr);
+  const after = JSON.parse(quarantined.stdout);
+  assert.equal(after.quarantine.queue.quarantined.length, 1);
+  assert.equal(after.corrupt_count, 1, 'the count is taken before the repair this run triggers');
+  assert.equal(fs.readFileSync(after.quarantine.queue.quarantined[0], 'utf8'), '{"torn":');
+  assert.equal(after.counts.pending, 1);
+  assert.equal(after.events.length, 1);
+
+  // Чтение очереди само чинит оборванный хвост, поэтому следующий запуск
+  // не находит ни повреждений, ни нового карантина.
+  const inspectOnly = run([]);
+  assert.equal(inspectOnly.status, 0, inspectOnly.stderr);
+  const plain = JSON.parse(inspectOnly.stdout);
+  assert.equal(plain.corrupt_count, 0);
+  assert.equal(plain.quarantine, null);
+  assert.equal(plain.counts.pending, 1);
+  assert.equal(plain.events.length, 1);
+});
+
+test('U2/FIX-06 plan: a journal with middle corruption is reported, not swallowed', () => {
+  const root = fixture('fix06-status-middle');
+  const writerLog = mod('writer-log');
+  const file = writerLog.logPath();
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, '{"event_id":"one"}\nnot-json\n{"event_id":"two"}\n', 'utf8');
+  const run = spawnSync(process.execPath, [path.join(REPO, 'queue-status.js'), '--quarantine'], {
+    encoding: 'utf8', windowsHide: true, env: { ...process.env, SYSTEM2_ROOT: root },
+  });
+  assert.equal(run.status, 0, run.stderr);
+  const payload = JSON.parse(run.stdout);
+  assert.equal(payload.corrupt.writer.corrupt_count, 1);
+  assert.match(payload.quarantine.writer.error, /corrupt JSONL record in the middle/);
+  assert.match(fs.readFileSync(file, 'utf8'), /not-json/, 'the failing journal is left untouched');
 });
