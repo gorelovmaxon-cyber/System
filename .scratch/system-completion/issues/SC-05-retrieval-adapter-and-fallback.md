@@ -3,7 +3,9 @@
 **What to build:** Адаптер поиска (`scripts/memory/search.js`), который по запросу + project_id возвращает выдержки с источниками в рамках бюджета контекста, а при недоступности Khoj не блокирует задачу — работает fallback на обязательные файлы и локальный индекс.
 **Requirement IDs:** R04, R05
 **Blocked by:** SC-04
-**Status:** planned
+**Status:** awaiting-validation
+
+> Статус уточнён 2026-09-11: адаптер/fallback проверены локально, положительный live Khoj требует внешней среды.
 **Перед началом работы:** Открой VS Code в `E:/System2`. SC-04 принят (Khoj работает; фактический API-контракт записан в docs/khoj-integration.md). Проверь health Khoj перед проверками.
 
 ## Контекст

@@ -3,7 +3,9 @@
 **What to build:** Импортированный и запущенный на выбранной версии Activepieces flow, который получает событие (webhook), анализирует его выбранным AI-подключением, валидирует ответ и вызывает работающий writer (мост SC-08) с подтверждением и обработкой ошибок; конфиг flow сохранён в репозитории без секретов.
 **Requirement IDs:** R06, R07
 **Blocked by:** SC-06, SC-08
-**Status:** planned
+**Status:** awaiting-validation
+
+> Статус уточнён 2026-09-11: sync-ack контракт реализован локально, живой flow 0.86.3 не импортирован из-за отсутствия Docker/AI connection.
 **Перед началом работы:** Открой VS Code в `E:/System2`. SC-06 принят (Activepieces работает, связность контейнер→host проверена и зафиксирована в ENVIRONMENT.md, AI-подключение подготовлено или явно отмечено отсутствующим). SC-08 принят (bridge /write работает, docs/memory-contract.md содержит контракт Writer). Проверь health bridge и Activepieces.
 
 ## Контекст
@@ -88,3 +90,21 @@ docs/activepieces-flow-config.md описывает flow-черновик (webho
 2. Отдельный коммит: services/activepieces/flows/*, docs/activepieces-flow-config.md, ENVIRONMENT.md, config при необходимости.
 3. Исполнитель ставит awaiting-review, приёмщик — done после приёмки.
 4. Ответ до 6 строк: ID, результат, проверки, коммит, ограничения (включая отсутствующие ключи), следующий доступный тикет (SC-10).
+
+## Контракт подтверждения webhook — редакция 2026-09-11
+
+Durable-ответственность сначала принимает локальная очередь SC-07: hook выполняет
+foreground enqueue и только затем запускает фоновый drain. Обычный ответ webhook
+2xx не подтверждает запись памяти. Доставка подтверждается исключительно
+синхронным коррелированным ответом flow `{event_id,status:"persisted"}` после
+ответа bridge либо `{event_id,status:"no-pattern"}` для ветки без знания.
+Отсутствующий, ошибочный или чужой `event_id`, а также 2xx без терминального
+статуса считаются retryable; исходное событие остаётся в очереди. Повтор безопасен
+за счёт идемпотентности writer.
+
+Blueprint переведён на `/sync` и явный Return Response. По официальной документации
+Activepieces sync webhook имеет отдельный timeout, а flow без Return Response не
+даёт требуемого терминального подтверждения: [limits](https://www.activepieces.com/docs/install/reference/limits),
+[flow control](https://www.activepieces.com/docs/build-pieces/piece-reference/flow-control).
+Проверка выполнена 2026-09-11; live-import версии 0.86.3, restart и worker recovery
+остаются `awaiting-validation`, поскольку Docker на этой машине отсутствует.

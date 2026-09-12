@@ -64,3 +64,28 @@ Figma, доступ к выбранному второму ПК/репозито
 Порядок запуска и восстановления: `docs/system-operations.md`; health-порты:
 bridge `127.0.0.1:8643`, Khoj `127.0.0.1:42110`, Activepieces `localhost:8642`.
 Docker/Khoj/AI connection не подтверждены в этой среде.
+
+## Повторная проверка 2026-09-11 — текущее устройство
+
+Рабочий каталог: `D:\SystemTheBest\System`; HEAD до расширенного пакета —
+`c0b345932ec9446de13c9d8233888adc00ccc1c8`, `master` совпадал с
+`origin/master`. До работы worktree был чистым; текущий dirty состоит из
+расширенного пакета и не является runtime-данными. Настоящие `.git/hooks`,
+`core.hooksPath` и `.claude/memory` не менялись.
+
+| Компонент | Результат 2026-09-11 |
+|---|---|
+| Node | `v24.18.0` |
+| npm | `11.16.0`; из PowerShell использован `npm.cmd`, execution policy не менялась |
+| Git | `2.55.0.windows.3`; origin GitHub, ветка master |
+| core.hooksPath | не задан в настоящей рабочей копии |
+| Docker | CLI не найден |
+| WSL | `wsl.exe` присутствует, но установка/дистрибутив не инициализированы |
+| Python | найден только неработающий WindowsApps alias |
+| `.local/` | в настоящей рабочей копии отсутствует |
+| Figma fixture/SDK | `npm ci` без уязвимостей; `npm test` — 2/2 |
+
+Локальные hook/queue/index/writer проверки выполнялись только в TEMP-каталогах.
+Для live-приёмки по-прежнему нужны: решение пользователя об установке Docker/WSL
+и совместимого Python; запуск Khoj и Activepieces 0.86.3; локальные AI/Figma
+секреты без публикации значений; разрешённый Figma-файл; реальный второй ПК.

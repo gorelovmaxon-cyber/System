@@ -11,17 +11,17 @@ Activepieces are not running. No mock/fixture is counted as live success.
 
 | Requirement | Evidence | Status | Owner / next fix |
 |---|---|---|---|
-| R01 workflow/roles/gates | SC-01 `e4fe4aa`, `docs/system-workflow.md` | done | — |
-| R02 portable memory/registry | SC-02 `38ab421`, resolver checks | done | — |
-| R03 quality/statuses/writer | SC-03 `f0a2628`, SC-08 `cee806e` | done | — |
-| R04 Khoj/index/search | SC-04 `9aa3c14` | blocked | SC-04-fix: provide Python 3.12 or verified compatible release, install/index/health |
+| R01 workflow/roles/gates | SC-01, `docs/system-workflow.md` | awaiting-review | independent review of updated local package |
+| R02 portable memory/registry | SC-02, B03/B13 regressions | awaiting-review | independent review |
+| R03 quality/statuses/writer | SC-03/08, T1/B01/B02/B15/B17 regressions | awaiting-review | independent writer review before real memory |
+| R04 Khoj/index/search | SC-04 + local B04/B05/B14/F05…F07 checks | awaiting-validation | provide live Khoj runtime/API and run health/search/reindex |
 | R05 retrieval/fallback | SC-05 `124a50b`, local fallback check | awaiting-validation | SC-05-fix: repeat positive queries against live Khoj |
 | R06 Activepieces/flow | SC-06 `8c5252d`, SC-09 `4525410` | blocked | SC-06-fix/SC-09-fix: Docker, UI, AI connection, live flow |
-| R07 event→writer→Git | SC-07 `8cd0edd`, SC-08, SC-11 | awaiting-validation | SC-09/11 live delivery after Activepieces |
-| R08 fresh index/no loop | SC-10 `ffb95e1`, local failed-queue check | blocked | SC-10-fix: configure Khoj reindex API and recovery test |
+| R07 event→writer→Git | SC-07/08/11, lease/ack/hook TEMP regressions | awaiting-validation | independent local review plus live delivery after Activepieces |
+| R08 fresh index/no loop | SC-10, revision/lease/backoff/aggregate regressions | awaiting-validation | configure live Khoj reindex API and recovery test |
 | R09 second device/recovery | SC-12/13, isolated clone | awaiting-validation | SC-13-fix: real second-PC drill and conflict/restore evidence |
 | R10 Figma MCP | SC-14 `32604a6`, fixture + real SDK client | awaiting-validation | SC-14-fix: live file/key verification |
-| R11 route workflows | SC-15 `f747837`, four dry-runs | done | — |
+| R11 route workflows | SC-15 `f747837`, four dry-runs | awaiting-validation | run against live client projects/integrations |
 | R12 evidence/economics | SC-16 `867969d`, templates/SUMMARY | awaiting-validation | SC-16-fix: apply to a complete live cycle |
 | R13 operations/recovery | SC-17 `bf070b4`, runbook/doctor | blocked | SC-17-fix: live service restore and index/flow recovery |
 
@@ -49,6 +49,10 @@ Activepieces are not running. No mock/fixture is counted as live success.
 
 No real push was made. The remote profile is not deployed. Existing user
 uncommitted files are preserved and are not release evidence.
+
+> Уточнение 2026-09-11: фраза выше относится к первичной приёмке 8 сентября.
+> Промежуточная работа 9 сентября позже опубликована на `c0b3459`; расширенный
+> пакет текущего сеанса ещё не публиковался. Публикация кода не означает READY.
 
 ## Publication status (2026-09-08)
 

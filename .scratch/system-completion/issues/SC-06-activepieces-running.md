@@ -3,7 +3,9 @@
 **What to build:** Рабочий Activepieces (UI, worker, БД) на закреплённой версии с персистентностью, подготовленной связностью контейнера к host-мосту и AI-подключением; конфиг перенесён в `services/activepieces/`.
 **Requirement IDs:** R06
 **Blocked by:** SC-01
-**Status:** planned
+**Status:** awaiting-validation
+
+> Статус уточнён 2026-09-11: Docker/Activepieces на этой машине недоступны; конфигурация не считается живым сервисом.
 **Перед началом работы:** Открой VS Code в `E:/System2`. SC-01 принят: ENVIRONMENT.md содержит выбранный релиз Activepieces (тег образа), postgres/redis-образы, порты, решение по сетевой связности Windows/Docker → host (например, `host.docker.internal` или выделенный адрес) и подтверждение, что Docker работает. Проверь `docker info`.
 
 ## Контекст

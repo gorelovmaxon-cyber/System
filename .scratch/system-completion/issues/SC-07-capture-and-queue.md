@@ -3,7 +3,9 @@
 **What to build:** Приём событий (commit и session-summary) по фиксированному JSON-контракту, долговечная локальная очередь с повторами/backoff, видимостью состояния и командой повторной доставки — без потери событий и без дублей при обрыве процесса.
 **Requirement IDs:** R07
 **Blocked by:** SC-02
-**Status:** planned
+**Status:** awaiting-review
+
+> Статус уточнён 2026-09-11: durable enqueue, JSONL recovery и lease-generation проверены синтетически; требуется независимая приёмка.
 **Перед началом работы:** Открой VS Code в `E:/System2`. SC-02 принят (resolve-paths, data_dir `.local/` вне Git, docs/memory-contract.md). Проверь, что `.local/` gitignored.
 
 ## Контекст

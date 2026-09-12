@@ -24,6 +24,11 @@ Status: awaiting-validation
 - Unknown `project_id` returned a clear `unknown project_id` request error.
 - `node --check scripts/memory/search.js` passed.
 
+> Уточнение 2026-09-11: `node --check` подтверждает только синтаксис и не является
+> функциональной проверкой. Функциональное evidence теперь дают регрессии
+> project isolation, custom memory root, config merge и allowed-before-forbidden;
+> положительный live Khoj всё ещё `awaiting-validation`.
+
 Khoj itself is not installed/running on this machine, so positive live search,
 health and API error simulation against the real service remain
 `awaiting-validation`; SC-04 is the external prerequisite.

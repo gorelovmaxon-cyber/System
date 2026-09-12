@@ -3,7 +3,9 @@
 **What to build:** Переносимый post-commit hook в репозитории с установщиком (без перезаписи чужого hook), объединяющий capture события (SC-07) и уведомление flow (SC-09); синхронизация Git без force push/reset, с видимыми ошибками, сохранением конфликтующих версий и без бесконечной рекурсии.
 **Requirement IDs:** R07, R09
 **Blocked by:** SC-07, SC-10
-**Status:** planned
+**Status:** awaiting-review
+
+> Статус уточнён 2026-09-11: hooksPath fail-closed и подключённый проект проверены в TEMP; требуется независимая приёмка.
 **Перед началом работы:** Открой VS Code в `E:/System2`. SC-07 (capture/queue), SC-10 (indexer) приняты. SC-09 даёт конечный адрес уведомления flow. Свериться с фактическим состоянием hooks из ENVIRONMENT.md (SC-01) и перепроверить командами (`git config core.hooksPath`, наличие и содержимое `.git/hooks/post-commit`), ничего не изменяя и не сбрасывая. Если в `.git/hooks/post-commit` (вне дерева) есть curl-заглушка с webhook Activepieces — её роль заменяется этим механизмом.
 
 ## Контекст

@@ -3,7 +3,7 @@
 **What to build:** Два уточняемых контракта фиксируются явно в FIX-тикетах и исходных документах: (1) где долговечно принята ответственность в цепочке webhook→flow→writer на версии Activepieces; (2) чем замена знания с сохранением истории отличается от настоящего удаления, и что видно в поиске/индексе/Git.
 **Requirement IDs:** SC-09 (R06, R07), SC-03/SC-10 (R03, R08); прямое требование актуального задания Sonnet.
 **Blocked by:** none (документация и анализ; live-части — awaiting-validation)
-**Status:** planned
+**Status:** awaiting-validation (live Activepieces/Khoj; локальный контракт awaiting-review)
 
 ## Контекст
 

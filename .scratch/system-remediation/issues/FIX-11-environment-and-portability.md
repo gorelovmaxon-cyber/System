@@ -3,7 +3,7 @@
 **What to build:** Фактическая среда этой машины зафиксирована с датой (2026-09-09) в ENVIRONMENT.md; переносимые hooks проверены на изолированном клоне (включая divergence/merge на временном remote); Figma MCP перепроверен (`npm test`); маршруты — dry-run; внешние блокировки перечислены с причинами и awaiting-validation.
 **Requirement IDs:** SC-01/02/04/06/11/12/13/14/15/17 (R02, R04, R05, R06, R07, R09, R10, R11, R13)
 **Blocked by:** none (после FIX-10)
-**Status:** planned
+**Status:** awaiting-validation (внешние сервисы/второй ПК; локальные проверки awaiting-review)
 
 ## Контекст
 
