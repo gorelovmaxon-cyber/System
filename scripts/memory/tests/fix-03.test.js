@@ -3,6 +3,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const { fixture, mod } = require('./helpers');
 
@@ -296,4 +297,79 @@ test('B14: an allowed record is selected before a better forbidden record', asyn
     assert.equal(result.results[0].scope, 'A');
     assert.match(result.results[0].snippet, /allowed details/);
   } finally { restore(); }
+});
+
+function countingKhoj(payload, counter) {
+  const original = global.fetch;
+  global.fetch = async (url) => {
+    counter.calls += 1;
+    if (String(url).includes('/health')) return { ok: true, text: async () => '{}' };
+    return { ok: true, text: async () => JSON.stringify({ results: payload }) };
+  };
+  return () => { global.fetch = original; };
+}
+
+function junctionInto(root, name, target) {
+  const link = path.join(root, '.claude/memory', name);
+  fs.mkdirSync(path.dirname(link), { recursive: true });
+  fs.symlinkSync(target, link, process.platform === 'win32' ? 'junction' : 'dir');
+  return link;
+}
+
+test('G05: a Khoj hit through a junction inside memory root is not read outside it', async () => {
+  const root = fixture('g05-junction-khoj');
+  const outside = fs.mkdtempSync(path.join(os.tmpdir(), 's2-g05-outside-'));
+  fs.writeFileSync(path.join(outside, 'outside.md'), entry('user', 'observation', 'OUTSIDE_SECRET_MARKER'), 'utf8');
+  junctionInto(root, 'linked', outside);
+  const counter = { calls: 0 };
+  const restore = countingKhoj([{ source: '.claude/memory/linked/outside.md', snippet: 'OUTSIDE_SECRET_MARKER', score: 0.9 }], counter);
+  try {
+    const result = await searchKhoj('OUTSIDE_SECRET_MARKER', undefined, { force: true });
+    // RED on original: файл читался и выдавался как обычный источник памяти
+    assert.equal(result.ok, true);
+    assert.deepEqual(result.results, []);
+    assert.equal(JSON.stringify(result).includes('OUTSIDE_SECRET_MARKER'), false);
+    assert.equal(counter.calls > 0, true);
+  } finally { restore(); }
+});
+
+test('G05: the local walk does not descend into a junction inside memory root', () => {
+  const root = fixture('g05-junction-walk');
+  const outside = fs.mkdtempSync(path.join(os.tmpdir(), 's2-g05-walk-outside-'));
+  fs.writeFileSync(path.join(outside, 'note.md'), '# outside\nOUTSIDE_WALK_MARKER body', 'utf8');
+  const link = junctionInto(root, 'linked', outside);
+  // Позитивный страж, а не воспроизведение: readdir с withFileTypes отдаёт
+  // junction как isSymbolicLink и не как каталог, поэтому прежний обход его и
+  // так не раскрывал. Явная проверка фиксирует это как намерение, а не как
+  // побочный эффект платформы.
+  assert.equal(fs.lstatSync(link).isSymbolicLink(), true);
+  assert.deepEqual(localResults('OUTSIDE_WALK_MARKER'), []);
+});
+
+test('G09: an unregistered project_id is rejected on the positive Khoj path, before HTTP', async () => {
+  const root = fixture('g09-ghost-project');
+  writeMemory(root, entry('ghost-project', 'observation', 'GHOST_MARKER'));
+  const counter = { calls: 0 };
+  const restore = countingKhoj([{ source: 'facts/writer-entries.md', snippet: 'GHOST_MARKER', score: 0.9 }], counter);
+  try {
+    // RED on original: с force сервис отвечал ok, и незарегистрированный проект
+    // получал запись; проверка стояла только на локальном пути.
+    await assert.rejects(() => searchKhoj('GHOST_MARKER', 'ghost-project', { force: true }), /unknown project_id: ghost-project/);
+    assert.equal(counter.calls, 0, 'запрос не доходит до сервиса');
+  } finally { restore(); }
+});
+
+test('G09: the verdict for an unknown project does not depend on Khoj availability', async () => {
+  const root = fixture('g09-ghost-offline');
+  writeMemory(root, entry('ghost-project', 'observation', 'GHOST_OFFLINE_MARKER'));
+  // Khoj выключен в конфигурации фикстуры. Оба пути — выключенный сервис и
+  // доступный (force) — обязаны давать один и тот же отказ: допустимость
+  // запроса не зависит от доступности зависимости.
+  await assert.rejects(() => searchKhoj('GHOST_OFFLINE_MARKER', 'ghost-project'), /unknown project_id/);
+  await assert.rejects(() => searchKhoj('GHOST_OFFLINE_MARKER', 'ghost-project', { force: true }), /unknown project_id/);
+  // зарегистрированный проект продолжает работать на обоих путях
+  const known = await searchKhoj('GHOST_OFFLINE_MARKER', 'A');
+  assert.equal(known.ok, false);
+  assert.equal(known.error, 'khoj-unavailable');
+  assert.deepEqual(known.fallback_results, []);
 });

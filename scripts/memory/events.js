@@ -8,6 +8,11 @@ const { resolvePaths } = require('./resolve-paths');
 const MAX_EVENT_BYTES = 100000;
 const DEFAULT_MAX_DIFF_BYTES = 20000;
 const KINDS = new Set(['commit', 'session-summary']);
+// Молчаливая нормализация стирала содержательный вход: строка вместо массива
+// превращалась в [], и validateEvent уже не видел исходного значения (G08).
+// Поэтому типы проверяются на исходном input до нормализации, а не после неё.
+const LIST_FIELDS = ['decisions', 'user_corrections', 'checks'];
+const STRING_FIELDS = ['project_id', 'summary', 'next_action', 'timestamp', 'sha', 'session_id', 'diff'];
 
 function configValue(name, fallback) {
   try {
@@ -76,7 +81,34 @@ function validateEvent(event) {
   return event;
 }
 
+// Проверка исходного входа до нормализации (G08). Отсутствующее необязательное
+// поле допустимо и означает пустое значение; присутствующее поле неверного типа
+// отклоняется явно, а не подменяется пустым — иначе решение, коррекция или
+// проверка исчезали бы незаметно, и validateEvent видел бы уже очищенный объект.
+function validateInput(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('event input must be an object');
+  for (const field of LIST_FIELDS) {
+    const value = input[field];
+    if (value === undefined || value === null) continue;
+    if (!Array.isArray(value) || !value.every(item => typeof item === 'string')) {
+      throw new Error(`${field} must be an array of strings`);
+    }
+  }
+  for (const field of STRING_FIELDS) {
+    const value = input[field];
+    if (value === undefined || value === null) continue;
+    if (typeof value !== 'string') throw new Error(`${field} must be a string`);
+  }
+  // CLI передаёт revision строкой, JSON-файл — числом; содержательным является
+  // целое значение, а не его запись.
+  if (input.revision !== undefined && input.revision !== null && !Number.isInteger(Number(input.revision))) {
+    throw new Error('revision must be an integer');
+  }
+  return input;
+}
+
 function createEvent(input) {
+  validateInput(input);
   const kind = input.kind;
   const source = kind === 'commit'
     ? { sha: String(input.sha || '') }

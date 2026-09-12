@@ -79,8 +79,16 @@ function tasksByEvent() {
   return grouped;
 }
 
-function currentRevision(file) {
-  try { return fileRevision(file); } catch { return null; }
+// Ревизия для сверки агрегата снимается с диска и только у пути, который
+// подтверждается сейчас: нечитаемый/уведённый за корень путь не может
+// подтвердить актуальность, поэтому он честно не подтверждает её (G06/G13).
+function currentRevision(root, file) {
+  try {
+    assertSafePath(root, file, 'indexer revision');
+    return fileRevision(file);
+  } catch {
+    return null;
+  }
 }
 
 function aggregateState(record, paths, tasks) {
@@ -89,7 +97,7 @@ function aggregateState(record, paths, tasks) {
   const pending = [];
   if (files.length === 0) return { indexed: false, missing, pending, reason: 'no-written-files' };
   for (const relative of files) {
-    const revision = currentRevision(path.resolve(paths.system_root, relative));
+    const revision = currentRevision(paths.memory_root, path.resolve(paths.system_root, relative));
     const task = tasks.find(item => item.file === relative && item.file_revision === revision);
     if (!task) { missing.push(relative); continue; }
     if (task.status !== 'indexed') pending.push({ file: relative, status: task.status, task_id: task.task_id });
@@ -212,6 +220,12 @@ function queueIndex(eventId, files, options = {}) {
 async function reindex(task, config, paths, options = {}) {
   const url = options.reindexUrl || process.env.KHOJ_REINDEX_URL || config.indexer?.reindex_url;
   if (!url || String(url).includes('<')) throw Object.assign(new Error('Khoj reindex mechanism is not configured'), { code: 'not-configured' });
+  // Задание перепроверяется по факту, а не берётся на веру из журнала (G06/G13):
+  // запись журнала могла быть восстановлена/изменена вручную (`../../outside.md`),
+  // а законный файл — оказаться за переименованным каталогом, заменённым junction.
+  // Путь, который не подтверждается сейчас, не передаётся адаптеру.
+  const absolute = path.resolve(paths.system_root, task.file);
+  assertSafePath(paths.memory_root, absolute, 'indexer file');
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), config.indexer?.timeout_ms || 5000);
   try {

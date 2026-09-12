@@ -110,3 +110,48 @@ test('F05: idempotent writer retry recreates a lost index task', () => {
   assert.equal(second.idempotent, true);
   assert.equal(indexer.status().length, 1);
 });
+
+test('G06: run refuses a journal path that escapes memory root and never reaches the adapter', async () => {
+  const root = fixture('g06-journal-escape');
+  const file = memoryFile(root);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, 'one');
+  const task = indexer.queueIndex('evt_g06', file)[0];
+  // Журнал восстановлен/изменён вручную: задание уводит за корень памяти.
+  indexerLog.append({ ...task, file: '../../outside.md', attempts: 0, next_attempt_at: null });
+  let calls = 0;
+  const results = await withFetch(async () => { calls += 1; return { ok: true }; }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
+  assert.equal(calls, 0, 'непроверенный путь не передаётся адаптеру');
+  assert.equal(results[0].status, 'failed');
+  assert.match(results[0].reason, /escapes allowed root/);
+  assert.deepEqual([...indexerLog.records().values()].filter(item => item.status === 'indexed'), []);
+});
+
+function removeLink(target) {
+  try { fs.unlinkSync(target); } catch { fs.rmdirSync(target); }
+}
+
+test('G13: a directory replaced by a junction between enqueue and run is not indexed', async () => {
+  const root = fixture('g13-junction-swap');
+  const file = memoryFile(root);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, 'one');
+  indexer.queueIndex('evt_g13', file);
+  // Штатный жизненный цикл: каталог переименован, на его месте junction в другой TEMP.
+  const moved = fs.mkdtempSync(path.join(os.tmpdir(), 's2-g13-moved-'));
+  fs.renameSync(path.dirname(file), path.join(moved, 'facts'));
+  fs.symlinkSync(path.join(moved, 'facts'), path.dirname(file), process.platform === 'win32' ? 'junction' : 'dir');
+  let calls = 0;
+  const clock = Date.now();
+  const swapped = await withFetch(async () => { calls += 1; return { ok: true }; }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture', now: clock }));
+  assert.equal(calls, 0, 'путь через junction не передаётся адаптеру');
+  assert.equal(swapped[0].status, 'failed');
+  assert.match(swapped[0].reason, /symbolic link|junction/);
+  assert.equal(writerLog.get('evt_g13'), undefined);
+  // Настоящий каталог возвращён: задание выполняется и подтверждается по факту.
+  removeLink(path.dirname(file));
+  fs.renameSync(path.join(moved, 'facts'), path.dirname(file));
+  const restored = await withFetch(async () => { calls += 1; return { ok: true }; }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture', now: clock + 120000 }));
+  assert.equal(calls, 1);
+  assert.equal(restored[0].status, 'indexed');
+});

@@ -48,6 +48,51 @@ test('B11: queue validates direct API input before append', () => {
   assert.equal(queue.list().length, 0);
 });
 
+test('G08: capture rejects a wrongly typed list instead of silently emptying it', () => {
+  fixture('g08-capture-types');
+  // RED on original: строка вместо массива превращалась в [] до validateEvent,
+  // и решение/коррекция/проверка исчезали без ошибки на входе.
+  const cases = [['decisions', 'KEEP_THIS_DECISION'], ['user_corrections', 7], ['checks', { done: true }], ['decisions', ['ok', 5]]];
+  for (const [field, value] of cases) {
+    assert.throws(
+      () => events.createEvent({ kind: 'session-summary', project_id: 'A', session_id: 'g08', revision: 1, summary: 's', [field]: value }),
+      new RegExp(field + ' must be an array of strings'),
+      field + ' = ' + JSON.stringify(value),
+    );
+  }
+  // Скалярные поля не подменяются приведением типа.
+  assert.throws(() => events.createEvent({ kind: 'session-summary', project_id: 'A', session_id: 'g08', revision: 1, summary: 's', next_action: 12 }), /next_action must be a string/);
+  assert.throws(() => events.createEvent({ kind: 'session-summary', project_id: 'A', session_id: 'g08', revision: 1, summary: { deep: 1 } }), /summary must be a string/);
+});
+
+test('G08: correct arrays and absent optional fields keep the documented meaning', () => {
+  fixture('g08-capture-ok');
+  const event = events.createEvent({ kind: 'session-summary', project_id: 'A', session_id: 'g08ok', revision: 1, summary: 's', decisions: ['d1'], user_corrections: [], checks: ['c1'] });
+  assert.deepEqual(event.decisions, ['d1']);
+  assert.deepEqual(event.user_corrections, []);
+  assert.deepEqual(event.checks, ['c1']);
+  // Отсутствующее/явно пустое необязательное поле — пустое значение, а не ошибка.
+  const bare = events.createEvent({ kind: 'session-summary', project_id: 'A', session_id: 'g08bare', revision: 1, summary: 's', decisions: null, checks: undefined, next_action: null });
+  assert.deepEqual(bare.decisions, []);
+  assert.deepEqual(bare.checks, []);
+  assert.equal(bare.next_action, '');
+});
+
+test('G08: capture --file with a wrongly typed field fails loudly and enqueues nothing', () => {
+  const root = fixture('g08-capture-file');
+  const input = path.join(root, 'input.json');
+  fs.writeFileSync(input, JSON.stringify({ decisions: 'KEEP_THIS_DECISION', summary: 'from file' }), 'utf8');
+  const result = spawnSync(process.execPath, [
+    path.join(__dirname, '..', 'capture.js'), 'session-summary',
+    '--project', 'A', '--session', 'g08file', '--revision', '1', '--file', input,
+  ], { encoding: 'utf8', env: { ...process.env, SYSTEM2_ROOT: root } });
+  // RED on original: событие принималось с decisions:[] и попадало в очередь.
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stderr, /decisions must be an array of strings/);
+  assert.equal(result.stdout.includes('evt_'), false);
+  assert.equal(new DurableQueue().list().length, 0);
+});
+
 test('B09/F10: truncated tails are quarantined and valid writer/indexer/queue records survive', () => {
   const root = fixture('b09-jsonl-tail');
   const writerLog = mod('writer-log');

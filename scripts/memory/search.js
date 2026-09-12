@@ -3,6 +3,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { resolvePaths, loadConfig } = require('./resolve-paths');
+const { assertSafePath } = require('./path-safety');
 
 const DEFAULTS = { limit: 3, budget: 1200, timeout: 1500 };
 
@@ -32,6 +33,28 @@ function sourceFile(memoryRoot, source) {
   const relative = path.relative(path.resolve(memoryRoot), candidate);
   if (!relative || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) return null;
   return candidate;
+}
+
+// Источник, который разрешено читать. Лексическая проверка пути недостаточна:
+// junction/symlink внутри памяти уводит чтение за настоящий корень, а имя при
+// этом остаётся «внутренним» (G05). Граница корня проверяется здесь, на чтении,
+// тем же примитивом, что и при записи.
+function readableSource(memoryRoot, source) {
+  const candidate = sourceFile(memoryRoot, source);
+  if (!candidate) return null;
+  try { return assertSafePath(memoryRoot, candidate, 'search source'); } catch { return null; }
+}
+
+// project_id проверяется на общей входной границе, до HTTP и до fallback (G09):
+// иначе допустимость запроса зависела бы от доступности Khoj — незарегистрированный
+// проект получал бы результаты с положительного пути сервиса.
+function assertKnownProject(paths, projectId) {
+  if (!projectId) return;
+  const registry = paths.registry || configFor(paths.system_root).registry || [];
+  if (registry.some(item => item.project_id === projectId)) return;
+  const error = new Error('unknown project_id: ' + projectId);
+  error.code = 'unknown-project';
+  throw error;
 }
 
 // Дубликат ключа — двусмысленность (S2): значение не выбирается (fail-closed),
@@ -108,15 +131,14 @@ function localResults(query, projectId, options = {}) {
   const queryWords = words(query);
   if (!queryWords.length) return [];
   const registry = paths.registry || configFor(paths.system_root).registry || [];
-  if (projectId && !registry.some(item => item.project_id === projectId)) {
-    const error = new Error('unknown project_id: ' + projectId);
-    error.code = 'unknown-project';
-    throw error;
-  }
+  assertKnownProject({ ...paths, registry }, projectId);
   const files = [];
   function walk(directory) {
     for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
       const full = path.join(directory, entry.name);
+      // Junction/symlink внутри корня — не источник памяти: обход не должен
+      // уводить чтение за настроенный корень (G05).
+      if (entry.isSymbolicLink()) continue;
       if (entry.isDirectory()) walk(full);
       else if (entry.isFile() && entry.name.endsWith('.md')) files.push(full);
     }
@@ -197,6 +219,9 @@ async function searchKhoj(query, projectId, options = {}) {
   const timeout = options.timeout ?? config.search?.timeout_ms ?? DEFAULTS.timeout;
   const limit = options.limit ?? config.search?.result_limit ?? DEFAULTS.limit;
   const budget = options.budget ?? (config.search?.budget_tokens_per_item ?? DEFAULTS.budget);
+  // До обращения к сервису: неизвестный проект — недопустимый запрос, а не
+  // «повезло с конфигурацией» (G09).
+  assertKnownProject(paths, projectId);
   if (khoj.enabled === false && !options.force) {
     return { ok: false, error: 'khoj-unavailable', message: 'Khoj integration is disabled', fallback: 'local', fallback_results: localResults(query, projectId, { paths, limit, budget }) };
   }
@@ -210,8 +235,9 @@ async function searchKhoj(query, projectId, options = {}) {
       const source = relativeSource(paths.memory_root, item.source || item.file || item.path);
       if (!source) return null;
       // Без локального файла scope записи проверить нельзя — сниппет сервиса
-      // не является подтверждением (R2).
-      const localFile = sourceFile(paths.memory_root, source);
+      // не является подтверждением (R2). Файл должен лежать внутри настоящего
+      // корня памяти: junction наружу даёт имя «внутри», но читает снаружи (G05).
+      const localFile = readableSource(paths.memory_root, source);
       if (!localFile || !fs.existsSync(localFile)) return null;
       const candidates = entries(fs.readFileSync(localFile, 'utf8')).filter(record => {
         const scope = record.meta.scope || 'unknown';
@@ -261,4 +287,4 @@ if (require.main === module) main().catch(error => {
   process.exitCode = 0;
 });
 
-module.exports = { searchKhoj, localResults, relativeSource, sourceFile, snippetFor, frontmatter, entries, matchEntry };
+module.exports = { searchKhoj, localResults, relativeSource, sourceFile, readableSource, assertKnownProject, snippetFor, frontmatter, entries, matchEntry };

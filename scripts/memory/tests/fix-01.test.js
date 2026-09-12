@@ -350,3 +350,60 @@ test('B02: writer rejects a junction that redirects a category outside memory ro
   );
   assert.equal(fs.existsSync(path.join(outside, 'writer-entries.md')), false);
 });
+
+test('G07: the order of JSON keys does not change proposal identity', () => {
+  const root = fixture('g07-key-order');
+  const ordered = { category: 'facts', status: 'observation', scope: 'user', statement: 'ORDER_MARKER', evidence: 'synthetic fixture', source: 'test' };
+  const reversed = { source: 'test', evidence: 'synthetic fixture', statement: 'ORDER_MARKER', scope: 'user', status: 'observation', category: 'facts' };
+  assert.equal(writer.writeProposal('evt_g07_order', ordered).status, 'persisted');
+  // RED on original: hash считался по порядку ключей входа -> CONFLICT на том же содержимом
+  const again = writer.writeProposal('evt_g07_order', reversed);
+  assert.equal(again.idempotent, true);
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal((text.match(/## ORDER_MARKER/g) || []).length, 1);
+});
+
+test('G07: an explicit optional default equals the omitted one', () => {
+  const root = fixture('g07-defaults');
+  const base = proposal('DEFAULT_MARKER');
+  assert.equal(writer.writeProposal('evt_g07_defaults', base).status, 'persisted');
+  const explicit = writer.writeProposal('evt_g07_defaults', { ...base, supersedes: undefined, confidence: undefined });
+  assert.equal(explicit.idempotent, true);
+  const text = fs.readFileSync(memoryFile(root), 'utf8');
+  assert.equal(text.includes('supersedes:'), false);
+  assert.equal(text.includes('confidence:'), false);
+});
+
+test('G07: an unknown proposal field is rejected instead of changing identity invisibly', () => {
+  fixture('g07-unknown-field');
+  // RED on original: поле не попадало в запись, но меняло hash и порождало CONFLICT
+  assert.throws(
+    () => writer.writeProposal('evt_g07_unknown', { ...proposal('UNKNOWN_FIELD_MARKER'), extra_note: 'ignored before' }),
+    /unknown proposal field: extra_note/
+  );
+});
+
+test('G07: a substantive difference still conflicts', () => {
+  fixture('g07-conflict');
+  writer.writeProposal('evt_g07_conflict', proposal('CONFLICT_ONE'));
+  assert.throws(
+    () => writer.writeProposal('evt_g07_conflict', proposal('CONFLICT_TWO')),
+    error => error.code === 'CONFLICT'
+  );
+  assert.throws(
+    () => writer.writeProposal('evt_g07_conflict', proposal('CONFLICT_ONE', 'B')),
+    error => error.code === 'CONFLICT'
+  );
+});
+
+test('G07: an interrupted legacy intent is recoverable and republished canonically', () => {
+  fixture('g07-legacy-intent');
+  const raw = { source: 'test', statement: 'LEGACY_MARKER', scope: 'user', status: 'observation', category: 'facts', evidence: 'synthetic fixture' };
+  // Старая (до канонизации) идентичность: порядок ключей входа, нормализованные поля.
+  const legacy = { ...raw, statement: 'LEGACY_MARKER', evidence: 'synthetic fixture', source: 'test', supersedes: undefined };
+  const legacyHash = proposalHash('evt_g07_legacy', [legacy]);
+  writerLog.append({ event_id: 'evt_g07_legacy', hash: legacyHash, status: 'intent', indexed: false });
+  const result = writer.writeProposal('evt_g07_legacy', raw);
+  assert.equal(result.status, 'persisted');
+  assert.notEqual(writerLog.get('evt_g07_legacy').hash, legacyHash);
+});

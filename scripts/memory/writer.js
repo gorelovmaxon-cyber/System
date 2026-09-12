@@ -59,12 +59,20 @@ function validateEventId(eventId) {
   return eventId;
 }
 
-// Валидация возвращает нормализованные значения (S2/S3): frontmatter-поля
-// однострочные, statement нормализован к LF и не содержит границ записей.
-// Hash считается по нормализованным предложениям — LF и CRLF формы одного
-// содержимого дают один hash (идемпотентный повтор, не CONFLICT).
-function validateProposal(proposal) {
-  if (!proposal || !CATEGORIES.includes(proposal.category)) throw new Error('invalid category');
+// Каноническая схема предложения (G07). Идентичность должна описывать
+// содержимое, а не запись: раньше hash считался по spread входного объекта,
+// поэтому тот же набор значений в другом порядке ключей давал другой hash и
+// повтор event_id отвечал CONFLICT, хотя итоговый Markdown совпадал — а
+// лишнее поле, наоборот, меняло hash, не попадая в файл. Поля фиксированы,
+// необязательные с определённым значением по умолчанию отсутствуют, лишние
+// отклоняются явно.
+const PROPOSAL_FIELDS = ['category', 'status', 'scope', 'statement', 'evidence', 'source', 'supersedes', 'confidence'];
+
+function canonicalProposal(proposal) {
+  if (!proposal || typeof proposal !== 'object' || Array.isArray(proposal)) throw new Error('proposal must be an object');
+  const unknown = Object.keys(proposal).filter(key => !PROPOSAL_FIELDS.includes(key));
+  if (unknown.length) throw new Error('unknown proposal field: ' + unknown.sort().join(', '));
+  if (!CATEGORIES.includes(proposal.category)) throw new Error('invalid category');
   if (!STATUSES.includes(proposal.status)) throw new Error('invalid status');
   const paths = resolvePaths();
   if (proposal.scope !== 'user' && !paths.registry.some(item => item.project_id === proposal.scope)) {
@@ -74,13 +82,40 @@ function validateProposal(proposal) {
   if (statement.split('\n').some(line => line.startsWith('---'))) {
     throw new Error('statement must not contain a line starting with ---');
   }
-  const evidence = singleLine(proposal.evidence, 'evidence');
-  const source = proposal.source === undefined ? undefined : singleLine(proposal.source, 'source');
-  const supersedes = proposal.supersedes === undefined ? undefined : singleLine(proposal.supersedes, 'supersedes');
-  if (proposal.confidence !== undefined && (typeof proposal.confidence !== 'number' || proposal.confidence < 0 || proposal.confidence > 1)) {
-    throw new Error('confidence must be between 0 and 1');
+  const canonical = {
+    category: proposal.category,
+    status: proposal.status,
+    scope: proposal.scope,
+    statement,
+    evidence: singleLine(proposal.evidence, 'evidence'),
+  };
+  if (proposal.source !== undefined) canonical.source = singleLine(proposal.source, 'source');
+  if (proposal.supersedes !== undefined) canonical.supersedes = singleLine(proposal.supersedes, 'supersedes');
+  if (proposal.confidence !== undefined) {
+    if (typeof proposal.confidence !== 'number' || proposal.confidence < 0 || proposal.confidence > 1) {
+      throw new Error('confidence must be between 0 and 1');
+    }
+    canonical.confidence = proposal.confidence;
   }
-  return { ...proposal, statement, evidence, source, supersedes };
+  return canonical;
+}
+
+function validateProposal(proposal) {
+  return canonicalProposal(proposal);
+}
+
+// Старая (до канонизации) форма предложения — только для сверки с hash'ем,
+// записанным прерванной записью прошлой версии. Она намеренно сохраняет
+// порядок ключей исходного запроса: иначе точный legacy hash не воспроизвести,
+// и восстановление законного прерванного запроса превратилось бы в CONFLICT.
+function legacyNormalized(proposal) {
+  return {
+    ...proposal,
+    statement: normalizeEol(text(proposal.statement, 'statement')),
+    evidence: singleLine(proposal.evidence, 'evidence'),
+    source: proposal.source === undefined ? undefined : singleLine(proposal.source, 'source'),
+    supersedes: proposal.supersedes === undefined ? undefined : singleLine(proposal.supersedes, 'supersedes'),
+  };
 }
 
 function proposalHash(eventId, proposals) {
@@ -170,10 +205,12 @@ function writeProposal(eventId, input) {
     const proposals = legacyProposals.map(validateProposal);
     const hash = proposalHash(eventId, proposals);
     // Before S2/S3, the intent hash was calculated from the validated but
-    // unnormalised request. Accept that exact legacy identity during recovery,
-    // then publish the canonical hash. This is not a wildcard: any substantive
-    // request difference still conflicts.
-    const legacyHash = proposalHash(eventId, legacyProposals);
+    // unnormalised request, and before G07 it was calculated straight from the
+    // raw input. Both forms existed in journals, so both are accepted during
+    // recovery; the canonical hash is published afterwards. This is not a
+    // wildcard: any substantive request difference still conflicts.
+    const legacyHashes = [legacyProposals, legacyProposals.map(legacyNormalized)]
+      .map(list => proposalHash(eventId, list));
     const paths = resolvePaths();
     // Решение о конфликте/повторе и изменение журнала — внутри блокировки (R6):
     // проверка журнала «до» блокировки пропускала конфликт одного event_id
@@ -182,7 +219,7 @@ function writeProposal(eventId, input) {
     crashPoint('after-lock');
     release.assertHeld();
     const previous = writerLog.get(eventId);
-    if (previous && previous.hash !== hash && previous.hash !== legacyHash) {
+    if (previous && previous.hash !== hash && !legacyHashes.includes(previous.hash)) {
       const error = new Error('event_id already persisted with different content');
       error.code = 'CONFLICT';
       throw error;
