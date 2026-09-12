@@ -1,0 +1,17 @@
+{
+  "revision": "a904185",
+  "results": [
+    {
+      "mode": "submitted",
+      "exit": 0,
+      "stdout": "{\"mode\":\"submitted\",\"root\":\"C:\\\\Users\\\\1663646\\\\AppData\\\\Local\\\\Temp\\\\s2-independent-watch-revive-ppkm4r\",\"atReturn\":{\"result\":{\"status\":\"deadline\",\"passes\":6,\"revives\":1,\"delivered\":0,\"pending\":1,\"failed\":0},\"calls\":2,\"completed\":false,\"recordStatus\":\"in-flight\"},\"later\":{\"completed\":true,\"delayMs\":3751,\"recordStatus\":\"delivered\"}}\n",
+      "stderr": ""
+    },
+    {
+      "mode": "await-control",
+      "exit": 0,
+      "stdout": "{\"mode\":\"await-control\",\"root\":\"C:\\\\Users\\\\1663646\\\\AppData\\\\Local\\\\Temp\\\\s2-independent-watch-revive-iLpgOO\",\"atReturn\":{\"result\":{\"status\":\"idle\",\"passes\":2,\"revives\":1,\"delivered\":1,\"pending\":0,\"failed\":0},\"calls\":2,\"completed\":true,\"recordStatus\":\"delivered\"},\"later\":{\"completed\":true,\"delayMs\":65,\"recordStatus\":\"delivered\"}}\n",
+      "stderr": ""
+    }
+  ]
+}

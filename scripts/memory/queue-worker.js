@@ -63,7 +63,9 @@ async function watch(options = {}) {
       if (waitMs > 0) await sleep(waitMs);
       if (!waiting.length) {
         if (options.revive === false) return { ...result, status: 'failed' };
-        queue.redeliver('failed', deliver);
+        // Оживление ожидается до конца: иначе владение снималось бы, пока
+        // запущенная доставка ещё идёт, а её ошибка оставалась в фоне (W1).
+        await queue.redeliver('failed', deliver);
         result.revives += 1;
         nextReviveAt = now() + reviveMs;
       }

@@ -210,6 +210,64 @@ test('G12: only one worker owns the queue at a time', async () => {
   assert.equal(result.status, 'idle');
 });
 
+// W1: оживление failed запускалось без ожидания, поэтому watch мог вернуть
+// deadline и снять владение, пока запущенная им доставка ещё шла в фоне.
+test('W1: an automatically revived failed event finishes before watch returns', async () => {
+  const root = fixture('w1-revive');
+  const queue = new DurableQueue({ dir: path.join(root, '.local', 'queue'), retriesMax: 2, backoffMs: 10 });
+  queue.enqueue(event());
+  let calls = 0;
+  let active = 0;
+  let maxActive = 0;
+  const deliver = async () => {
+    calls += 1;
+    if (calls <= 2) return { ok: false, retryable: true, error: 'service down' };
+    active += 1;
+    maxActive = Math.max(maxActive, active);
+    try {
+      // Доставка асинхронная: результат приходит таймером, а не микрозадачей.
+      await new Promise(resolve => setTimeout(resolve, 50));
+      return { ok: true };
+    } finally {
+      active -= 1;
+    }
+  };
+  const result = await watch({ queue, deliver, maxIdleMs: 30000 });
+  assert.equal(maxActive, 1);
+  assert.equal(calls, 3);
+  assert.equal(active, 0);
+  assert.equal(result.status, 'idle');
+  assert.equal(result.delivered, 1);
+  assert.equal(queue.list()[0].status, 'delivered');
+});
+
+// W1: отказ самого оживления не должен теряться в фоне — вызывающий видит
+// ошибку, владение освобождается, необработанного отклонения не остаётся.
+// Отказ вводится на границе worker↔queue: транзакция оживления недоступна.
+test('W1: a failing revival reaches the caller and releases the worker lock', async () => {
+  const root = fixture('w1-revive-failure');
+  const queue = new DurableQueue({ dir: path.join(root, '.local', 'queue'), retriesMax: 1, backoffMs: 5 });
+  queue.enqueue(event());
+  const rejection = new Error('revival transaction is unavailable');
+  queue.redeliver = async () => { throw rejection; };
+  const unhandled = [];
+  const onUnhandled = reason => unhandled.push(reason);
+  process.on('unhandledRejection', onUnhandled);
+  try {
+    await assert.rejects(
+      () => watch({ queue, deliver: async () => ({ ok: false, retryable: true, error: 'down' }), maxIdleMs: 30000 }),
+      rejection,
+    );
+    // Отклонение всплывает к вызывающему, а не остаётся в фоне: даём циклу
+    // событий шанс сообщить о необработанном Promise.
+    await new Promise(resolve => setTimeout(resolve, 20));
+  } finally {
+    process.off('unhandledRejection', onUnhandled);
+  }
+  assert.deepEqual(unhandled, []);
+  assert.equal(fs.existsSync(lockStatePath(queue.dir)), false);
+});
+
 // G17: push без аргументов отправлял локальное имя ветки (`origin local-work`),
 // создавая на remote новую ветку и оставляя ветку синхронизации без изменений.
 test('G17: sync --push publishes the upstream destination, not the local branch name', () => {

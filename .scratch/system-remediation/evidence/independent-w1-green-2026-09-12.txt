@@ -1,0 +1,13 @@
+﻿✔ G12: a durable event completes after the service returns, without a new commit (4376.7505ms)
+✔ G12: watch stops with an honest status instead of retrying forever (3196.9198ms)
+✔ G12: only one worker owns the queue at a time (964.1664ms)
+✔ W1: an automatically revived failed event finishes before watch returns (4834.637ms)
+✔ W1: a failing revival reaches the caller and releases the worker lock (1533.4169ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15133.951

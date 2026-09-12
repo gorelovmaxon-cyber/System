@@ -1,0 +1,93 @@
+✖ W1: an automatically revived failed event finishes before watch returns (30985.2873ms)
+✖ W1: a failing revival reaches the caller and releases the worker lock (30654.4646ms)
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "W1: a failing revival reaches the caller and releases the worker lock" at tests\fix-11-cycle.test.js:247:1 generated asynchronous activity after the test ended. This activity created the error "Error: revival transaction is unavailable" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 62498.0468
+
+✖ failing tests:
+
+test at tests\fix-11-cycle.test.js:215:1
+✖ W1: an automatically revived failed event finishes before watch returns (30985.2873ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\System\scripts\memory\tests\fix-11-cycle.test.js:238:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\fix-11-cycle.test.js:247:1
+✖ W1: a failing revival reaches the caller and releases the worker lock (30654.4646ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection (Error).
+      at async TestContext.<anonymous> (D:\SystemTheBest\System\scripts\memory\tests\fix-11-cycle.test.js:257:5)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: Error: revival transaction is unavailable
+        at TestContext.<anonymous> (D:\SystemTheBest\System\scripts\memory\tests\fix-11-cycle.test.js:251:21)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1325:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+        at Test.postRun (node:internal/test_runner/test:1465:19)
+        at Test.run (node:internal/test_runner/test:1390:12)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3),
+    operator: 'rejects',
+    diff: 'simple'
+  }
