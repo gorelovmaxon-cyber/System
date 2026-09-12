@@ -1,0 +1,22 @@
+# RED блоков 2-5 из git-ревизий (2026-09-12)
+# Метод: git worktree add --detach <sha>; копия текущих tests/*.js; прогон регрессий блока
+
+block2 @ b247eeb  fix-05.test.js fix-08.test.js      -> 10 tests,  1 pass,  9 fail
+block3 @ 6b22b60  fix-03.test.js fix-07.test.js      -> 31 tests, 26 pass,  5 fail
+block4 @ a8bfaf4  fix-11.test.js fix-11-cycle.test.js -> 25 tests,  9 pass, 16 fail
+  (9 pass совпадает с матрицей; 14 -> 16 потому, что копия тестов включает
+   две регрессии W1, добавленные позже в fix-11-cycle.test.js)
+block5 @ 91bdada  fix-06.test.js                     -> 22 tests, 18 pass,  4 fail
+  (совпадает с матрицей: 18 pass / 4 fail)
+
+Собственная проба, красное на 1b20150 (родитель b1607ff, фикс V1/G15):
+G15 {"id":"G15","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G15-dIAEz4","childA":"persisted","blockedWhileHeld":null,"bWroteWhileHeld":true,"silentLossOfB":true,"retryAfterRelease":"persisted","containsA":true,"containsB":true,"verdict":false}
+G08 {"id":"G08","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G08-VEqlRG","apiError":null,"cliExit":0,"cliStderr":null,"queuedCount":3,"leakedDecisionInQueue":false,"leakedDecisionInMemory":false,"memoryBefore":"absent","verdict":false}
+G09 {"id":"G09","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G09-USYaKK","remoteError":null,"remoteCalls":2,"localError":"unknown-project","knownProjectReachedService":true,"knownOk":true,"memoryFilesAfterRefusal":[],"verdict":false}
+LOCK {"id":"LOCK","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-LOCK-aR9oTM","harness_error":"TypeError: lockStatePath is not a function\n    at D:\\SystemTheBest\\acceptance-p1\\probes\\acceptance-p1-probe.cjs:216:22\n    at test (D:\\SystemTheBest\\acceptance-p1\\probes\\acceptance-p1-probe.cjs:38:40)\n    at D:\\SystemTheBest\\acceptance-p1\\probes\\acceptance-p1-probe.cjs:213:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"}
+
+Собственная проба, зелёное на f254a5f:
+G15 {"id":"G15","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G15-eSssq8","childA":"persisted","blockedWhileHeld":{"code":"LOCK_TIMEOUT","reason":"busy","message":"writer lock timeout","elapsedMs":2364},"bWroteWhileHeld":false,"silentLossOfB":false,"retryAfterRelease":"persisted","containsA":true,"containsB":true,"verdict":true}
+G08 {"id":"G08","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G08-tc5XOI","apiError":"decisions must be an array of strings","cliExit":1,"cliStderr":"ERROR: decisions must be an array of strings","queuedCount":0,"leakedDecisionInQueue":false,"leakedDecisionInMemory":false,"memoryBefore":"absent","verdict":true}
+G09 {"id":"G09","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G09-n32Tqm","remoteError":{"code":"unknown-project","message":"unknown project_id: ghost-project"},"remoteCalls":0,"localError":"unknown-project","knownProjectReachedService":true,"knownOk":true,"memoryFilesAfterRefusal":[],"verdict":true}
+LOCK {"id":"LOCK","root":"C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-LOCK-xdo9Gk","identities":{"writerId":"fdd174eae5e067dc106f777c15d1db5e.lock","queueId":"891b82aa86358d267a22f8bf834656a6.lock","journalId":"85a7515e1c45c8d2ec898da4b1ffbb6d.lock","distinct":true},"secondContender":{"code":"LOCK_TIMEOUT","reason":"busy"},"authorityLostOnForeignRemoval":"LOCK_AUTHORITY_LOST","journalRecords":20,"journalExpected":20,"uniqueRecords":20,"tornOrLost":false,"verdict":true}

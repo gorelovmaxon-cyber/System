@@ -1,0 +1,70 @@
+{
+  "date": "2026-09-12",
+  "head": "f254a5f82878ea8384ce5b7ba2c4afe7d83cbee1",
+  "sharedLockDir": "C:\\Users\\1663646\\AppData\\Local\\Temp\\acc-p1-locks-W4azXT",
+  "results": [
+    {
+      "id": "G15",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G15-eSssq8",
+      "childA": "persisted",
+      "blockedWhileHeld": {
+        "code": "LOCK_TIMEOUT",
+        "reason": "busy",
+        "message": "writer lock timeout",
+        "elapsedMs": 2364
+      },
+      "bWroteWhileHeld": false,
+      "silentLossOfB": false,
+      "retryAfterRelease": "persisted",
+      "containsA": true,
+      "containsB": true,
+      "verdict": true
+    },
+    {
+      "id": "G08",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G08-tc5XOI",
+      "apiError": "decisions must be an array of strings",
+      "cliExit": 1,
+      "cliStderr": "ERROR: decisions must be an array of strings",
+      "queuedCount": 0,
+      "leakedDecisionInQueue": false,
+      "leakedDecisionInMemory": false,
+      "memoryBefore": "absent",
+      "verdict": true
+    },
+    {
+      "id": "G09",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G09-n32Tqm",
+      "remoteError": {
+        "code": "unknown-project",
+        "message": "unknown project_id: ghost-project"
+      },
+      "remoteCalls": 0,
+      "localError": "unknown-project",
+      "knownProjectReachedService": true,
+      "knownOk": true,
+      "memoryFilesAfterRefusal": [],
+      "verdict": true
+    },
+    {
+      "id": "LOCK",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-LOCK-xdo9Gk",
+      "identities": {
+        "writerId": "fdd174eae5e067dc106f777c15d1db5e.lock",
+        "queueId": "891b82aa86358d267a22f8bf834656a6.lock",
+        "journalId": "85a7515e1c45c8d2ec898da4b1ffbb6d.lock",
+        "distinct": true
+      },
+      "secondContender": {
+        "code": "LOCK_TIMEOUT",
+        "reason": "busy"
+      },
+      "authorityLostOnForeignRemoval": "LOCK_AUTHORITY_LOST",
+      "journalRecords": 20,
+      "journalExpected": 20,
+      "uniqueRecords": 20,
+      "tornOrLost": false,
+      "verdict": true
+    }
+  ]
+}

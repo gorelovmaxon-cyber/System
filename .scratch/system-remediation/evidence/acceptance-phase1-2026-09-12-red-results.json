@@ -1,0 +1,47 @@
+{
+  "date": "2026-09-12",
+  "head": "1b201503a53781a926b08c2a18dd8e3b7b73d406",
+  "sharedLockDir": "C:\\Users\\1663646\\AppData\\Local\\Temp\\acc-p1-locks-5uEf7h",
+  "results": [
+    {
+      "id": "G15",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G15-dIAEz4",
+      "childA": "persisted",
+      "blockedWhileHeld": null,
+      "bWroteWhileHeld": true,
+      "silentLossOfB": true,
+      "retryAfterRelease": "persisted",
+      "containsA": true,
+      "containsB": true,
+      "verdict": false
+    },
+    {
+      "id": "G08",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G08-VEqlRG",
+      "apiError": null,
+      "cliExit": 0,
+      "cliStderr": null,
+      "queuedCount": 3,
+      "leakedDecisionInQueue": false,
+      "leakedDecisionInMemory": false,
+      "memoryBefore": "absent",
+      "verdict": false
+    },
+    {
+      "id": "G09",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-G09-USYaKK",
+      "remoteError": null,
+      "remoteCalls": 2,
+      "localError": "unknown-project",
+      "knownProjectReachedService": true,
+      "knownOk": true,
+      "memoryFilesAfterRefusal": [],
+      "verdict": false
+    },
+    {
+      "id": "LOCK",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-acc-LOCK-aR9oTM",
+      "harness_error": "TypeError: lockStatePath is not a function\n    at D:\\SystemTheBest\\acceptance-p1\\probes\\acceptance-p1-probe.cjs:216:22\n    at test (D:\\SystemTheBest\\acceptance-p1\\probes\\acceptance-p1-probe.cjs:38:40)\n    at D:\\SystemTheBest\\acceptance-p1\\probes\\acceptance-p1-probe.cjs:213:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+    }
+  ]
+}

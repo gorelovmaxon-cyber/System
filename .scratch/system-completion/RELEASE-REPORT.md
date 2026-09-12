@@ -54,6 +54,13 @@ uncommitted files are preserved and are not release evidence.
 > Промежуточная работа 9 сентября позже опубликована на `c0b3459`; расширенный
 > пакет текущего сеанса ещё не публиковался. Публикация кода не означает READY.
 
+> Уточнение 2026-09-12: локальные блоки расширенного пакета (V1/G15, G01–G19, W1)
+> **приняты** независимой приёмкой Фазы 1; FIX-01…08 и FIX-10 → `done`. Строки R01/R02/R03
+> выше сохраняют прежний статус как исторический; актуальный вердикт и его границы —
+> [INDEPENDENT-ACCEPTANCE-PHASE1-2026-09-12.md](../system-remediation/INDEPENDENT-ACCEPTANCE-PHASE1-2026-09-12.md).
+> Решение **v1 NOT READY** не меняется: живой цикл (Khoj, Activepieces, Figma, второй ПК)
+> этим вердиктом не подтверждён.
+
 ## Publication status (2026-09-08)
 
 All local work is now pushed to `github.com/gorelovmaxon-cyber/System` (branch

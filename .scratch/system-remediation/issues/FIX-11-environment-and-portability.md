@@ -14,7 +14,7 @@
 - `.scratch/system-completion/ENVIRONMENT.md` — актуализировать с датой проверки 2026-09-09: версии (Node/Git), отсутствие Docker/WSL/Python, core.hooksPath пуст, remote/ветка, отсутствие `.local/`; внешние блокировки и что требуется от пользователя.
 - `docs/second-pc.md` — (если найдётся расхождение с фактическим поведением bootstrap/doctor на этой машине) датированная правка.
 - `docs/routes/*` — не менять без расхождения; зафиксировать dry-run в отчёте.
-- `scripts/memory/tests/fix-11-hooks.test.js` — новый тест: изолированный клон (temp git repo с bare-remote): install-hooks идемпотентен; commit → одно pending-событие; divergence: две ветки с разными записями памяти → merge сохраняет обе версии; `sync.js --push` на временный remote после merge.
+- `scripts/memory/tests/fix-11-cycle.test.js` — новый тест: изолированный клон (temp git repo с bare-remote): install-hooks идемпотентен; commit → одно pending-событие; divergence: две ветки с разными записями памяти → merge сохраняет обе версии; `sync.js --push` на временный remote после merge.
 - `scripts/memory/tests/fix-11-figma.test.js` — (или вызов существующих тестов) `npm test` в `.claude/mcp-servers/figma`.
 - `SC-REVIEW-MATRIX.md` — финальные статусы SC-01/02/04/06/11/12/13/14/15/17.
 

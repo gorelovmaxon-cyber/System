@@ -6,6 +6,14 @@
 - Формат: [TICKET_TEMPLATE.md](../../../TICKET_TEMPLATE.md) (SC-00; полный код не обязателен).
 - Статусы на 2026-09-11: **SC-01/02/07/08/11/12/16 — awaiting-review**; **SC-03/04/05/06/09/10/13/14/15/17 — awaiting-validation**; **SC-18 — blocked**. «Локальные тесты прошли» ≠ «внешняя приёмка выполнена».
 
+> Уточнение 2026-09-12: локальная часть статусов изменилась. Независимая приёмка Фазы 1
+> ([INDEPENDENT-ACCEPTANCE-PHASE1-2026-09-12.md](../../system-remediation/INDEPENDENT-ACCEPTANCE-PHASE1-2026-09-12.md))
+> приняла блоки V1/G15, G01–G19, W1; FIX-01…08 и FIX-10 → `done`. Живые SC — Khoj,
+> Activepieces, Figma, второй ПК — остаются `awaiting-validation`/`blocked`, SC-18 по-прежнему
+> NOT READY. Актуальная построчная картина — в
+> [SC-REVIEW-MATRIX.md](../../system-remediation/SC-REVIEW-MATRIX.md). Разделы ниже датированы
+> 2026-09-08/11 и не переписываются.
+
 ## Согласованный статус 2026-09-11
 
 Расширенный локальный пакет закрывает T1, B01…B19 и F05…F10 положительными
