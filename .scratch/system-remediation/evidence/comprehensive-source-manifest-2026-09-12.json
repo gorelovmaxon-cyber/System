@@ -1,0 +1,199 @@
+{
+    "head":  "fb10b89f92122d2ffca5e55e9e83cdca3e207399",
+    "date":  "2026-09-12",
+    "dirty_tree":  true,
+    "files":  [
+                  {
+                      "path":  "scripts\\memory\\bootstrap.js",
+                      "sha256":  "BD8F833E389F4790C2D886886A45A6BB92888DCBC0036FA9A8760A3DAD31F05D"
+                  },
+                  {
+                      "path":  "scripts\\memory\\bridge-server.js",
+                      "sha256":  "AD17A9081D58DA5110DCB2C184CF6681D46121CD2AB68C4B39A581CE77947A5D"
+                  },
+                  {
+                      "path":  "scripts\\memory\\capture.js",
+                      "sha256":  "99C43280D84C2C18B3EE0DF09C0076CA2DFA79267F23AFCC2A3D8BD3D0356CD6"
+                  },
+                  {
+                      "path":  "scripts\\memory\\deliver.js",
+                      "sha256":  "EB037DB1D49C220610AA6A8D7DA9014C452C6AD210E3B6A03DF8DEBD222A67DE"
+                  },
+                  {
+                      "path":  "scripts\\memory\\doctor.js",
+                      "sha256":  "A9076B26E5194BAD20870082E6DE8DE5E61666F8E62D9756F7070AFDE154A914"
+                  },
+                  {
+                      "path":  "scripts\\memory\\events.js",
+                      "sha256":  "9AF194BE2D8E81B46C0FC872CF507AC65EFBC8C4C5F1ADB97E7216CC6A981179"
+                  },
+                  {
+                      "path":  "scripts\\memory\\indexer-log.js",
+                      "sha256":  "0593396AFC31F5EB26139E0EF788CC3EFF469AD5E134648E20AA58DCDC824C49"
+                  },
+                  {
+                      "path":  "scripts\\memory\\indexer.js",
+                      "sha256":  "383549684F25AF5153E8B45AD9B82B0E4D4ECF283A31442044842959829717D8"
+                  },
+                  {
+                      "path":  "scripts\\memory\\init-local-config.js",
+                      "sha256":  "29BB5E567D965B5921775D86823A62591A1633D061BB499D6095835AB7ACB11D"
+                  },
+                  {
+                      "path":  "scripts\\memory\\init-project.js",
+                      "sha256":  "BE52F2AABA9E104E289D9F4664F915EC058255AFAA387E2B08E87D024E0DB120"
+                  },
+                  {
+                      "path":  "scripts\\memory\\ipc-lock.js",
+                      "sha256":  "FA942CC0AF66565FFBB7D338C4692A2CBC708634C6028439F50D4F67E827F67F"
+                  },
+                  {
+                      "path":  "scripts\\memory\\jsonl.js",
+                      "sha256":  "BEAC0FBE19EA02EE0B485652137E1B2686C9A7A7A57DAEF52341261CB3E31A17"
+                  },
+                  {
+                      "path":  "scripts\\memory\\lock-keeper.cjs",
+                      "sha256":  "99087F759B476319A3145E6CB29F7E9E792583FD3636FD8CA93ABBFCDB8AB6E1"
+                  },
+                  {
+                      "path":  "scripts\\memory\\path-safety.js",
+                      "sha256":  "CFD29A2DB6F0C328398472B365AAC5C4EA12E2E7168B5B3592762EB206CE2DC8"
+                  },
+                  {
+                      "path":  "scripts\\memory\\project-id.js",
+                      "sha256":  "24FA4B2979897A6C792D4700B38BBFBA6C9CCB33D2FB0230E480818159938589"
+                  },
+                  {
+                      "path":  "scripts\\memory\\queue-status.js",
+                      "sha256":  "3F9CE6BAF0A31B2F965A2722D1D6350CCE6C7C4A20512269DF5D5C054CC96167"
+                  },
+                  {
+                      "path":  "scripts\\memory\\queue-worker.js",
+                      "sha256":  "8B8F93E0247464A47C1E3D308F4F9B43A79A28D9208E2CCF3AF716F371649CA5"
+                  },
+                  {
+                      "path":  "scripts\\memory\\queue.js",
+                      "sha256":  "75124023260A22A20F6CB6C13B6FAFEF16543E406E56D6A89A313AA566E975D7"
+                  },
+                  {
+                      "path":  "scripts\\memory\\resolve-paths.js",
+                      "sha256":  "3F91EA49B759706868D2272C9D550F0C80D50D2FFB2E7C3A303E377226AB33C5"
+                  },
+                  {
+                      "path":  "scripts\\memory\\route.js",
+                      "sha256":  "FF1009924AC5F7C967ABDA220B3F5CE1EAF822C4D8C409F3FD2BB06C3C9FD000"
+                  },
+                  {
+                      "path":  "scripts\\memory\\save.js",
+                      "sha256":  "99A5DE33DD27638288B3D4F8B655B7EE2037E200787A944FFC7A82364B1D8BD7"
+                  },
+                  {
+                      "path":  "scripts\\memory\\search.js",
+                      "sha256":  "C1A9658CB7F075F2CFA3F425329C5CD78FC470CFA264CAFB6D3B02E7C615B081"
+                  },
+                  {
+                      "path":  "scripts\\memory\\sync.js",
+                      "sha256":  "D767681FF30A5BBCE67FDE30B7B7860C032C193160079A3F6116CFB36E4E04AF"
+                  },
+                  {
+                      "path":  "scripts\\memory\\writer-log.js",
+                      "sha256":  "8CB4D2DF15A3AF0434FBE23120F749976DB1D7995DDF8112D81FEC25606179DD"
+                  },
+                  {
+                      "path":  "scripts\\memory\\writer.js",
+                      "sha256":  "D9AC57F243FEA70771BB7BE9A07E4860F1948689E10A332AF85F9DCFF35F7C76"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-01.test.js",
+                      "sha256":  "1C9FE1D2885B1A2A6F20AE909E41ACB82B16B3CC13C4A8B83059E817F71C5867"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-02-holder.cjs",
+                      "sha256":  "583C7EA213DBEEBCE81B7DB67771DC0400BDA24477661810BAC8E2B3DD4F7ACE"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-02-keeper.cjs",
+                      "sha256":  "C9705913FE6D2C28AD3B5472D17EB8F33F9169CBBD05710D73114D5B5DC76A66"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-02-keeper.test.js",
+                      "sha256":  "E04A85FFB9DD285C07014CAE98ECC3CB6878648E3115B72DF0045514B2A2F621"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-02-pause.cjs",
+                      "sha256":  "7098A61E67F04C0F1C380680BA6F21FFF72F437732DFC1E54872CD3DF002C646"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-02-reclaim-pause.cjs",
+                      "sha256":  "A99F791B16D2F44CEFCFDED04AB37BAB06EB0FBFE167EADC6ED56141AC29B00E"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-02.test.js",
+                      "sha256":  "4206B5E04CF152B9F0C202854A89E166151729B7D587C6CC369031A736EEF32C"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-03.test.js",
+                      "sha256":  "EAF1D485D40ADF3486905786618BAD3BD39AD1458529D8D04F2D9E51A9BF4414"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-04-crash.cjs",
+                      "sha256":  "B2ECCF5D3139CC2DCC0AA2BBD13A513AEA3E8D41AC6436A23C22C56B2D6169B5"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-04.test.js",
+                      "sha256":  "AE809A24F877E0CE621B799C1D8D6CBEC35554CD0B5E75E8837A536BBEAC213D"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-06-repair-crash.cjs",
+                      "sha256":  "3EBF69569B22AABECD0EC8E8162EA83FA7204418DA78160B7402FF958447CE08"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-06.test.js",
+                      "sha256":  "43143C1A1DA1A8171A3F9DF6DF8746F2D6E8EB88979D452AFF13FE719C76EC33"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-07.test.js",
+                      "sha256":  "20A76696E1ABB10BF222880E21F234E1E2FD37617B737906F827F2C9AE7DD490"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-09.test.js",
+                      "sha256":  "5A7F4A2396998613B20E9507BB50508EDC323C985524FF7F485E23E256629CCB"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\fix-11.test.js",
+                      "sha256":  "CF86CB5A1921429EAEAFE519A1D371349BB3211D83D7C5EF9EE694DF6B2CF9F9"
+                  },
+                  {
+                      "path":  "scripts\\memory\\tests\\helpers.js",
+                      "sha256":  "EA15291CC3979CF3FAC5234FAAE2DE75D0ED944C2DD8C6D437D90CA82B1A1EE5"
+                  },
+                  {
+                      "path":  ".git-hooks-templates\\install-hooks.sh",
+                      "sha256":  "9287E61B3AAE68CB570A72C0C529A206AD82E056DA63180A67D46B7E44DC2A6B"
+                  },
+                  {
+                      "path":  ".git-hooks-templates\\post-commit",
+                      "sha256":  "FA8AE6E200468EB28F9D3CBBE19B2FD0F682F4AAE42163E8E55A0F0577D6DEEE"
+                  },
+                  {
+                      "path":  "config\\system.example.json",
+                      "sha256":  "90F0AB11AAEA932A7CB2D2BF7AA6C5A5B400BA193F43B8E1969B520C8B8BE0F5"
+                  },
+                  {
+                      "path":  "config\\system.local.example.json",
+                      "sha256":  "EA1335E567B8DD8729974BAE1C1626336F84C6E608D110AC2154DBCB430A8EF5"
+                  },
+                  {
+                      "path":  "docs\\memory-contract.md",
+                      "sha256":  "4365B4203134300C08C642C5D2CFA1151CF8EC3E4651DCFA6234254DF747FF79"
+                  },
+                  {
+                      "path":  ".claude\\mcp-servers\\figma\\lib\\extract.js",
+                      "sha256":  "4E4C53E2B10D78E6A17679592B02E3741285FB1B5367342679CB5863FB049A50"
+                  },
+                  {
+                      "path":  ".claude\\mcp-servers\\figma\\server.js",
+                      "sha256":  "56622770E712159D893F98D9695AB741F78B61688A7CCC2E0086792EEF0CCAE7"
+                  }
+              ]
+}

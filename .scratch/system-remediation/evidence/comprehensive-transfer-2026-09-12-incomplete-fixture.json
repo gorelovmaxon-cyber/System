@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-12",
+  "results": [
+    {
+      "id": "G17",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G17-NcT2TI",
+      "bare": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-bare-k7idKY",
+      "before": "4aba0f3b0e890d05b966134d5c37251cb3b8ca0d",
+      "after": "4aba0f3b0e890d05b966134d5c37251cb3b8ca0d",
+      "exit": 0,
+      "stdout": "{\n  \"pushed\": true,\n  \"remote\": \"origin\",\n  \"branch\": \"local-work\",\n  \"output\": \"\"\n}\n",
+      "stderr": "",
+      "createdOtherBranch": true,
+      "reproduced": true
+    },
+    {
+      "id": "G18",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G18-I5pfo1",
+      "exit": 1,
+      "stderr": "use --file, --run, --status or --requeue-failed\n",
+      "reproduced": true
+    },
+    {
+      "id": "G19",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G19-sHUPfL",
+      "project": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-initial-commit-TgAPCt",
+      "exit": 0,
+      "events": 0,
+      "reproduced": false
+    }
+  ]
+}
