@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-12",
+  "results": [
+    {
+      "id": "G17",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G17-wqwzD0",
+      "bare": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-bare-jSMyU8",
+      "before": "d3c2bd4f26943b7e05b95e15685304f32313ba5c",
+      "after": "ac6d08bd78abac2bf1fa28f39aa4a2005278a131",
+      "exit": 0,
+      "stdout": "{\n  \"pushed\": true,\n  \"remote\": \"origin\",\n  \"branch\": \"main\",\n  \"local_branch\": \"local-work\",\n  \"upstream\": \"origin/main\",\n  \"refspec\": \"HEAD:refs/heads/main\",\n  \"head\": \"ac6d08bd78abac2bf1fa28f39aa4a2005278a131\",\n  \"destination_sha\": \"ac6d08bd78abac2bf1fa28f39aa4a2005278a131\",\n  \"verified\": true,\n  \"output\": \"\"\n}\n",
+      "stderr": "",
+      "createdOtherBranch": false,
+      "reproduced": false
+    },
+    {
+      "id": "G18",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G18-Yy5F4u",
+      "exit": 0,
+      "stderr": "",
+      "reproduced": false
+    },
+    {
+      "id": "G19",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G19-g0SZYI",
+      "project": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-initial-commit-5SLnkS",
+      "exit": 0,
+      "events": 1,
+      "diff": "diff --git a/initial.txt b/initial.txt\nnew file mode 100644\nindex 0000000..c8b9d54\n--- /dev/null\n+++ b/initial.txt\n@@ -0,0 +1 @@\n+INITIAL_DIFF_MARKER\n\\ No newline at end of file\n",
+      "reproduced": false
+    }
+  ]
+}

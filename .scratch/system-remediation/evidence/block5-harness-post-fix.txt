@@ -1,0 +1,13 @@
+## comprehensive-transfer (G17-G19) — из results.json
+G17 reproduced= false
+G18 reproduced= false
+G19 reproduced= false
+
+## Итог по G13-G19
+G13 reproduced=false
+G14 reproduced=false
+G15 harness_error
+G16 reproduced=false
+G17 reproduced=false
+G18 reproduced=false
+G19 reproduced=false

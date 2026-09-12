@@ -1,0 +1,40 @@
+# GREEN блока 5 — исправленное дерево (91bdada + правки блока 5), 2026-09-12
+
+## node --test scripts/memory/tests/fix-06.test.js
+✔ B10: UTF-8 truncation preserves code points and the byte limit (2.1245ms)
+✔ B11: event validation rejects missing identity and malformed list fields (22.195ms)
+✔ B11: queue validates direct API input before append (14.2857ms)
+✔ G08: capture rejects a wrongly typed list instead of silently emptying it (6.1568ms)
+✔ G08: correct arrays and absent optional fields keep the documented meaning (9.4002ms)
+✔ G08: capture --file with a wrongly typed field fails loudly and enqueues nothing (95.7779ms)
+✔ B09/F10: truncated tails are quarantined and valid writer/indexer/queue records survive (947.3338ms)
+✔ B09: corruption in the middle is fail-closed and is not silently removed (180.7125ms)
+✔ F09: recapture of the same commit ignores timestamp-only differences (465.8278ms)
+✔ F08: only one concurrent worker delivers a live lease (1430.2608ms)
+✔ F08: an expired worker cannot overwrite a newer delivered generation (2010.1341ms)
+✔ U2: a failed quarantine write leaves the journal byte-identical (242.1733ms)
+✔ U2: a failed repaired-copy write keeps prefix and tail recoverable (253.6732ms)
+✔ U2: a failed replacement leaves the journal intact and no repair leftovers (261.6417ms)
+✔ U2: process death at a repair boundary keeps both parts recoverable (437.6536ms)
+✔ U2: the canonical journal is only replaced by an atomic rename of a prepared sibling (149.5797ms)
+✔ U2: a valid final record without LF is not rewritten and stays appendable (444.7349ms)
+✔ U2: an append is flushed to disk through its own fd (283.1741ms)
+✔ U2/FIX-06 plan: corrupt_count is reported without touching the journal (437.3516ms)
+✔ U2/FIX-06 plan: quarantine moves the torn tail to a sidecar and is idempotent (859.5271ms)
+✔ U2/FIX-06 plan: queue-status reports corrupt_count and quarantines on request (2264.3845ms)
+✔ U2/FIX-06 plan: a journal with middle corruption is reported, not swallowed (1041.6115ms)
+ℹ tests 22
+ℹ pass 22
+ℹ fail 0
+
+## npm test (.claude/mcp-servers/figma)
+✔ extracts supported tokens with provenance and duplicates (3.0181ms)
+✔ fills with alpha and radii stay visible, non-solid fills are reported (0.5436ms)
+✔ gap without padding is reported as a spacing token (0.3643ms)
+✔ nodeId limits the answer to the subtree, including file-wide styles (0.9118ms)
+✔ an unknown nodeId fails instead of silently returning the whole file (0.8443ms)
+✔ file key and node id are read from a Figma URL (1.2742ms)
+✔ real MCP client initializes, lists and calls the tool (439.8073ms)
+ℹ tests 7
+ℹ pass 7
+ℹ fail 0

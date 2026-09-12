@@ -3,12 +3,12 @@
   "results": [
     {
       "id": "G13",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G13-7fKbEa",
-      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-index-outside-W1TExP",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G13-9hyCwq",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-index-outside-0Q9GDB",
       "calls": 0,
       "result": [
         {
-          "task_id": "idx_3f522528aa6106a1",
+          "task_id": "idx_6559a185818eeb0b",
           "status": "failed",
           "reason": "indexer file crosses a symbolic link or junction"
         }
@@ -17,44 +17,42 @@
     },
     {
       "id": "G14",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G14-7p6qyv",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G14-LpzAQq",
       "registered": {
-        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-tmC5Bx",
+        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-bQhUWk",
         "project_id": "new-project",
-        "claude": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-tmC5Bx\\CLAUDE.md",
-        "handoff": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-tmC5Bx\\HANDOFF.md",
+        "claude": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-bQhUWk\\CLAUDE.md",
+        "handoff": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-bQhUWk\\HANDOFF.md",
         "registry": "registered-in-local-config",
-        "local_path": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-tmC5Bx"
+        "local_path": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-new-project-bQhUWk"
       },
       "reproduced": false
     },
     {
       "id": "G15",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G15-vSSexB",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G15-JTzzkQ",
       "harness_error": "Error: writer lock timeout\n    at acquireProcessLock (D:\\SystemTheBest\\System\\scripts\\memory\\ipc-lock.js:228:17)\n    at acquireLock (D:\\SystemTheBest\\System\\scripts\\memory\\writer.js:37:10)\n    at Object.writeProposal (D:\\SystemTheBest\\System\\scripts\\memory\\writer.js:218:15)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-extra-2026-09-12.cjs:44:19\n    at test (D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-extra-2026-09-12.cjs:15:95)\n    at D:\\SystemTheBest\\System\\.scratch\\system-remediation\\evidence\\comprehensive-extra-2026-09-12.cjs:34:8\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
     },
     {
       "id": "G16",
-      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G16-N29qlS",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G16-Klu9vy",
       "output": {
         "colors": [],
-        "typography": [
+        "typography": [],
+        "spacing": [],
+        "radii": [],
+        "ignored": [
           {
+            "kind": "style",
+            "style_id": "outside",
             "name": "OUTSIDE_STYLE",
-            "type": "style",
-            "fontFamily": "OutsideFont",
-            "fontSize": null,
-            "fontWeight": null,
-            "lineHeight": null,
+            "reason": "not-used-in-scope",
             "node": "styles/OUTSIDE_STYLE",
             "node_id": "outside"
           }
-        ],
-        "spacing": [],
-        "radii": [],
-        "ignored": []
+        ]
       },
-      "reproduced": true,
+      "reproduced": false,
       "classification": "nodeId does not limit file-wide styles; contract decision needed"
     }
   ]

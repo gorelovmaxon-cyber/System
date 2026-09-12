@@ -1,0 +1,39 @@
+# RED блока 5 — база: detached worktree на 91bdada (HEAD до правок блока 5), копия новых тестов
+# Дата: 2026-09-12
+
+## node --test scripts/memory/tests/fix-06.test.js
+✖ U2/FIX-06 plan: corrupt_count is reported without touching the journal (175.1516ms)
+✖ U2/FIX-06 plan: quarantine moves the torn tail to a sidecar and is idempotent (161.0793ms)
+✖ U2/FIX-06 plan: queue-status reports corrupt_count and quarantines on request (615.4109ms)
+✖ U2/FIX-06 plan: a journal with middle corruption is reported, not swallowed (184.363ms)
+ℹ tests 22
+ℹ pass 18
+ℹ fail 4
+✖ failing tests:
+✖ U2/FIX-06 plan: corrupt_count is reported without touching the journal (175.1516ms)
+✖ U2/FIX-06 plan: quarantine moves the torn tail to a sidecar and is idempotent (161.0793ms)
+✖ U2/FIX-06 plan: queue-status reports corrupt_count and quarantines on request (615.4109ms)
+✖ U2/FIX-06 plan: a journal with middle corruption is reported, not swallowed (184.363ms)
+
+## node --test test/extract.test.js (figma)
+✔ extracts supported tokens with provenance and duplicates (3.1724ms)
+✔ fills with alpha and radii stay visible, non-solid fills are reported (0.6013ms)
+✖ gap without padding is reported as a spacing token (1.4561ms)
+✖ nodeId limits the answer to the subtree, including file-wide styles (0.8284ms)
+✔ an unknown nodeId fails instead of silently returning the whole file (0.9636ms)
+ℹ tests 5
+ℹ pass 3
+ℹ fail 2
+✖ failing tests:
+✖ gap without padding is reported as a spacing token (1.4561ms)
+✖ nodeId limits the answer to the subtree, including file-wide styles (0.8284ms)
+
+## node --test test/mcp-client.test.js (figma)
+✖ file key and node id are read from a Figma URL (1.2236ms)
+✖ real MCP client initializes, lists and calls the tool (546.0744ms)
+ℹ tests 2
+ℹ pass 0
+ℹ fail 2
+✖ failing tests:
+✖ file key and node id are read from a Figma URL (1.2236ms)
+✖ real MCP client initializes, lists and calls the tool (546.0744ms)
