@@ -17,6 +17,7 @@
 ## Facts (данные с источником или явно отмеченные как наблюдение)
 - [Technology Stack](facts/technology-stack.md) — языки, фреймворки, tools, APIs
 - [Projects Overview](facts/projects-overview.md) — активные проекты, статус, эволюция систем
+- [Writer Entries](facts/writer-entries.md) — записи, созданные живым writer'ом (наблюдение)
 
 ## Gotchas (ошибки и проверенные обходы)
 - [Git + Node.js на Windows](gotchas/git-node-windows.md) — типичные проблемы и решения
@@ -27,7 +28,7 @@
 
 ---
 
-**Последнее обновление:** 2026-08-18  
+**Последнее обновление:** 2026-09-12  
 **Структура:** относительные пути для переносимости между машинами
 
 ## Observations / анализы
