@@ -4,6 +4,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
+const path = require('node:path');
 const { fixture, proposal, memoryFile, mod } = require('./helpers');
 
 const writer = mod('writer');
@@ -299,4 +300,53 @@ test('S3: normalization does not hide real content differences (CONFLICT preserv
     () => writer.writeProposal('evt_s3_conflict', [proposal('CONTENT_A\nCONTENT_C')]),
     (err) => err.code === 'CONFLICT'
   );
+});
+
+test('B01: required evidence rejects missing and non-string values', () => {
+  const root = fixture('b01-evidence-types');
+  for (const [index, evidence] of [undefined, null, {}, []].entries()) {
+    assert.throws(
+      () => writer.writeProposal(`evt_bad_evidence_${index}`, [{ ...proposal('BAD_EVIDENCE'), evidence }]),
+      /evidence must be a non-empty string/
+    );
+  }
+  assert.equal(fs.existsSync(memoryFile(root)), false);
+});
+
+test('B17: empty batch is rejected without reserving the event id', () => {
+  fixture('b17-empty-batch');
+  assert.throws(() => writer.writeProposal('evt_empty', []), /non-empty array/);
+  const result = writer.writeProposal('evt_empty', proposal('REAL_AFTER_EMPTY'));
+  assert.equal(result.status, 'persisted');
+});
+
+test('B15: exact legacy intent with edge whitespace recovers under canonical hash', () => {
+  fixture('b15-legacy-intent');
+  const crypto = require('node:crypto');
+  const writerLog = mod('writer-log');
+  const legacy = proposal('LEGACY_SOURCE', 'user', 'facts', { source: '  evidence-source  ' });
+  const legacyHash = crypto.createHash('sha256')
+    .update(JSON.stringify({ eventId: 'evt_legacy', proposals: [legacy] }))
+    .digest('hex');
+  writerLog.append({ event_id: 'evt_legacy', hash: legacyHash, status: 'intent' });
+  const result = writer.writeProposal('evt_legacy', legacy);
+  assert.equal(result.status, 'persisted');
+  assert.match(fs.readFileSync(memoryFile(process.env.SYSTEM2_ROOT), 'utf8'), /source: evidence-source/);
+  assert.equal(writer.writeProposal('evt_legacy', legacy).idempotent, true);
+  assert.throws(
+    () => writer.writeProposal('evt_legacy', { ...legacy, statement: 'DIFFERENT' }),
+    error => error.code === 'CONFLICT'
+  );
+});
+
+test('B02: writer rejects a junction that redirects a category outside memory root', () => {
+  const root = fixture('b02-junction');
+  const outside = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-b02-outside-'));
+  const category = path.join(root, '.claude', 'memory', 'facts');
+  fs.symlinkSync(outside, category, process.platform === 'win32' ? 'junction' : 'dir');
+  assert.throws(
+    () => writer.writeProposal('evt_b02', proposal('MUST_STAY_INSIDE')),
+    /symbolic link|junction|outside/
+  );
+  assert.equal(fs.existsSync(path.join(outside, 'writer-entries.md')), false);
 });
