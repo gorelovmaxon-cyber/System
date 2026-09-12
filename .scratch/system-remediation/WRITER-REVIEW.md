@@ -289,3 +289,15 @@ RED взят из git, а не из текстового описания. Live 
 и restore памяти, экономика — **не выполнялись** и остаются `awaiting-validation`/внешними.
 **Блок не принят автором; до положительного вердикта — без миграции настоящей памяти и без
 подключения writer к рабочему потоку.**
+
+**Точка подачи и происхождение доказательств.** HEAD пакета — `76ae68d` (документы приёмки) на
+`c13f11c` (блок 5); полный список коммитов блоков — в таблице выше. RED-выводы:
+`evidence/red-2026-09-12-v1-g15.txt`, `red-2026-09-12-block2.txt`, `red-2026-09-12-block3.txt`,
+`red-2026-09-12-block4-unit.txt`, `red-2026-09-12-block5-unit.txt`. GREEN-выводы:
+`green-2026-09-12-block4-unit.txt`, `green-2026-09-12-block5-unit.txt`,
+`block3-harness-post-fix.txt`, `block3-extra-harness-post-fix.txt`, `block5-harness-post-fix.txt`;
+прогон блоков 4–5 в целом лежит в `comprehensive-{audit,extra,transfer}-2026-09-12-results.json`
+(G01–G19: `not-reproduced`, кроме G08/G09/G15 `harness_error` и G12 `reproduced` — см. наблюдения
+выше). Результаты harness-ов, сохранённые **до** повтора (требование задания), — в
+`evidence/pre-block4/` и `evidence/pre-block5/`. Внешние блокировки и незакрытые live-пункты — в
+[SUMMARY.md](issues/SUMMARY.md) и [HANDOFF](../../../HANDOFF.md).
