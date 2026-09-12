@@ -1,9 +1,15 @@
 'use strict';
 
-// Аварийные регрессии U1 (независимая проверка 2026-09-11, FIX-02): право входа
-// при независимой смерти keeper'а и writer'а, пауза живого владельца, отказ
-// запуска keeper'а и штатный release. Только TEMP-ресурсы, настоящая память не
-// затрагивается.
+// Аварийные регрессии U1/V1 (независимые проверки 2026-09-11 и 2026-09-12,
+// FIX-02): право входа при независимой смерти keeper'а и writer'а, пауза
+// живого владельца, отказ запуска keeper'а и штатный release. Только
+// TEMP-ресурсы, настоящая память не затрагивается.
+//
+// Протокол V1: запись владения публикует только держатель эксклюзивного
+// OS-bind'а (lock-keeper.cjs), поэтому устаревшая публикация невозможна по
+// построению. Отсюда две проверяемые границы: смерть сторожа не отзывает
+// authority у живого владельца (U1), а смерть владельца освобождает ресурс
+// (сторож снимает свою запись).
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
@@ -70,30 +76,35 @@ test('U1: a killed keeper does not admit a second owner while the writer lives',
     assert.equal(probe.status, 0, probe.stderr);
     assert.equal(readJson(path.join(dir, 'endpoint.json')).status, 'acquired', 'endpoint must be free after the keeper died');
 
-    // RED до правки: второй процесс получал право входа при живом владельце.
+    // RED до правки U1: второй процесс получал право входа при живом владельце.
+    const before = fs.readFileSync(metadataFile, 'utf8');
     const second = runFixture('try', resource, dir, '10');
     assert.notEqual(second.status, 0, 'a second owner must not be admitted: ' + second.stdout);
     assert.equal(second.stdout.includes('ACQUIRED'), false);
     assert.match(second.stderr, /REFUSED:live-owner/);
-    assert.equal(readJson(metadataFile).pid, held.pid, 'the live owner keeps the ownership record');
+    assert.equal(fs.readFileSync(metadataFile, 'utf8'), before, 'a refusal must not rewrite the live ownership record');
     assert.equal(pidAlive(held.pid), true, 'the first owner is still alive and has not released');
 
-    // Владелец не продолжает работу по утраченному праву входа: путь записи
-    // проверяет authority и падает fail-closed, а не пишет.
+    // Владелец authority не теряет: смерть сторожа её не отзывает (иначе запись
+    // отозвал бы тот, кто не является владельцем). Запись по-прежнему называет
+    // живой процесс, поэтому fail-closed проверка пути записи проходит.
     fs.writeFileSync(path.join(dir, 'probe-assert'), '1');
     await waitFor(() => fs.existsSync(path.join(dir, 'assert-result.json')));
     const assertion = readJson(path.join(dir, 'assert-result.json'));
-    assert.equal(assertion.ok, false);
-    assert.equal(assertion.code, 'LOCK_AUTHORITY_LOST');
+    assert.equal(assertion.ok, true, 'authority survives the death of its keeper: ' + JSON.stringify(assertion));
+
+    // Пока секция не завершена, третий процесс тоже не входит.
+    const thirdTry = runFixture('try', resource, dir, '10');
+    assert.notEqual(thirdTry.status, 0, 'a third owner must not enter while the first lives: ' + thirdTry.stdout);
 
     // Штатный release живого владельца освобождает ресурс для следующего.
     fs.writeFileSync(path.join(dir, 'stop'), '1');
     const exited = await holder.done;
     assert.equal(exited.code, 0, exited.err);
     assert.equal(fs.existsSync(metadataFile), false, 'release removes the ownership record');
-    const third = runFixture('try', resource, dir, '10');
-    assert.equal(third.status, 0, third.stderr);
-    assert.match(third.stdout, /ACQUIRED/);
+    const fourth = runFixture('try', resource, dir, '10');
+    assert.equal(fourth.status, 0, fourth.stderr);
+    assert.match(fourth.stdout, /ACQUIRED/);
   } finally {
     fs.writeFileSync(path.join(dir, 'stop'), '1');
     holder.child.kill();
@@ -140,11 +151,16 @@ test('U1: the death of the writer releases authority for the next owner', async 
   const held = readJson(path.join(dir, 'held.json'));
   assert.equal(pidAlive(held.pid), true);
 
-  // Независимая смерть владельца: keeper замечает её и освобождает endpoint.
+  // Независимая смерть владельца: ресурс освобождается для следующего поколения.
+  // На Windows сторож завершается вместе с владельцем (libuv держит потомков в
+  // job object), поэтому запись остаётся и называет мёртвый pid; новая генерация
+  // забирает ресурс по правилу «мёртвый владелец». На POSIX сторож переживает
+  // владельца и снимает запись сам — в обоих случаях чужое владение не возникает.
   holder.child.kill();
   await holder.done;
   await waitFor(() => !pidAlive(held.pid));
-  assert.equal(readJson(metadataFile).pid, held.pid, 'the stale record survives the owner');
+  const stale = fs.existsSync(metadataFile) ? readJson(metadataFile) : null;
+  assert.ok(stale === null || stale.pid === held.pid, 'no third party may own the resource after the owner died');
 
   const next = runFixture('try', resource, dir, '20');
   assert.equal(next.status, 0, next.stderr);

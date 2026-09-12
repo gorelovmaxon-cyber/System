@@ -23,8 +23,8 @@ B01…B19 + F05…F10 — следующий этап в [SONNET-EXTENDED-FIX-PA
 | SC-04 Khoj | R04 | health/search реальные; версия = ENVIRONMENT; нет секретов в индексе | ничего не установлено; services/khoj/README.md — runbook с гейтом Python 3.12; config.example.yml НЕ создан | отчёт честный: khoj нет, py 3.14, PyPI требует <3.13, dry-run остановлен | внешн (Python 3.12/Docker); тикет: контракт конфигурации не зафиксирован в ENVIRONMENT | FIX-11 |
 | SC-05 Retrieval | R05,R04 | 5 контрольных вопросов; fallback при отказе; budget; нет путей вне memory | search.js адаптер + localResults существуют; fallback работает (проверено на этой машине) | отчёт: fallback `ok:false,error:khoj-unavailable`; «5 вопросов» не задокументированы; `node --check` подан как успех | F04 исправлен (FIX-03: R2/R3 перитмическая верификация хитов Khoj, CRLF-разбор, строгая изоляция scope по записям; S2 дубликат ключа frontmatter fail-closed на чтении — `parseFields {fields, duplicated}`, нет last-wins; fix-03 15/15, RED на aa2bfa5/980d331); тикет: противоречие node --check | FIX-03, FIX-10 |
 | SC-06 Activepieces | R06 | compose healthy; flow без ключей; контейнер→host связность; секреты вне Git | docker-compose.yml (0.86.3) и .env.example с AP_HOST_BRIDGE_URL существуют | Docker/WSL не установлены — ни одна проверка не выполнена; честно помечено | внешн (Docker/WSL) | FIX-11 |
-| SC-07 Capture/queue | R07 | долговечная очередь; повторы без дублей; обрыв до ack; queue-status; без `.local/` в Git | events.js/queue.js/capture.js/deliver.js/queue-status.js существуют; `.local` gitignored | отчёт: UTF-8 события, pending при недоступном endpoint, повторный event_id без дубля | код: F08, F09, F10 воспроизведены (FIX-05/06); писательская часть R07 исправлена в FIX-02 (R5/R6 publish-verify владельца, конфликт под блокировкой; S1 карантин-восстановление lock — устаревшее решение не разрушает канонический путь; fix-02 12/12, RED на 5fe4a7b/980d331); **T1 открыт (третье ревью): карантин допускает двух владельцев — доработка протокола в расширенном пакете**; тикет: 4 разных статуса у одного тикета | FIX-05, FIX-06, FIX-10 |
-| SC-08 Writer/bridge | R03,R07 | 200 persisted; повтор без дубля; параллельные /write; 400/401/409; перезапуск без дубля | writer.js/bridge-server.js/writer-log.js/save.js; контракт в memory-contract.md (границы persisted, R5/R6, S1/S2/S3) | FIX-01..04: 52/52; RED по R1–R6 на предшествующих ревизиях, по S1–S3 на 980d331, T1 на ffe215a; пробы ревью reproduced:false на a8574f6 и c258c75 (S1–S3); третья приёмка reproduced:true по T1 (writer-review-round3.cjs) | F01/F02/F03 исправлены; R1/R4 (идентичность записи по полному содержимому, CRLF), R5/R6 (publish-verify lock, конфликт под блокировкой), S2 (однозначная сериализация полей), S3 (канонизация EOL до hash); **T1 открыт — третья приёмка отклонена, доработка протокола блокировки в расширенном пакете** | FIX-01, FIX-02, FIX-04 |
+| SC-07 Capture/queue | R07 | долговечная очередь; повторы без дублей; обрыв до ack; queue-status; без `.local/` в Git | events.js/queue.js/capture.js/deliver.js/queue-status.js существуют; `.local` gitignored | отчёт: UTF-8 события, pending при недоступном endpoint, повторный event_id без дубля | код: F08, F09, F10 воспроизведены (FIX-05/06); писательская часть R07 исправлена в FIX-02 (R5/R6 — конфликт под блокировкой; S1/T1 заменены примитивом OS-bind; V1/G15 — публикация только держателем bind'а и каноническая идентичность ресурса; fix-02 12/12, fix-02-v1-ownership 8/8); тикет: 4 разных статуса у одного тикета | FIX-05, FIX-06, FIX-10 |
+| SC-08 Writer/bridge | R03,R07 | 200 persisted; повтор без дубля; параллельные /write; 400/401/409; перезапуск без дубля | writer.js/bridge-server.js/writer-log.js/save.js; контракт в memory-contract.md (границы persisted, протокол блокировки V1/G15, S2/S3) | FIX-01..04: 108/108 (весь набор); RED по R1–R6 на предшествующих ревизиях, по S1–S3 на 980d331, T1 на ffe215a, по V1/G15 на ece1b24 (проба exit 0, регрессии 7/8); пятая приёмка по V1 воспроизведена на до-фиксовом дереве | F01/F02/F03 исправлены; R1/R4 (идентичность записи по полному содержимому, CRLF), R5/R6 (конфликт под блокировкой), S2 (однозначная сериализация полей), S3 (канонизация EOL до hash); блокировка: право входа — эксклюзивный OS-bind, запись владения публикует только держатель bind'а, идентичность ресурса — канонический `memory_root` (V1/G15); `awaiting-review` | FIX-01, FIX-02, FIX-04 |
 | SC-09 AI-flow | R06,R07 | полный flow событие→AI→writer; ошибочный AI JSON; повторы без дубля | memory-event-to-writer.json — **blueprint** (HANDOFF подтверждает), не импортируемый экспорт | ни один сценарий не выполнялся (AP не запущен, нет AI-ключа) | внешн (Docker/AP/AI-ключ); тикет: blueprint вместо flow, контракт webhook не уточнён | FIX-09, FIX-11 |
 | SC-10 Индекс | R08 | новое знание находится; изменение/удаление/superseded; отказ Khoj → persisted; без циклов | indexer.js/indexer-log.js существуют; контракт persisted/indexed разделён | отчёт: одна задача на event, `--run` → failed с причиной «not configured»; live не проверялось | код: F05, F06, F07 воспроизведены; непроверено (live reindex) | FIX-07, FIX-08, FIX-09 |
 | SC-11 Hooks/sync | R07,R09 | install-hooks идемпотентен; commit → одно событие; divergence без потерь; один источник hook | .git-hooks-templates/{post-commit,install-hooks.sh}, sync.js, project-id.js существуют | отчёт: клон — установщик 2 раза, пустой commit → одно pending-событие; divergence-сценарий НЕ описан; на этой машине hooksPath не установлен | непроверено (divergence); тикет: критерий 5 без результата | FIX-11, FIX-10 |
@@ -44,9 +44,9 @@ B01…B19 + F05…F10 — следующий этап в [SONNET-EXTENDED-FIX-PA
 | R02 | непроверено→проверяется | resolver работает (тесты FIX-11); evidence-отчёт отсутствовал |
 | R03 | частично | формат/статусы есть; немедленное сохранение и границы persisted зафиксированы (FIX-04, SPEC 2026-09-09); идентичность записи по полному содержимому, CRLF-идемпотентность и канонизация EOL до hash (FIX-01 R1/R4 + S3); однозначная сериализация полей frontmatter — reject CR/LF, round-trip без потерь (FIX-01 S2); контракт superseded/удаление уточняется (FIX-09) |
 | R04 | внешн | нет Python 3.12/Docker; Khoj не установлен |
-| R05 | код F04 исправлен | fallback работает; изоляция проектов по записям + перитмическая верификация Khoj + дубликат ключа fail-closed (FIX-03 R2/R3 + S2, 15/15); третья приёмка подтвердила поиск, блок в целом отклонён по T1 (writer lock) — доработка в расширенном пакете |
+| R05 | код F04 исправлен | fallback работает; изоляция проектов по записям + перитмическая верификация Khoj + дубликат ключа fail-closed (FIX-03 R2/R3 + S2, 15/15); третья приёмка подтвердила поиск, блок был отклонён по T1 (writer lock) — T1 закрыт сменой примитива в U1/V1, повторная подача блока |
 | R06 | внешн | нет Docker/WSL; flow не запущен |
-| R07 | код F08–F10 исправляется; писательская блокировка частично исправлена, T1 открыт | очередь работает на happy-path; владение/восстановление очереди чинятся (FIX-05/06); lock writer с publish-verify владельца и освобождением своего поколения + карантин-восстановление без разрушения канонического пути (FIX-02 R5/R6 + S1) реализованы, но **T1 (третья приёмка) показал двух владельцев при трёхпроцессном окне — протокол дорабатывается в расширенном пакете** |
+| R07 | код F08–F10 исправляется; писательская блокировка доработана, ожидает независимой приёмки | очередь работает на happy-path; владение/восстановление очереди чинятся (FIX-05/06); lock writer: право входа даёт эксклюзивный OS-bind, запись владения публикует и снимает только его держатель, идентичность ресурса — канонический `memory_root` (FIX-02 V1/G15; ранние R5/R6/S1 заменены); T1 закрыт сменой примитива, U1 — guard живого владельца под bind'ом; см. `issues/FIX-02-…md`, матрицу `EXTENDED-FIX-MATRIX.md` |
 | R08 | код F05–F07 исправляется | индексный контракт чинится (FIX-07/08); live reindex внешн |
 | R09 | внешн | второй ПК недоступен; hooks/divergence проверяются на клоне (FIX-11) |
 | R10 | готово локально / внешн live | тесты 2/2 повторно прогоняются; live Figma требует ключ+макет |
@@ -63,3 +63,30 @@ B01…B19 + F05…F10 — следующий этап в [SONNET-EXTENDED-FIX-PA
 5. SC-02/03/08 «done» без отчётных файлов и задокументированных проверок.
 6. SC-05: `node --check` подан как прошедшая проверка (противоречит SC-16).
 7. Все тикеты предписывают `E:\System2`; актуальный корень — `D:\SystemTheBest\System`.
+
+## Актуализация расширенного пакета 2026-09-11
+
+Этот раздел новее таблиц от 9 сентября и задаёт текущий статус исполнителя.
+Исторические RED/отказы выше сохранены без переписывания.
+
+| SC | Текущий статус | Новое локальное evidence | Остаётся |
+|---|---|---|---|
+| 01,02 | awaiting-review | текущая среда; B03 config/root | независимое ревью |
+| 03 | awaiting-validation | B01/B15/B17; superseded/delete contract | настоящая память после рубежа |
+| 04,05 | awaiting-validation | B04/B05/B14, project isolation/fallback | live Khoj |
+| 06 | awaiting-validation | конфигурация/официальная сверка 0.86.3 | Docker/worker/health |
+| 07 | awaiting-review | F08–F10, B09–B11; durable enqueue, queue lease | независимое ревью; live endpoint отдельно |
+| 08 | awaiting-review | T1 OS IPC authority, B02, 85+ локальных тестов | независимая приёмка до real memory |
+| 09 | awaiting-validation | sync webhook correlation/terminal ack | live AP flow + AI connection |
+| 10 | awaiting-validation | F05–F07, B07/B08/B16/B19 | live Khoj reindex |
+| 11,12 | awaiting-review | B06/B12/B13; TEMP connected-project hook | независимое ревью |
+| 13 | awaiting-validation | локальные clone/merge проверки | реальный второй ПК |
+| 14 | awaiting-validation | npm test 2/2; B18 nodeId subtree | разрешённый live Figma file |
+| 15 | awaiting-validation | route dry-runs | живые проекты/интеграции |
+| 16 | awaiting-review | статусы/evidence приведены к факту | независимое ревью |
+| 17 | awaiting-validation | runbook/doctor readiness | live restore сервисов |
+| 18 | blocked | NOT READY сохранён | все внешние рубежи и полная приёмка |
+
+Противоречия FIX-10 устранены датированными шапками/примечаниями в SC-тикетах,
+SUMMARY, RELEASE-REPORT и отчётах SC-05/07. Публикация текущего расширенного
+пакета ещё не означает принятие или подключение настоящей памяти.

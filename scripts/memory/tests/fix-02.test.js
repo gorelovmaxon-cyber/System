@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawn, spawnSync } = require('node:child_process');
-const { fixture, proposal, memoryFile, mod } = require('./helpers');
+const { fixture, proposal, memoryFile, lockFile, mod } = require('./helpers');
 
 const writer = mod('writer');
 
@@ -31,10 +31,6 @@ function waitForExit(done, timeoutMs = 10000) {
     done,
     new Promise((_, reject) => setTimeout(() => reject(new Error('child exit timeout')), timeoutMs)),
   ]);
-}
-
-function lockFile(root) {
-  return path.join(root, '.local', 'writer', 'memory.lock');
 }
 
 function writeLockFile(root, owner) {
@@ -81,7 +77,7 @@ test('F03: lock with unparseable owner content is recovered', () => {
 
 test('F03: live lock is not stolen; write times out; after holder exit write succeeds', async () => {
   const root = fixture('fix03-live');
-  const child = spawn(process.execPath, [HOLDER, 'hold', '4000'], { env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn(process.execPath, [HOLDER, 'hold', '7000'], { env: process.env, stdio: ['ignore', 'pipe', 'pipe'] });
   let childErr = '';
   child.stderr.on('data', d => { childErr += d; });
 
@@ -108,14 +104,14 @@ test('F03: live lock is not stolen; write times out; after holder exit write suc
   assert.equal(childErr, '');
 });
 
-test('R5: holder paused after open; main acquires lock; child fails and keeps main lock intact', async () => {
+test('V1: a contender paused before entry cannot enter while a live owner holds authority, and its refusal destroys nothing', async () => {
   const root = fixture('fix02-r5-steal');
-  const paused = spawnPausedChild('pause-after-open', root);
+  const paused = spawnPausedChild('lock', root);
   let release;
   try {
     await waitFor(() => fs.existsSync(path.join(root, 'ready')));
-    // главный процесс ждёт окно публикации владельца (5×50 мс), снимает пустую
-    // блокировку и публикует собственного владельца
+    // претендент стоит до входа; родитель берёт право входа и, значит, запись
+    // владельца в общем каталоге называет его поколение
     release = writer.acquireLock();
     const file = lockFile(root);
     assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, process.pid);
@@ -139,7 +135,7 @@ test('R5: holder paused after open; main acquires lock; child fails and keeps ma
   }
 });
 
-test('R5: release deletes only its own lock; foreign lock of another generation survives', () => {
+test('R5: release deletes only its own lock; a foreign lock is refused, not silently shared', () => {
   const root = fixture('fix02-r5-foreign');
   const release = writer.acquireLock();
   const file = lockFile(root);
@@ -153,18 +149,28 @@ test('R5: release deletes only its own lock; foreign lock of another generation 
   assert.ok(fs.existsSync(file), 'release must not delete a foreign lock');
   assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, gone.pid);
 
-  // собственный lock своего поколения освобождается штатно
+  // Запись чужого ПК — не «мёртвый владелец»: pid на этом хосте не наблюдаем,
+  // поэтому общий memory_root между машинами отклоняется явно (G15), а не
+  // разделяется молча. Выход — осознанное действие оператора над записью.
+  assert.throws(
+    () => writer.acquireLock(),
+    error => error.code === 'LOCK_TIMEOUT' && error.reason === 'foreign-owner'
+  );
+  assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).nonce, 'foreign-nonce', 'refusal destroys nothing');
+
+  fs.unlinkSync(file);
   const release2 = writer.acquireLock();
+  assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, process.pid);
   release2();
   assert.equal(fs.existsSync(file), false);
 });
 
 test('R6: conflict decision is made under the lock; racing process gets CONFLICT', async () => {
   const root = fixture('fix02-r6-race');
-  const paused = spawnPausedChild('pause-before-open', root);
+  const paused = spawnPausedChild('write', root);
   try {
     await waitFor(() => fs.existsSync(path.join(root, 'ready')));
-    // родитель сохраняет первым, пока ребёнок ещё до создания lock
+    // родитель сохраняет первым, пока ребёнок ещё не вошёл в протокол
     const parent = writer.writeProposal('evt_race', [proposal('PARENT_CONTENT')]);
     assert.equal(parent.status, 'persisted');
     paused.resume();
@@ -186,7 +192,7 @@ test('R6: sequential write of different content to same event_id in another proc
   const root = fixture('fix02-r6-seq');
   writer.writeProposal('evt_seq', [proposal('SEQ_PARENT')]);
   // без гонки: ребёнок стартует после завершённой записи родителя
-  const paused = spawnPausedChild('pause-before-open', root, 'evt_seq');
+  const paused = spawnPausedChild('write', root, 'evt_seq');
   paused.resume();
   const r = await waitForExit(paused.done);
   assert.notEqual(r.code, 0, 'child must fail with CONFLICT: ' + r.out);
@@ -199,7 +205,7 @@ test('R6: sequential write of different content to same event_id in another proc
 test('R6: exact repeat of the same event_id in another process is idempotent', async () => {
   const root = fixture('fix02-r6-idem');
   writer.writeProposal('evt_idem', [proposal('IDEM_CONTENT')]);
-  const paused = spawnPausedChild('pause-before-open', root, 'evt_idem', 'IDEM_CONTENT');
+  const paused = spawnPausedChild('write', root, 'evt_idem', 'IDEM_CONTENT');
   paused.resume();
   const r = await waitForExit(paused.done);
   assert.equal(r.code, 0, r.err);
@@ -209,58 +215,57 @@ test('R6: exact repeat of the same event_id in another process is idempotent', a
   paused.child.kill();
 });
 
-test('S1: stale reclaimer paused before its destructive action cannot delete the live lock of a new owner', async () => {
+test('V1: a contender that started over a stale owner record cannot displace the live owner who took it over', async () => {
   const root = fixture('fix02-s1-reclaim');
   const gone = spawnSync(process.execPath, ['-e', ''], { encoding: 'utf8' });
   writeLockFile(root, { pid: gone.pid, hostname: os.hostname(), created: new Date().toISOString(), nonce: 'dead-nonce' });
-  const reclaimer = spawn(process.execPath, [RECLAIM_PAUSE], {
+  const contender = spawn(process.execPath, [RECLAIM_PAUSE], {
     env: { ...process.env, SYSTEM2_ROOT: root },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   let err = '';
-  reclaimer.stderr.on('data', d => { err += d; });
-  const done = new Promise(resolve => reclaimer.on('close', code => resolve({ code, err })));
+  contender.stderr.on('data', d => { err += d; });
+  const done = new Promise(resolve => contender.on('close', code => resolve({ code, err })));
   let release;
   try {
     await waitFor(() => fs.existsSync(path.join(root, 'ready')));
-    // пока реклаймер замер перед разрушающим действием, другой процесс штатно
-    // восстанавливает тот же lock и публикует своё поколение
+    // пока претендент стоит до входа, другой процесс штатно восстанавливает
+    // мёртвую запись и публикует своё поколение
     release = writer.acquireLock();
     const file = lockFile(root);
     assert.equal(JSON.parse(fs.readFileSync(file, 'utf8')).pid, process.pid);
     fs.writeFileSync(path.join(root, 'resume'), '1');
     const r = await waitForExit(done);
-    // RED on original: реклаймер по пути удалял живой lock нового поколения
-    // и входил в критическую секцию при неосвобождённой блокировке
+    // RED on original: устаревший претендент по пути удалял живой lock нового
+    // поколения и входил в критическую секцию при неосвобождённой блокировке
     assert.equal(fs.existsSync(path.join(root, 'child-acquired')), false, r.err);
     assert.equal(
       JSON.parse(fs.readFileSync(file, 'utf8')).pid,
       process.pid,
-      'stale reclaimer must not delete the live lock of the new generation'
+      'a stale contender must not delete the live ownership record of the new generation'
     );
   } finally {
     fs.writeFileSync(path.join(root, 'resume'), '1');
     if (release) release();
-    reclaimer.kill();
+    contender.kill();
   }
 });
 
-test('S1: a second reclaiming process cannot enter the critical section while the first holds the lock', async () => {
-  const root = fixture('fix02-s1-second-reclaimer');
+test('V1: a second contender cannot enter the critical section while the first holder owns it', async () => {
+  const root = fixture('fix02-s1-second-contender');
   const gone = spawnSync(process.execPath, ['-e', ''], { encoding: 'utf8' });
   writeLockFile(root, { pid: gone.pid, hostname: os.hostname(), created: new Date().toISOString(), nonce: 'dead-nonce' });
-  // первый реклаймер восстанавливает мёртвый lock и удерживает его до release-me
+  // первый претендент восстанавливает мёртвую запись и удерживает право входа до release-me
   const first = spawn(process.execPath, [RECLAIM_PAUSE, 'hold'], {
     env: { ...process.env, SYSTEM2_ROOT: root },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   try {
-    // реклаймер приостанавливается перед своим разрушающим действием
-    // (устаревшее решение) — отпускаем его, чтобы он завершил восстановление
+    // претендент приостановлен до входа — отпускаем его, чтобы он завершил восстановление
     await waitFor(() => fs.existsSync(path.join(root, 'ready')));
     fs.writeFileSync(path.join(root, 'resume'), '1');
     await waitFor(() => fs.existsSync(path.join(root, 'first-acquired')));
-    // второй реклаймер того же мёртвого lock стартует, пока первый держит lock
+    // второй претендент на ту же мёртвую запись стартует, пока первый держит право входа
     const second = spawn(process.execPath, [RECLAIM_PAUSE], {
       env: { ...process.env, SYSTEM2_ROOT: root },
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -270,7 +275,7 @@ test('S1: a second reclaiming process cannot enter the critical section while th
     const done = new Promise(resolve => second.on('close', code => resolve({ code, err })));
     try {
       const r = await waitForExit(done);
-      assert.notEqual(r.code, 0, 'second reclaimer must not acquire: ' + r.err);
+      assert.notEqual(r.code, 0, 'a second contender must not acquire: ' + r.err);
       assert.match(r.err, /writer lock timeout/);
       assert.equal(fs.existsSync(path.join(root, 'child-acquired')), false);
       assert.equal(
@@ -289,14 +294,36 @@ test('S1: a second reclaiming process cannot enter the critical section while th
   assert.equal(fs.existsSync(lockFile(root)), false, 'lock is removed after the holder releases');
 });
 
-test('S1: reclaim of a dead lock leaves no quarantine files behind', () => {
+test('S1: takeover of a dead owner leaves no quarantine or keeper leftovers', () => {
   const root = fixture('fix02-s1-clean');
   const gone = spawnSync(process.execPath, ['-e', ''], { encoding: 'utf8' });
   writeLockFile(root, { pid: gone.pid, hostname: os.hostname(), created: new Date().toISOString(), nonce: 'dead-nonce' });
   const release = writer.acquireLock();
   const dir = path.dirname(lockFile(root));
-  // после quarantine-rename путь не остаётся замусоренным: только живой lock
-  assert.deepEqual(fs.readdirSync(dir).filter(f => f.includes('memory.lock')), ['memory.lock']);
+  // Ни карантина прежнего протокола, ни осиротевших файлов сторожа: в общем
+  // каталоге владения остаётся ровно одна запись текущего поколения.
+  assert.deepEqual(fs.readdirSync(dir), [path.basename(lockFile(root))]);
+  assert.equal(JSON.parse(fs.readFileSync(lockFile(root), 'utf8')).pid, process.pid);
   release();
-  assert.equal(fs.existsSync(lockFile(root)), false);
+  assert.deepEqual(fs.readdirSync(dir), []);
+});
+
+test('T1: changing diagnostic metadata never frees authority for a third process', () => {
+  const root = fixture('t1-os-authority');
+  const release = writer.acquireLock();
+  const file = lockFile(root);
+  const moved = file + '.old-metadata';
+  fs.renameSync(file, moved);
+  fs.writeFileSync(file, JSON.stringify({ pid: 999999, hostname: os.hostname(), nonce: 'stale-view' }));
+  const third = spawnSync(process.execPath, [HOLDER, 'write'], {
+    env: { ...process.env, SYSTEM2_ROOT: root }, encoding: 'utf8', timeout: 15000,
+  });
+  assert.notEqual(third.status, 0, 'third process must not enter while authority is held');
+  assert.match(third.stderr, /writer lock timeout/);
+  release();
+  try { fs.unlinkSync(moved); } catch {}
+  const after = spawnSync(process.execPath, [HOLDER, 'write'], {
+    env: { ...process.env, SYSTEM2_ROOT: root }, encoding: 'utf8', timeout: 15000,
+  });
+  assert.equal(after.status, 0, after.stderr);
 });

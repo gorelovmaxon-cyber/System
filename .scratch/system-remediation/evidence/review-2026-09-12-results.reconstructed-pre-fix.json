@@ -1,0 +1,18 @@
+{
+  "id": "V1",
+  "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-review-sept12-SQeZp0",
+  "firstPid": 8236,
+  "secondPid": 21712,
+  "secondAssertPassedBeforePause": true,
+  "overwrittenOwnerPid": 8236,
+  "firstAssertError": "LOCK_AUTHORITY_LOST",
+  "guardRemovedWhileSecondAlive": true,
+  "thirdExit": 0,
+  "thirdStdout": "ACQUIRED\n",
+  "thirdStderr": "",
+  "secondStillAliveAndNotReleased": true,
+  "reproduced": true,
+  "reconstructed": true,
+  "revision": "ece1b24",
+  "note": "Получено прогоном неподделанной пробы рецензента против TEMP-копии scripts/memory с историческими ipc-lock.js, lock-keeper.cjs и writer.js из ревизии ece1b24 (red-reconstruction-2026-09-12.cjs)."
+}

@@ -1,0 +1,161 @@
+# RED: позитивные регрессии V1/G15 против до-фиксовой реконструкции
+
+восстановленная ревизия: ece1b24
+дерево: C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p
+код выхода прогона: 1
+
+Проба рецензента на этой же копии: exit 0, V1 репроизведён (см. review-2026-09-12-results.reconstructed-pre-fix.json).
+
+✖ V1: a refused contender neither replaces nor removes the ownership of a live owner (271.0562ms)
+✖ V1: the death of a keeper does not admit a contender while the owner is in its section (719.8285ms)
+✖ V1: an orphaned publication of this very process is taken over; release leaves no state (114.0181ms)
+✖ V1: a foreign-host ownership record is an explicit refusal, never a shared memory (49.864ms)
+✖ V1: contenders on one memory terminate in bounded time without corrupting it (909.0305ms)
+✖ G15: two configurations with different data_dir serialize on one shared memory root (209.0042ms)
+✖ G15: one memory reached through a junction has one lock identity (8.9637ms)
+✔ G15: a journal transaction through a junction alias closes the canonical journal path (2160.2981ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 1
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4611.8867
+
+✖ failing tests:
+
+test at scripts\memory\tests\fix-02-v1-ownership.test.js:69:1
+✖ V1: a refused contender neither replaces nor removes the ownership of a live owner (271.0562ms)
+  Error: ENOENT: no such file or directory, scandir 'C:\Users\1663646\AppData\Local\Temp\s2-v1-abc-EW3OyC\.locks'
+      at Object.readdirSync (node:fs:1570:26)
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:84:22)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-v1-abc-EW3OyC\\.locks'
+  }
+
+test at scripts\memory\tests\fix-02-v1-ownership.test.js:119:1
+✖ V1: the death of a keeper does not admit a contender while the owner is in its section (719.8285ms)
+  Error: ENOENT: no such file or directory, scandir 'C:\Users\1663646\AppData\Local\Temp\s2-v1-keeper-death-fPvxu9\.locks'
+      at Object.readdirSync (node:fs:1570:26)
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:148:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-v1-keeper-death-fPvxu9\\.locks'
+  }
+
+test at scripts\memory\tests\fix-02-v1-ownership.test.js:156:1
+✖ V1: an orphaned publication of this very process is taken over; release leaves no state (114.0181ms)
+  Error: lock timeout
+      at Object.acquireProcessLock (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\ipc-lock.js:183:17)
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:167:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    code: 'LOCK_TIMEOUT',
+    reason: 'live-owner'
+  }
+
+test at scripts\memory\tests\fix-02-v1-ownership.test.js:178:1
+✖ V1: a foreign-host ownership record is an explicit refusal, never a shared memory (49.864ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  Error: lock timeout
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:188:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: lock timeout
+        at Object.acquireProcessLock (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\ipc-lock.js:183:17)
+        at C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:189:19
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:188:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1325:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+        at Test.postRun (node:internal/test_runner/test:1465:19)
+        at Test.run (node:internal/test_runner/test:1390:12),
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-02-v1-ownership.test.js:195:1
+✖ V1: contenders on one memory terminate in bounded time without corrupting it (909.0305ms)
+  Error: ENOENT: no such file or directory, scandir 'C:\Users\1663646\AppData\Local\Temp\s2-v1-bounded-fWJNPn\.locks'
+      at Object.readdirSync (node:fs:1570:26)
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:227:23)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'scandir',
+    path: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-v1-bounded-fWJNPn\\.locks'
+  }
+
+test at scripts\memory\tests\fix-02-v1-ownership.test.js:232:1
+✖ G15: two configurations with different data_dir serialize on one shared memory root (209.0042ms)
+  AssertionError [ERR_ASSERTION]: one ownership record for one memory
+  + actual - expected
+  
+  + 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-a-9cspiX\\.local\\writer\\memory.lock'
+  - 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-b-yNxjZ0\\.local-b\\writer\\memory.lock'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:250:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-a-9cspiX\\.local\\writer\\memory.lock',
+    expected: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-b-yNxjZ0\\.local-b\\writer\\memory.lock',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-02-v1-ownership.test.js:282:1
+✖ G15: one memory reached through a junction has one lock identity (8.9637ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-alias-Oqm0sK\\memory'
+  - 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-junction-HYmGTe\\.claude\\memory'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\red-2026-09-12-wdGM3p\scripts\memory\tests\fix-02-v1-ownership.test.js:288:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-alias-Oqm0sK\\memory',
+    expected: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g15-junction-HYmGTe\\.claude\\memory',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

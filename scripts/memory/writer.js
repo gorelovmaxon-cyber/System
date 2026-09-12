@@ -9,29 +9,36 @@ const { resolvePaths } = require('./resolve-paths');
 const writerLog = require('./writer-log');
 const { queueIndex } = require('./indexer');
 const { assertSafePath } = require('./path-safety');
-const { acquireProcessLock } = require('./ipc-lock');
+const { acquireProcessLock, lockStatePath } = require('./ipc-lock');
 
 const CATEGORIES = ['user-profile', 'facts', 'patterns', 'decisions', 'gotchas'];
 const STATUSES = ['observation', 'confirmed', 'superseded'];
 const MAX_FIELD_BYTES = 20000;
 let busy = false;
 
+// Идентичность защищаемого ресурса — сама память (канонический memory_root),
+// а не data_dir: две валидные конфигурации на одном ПК, указывающие один и тот
+// же memory_root, имеют разные стандартные `.local` и без общего владения
+// теряли бы записи друг друга молча (G15). Общий каталог состояния выводится
+// из канонического пути памяти, поэтому вторая копия и custom root попадают в
+// тот же владелец.
+//
+// Право входа даёт эксклюзивный OS bind сторожа, и запись владения публикует
+// только держатель bind'а: публикация не может опереться на уже утраченный
+// bind (V1). Живой владелец в записи закрывает вход и тогда, когда endpoint
+// освободился из-за смерти сторожа (U1). assertHeld() позволяет пути записи
+// упасть fail-closed, если владение больше не наше.
 function lockPath() {
-  return path.join(resolvePaths().data_dir, 'writer', 'memory.lock');
+  return lockStatePath(resolvePaths().memory_root);
 }
 
-// The atomic right-of-entry event is a successful OS bind performed by a
-// dedicated keeper, combined with the ownership guard in acquireProcessLock:
-// while the bind is ours, no other live process may be recorded as the owner.
-// No contender ever renames or removes another owner's authority. If the writer
-// stops at any boundary, the keeper observes its death (or dies with the
-// session) and the OS releases the endpoint. The memory.lock file below carries
-// the generation that holds authority; a recorded live owner keeps it even when
-// the endpoint is free because its keeper died. assertHeld() lets the write
-// path fail closed instead of mutating under an endpoint it no longer holds.
 function acquireLock() {
-  const file = lockPath();
-  return acquireProcessLock(file, { metadataFile: file, attempts: 20, timeoutMessage: 'writer lock timeout' });
+  const paths = resolvePaths();
+  return acquireProcessLock(paths.memory_root, {
+    metadataFile: lockStatePath(paths.memory_root),
+    attempts: 20,
+    timeoutMessage: 'writer lock timeout',
+  });
 }
 
 function text(value, field) {

@@ -1,38 +1,37 @@
 #!/usr/bin/env node
 'use strict';
 
-// Детерминированная пауза реклаймера блокировки (S1): процесс-реклаймер
-// приостанавливается непосредственно перед своим разрушающим действием над
-// memory.lock. На старой реализации это unlinkSync канонического пути
-// (окно «повторное чтение мёртвого владельца -> удаление»); после
-// quarantine-rename это unlinkSync verified-карантина. Управляется файлами
-// ready/resume в корне фикстуры (SYSTEM2_ROOT). Используется только тестами.
+// Претендент на право входа поверх мёртвой записи владельца (S1). Процесс
+// стартует с мёртвой записью в общем каталоге владения и приостанавливается
+// ДО входа в протокол. Прежний вариант фикстуры приостанавливался внутри
+// разрушающего действия над памятью блокировки (unlinkSync канонического пути
+// либо verified-карантина) — этих веток в текущем протоколе нет: устаревший
+// претендент не удаляет и не переименовывает чужую authority, а живой
+// владелец в записи закрывает вход. Поэтому проверяется достижимое: тест
+// удерживает право входа в родителе и убеждается, что возобновлённый
+// претендент не входит и не разрушает запись живого владельца.
+// Управляется файлами ready/resume в корне фикстуры (SYSTEM2_ROOT);
+// содержимое ready — метка режима для диагностики. Режим 'hold' —
+// восстановить мёртвую запись, удерживать до release-me и отпустить.
+// Используется только тестами.
 const fs = require('node:fs');
 const path = require('node:path');
 
 const root = process.env.SYSTEM2_ROOT;
 if (!root) throw new Error('SYSTEM2_ROOT is required');
 
-const orig = fs.unlinkSync;
-let paused = false;
-fs.unlinkSync = function (file, ...args) {
-  if (!paused && String(file).includes('memory.lock')) {
-    paused = true;
-    fs.writeFileSync(path.join(root, 'ready'), '1');
-    const end = Date.now() + 10000;
-    while (!fs.existsSync(path.join(root, 'resume'))) {
-      if (Date.now() > end) throw new Error('pause timeout');
-      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
-    }
-  }
-  return orig(file, ...args);
-};
+fs.writeFileSync(path.join(root, 'ready'), process.argv[2] || 'reclaim');
+const readyEnd = Date.now() + 10000;
+while (!fs.existsSync(path.join(root, 'resume'))) {
+  if (Date.now() > readyEnd) throw new Error('pause timeout');
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10);
+}
 
 const writer = require('../writer');
 const mode = process.argv[2];
 
 if (mode === 'hold') {
-  // реклаймер, который восстановил мёртвый lock и удерживает его до release-me
+  // претендент, который восстановил мёртвую запись и удерживает право входа
   const release = writer.acquireLock();
   fs.writeFileSync(path.join(root, 'first-acquired'), '1');
   const end = Date.now() + 15000;

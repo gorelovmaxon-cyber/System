@@ -1,0 +1,70 @@
+# Проба рецензента V1 (review-2026-09-12.cjs): наблюдения по трём состояниям дерева
+
+Семантика кодов выхода этой пробы: 0 — дефект воспроизведён; 1 — не воспроизведён;
+2 — ошибка harness-а. Ни 0, ни 2 не являются положительным вердиктом по блоку:
+вердикт выносит независимая приёмка, а положительное доказательство дают позитивные
+регрессии (см. issues/FIX-02-writer-lock-ownership.md, раздел V1/G15).
+
+## 1. До правок (исторический прогон 2026-09-12 10:41, сохранён как review-2026-09-12-results.pre-fix.json)
+
+{
+  "id": "V1",
+  "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-review-sept12-bmO4Wz",
+  "firstPid": 29184,
+  "secondPid": 30748,
+  "secondAssertPassedBeforePause": true,
+  "overwrittenOwnerPid": 29184,
+  "firstAssertError": "LOCK_AUTHORITY_LOST",
+  "guardRemovedWhileSecondAlive": true,
+  "thirdExit": 0,
+  "thirdStdout": "ACQUIRED\n",
+  "thirdStderr": "",
+  "secondStillAliveAndNotReleased": true,
+  "reproduced": true
+}
+
+Проба завершается exit 0: перехват публикации владельцем срабатывает, третий процесс
+получает право входа при живом владельце второго (ACQUIRED).
+
+## 2. До-фиксовая ревизия из git (ece1b24), восстановленная в TEMP-копию
+
+{
+  "id": "V1",
+  "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-review-sept12-SQeZp0",
+  "firstPid": 8236,
+  "secondPid": 21712,
+  "secondAssertPassedBeforePause": true,
+  "overwrittenOwnerPid": 8236,
+  "firstAssertError": "LOCK_AUTHORITY_LOST",
+  "guardRemovedWhileSecondAlive": true,
+  "thirdExit": 0,
+  "thirdStdout": "ACQUIRED\n",
+  "thirdStderr": "",
+  "secondStillAliveAndNotReleased": true,
+  "reproduced": true,
+  "reconstructed": true,
+  "revision": "ece1b24",
+  "note": "Получено прогоном неподделанной пробы рецензента против TEMP-копии scripts/memory с историческими ipc-lock.js, lock-keeper.cjs и writer.js из ревизии ece1b24 (red-reconstruction-2026-09-12.cjs)."
+}
+
+Проба завершается exit 0 — то есть RED воспроизводится не только историческим прогоном,
+но и повторяемо из ревизии, доступной в git (red-reconstruction-2026-09-12.cjs).
+
+## 3. После правок (текущее дерево)
+
+TypeError: Cannot read properties of undefined (reading 'pid')
+    at Object.<anonymous> (D:\SystemTheBest\System\.scratch\system-remediation\evidence\review-2026-09-12.cjs:52:81)
+    at Module._compile (node:internal/modules/cjs/loader:1871:14)
+    at Object..js (node:internal/modules/cjs/loader:2002:10)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
+PROBE exit=2
+
+Проба не завершается: точки перехвата (fs.renameSync по пути записи владения —
+публикация владельцем) в протоколе больше нет, поэтому second/held не заполняются.
+Это ожидаемое следствие смены протокола (публикует только держатель bind-а), а не
+успешная приёмка и не подтверждение исправления. Положительное доказательство блока —
+позитивные регрессии V1/G15 (8/8) и весь набор (108/108).

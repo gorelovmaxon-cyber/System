@@ -5,6 +5,7 @@ const path = require('node:path');
 const os = require('node:os');
 
 const REPO = path.resolve(__dirname, '..');
+const { lockStatePath } = require('../ipc-lock');
 
 function fixture(name, options = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 's2-' + name + '-'));
@@ -23,7 +24,25 @@ function fixture(name, options = {}) {
   // зеркало реального репозитория: каталог данных (.local) не отслеживается git
   fs.writeFileSync(path.join(root, '.gitignore'), '.local/\n.local-*\n');
   process.env.SYSTEM2_ROOT = root;
+  // Каталог владения блокировок — внутри фикстуры: прогоны тестов не делят
+  // состояние в общем tmpdir и не оставляют после себя осиротевших записей.
+  // Он не выводится из data_dir — иначе фикстуры с разными data_dir не
+  // пересекались бы по владению (это и есть предмет регрессии G15).
+  process.env.SYSTEM2_LOCK_DIR = lockDir(root);
   return root;
+}
+
+function memoryRoot(root) {
+  return path.join(root, '.claude/memory');
+}
+
+function lockDir(root) {
+  return path.join(root, '.locks');
+}
+
+// Путь записи владения для ресурса фикстуры (по умолчанию — её память).
+function lockFile(root, resource = memoryRoot(root)) {
+  return lockStatePath(resource);
 }
 
 function proposal(statement, scope = 'user', category = 'facts', extra = {}) {
@@ -38,4 +57,4 @@ function mod(name) {
   return require(path.join(REPO, name));
 }
 
-module.exports = { REPO, fixture, proposal, memoryFile, mod };
+module.exports = { REPO, fixture, proposal, memoryFile, memoryRoot, lockDir, lockFile, mod };

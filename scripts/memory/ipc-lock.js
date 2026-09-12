@@ -1,28 +1,35 @@
 #!/usr/bin/env node
 'use strict';
 
-// Процессная взаимная блокировка. Право входа (right of entry) устанавливается
-// двумя фактами, проверяемыми в этом порядке:
+// Процессная взаимная блокировка по эксклюзивному OS-endpoint ресурса
+// (named pipe в Windows, loopback-порт в POSIX).
 //
-//   1. собственный keeper удерживает эксклюзивный OS-endpoint ресурса (named
-//      pipe в Windows, loopback-порт в POSIX). ОС освобождает endpoint при
-//      смерти keeper, а keeper завершается при смерти своего writer — то есть
-//      endpoint не переживает writer.
-//   2. пока этот bind наш, канонический файл владения не называет другого
-//      живого процесса.
+// Право входа устанавливает ОДИН атомарный факт: эксклюзивный bind endpoint,
+// удерживаемый сторожевым процессом (keeper). Два процесса не могут держать
+// один endpoint одновременно, и ОС освобождает его при завершении сторожа.
 //
-// Ни одна из двух проверок не является authority в одиночку. Endpoint не
-// является: ОС освобождает его и тогда, когда keeper убит, а writer жив (U1).
-// Этот случай закрывает шаг 2 — запись владения по-прежнему называет живого
-// владельца, и претендент не публикует поверх неё. Запись владения тоже не
-// является authority в одиночку: её может оставить writer, погибший в любой
-// точке, а шаг «прочитать → решить → опубликовать» сериализуется только
-// эксклюзивным bind.
+// Запись владения публикует ТОЛЬКО текущий держатель bind и только под своим
+// bind'ом (см. lock-keeper.cjs). Это и есть исправление V1: публикация не
+// может быть основана на bind'е, который уже утрачен, потому что между
+// «прочитать запись → решить → опубликовать» держатель bind не меняется —
+// он один и тот же процесс, и его смерть отменяет публикацию целиком, а не
+// заменяет чужую.
 //
-// Authority утрачивается, когда владелец завершился, или когда его запись
-// заменена новым поколением после его release. Смерть keeper сама по себе
-// authority не отзывает. hold.assertHeld() позволяет владельцу дополнительно
-// требовать живость endpoint и падать fail-closed вместо записи.
+// Запись владения нужна для U1: bind освобождается ОС и тогда, когда сторож
+// убит, а владелец жив и секцию не завершил. Тогда претендент получает bind,
+// но видит запись живого владельца и отказывается (`live-owner`), не публикуя
+// поверх неё. Владелец не теряет authority от смерти сторожа: authority — это
+// запись, удерживаемая живым процессом, и она исчезает только при release,
+// смерти владельца или (для своего же осиротевшего попытки) takeover.
+//
+// Идентичность ресурса — канонический путь (junction/symlink и регистр
+// Windows разворачиваются), поэтому один и тот же ресурс, названный разными
+// конфигурациями (два data_dir, custom root, вторая копия), даёт один endpoint
+// и один общий файл владения (G15).
+//
+// pidAlive: ESRCH — единственное доказательство смерти. EPERM и любая другая
+// ошибка означают «жив»: снимать владение у процесса, который не проверяется,
+// нельзя. Переиспользование pid остаётся документированным ограничением.
 
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -36,6 +43,44 @@ function pause(ms) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 }
 
+// Канонический путь ресурса. Несуществующий хвост разрешается от ближайшего
+// существующего предка: иначе запись владения для ещё не созданного журнала
+// отличалась бы от записи для созданного.
+function canonicalPath(target) {
+  let current = path.resolve(String(target));
+  const missing = [];
+  while (!fs.existsSync(current)) {
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    missing.unshift(path.basename(current));
+    current = parent;
+  }
+  let resolved = current;
+  try { resolved = fs.realpathSync.native(current); } catch { resolved = current; }
+  const joined = missing.length ? path.join(resolved, ...missing) : resolved;
+  return process.platform === 'win32' ? joined.toLowerCase() : joined;
+}
+
+// Каталог состояния блокировок, общий для всех конфигураций этого ПК и
+// пользователя: он выводится из канонического пути ресурса, а не из data_dir.
+function lockStateDir() {
+  return path.resolve(process.env.SYSTEM2_LOCK_DIR || path.join(os.tmpdir(), 'system2-locks'));
+}
+
+// Путь общего файла владения для ресурса (например, memory_root).
+function lockStatePath(identity) {
+  const dir = lockStateDir();
+  fs.mkdirSync(dir, { recursive: true });
+  const id = crypto.createHash('sha256').update(canonicalPath(identity)).digest('hex').slice(0, 32);
+  return path.join(dir, id + '.lock');
+}
+
+function endpointFor(resource) {
+  const id = crypto.createHash('sha256').update(canonicalPath(resource)).digest('hex').slice(0, 32);
+  if (process.platform === 'win32') return `\\\\.\\pipe\\system2-lock-${id}`;
+  return { host: '127.0.0.1', port: 20000 + (Number.parseInt(id.slice(0, 8), 16) % 30000) };
+}
+
 function ownerFrom(file) {
   try {
     const value = JSON.parse(fs.readFileSync(file, 'utf8').trim());
@@ -47,8 +92,6 @@ function sameOwner(a, b) {
   return a !== null && a.pid === b.pid && a.nonce === b.nonce;
 }
 
-// ESRCH — единственное доказательство смерти. EPERM и любая другая ошибка
-// означают «жив»: блокировку нельзя снять у процесса, который не проверяется.
 function pidAlive(pid) {
   try {
     process.kill(pid, 0);
@@ -58,10 +101,18 @@ function pidAlive(pid) {
   }
 }
 
-function endpointFor(resource) {
-  const id = crypto.createHash('sha256').update(path.resolve(resource).toLowerCase()).digest('hex').slice(0, 32);
-  if (process.platform === 'win32') return `\\\\.\\pipe\\system2-lock-${id}`;
-  return { host: '127.0.0.1', port: 20000 + (Number.parseInt(id.slice(0, 8), 16) % 30000) };
+// Запись чужого ПК: живой владелец на другой машине не наблюдается этим
+// хостом, поэтому общий memory_root между машинами явно отклоняется, а не
+// разделяется молча (одна запись на каждом ПК — модель контракта).
+function foreignOwner(record) {
+  return Boolean(record) && record.hostname !== os.hostname();
+}
+
+// Осиротевшая публикация собственной попытки: тот же pid и другой nonce.
+// Такой записи предшествовал отказ acquire (сторож успел опубликовать запись,
+// но не успел сообщить результат), поэтому владельцем она не является.
+function ownOrphan(record, pid, nonce) {
+  return Boolean(record) && record.pid === pid && record.nonce !== nonce;
 }
 
 function readStatus(file) {
@@ -79,7 +130,7 @@ function acquireProcessLock(resource, options = {}) {
   const keeperScript = options.keeperScript || KEEPER_SCRIPT;
   const attempts = options.attempts ?? 100;
   fs.mkdirSync(path.dirname(metadataFile), { recursive: true });
-  // Проверяется синхронно: без keeper право входа недостижимо, и это должно
+  // Проверяется синхронно: без сторожа право входа недостижимо, и это должно
   // быть видно вызывающему как ошибка, а не как таймаут через attempts попыток.
   if (!fs.existsSync(keeperScript)) throw new Error(`lock keeper script is missing: ${keeperScript}`);
   const owner = {
@@ -92,11 +143,16 @@ function acquireProcessLock(resource, options = {}) {
   // в ошибке таймаута (диагностика и аварийные регрессии).
   let refusal = null;
   for (let attempt = 0; attempt < attempts; attempt += 1) {
-    // Шаг 2 (U1): записанный живой владелец сохраняет authority и тогда, когда
-    // endpoint свободен. Проверка идёт до spawn, чтобы ожидание живого
-    // владельца не стоило процесса keeper на каждую попытку.
+    // Дешёвая предпроверка до spawn: живой владелец не требует сторожа, а
+    // ожидание под ним не должно стоить процесса на каждую попытку. Она не
+    // является решением — решение принимает держатель bind'а (keeper).
     const recorded = ownerFrom(metadataFile);
-    if (recorded && pidAlive(recorded.pid)) {
+    if (foreignOwner(recorded)) {
+      refusal = 'foreign-owner';
+      pause(10);
+      continue;
+    }
+    if (recorded && pidAlive(recorded.pid) && !ownOrphan(recorded, owner.pid, owner.nonce)) {
       refusal = 'live-owner';
       pause(10);
       continue;
@@ -108,6 +164,7 @@ function acquireProcessLock(resource, options = {}) {
     const keeper = spawn(process.execPath, [
       keeperScript, JSON.stringify(endpointFor(resource)),
       String(process.pid), statusFile, releaseRequest, releaseAck,
+      metadataFile, JSON.stringify(owner),
     ], { stdio: 'ignore', windowsHide: true });
     // Без обработчика ошибка spawn осталась бы необработанным событием и уронила
     // бы процесс позже; право входа при этом не выдаётся.
@@ -119,45 +176,29 @@ function acquireProcessLock(resource, options = {}) {
       pause(5);
     }
     try { fs.unlinkSync(statusFile); } catch {}
-    if (!status || status.status !== 'acquired') {
-      try { keeper.kill(); } catch {}
-      if (status && status.status === 'error') throw new Error(`lock keeper failed: ${status.message}`);
-      refusal = status ? status.status : 'no-status';
+    if (!status) {
+      // Сторож умер, не сообщив результат. Публикации могло не быть вовсе
+      // либо осталась осиротевшая запись нашей же попытки — её снимет
+      // следующая попытка этого acquire (ownOrphan), чужая запись не тронется.
+      refusal = 'no-status';
       pause(10);
       continue;
     }
-    // Повторное чтение под эксклюзивным bind: другой претендент не может
-    // находиться между своей проверкой и публикацией, поэтому это решение
-    // нельзя аннулировать конкурирующим acquire. Оно отвечает на смерть
-    // keeper'а живого владельца — bind достался нам, но authority у него.
-    const current = ownerFrom(metadataFile);
-    if (current && pidAlive(current.pid)) {
+    if (status.status !== 'acquired') {
       try { keeper.kill(); } catch {}
-      refusal = 'live-owner';
+      if (status.status === 'error') throw new Error(`lock keeper failed: ${status.message}`);
+      refusal = status.reason || status.status;
       pause(10);
       continue;
-    }
-    try {
-      const tmp = metadataFile + `.meta-${process.pid}-${owner.nonce}`;
-      const fd = fs.openSync(tmp, 'wx');
-      try {
-        fs.writeFileSync(fd, JSON.stringify(owner) + '\n', 'utf8');
-        fs.fsyncSync(fd);
-      } finally { fs.closeSync(fd); }
-      fs.renameSync(tmp, metadataFile);
-    } catch (error) {
-      try { keeper.kill(); } catch {}
-      throw error;
     }
     // exitCode/signalCode обновляются обработчиком события, поэтому в
     // синхронном вызывающем они отстают; pidAlive проверяет ОС немедленно.
     const keeperGone = () => keeper.exitCode !== null || keeper.signalCode !== null || !pidAlive(keeper.pid);
     const hold = () => {
-      if (sameOwner(ownerFrom(metadataFile), owner)) {
-        try { fs.unlinkSync(metadataFile); } catch {}
-      }
-      // Мёртвый keeper уже освободил endpoint: подтверждения не будет и ждать
-      // его не нужно, иначе release живого владельца стоил бы секунды.
+      // Освобождение: сторож снимает свою запись и закрывает endpoint. Если
+      // сторожа уже нет, запись снимает сам владелец — это безопасно, потому
+      // что, пока запись называла живого владельца, ни один претендент не
+      // опубликовал поверх неё, а сам владелец работу закончил.
       if (!keeperGone()) {
         try { fs.writeFileSync(releaseRequest, 'release', { flag: 'wx' }); } catch {}
         const releaseDeadline = Date.now() + 1000;
@@ -165,14 +206,18 @@ function acquireProcessLock(resource, options = {}) {
           pause(5);
         }
       }
+      if (sameOwner(ownerFrom(metadataFile), owner)) {
+        try { fs.unlinkSync(metadataFile); } catch {}
+      }
       try { fs.unlinkSync(releaseRequest); } catch {}
       try { fs.unlinkSync(releaseAck); } catch {}
+      try { fs.unlinkSync(metadataFile + '.publish-' + keeper.pid); } catch {}
     };
-    // Проверка сужает окно, но не создаёт инвариант: инвариант несёт guard выше.
-    // Нужна владельцу, который хочет падать fail-closed, а не писать по праву
-    // входа, которое он больше не удерживает.
+    // Проверка инварианта владения для владельца, который хочет падать
+    // fail-closed вместо записи по authority, которого у него больше нет.
+    // Смерть сторожа authority не отзывает (U1): пока запись называет живой
+    // процесс, претендент отказывается, и владелец вправе продолжить.
     hold.assertHeld = () => {
-      if (keeperGone()) throw authorityLost('lock authority lost: the keeper holding the endpoint has exited');
       if (!sameOwner(ownerFrom(metadataFile), owner)) {
         throw authorityLost('lock authority lost: the ownership record no longer names this generation');
       }
@@ -186,4 +231,4 @@ function acquireProcessLock(resource, options = {}) {
   throw error;
 }
 
-module.exports = { acquireProcessLock, endpointFor };
+module.exports = { acquireProcessLock, canonicalPath, endpointFor, lockStateDir, lockStatePath };

@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawn, spawnSync } = require('node:child_process');
-const { fixture, proposal, memoryFile, mod, REPO } = require('./helpers');
+const { fixture, proposal, memoryFile, lockFile, mod, REPO } = require('./helpers');
 
 const writer = mod('writer');
 const writerLog = mod('writer-log');
@@ -95,12 +95,23 @@ test('F04: deterministic crash at each write stage is recovered by the real writ
     const args = ['--event-id', eventId, '--statement', 'STAGE_MARKER_' + stage, '--category', 'facts', '--evidence', 'fixture', '--scope', 'A'];
     const env = { ...process.env, SYSTEM2_CRASH_AT: stage };
 
-    // реальный save.js падает в заданной точке writeProposal (exit 23), lock остаётся
+    // реальный save.js падает в заданной точке writeProposal (exit 23)
     const crash = spawnSync(process.execPath, [SAVE, ...args], { env, encoding: 'utf8' });
     assert.equal(crash.status, 23, 'crash point ' + stage + ' must fire');
-    assert.ok(fs.existsSync(path.join(root, '.local', 'writer', 'memory.lock')), 'lock survives crash at ' + stage);
+    // V1/U1: запись владения снимает только держатель bind'а. Кто снимет её после
+    // аварии владельца, зависит от гонки: сторож либо убит вместе с владельцем
+    // (libuv job object на Windows) и тогда запись остаётся, называя мёртвый pid,
+    // либо его собственный опрос жизни родителя успевает снять запись и закрыть
+    // endpoint. Оба исхода безопасны и не требуют ручной очистки, поэтому
+    // проверяются оба, а не один из них: важен один владелец и живой endpoint.
+    const lock = lockFile(root);
+    const stale = fs.existsSync(lock) ? JSON.parse(fs.readFileSync(lock, 'utf8')) : null;
+    if (stale) {
+      assert.equal(stale.pid, crash.pid, 'the record may only name the crashed owner');
+      assert.throws(() => process.kill(stale.pid, 0), error => error.code === 'ESRCH', 'the crashed owner is dead');
+    }
 
-    // следующий запуск восстанавливает lock мёртвого владельца и завершает запись
+    // следующий запуск входит в освобождённый ресурс и завершает запись
     const r = runSave(args);
     assert.equal(r.status, 0, 'stage ' + stage + ': ' + r.stderr);
     assert.equal(JSON.parse(r.stdout).status, 'persisted', 'stage ' + stage);
@@ -134,7 +145,12 @@ test('F04: writeAtomic cleans up its temp file when the rename fails', () => {
   const originalRename = fs.renameSync;
   // детерминированный сбой rename ПОСЛЕ создания tmp: на исходной реализации
   // writeAtomic tmp остаётся (RED), после фикса — подчищается (GREEN)
-  fs.renameSync = () => { throw new Error('simulated rename failure'); };
+  fs.renameSync = (from, to) => {
+    if (String(from).includes('.tmp-') && String(to).endsWith('writer-entries.md')) {
+      throw new Error('simulated rename failure');
+    }
+    return originalRename(from, to);
+  };
   try {
     assert.throws(() => writer.writeProposal('evt_tmp', [proposal('TMP_FAIL')]), /simulated rename failure/);
   } finally {

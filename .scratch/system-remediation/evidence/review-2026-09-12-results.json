@@ -1,0 +1,15 @@
+{
+  "id": "V1",
+  "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-review-sept12-bmO4Wz",
+  "firstPid": 29184,
+  "secondPid": 30748,
+  "secondAssertPassedBeforePause": true,
+  "overwrittenOwnerPid": 29184,
+  "firstAssertError": "LOCK_AUTHORITY_LOST",
+  "guardRemovedWhileSecondAlive": true,
+  "thirdExit": 0,
+  "thirdStdout": "ACQUIRED\n",
+  "thirdStderr": "",
+  "secondStillAliveAndNotReleased": true,
+  "reproduced": true
+}
