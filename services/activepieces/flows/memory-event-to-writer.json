@@ -6,7 +6,7 @@
   "trigger": {
     "type": "webhook",
     "method": "POST",
-    "path": "<WEBHOOK_ID>",
+    "path": "<WEBHOOK_ID>/sync",
     "input": "SC-07 event schema v1"
   },
   "steps": [
@@ -61,6 +61,13 @@
       "when": "write.status == persisted",
       "on_true": "success",
       "on_false": "visible_error_and_retry"
+    },
+    {
+      "id": "return_response",
+      "type": "webhook-return-response",
+      "on_persisted": {"status": 200, "body": {"event_id": "{{trigger.body.event_id}}", "status": "persisted"}},
+      "on_no_pattern": {"status": 200, "body": {"event_id": "{{trigger.body.event_id}}", "status": "no-pattern"}},
+      "on_error": {"status": 500, "body": {"event_id": "{{trigger.body.event_id}}", "status": "failed"}}
     }
   ],
   "secrets": {

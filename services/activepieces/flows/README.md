@@ -26,3 +26,19 @@ Use the local bridge token as a secret connection/header and never commit it.
 4. Bridge stopped or unauthorized → visible execution error; source event stays
    in the SC-07 queue for retry.
 5. Repeat the same `event_id` → writer idempotency, no duplicate entry.
+
+## Delivery acknowledgement contract (checked 2026-09-11)
+
+Capture is durable in the local SC-07 queue before webhook delivery starts.
+The configured endpoint must be the synchronous webhook URL ending in `/sync`
+and the flow must finish with Return Response. A generic 2xx is only acceptance;
+the sender acknowledges the queue item only after a correlated response:
+`{event_id,status:"persisted"}` or `{event_id,status:"no-pattern"}`. Missing,
+uncorrelated or malformed terminal output is retryable. At-least-once retries
+are safe because writer is idempotent by `event_id`.
+
+This contract follows the official Activepieces documentation for
+[synchronous webhook limits](https://www.activepieces.com/docs/install/reference/limits)
+and [returning a flow response](https://www.activepieces.com/docs/build-pieces/piece-reference/flow-control).
+The repository pins 0.86.3 (release `8bfbb2f`); a real imported flow remains
+`awaiting-validation` until Docker, worker persistence and the bridge are live.
