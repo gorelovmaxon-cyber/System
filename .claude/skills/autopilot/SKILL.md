@@ -7,7 +7,7 @@ description: Use when the user dictates an app, site, bot, or feature to build e
 
 ## Overview
 
-Autopilot drives a dictated idea through the mattpocock/skills pipeline — grill → spec → tickets → implement — **in one dialogue**, without making the user approve each stage. The user answers questions once at the start and receives a working project at the end. Core principle: **the order is the product** — code is written only in the last phase, and every ticket is implemented by a separate subagent with a fresh, isolated context.
+Autopilot drives a dictated idea through the mattpocock/skills pipeline — grill → spec → tickets → implement — **in one dialogue**, without making the user approve each stage. The user answers questions once at the start and receives a working project at the end. Core principle: **the order is the product** — code is written only in the last phase, and implementation is delegated to one executor that works through related tickets sequentially.
 
 This skill only orchestrates — the phases below **invoke the pipeline skills and follow their rules**; nothing here restates them. What Autopilot adds: which human gates to remove, and how to run implementation hands-free.
 
@@ -17,11 +17,11 @@ This skill only orchestrates — the phases below **invoke the pipeline skills a
 npx skills add mattpocock/skills
 ```
 
-**Для режима `--mode=systemqwen` prerequisite НЕ нужны** — используется только создание тикетов (grilling, to-spec, to-tickets), реализацию делает исполнитель GPT Luna через VS Code.
+**Для режима `--mode=systemqwen` prerequisite НЕ нужны** — используется только создание тикетов (grilling, to-spec, to-tickets), реализацию выполняет выбранный исполнитель в отдельном чате.
 
 ## Параметры (опционально)
 
-- `--mode=systemqwen` — режим с явными остановками: создать тикеты и остановиться, не реализовывать самому. Реализацию делает GPT Luna через VS Code (документация: `../../README.md`).
+- `--mode=systemqwen` — режим разделения ролей: создать тикеты и остановиться, не реализовывать самому. Реализацию выполняет выбранный исполнитель (в текущем запуске — Sonnet/Sol) в отдельном чате; передача задания — файлом задачи и HANDOFF, автоматического runner'а нет. Контракт: [`docs/system-workflow.md`](../../../docs/system-workflow.md).
 
 Доменный маршрут (dev/sites/marketing) выбирается в `start` после обязательных
 файлов проекта и retrieval; он не меняет нумерацию фаз.
@@ -133,7 +133,7 @@ Grill как справочную информацию; он не заменяе
 только нерешённые детали.
 
 Подробная настройка и fallback описаны в
-[`docs/khoj-integration.md`](../../docs/khoj-integration.md).
+[`docs/khoj-integration.md`](../../../docs/khoj-integration.md).
 
 ---
 
@@ -161,12 +161,12 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 ✅ Тикеты готовы: T1, T2, T3
 Сохранены: `.scratch/[project]/issues/`
 
-Автор тикетов завершил нарезку. Передавай T1 исполнителю GPT Luna через VS Code
-(совместимое имя интерфейса — Qwen Code).
-Документация: ../../QWEN.md
+Тикеты готовы. Передавай исполнителю разрешённый блок связанных тикетов —
+файлом задачи и HANDOFF в отдельном чате.
+Документация: ../../../QWEN.md
 ```
 
-**🛑 СТОП.** Не запускай Phase 4 (Implementation). Жди результата от Qwen.
+**🛑 СТОП.** Не запускай Phase 4 (Implementation). Жди результата исполнителя.
 
 ---
 
@@ -174,15 +174,17 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 
 ### Phase 4 — Implement (через subagent-pipeline)
 
-**Вызывает `/subagent-pipeline` для последовательного исполнения тикетов.** Один тикет
-получает один свежий контекст и один коммит. Планировщик/приёмщик не смешивается с
-исполнителем; модель исполнителя выбирается конфигурацией запуска. В текущем процессе
-роль исполнителя выполняет GPT Luna через VS Code.
+**Вызывает `/subagent-pipeline` для последовательного исполнения тикетов.** Один
+исполнитель ведёт связанные тикеты разрешённого блока в одном рабочем контексте;
+планировщик/приёмщик не смешивается с исполнителем. Модель исполнителя выбирается
+конфигурацией запуска; в режиме systemqwen его роль выполняет выбранный Sonnet/Sol
+в отдельном чате.
 
 - **No git repo yet → `git init` at the start of this phase.** One commit per ticket — commits are the user's rollback points.
-- Тикеты исполняются **последовательно** (экономия ~3–5× по сравнению с параллельными агентами). Параллельность можно включить явно для непересекающихся файлов через параметр в subagent-pipeline.
+- Тикеты исполняются **последовательно**. Параллельность — явное исключение для независимых задач с обоснованным выигрышем времени и учётом расходов, а не режим по умолчанию; включается отдельным решением, а не автоматически.
+- Новый контекст на каждый тикет не обязателен. Сохранять контекст предпочтительно; при переходе в новую сессию нужен краткий HANDOFF.
 - After each ticket, report **one plain-language line** («Можно загрузить клиентов из файла — 3 из 8 готово»). No diffs, no jargon.
-- Ticket failed → retry **once** in a fresh context with the error attached. Second failure → stop, tell the user in plain language what is blocking and what you need.
+- Ticket failed → retry **once** with the error attached. Second failure → stop, tell the user in plain language what is blocking and what you need.
 
 ### Phase 5 — Finish
 
@@ -218,18 +220,18 @@ session-summary:
 
 ### Для режима systemqwen
 
-Пользователь передаст отчёт исполнителя после реализации тикета.
+Пользователь передаст отчёт исполнителя после завершения разрешённого блока.
 
 Проверь:
-1. Прочитай отчёт исполнителя GPT Luna
+1. Прочитай отчёт исполнителя
 2. `git diff` для проверки изменений
 3. Результат тестов
 
 Ответ:
-- ✅ "T[N] проверен: [вывод]. Передавай T[N+1] исполнителю."
+- ✅ "Блок проверен: [вывод]. Передавай следующий блок."
 - ⚠️ "T[N]: нужна доработка — [замечания]"
 
-Повторяй для каждого тикета.
+Повторяй для каждого блока, а не для каждого тикета.
 
 ## Rationalizations — STOP
 
@@ -240,14 +242,14 @@ session-summary:
 | «Сделаю заглушку, уточнит потом» | Блокирующие неизвестные (оплата, ключи, хостинг) решаются в grilling, до билда. |
 | «И так понятно, что делать» | Понятно тебе — не зафиксировано. Спека — единственная точка сверки. |
 | «Быстрее всё сделать в одном контексте» | Быстрее в первый час. Дальше модель ходит кругами и ломает работавшее. |
-| «Параллельные агенты быстрее» | Быстрее по времени, дороже в ~3–5× по токенам. Последовательно через subagent-pipeline — экономия без потери качества. |
+| «Параллельные агенты быстрее» | Быстрее по времени, но дороже и сложнее в приёмке. Замеров для этого проекта нет — включать параллельность только явным решением, с обоснованием выигрыша и учётом расходов. |
 
 ## Red Flags — start the phase over
 
 - Writing code before the spec exists.
 - Asking the user to review tickets, granularity, or code.
-- Two tickets in one subagent context.
-- Using parallel agents when files intersect (должен быть последовательный режим через subagent-pipeline).
+- Two tickets in one commit.
+- Spawning parallel agents by default, without a stated time win and cost accounting.
 - Silent assumption not marked as PLACEHOLDER.
 - Payment/keys/hosting first mentioned at the finish line.
 

@@ -2,6 +2,14 @@
 
 Ты — исполнитель Sonnet 5 фазы 5. Прочитай README.md, reports/CHAT-04-RESULT.md и последние решения пользователя (раздел 8 HANDOFF-GPT-NEXT). Следующий — CHAT-06-TRANSFER.md.
 
+> **Документальная часть L05-01/L05-02 выполнена отдельным блоком PROC-01**
+> (2026-09-12): роли, цикл, статусы, публикация и правила контекста согласованы в
+> `docs/system-workflow.md`, `CLAUDE.md`, `TICKET_TEMPLATE.md`, `docs/usage-guide.md`
+> и активных скиллах. Отчёт — [reports/PROC-01-RESULT.md](reports/PROC-01-RESULT.md).
+> Это проверка согласованности инструкций, а не live-тест: **живые критерии L05-02
+> (реальный retrieval в обоих клиентах и передача результата) и L05-03 (Figma,
+> маршруты dev/sites/marketing) остаются открытыми** и выполняются ниже.
+
 ## Прочитать
 
 CLAUDE.md; docs/system-workflow.md; .claude/skills/start/SKILL.md; .claude/skills/subagent-pipeline/SKILL.md; docs/routes/ по нужному маршруту; SC-14/15/16; .claude/mcp-servers/figma/README.md. Черновик ASTRA-ORCHESTRATION-IDEAS не превращать в обязательные задачи.
