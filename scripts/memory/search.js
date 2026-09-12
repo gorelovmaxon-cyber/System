@@ -2,7 +2,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { resolvePaths } = require('./resolve-paths');
+const { resolvePaths, loadConfig } = require('./resolve-paths');
 
 const DEFAULTS = { limit: 3, budget: 1200, timeout: 1500 };
 
@@ -11,9 +11,7 @@ function readJson(file) {
 }
 
 function configFor(root) {
-  const file = path.join(root, 'config', 'system.local.json');
-  const example = path.join(root, 'config', 'system.example.json');
-  return fs.existsSync(file) ? readJson(file) : readJson(example);
+  return loadConfig(root).config;
 }
 
 function relativeSource(memoryRoot, candidate) {
@@ -25,6 +23,15 @@ function relativeSource(memoryRoot, candidate) {
   const relative = path.relative(memoryRoot, absolute);
   if (!relative || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) return null;
   return '.claude/memory/' + relative.replaceAll(path.sep, '/');
+}
+
+function sourceFile(memoryRoot, source) {
+  if (typeof source !== 'string') return null;
+  const stripped = source.replaceAll('\\', '/').replace(/^\.\//, '').replace(/^\.claude\/memory\//, '');
+  const candidate = path.resolve(memoryRoot, stripped);
+  const relative = path.relative(path.resolve(memoryRoot), candidate);
+  if (!relative || relative.startsWith('..' + path.sep) || path.isAbsolute(relative)) return null;
+  return candidate;
 }
 
 // Дубликат ключа — двусмысленность (S2): значение не выбирается (fail-closed),
@@ -204,9 +211,13 @@ async function searchKhoj(query, projectId, options = {}) {
       if (!source) return null;
       // Без локального файла scope записи проверить нельзя — сниппет сервиса
       // не является подтверждением (R2).
-      const localFile = path.resolve(paths.system_root, source);
-      if (!fs.existsSync(localFile)) return null;
-      const record = matchEntry(entries(fs.readFileSync(localFile, 'utf8')), query, item.snippet || item.text);
+      const localFile = sourceFile(paths.memory_root, source);
+      if (!localFile || !fs.existsSync(localFile)) return null;
+      const candidates = entries(fs.readFileSync(localFile, 'utf8')).filter(record => {
+        const scope = record.meta.scope || 'unknown';
+        return !projectId || scope === 'user' || scope === projectId;
+      });
+      const record = matchEntry(candidates, query, item.snippet || item.text);
       if (!record) return null;
       const scope = record.meta.scope || 'unknown';
       if (projectId && scope !== 'user' && scope !== projectId) return null;
@@ -250,4 +261,4 @@ if (require.main === module) main().catch(error => {
   process.exitCode = 0;
 });
 
-module.exports = { searchKhoj, localResults, relativeSource, snippetFor, frontmatter, entries, matchEntry };
+module.exports = { searchKhoj, localResults, relativeSource, sourceFile, snippetFor, frontmatter, entries, matchEntry };

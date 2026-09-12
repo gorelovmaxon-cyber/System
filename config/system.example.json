@@ -60,7 +60,7 @@
     "backoff_ms": 1000
   },
   "delivery": {
-    "endpoint": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
+    "endpoint": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>/sync"
   },
   "bridge": {
     "port": 8643,

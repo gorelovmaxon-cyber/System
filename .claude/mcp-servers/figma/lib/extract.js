@@ -92,7 +92,21 @@ function extractDesignTokens(file, options = {}) {
     for (const child of node.children || []) visit(child, currentPath);
   }
 
-  visit(file.document);
+  function findNode(node, id) {
+    if (!node || typeof node !== 'object') return null;
+    if (String(node.id) === String(id)) return node;
+    for (const child of node.children || []) {
+      const found = findNode(child, id);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  const selected = options.nodeId === undefined || options.nodeId === null
+    ? file.document
+    : findNode(file.document, options.nodeId);
+  if (!selected) throw new Error('Figma nodeId not found: ' + options.nodeId);
+  visit(selected);
   return result;
 }
 

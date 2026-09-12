@@ -19,7 +19,17 @@ function status() {
     behind = counts[0]; ahead = counts[1];
   }
   const memory = git(['status', '--short', '--', '.claude/memory', 'config']).stdout.trim().split(/\r?\n/).filter(Boolean);
-  return { branch, upstream: upstream || null, ahead, behind, memory_changes: memory, clean: memory.length === 0 };
+  const worktree = git(['status', '--short']).stdout.trim().split(/\r?\n/).filter(Boolean);
+  return {
+    branch,
+    upstream: upstream || null,
+    ahead,
+    behind,
+    memory_changes: memory,
+    worktree_changes: worktree,
+    clean: worktree.length === 0,
+    remote_freshness: 'not-fetched-by-status',
+  };
 }
 
 function push(branch) {
@@ -29,9 +39,12 @@ function push(branch) {
   if (current.upstream && current.behind > 0 && current.ahead > 0) {
     throw new Error('branch diverged; merge/pull first, preserving both versions (no force push)');
   }
-  const result = git(['push', 'origin', target]);
+  if (current.behind > 0) throw new Error('branch is behind upstream; fetch and merge first (no force push)');
+  const upstreamRemote = current.upstream?.includes('/') ? current.upstream.split('/')[0] : null;
+  const remote = upstreamRemote || 'origin';
+  const result = git(['push', remote, target]);
   if (result.status !== 0) throw new Error((result.stderr || result.stdout || 'git push failed').trim());
-  return { pushed: true, branch: target, output: result.stdout.trim() };
+  return { pushed: true, remote, branch: target, output: result.stdout.trim() };
 }
 
 function parseArgs(argv) {

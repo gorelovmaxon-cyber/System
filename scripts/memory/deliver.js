@@ -8,10 +8,7 @@ const { resolvePaths } = require('./resolve-paths');
 function endpoint() {
   if (process.env.MEMORY_DELIVERY_ENDPOINT) return process.env.MEMORY_DELIVERY_ENDPOINT;
   const paths = resolvePaths();
-  const read = file => fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
-  const example = read(path.join(paths.system_root, 'config/system.example.json'));
-  const local = read(paths.localConfig);
-  return local.delivery?.endpoint || example.delivery?.endpoint || '';
+  return paths.config.delivery?.endpoint || '';
 }
 
 async function deliverEvent(event, options = {}) {
@@ -26,8 +23,21 @@ async function deliverEvent(event, options = {}) {
       body: JSON.stringify(event),
       signal: controller.signal,
     });
-    if (response.ok) return { ok: true, status: response.status };
     const body = await response.text();
+    if (response.ok) {
+      let confirmation;
+      try { confirmation = JSON.parse(body); } catch {}
+      const correlated = confirmation?.event_id === event.event_id;
+      const terminal = confirmation?.status === 'persisted' || confirmation?.status === 'no-pattern';
+      if (correlated && terminal) {
+        return { ok: true, status: response.status, outcome: confirmation.status };
+      }
+      return {
+        ok: false,
+        retryable: true,
+        error: `HTTP ${response.status} accepted without correlated terminal confirmation`,
+      };
+    }
     const retryable = response.status >= 500 || response.status === 429;
     return { ok: false, retryable, error: `HTTP ${response.status}: ${body.slice(0, 200)}` };
   } catch (error) {

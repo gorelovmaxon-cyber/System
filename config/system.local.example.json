@@ -14,7 +14,7 @@
       "base_url": "http://127.0.0.1:8643"
     },
     "activepieces": {
-      "webhook_url": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>"
+      "webhook_url": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>/sync"
     }
   }
 }

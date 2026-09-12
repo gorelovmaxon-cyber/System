@@ -61,13 +61,26 @@ function assertRoot(root, source) {
   return resolved;
 }
 
+function isPlainObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
 function mergeConfig(base, override) {
-  return {
-    ...base,
-    ...override,
-    local_paths: { ...(base.local_paths || {}), ...(override.local_paths || {}) },
-    integrations: { ...(base.integrations || {}), ...(override.integrations || {}) },
-  };
+  const result = { ...base };
+  for (const [key, value] of Object.entries(override || {})) {
+    result[key] = isPlainObject(value) && isPlainObject(base?.[key])
+      ? mergeConfig(base[key], value)
+      : value;
+  }
+  return result;
+}
+
+function loadConfig(root) {
+  const examplePath = path.join(root, 'config', 'system.example.json');
+  const localConfigPath = path.join(root, 'config', 'system.local.json');
+  const example = readJson(examplePath);
+  const local = isFile(localConfigPath) ? readJson(localConfigPath) : {};
+  return { config: mergeConfig(example, local), localConfigPath };
 }
 
 function resolvePaths(options = {}) {
@@ -75,7 +88,8 @@ function resolvePaths(options = {}) {
   let root;
   let localConfigPath = null;
 
-  if (options.root || process.env.SYSTEM2_ROOT) {
+  const selectedExplicitly = Boolean(options.root || process.env.SYSTEM2_ROOT);
+  if (selectedExplicitly) {
     root = assertRoot(options.root || process.env.SYSTEM2_ROOT, 'SYSTEM2_ROOT');
   } else {
     const discovered = findSystemRoot(cwd);
@@ -88,19 +102,20 @@ function resolvePaths(options = {}) {
     root = discovered;
   }
 
-  const examplePath = path.join(root, 'config', 'system.example.json');
-  const example = readJson(examplePath);
-  localConfigPath = path.join(root, 'config', 'system.local.json');
-  const local = isFile(localConfigPath) ? readJson(localConfigPath) : {};
-  const config = mergeConfig(example, local);
+  let loaded = loadConfig(root);
+  let config = loaded.config;
+  localConfigPath = loaded.localConfigPath;
 
   const configuredRoot = config.system_root;
-  if (configuredRoot && !String(configuredRoot).startsWith('<')) {
+  if (!selectedExplicitly && configuredRoot && !String(configuredRoot).startsWith('<')) {
     const configuredAbsolute = path.isAbsolute(configuredRoot)
       ? configuredRoot
       : path.resolve(root, configuredRoot);
     if (path.resolve(configuredAbsolute) !== root) {
       root = assertRoot(configuredAbsolute, 'config/system.local.json');
+      loaded = loadConfig(root);
+      config = loaded.config;
+      localConfigPath = loaded.localConfigPath;
     }
   }
 
@@ -113,6 +128,7 @@ function resolvePaths(options = {}) {
     data_dir: dataDir,
     localConfig: localConfigPath,
     registry: Array.isArray(config.registry) ? config.registry : [],
+    config,
   };
 }
 
@@ -131,6 +147,8 @@ if (require.main === module) {
 
 module.exports = {
   findSystemRoot,
+  loadConfig,
+  mergeConfig,
   resolvePaths,
 };
 

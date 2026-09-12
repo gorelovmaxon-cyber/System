@@ -9,10 +9,20 @@ const START = '<!-- systemqwen:start -->';
 const END = '<!-- systemqwen:end -->';
 
 function replaceSection(text, section) {
+  const starts = text.split(START).length - 1;
+  const ends = text.split(END).length - 1;
+  if (starts !== ends || starts > 1) throw new Error('managed System2 section is damaged or duplicated');
   const start = text.indexOf(START);
   const end = text.indexOf(END, start + START.length);
   if (start >= 0 && end >= 0) return text.slice(0, start) + section + text.slice(end + END.length);
   return text.trimEnd() + '\n\n' + section + '\n';
+}
+
+function hasManagedSection(text) {
+  const starts = text.split(START).length - 1;
+  const ends = text.split(END).length - 1;
+  if (starts !== ends || starts > 1) throw new Error('managed System2 section is damaged or duplicated');
+  return starts === 1;
 }
 
 function initProject(options = {}) {
@@ -37,7 +47,7 @@ function initProject(options = {}) {
   fs.writeFileSync(claude, replaceSection(claudeText, section), 'utf8');
   const handoffText = fs.existsSync(handoff) ? fs.readFileSync(handoff, 'utf8') : '# HANDOFF — ' + projectId + '\n';
   const handoffSection = [START, '- **Задача:** не указана', '- **Выполнено:** bootstrap проекта подключён к общей памяти', '- **Текущие изменения/коммит:** проверить `git status` (НЕ ЗАКОММИЧЕНО: если есть изменения)', '- **Подтверждённые решения:** см. CLAUDE.md и memory contract', '- **Результаты проверок:** bootstrap выполнен локально', '- **Незавершённое:** заполнить перед остановкой сессии', '- **Следующий шаг:** указать конкретное продолжение', END].join('\n');
-  fs.writeFileSync(handoff, replaceSection(handoffText, handoffSection), 'utf8');
+  if (!hasManagedSection(handoffText)) fs.writeFileSync(handoff, replaceSection(handoffText, handoffSection), 'utf8');
   return { root, project_id: projectId, claude, handoff, registry: knownProject ? 'existing' : 'registered-in-local-config' };
 }
 
@@ -59,4 +69,4 @@ if (require.main === module) {
   catch (error) { process.stderr.write(error.message + '\n'); process.exitCode = 1; }
 }
 
-module.exports = { initProject, replaceSection, START, END };
+module.exports = { initProject, replaceSection, hasManagedSection, START, END };

@@ -252,3 +252,48 @@ test('S2: duplicate status in a record is fail-closed (status_hint unknown)', ()
   assert.equal(res[0].status_hint, 'unknown');
   assert.equal(res[0].scope, 'user');
 });
+
+test('B04: minimal local config preserves nested search and Khoj defaults', async () => {
+  const root = fixture('b04-config-merge');
+  fs.writeFileSync(path.join(root, 'config/system.local.json'), JSON.stringify({ local_paths: {} }));
+  let calls = 0;
+  const originalFetch = global.fetch;
+  global.fetch = async () => { calls += 1; throw new Error('must not call disabled Khoj'); };
+  try {
+    const result = await searchKhoj('anything', 'A');
+    assert.equal(result.error, 'khoj-unavailable');
+    assert.equal(calls, 0);
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test('B05: Khoj hit resolves against a configured custom memory root', async () => {
+  const root = fixture('b05-custom-memory');
+  fs.writeFileSync(path.join(root, 'config/system.local.json'), JSON.stringify({ memory_root: 'custom-memory' }));
+  const file = path.join(root, 'custom-memory', 'facts', 'writer-entries.md');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, entry('A', 'confirmed', 'CUSTOM_MEMORY_HIT'));
+  const restore = stubKhoj([{ source: file, snippet: 'CUSTOM_MEMORY_HIT', score: 0.8 }]);
+  try {
+    const result = await searchKhoj('CUSTOM_MEMORY_HIT', 'A', { force: true });
+    assert.equal(result.ok, true);
+    assert.equal(result.results.length, 1);
+    assert.equal(result.results[0].scope, 'A');
+  } finally { restore(); }
+});
+
+test('B14: an allowed record is selected before a better forbidden record', async () => {
+  const root = fixture('b14-allowed-candidate');
+  writeMemory(root,
+    entry('B', 'confirmed', 'SHARED_QUERY private private private') +
+    entry('A', 'observation', 'SHARED_QUERY allowed details'));
+  const restore = stubKhoj([{ source: 'facts/writer-entries.md', snippet: 'SHARED_QUERY private', score: 0.9 }]);
+  try {
+    const result = await searchKhoj('SHARED_QUERY', 'A', { force: true });
+    assert.equal(result.ok, true);
+    assert.equal(result.results.length, 1);
+    assert.equal(result.results[0].scope, 'A');
+    assert.match(result.results[0].snippet, /allowed details/);
+  } finally { restore(); }
+});

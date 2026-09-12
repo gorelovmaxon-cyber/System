@@ -43,6 +43,10 @@ async function main() {
   const event = createEvent(input);
   const queue = new DurableQueue();
   const record = queue.enqueue(event);
+  if (values.enqueue_only === true) {
+    process.stdout.write(JSON.stringify({ event, status: record.status, attempts: record.attempts }, null, 2) + '\n');
+    return;
+  }
   const records = await queue.process(deliverEvent, { limit: 1 });
   const latest = records.find(item => item.event.event_id === event.event_id) || record;
   process.stdout.write(JSON.stringify({ event, status: latest.status, attempts: latest.attempts }, null, 2) + '\n');

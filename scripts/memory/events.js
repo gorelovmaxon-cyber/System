@@ -29,28 +29,49 @@ function eventIdFor(kind, source, projectId = '') {
 
 function truncateUtf8(value, maxBytes) {
   const input = String(value || '');
-  const bytes = Buffer.from(input, 'utf8');
-  if (bytes.length <= maxBytes) return input;
-  return Buffer.concat([bytes.subarray(0, Math.max(0, maxBytes - 3)), Buffer.from('...')]).toString('utf8');
+  if (!Number.isInteger(maxBytes) || maxBytes < 0) throw new Error('maxBytes must be a non-negative integer');
+  if (Buffer.byteLength(input, 'utf8') <= maxBytes) return input;
+  const suffix = '.'.repeat(Math.min(3, maxBytes));
+  const budget = maxBytes - Buffer.byteLength(suffix, 'utf8');
+  let output = '';
+  let used = 0;
+  for (const character of input) {
+    const size = Buffer.byteLength(character, 'utf8');
+    if (used + size > budget) break;
+    output += character;
+    used += size;
+  }
+  return output + suffix;
 }
 
 function validateEvent(event) {
   if (!event || event.schema_version !== '1') throw new Error('schema_version must be "1"');
   if (!KINDS.has(event.kind)) throw new Error('kind must be commit or session-summary');
+  if (typeof event.event_id !== 'string' || !/^evt_[0-9a-f]{12}$/.test(event.event_id)) throw new Error('event_id is required');
   if (!event.project_id || typeof event.project_id !== 'string') throw new Error('project_id is required');
   const registry = resolvePaths().registry;
   if (registry.length && !registry.some(item => item.project_id === event.project_id)) {
     throw new Error('unknown project_id: ' + event.project_id);
   }
-  if (!event.source || typeof event.source !== 'object') throw new Error('source is required');
-  if (!event.timestamp || Number.isNaN(Date.parse(event.timestamp))) throw new Error('timestamp must be ISO UTC');
+  if (!event.source || typeof event.source !== 'object' || Array.isArray(event.source)) throw new Error('source is required');
+  if (typeof event.timestamp !== 'string' || !/^\d{4}-\d{2}-\d{2}T.*Z$/.test(event.timestamp) || Number.isNaN(Date.parse(event.timestamp))) throw new Error('timestamp must be ISO UTC');
   if (typeof event.summary !== 'string') throw new Error('summary is required');
+  for (const field of ['decisions', 'user_corrections', 'checks']) {
+    if (!Array.isArray(event[field]) || !event[field].every(item => typeof item === 'string')) {
+      throw new Error(`${field} must be an array of strings`);
+    }
+  }
+  if (typeof event.next_action !== 'string') throw new Error('next_action must be a string');
   if (event.kind === 'commit' && (!event.source.sha || !/^[0-9a-f]{7,64}$/i.test(event.source.sha))) {
     throw new Error('commit source.sha must be a hexadecimal Git SHA');
   }
   if (event.kind === 'session-summary' && (!event.source.session_id || !Number.isInteger(event.source.revision))) {
     throw new Error('session source.session_id and integer revision are required');
   }
+  if (event.event_id !== eventIdFor(event.kind, event.source, event.project_id)) {
+    throw new Error('event_id does not match deterministic event identity');
+  }
+  if (event.kind === 'commit' && typeof event.diff !== 'string') throw new Error('commit diff must be a string');
   if (Buffer.byteLength(JSON.stringify(event), 'utf8') > MAX_EVENT_BYTES) throw new Error('event exceeds size limit');
   return event;
 }

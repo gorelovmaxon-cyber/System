@@ -9,10 +9,7 @@ const { writeProposal } = require('./writer');
 
 function bridgeConfig() {
   const paths = resolvePaths();
-  const read = file => fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
-  const example = read(path.join(paths.system_root, 'config/system.example.json'));
-  const local = read(paths.localConfig);
-  const bridge = { ...(example.bridge || {}), ...(local.bridge || {}) };
+  const bridge = paths.config.bridge || {};
   return {
     port: Number(process.env.MEMORY_BRIDGE_PORT || bridge.port || 8643),
     token: process.env.MEMORY_BRIDGE_TOKEN || bridge.token || '',
@@ -32,7 +29,10 @@ function tokenFrom(req) {
 function server(options = {}) {
   const config = { ...bridgeConfig(), ...options };
   return http.createServer((req, res) => {
-    if (req.method === 'GET' && req.url === '/health') return response(res, 200, { status: 'ok' });
+    if (req.method === 'GET' && req.url === '/health') {
+      const ready = Boolean(config.token && !config.token.includes('<'));
+      return response(res, ready ? 200 : 503, { status: ready ? 'ready' : 'not-ready', writer: ready });
+    }
     if (req.method !== 'POST' || req.url !== '/write') return response(res, 404, { error: 'not found' });
     if (!config.token || config.token.includes('<')) return response(res, 503, { error: 'bridge token is not configured' });
     if (tokenFrom(req) !== config.token) return response(res, 401, { error: 'unauthorized' });

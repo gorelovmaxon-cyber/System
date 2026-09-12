@@ -3,18 +3,26 @@
 set +e
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 cd "$ROOT" || exit 0
+SYSTEM_ROOT_NATIVE="${SYSTEM2_ROOT:-$ROOT}"
+if command -v cygpath >/dev/null 2>&1; then
+  SYSTEM_ROOT_SHELL="$(cygpath -u "$SYSTEM_ROOT_NATIVE")"
+  SYSTEM_ROOT_NATIVE="$(cygpath -w "$SYSTEM_ROOT_SHELL")"
+else
+  SYSTEM_ROOT_SHELL="${SYSTEM_ROOT_NATIVE//\\//}"
+fi
+SCRIPT_ROOT="$SYSTEM_ROOT_SHELL/scripts/memory"
+[ -f "$SCRIPT_ROOT/capture.js" ] || exit 0
 MESSAGE="$(git log -1 --pretty=%B 2>/dev/null)"
 case "$MESSAGE" in
   auto-learn:*|system2-index:*) exit 0 ;;
 esac
 SHA="$(git rev-parse HEAD 2>/dev/null)" || exit 0
-PROJECT_ID="${SYSTEM2_PROJECT_ID:-$(node scripts/memory/project-id.js 2>/dev/null)}"
-[ -n "$PROJECT_ID" ] || PROJECT_ID=systemqwen
-mkdir -p .local/hook
+PROJECT_ID="${SYSTEM2_PROJECT_ID:-$(SYSTEM2_ROOT="$SYSTEM_ROOT_NATIVE" node "$SCRIPT_ROOT/project-id.js" "$ROOT" 2>/dev/null)}"
+[ -n "$PROJECT_ID" ] || exit 0
+node -e "require('node:fs').mkdirSync('.local/hook',{recursive:true})" || exit 0
 DIFF_FILE=".local/hook/diff-${SHA}.txt"
 git diff --no-ext-diff HEAD^ HEAD 2>/dev/null > "$DIFF_FILE"
-(
-  node scripts/memory/capture.js commit --project "$PROJECT_ID" --sha "$SHA" --message "$MESSAGE" --diff "$DIFF_FILE" >> .local/hook/capture.log 2>&1
-  rm -f "$DIFF_FILE"
-) &
+SYSTEM2_ROOT="$SYSTEM_ROOT_NATIVE" node "$SCRIPT_ROOT/capture.js" commit --project "$PROJECT_ID" --sha "$SHA" --message "$MESSAGE" --diff "$DIFF_FILE" --enqueue-only >> .local/hook/capture.log 2>&1 || exit 0
+node -e "try{require('node:fs').unlinkSync(process.argv[1])}catch{}" "$DIFF_FILE"
+(SYSTEM2_ROOT="$SYSTEM_ROOT_NATIVE" node "$SCRIPT_ROOT/queue-worker.js" >> .local/hook/capture.log 2>&1) &
 exit 0

@@ -32,11 +32,16 @@ async function diagnose(options = {}) {
   catch (error) { add(false, 'resolve-paths', error.message); return checks; }
   add(fs.existsSync(paths.localConfig), 'config/system.local.json', 'Run node scripts/memory/init-local-config.js --root <root>.');
   add(fs.existsSync(path.join(root, 'HANDOFF.md')), 'project HANDOFF.md', 'Run node scripts/memory/init-project.js for the connected project.');
-  add(command('git', ['config', '--get', 'core.hooksPath'], root) === '.git-hooks-templates', 'portable hooksPath', 'Run bash .git-hooks-templates/install-hooks.sh.');
+  const activeHooks = command('git', ['config', '--get', 'core.hooksPath'], root);
+  const expectedHooks = path.join(root, '.git-hooks-templates');
+  add(activeHooks === '.git-hooks-templates' || (activeHooks && path.resolve(root, activeHooks) === expectedHooks), 'portable hooksPath', 'Run bash .git-hooks-templates/install-hooks.sh.');
   add(fs.existsSync(path.join(root, '.claude/memory')), 'shared memory root', 'Restore .claude/memory from Git.');
-  add(await probe('http://127.0.0.1:42110/health'), 'Khoj health', 'Install/start the verified Khoj release and configure its local index.');
-  add(await probe('http://127.0.0.1:8643/health'), 'memory bridge health', 'Start node scripts/memory/bridge-server.js with a local token.');
-  add(await probe('http://127.0.0.1:8642/api/v1/health'), 'Activepieces health', 'Start services/activepieces with Docker Compose.');
+  const khoj = paths.config.integrations?.khoj || {};
+  const bridge = paths.config.integrations?.bridge || {};
+  const activepieces = paths.config.integrations?.activepieces || {};
+  add(await probe(new URL(khoj.health_path || '/health', khoj.base_url || 'http://127.0.0.1:42110')), 'Khoj health', 'Install/start the verified Khoj release and configure its local index.');
+  add(await probe(new URL(bridge.health_path || '/health', bridge.base_url || 'http://127.0.0.1:8643')), 'memory bridge ready', 'Start node scripts/memory/bridge-server.js with a local token; health must report ready.');
+  add(await probe(new URL('/api/v1/health', activepieces.base_url || 'http://127.0.0.1:8642')), 'Activepieces health', 'Start services/activepieces with Docker Compose.');
   add(true, fs.existsSync(path.join(root, '.local/queue/events.jsonl')) ? 'local event queue available' : 'local event queue not created (valid)', '');
   return checks;
 }
