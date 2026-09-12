@@ -3,7 +3,7 @@
 **What to build:** Сбой очереди индекса не скрывается и восстанавливается: повтор persisted-события и команда reconcile создают недостающие задачи; причина сбоя видна; оставшиеся после аварии in-flight задачи безопасно возобновляются и не блокируют run; состояние между журналами восстанавливается на каждой границе, включая полную потерю производного журнала.
 **Requirement IDs:** SC-10 (R08), дефекты F05, F06, G04, G18.
 **Blocked by:** FIX-01 (idempotent-путь writer), FIX-06 (jsonl/appendDurable)
-**Status:** awaiting-validation
+**Status:** awaiting-validation (live Khoj; локальные проверки блока 2 — awaiting-review)
 
 ## Контекст
 
