@@ -5,7 +5,7 @@
 `.scratch/system-launch/` закоммичены и отправлены обычным push; `ls-remote` совпадает с `HEAD`.
 **Requirement IDs:** R09, R13 (переносимость и сохранность), L01
 **Blocked by:** L01-01
-**Status:** in-progress
+**Status:** verified-local
 **Перед началом работы:** Открой VS Code в папке D:\SystemTheBest\System. Проверь корень Git и текущие изменения.
 
 ## Контекст
@@ -62,11 +62,11 @@
 
 ## Критерии приёмки
 
-- [ ] Дополнение к резерву создано и его манифест проверен; новый огромный архив не создавался.
-- [ ] `git show --stat HEAD` содержит только документы и пакет планов; ни одного файла кода.
-- [ ] `git ls-remote origin refs/heads/master` совпадает с `git rev-parse HEAD`.
-- [ ] `git check-ignore` подтверждает, что `.env`, `system.local.json`, `.local/**` вне коммита.
-- [ ] Оставшиеся untracked перечислены и обоснованы как намеренные.
+- [x] Дополнение к резерву создано и его манифест проверен; новый огромный архив не создавался.
+- [x] `git show --stat HEAD` содержит только документы и пакет планов; ни одного файла кода.
+- [x] `git ls-remote origin refs/heads/master` совпадает с `git rev-parse HEAD`.
+- [x] `git check-ignore` подтверждает, что `.env`, `system.local.json`, `.local/**` вне коммита.
+- [x] Оставшиеся untracked перечислены и обоснованы как намеренные.
 
 ## Проверки
 
@@ -87,3 +87,25 @@ Force push, rebase, amend и `reset --hard` запрещены. Push не озн
 1. Diff и результат push — в `.scratch/system-launch/reports/CHAT-01-RESULT.md`.
 2. Коммит один, вместе с L01-01.
 3. Статус: `verified-local` для сохранения; публикация подтверждается сверкой remote SHA.
+
+## Результат
+
+Выполнено 2026-09-12 чатом 1.
+
+- Существующий резерв `pre-push-20260912-182546` проверен целиком: `sha256sum -c MANIFEST.sha256`
+  → **12 × OK, 0 FAILED**. Его bundle держит `refs/heads/master` = `67b45ec`.
+- Полный архив заново **не собирался**. Создано дополнение
+  `addendum-phase1-2026-09-12/` (392 КБ, 27 файлов, свой `MANIFEST.sha256` → 27 × OK):
+  инкрементальный bundle `67b45ec..f254a5f` (`git bundle verify` → okay, требует `67b45ec`),
+  новый untracked-материал, снимок изменённых документов, `git diff`, `ADDENDUM.md`.
+- Коммиты: `c62fd6a` (24 файла, все документы — ни одного файла кода, `+1362/−44`),
+  `d347ee8` (отчёт), `5e975f0` (HANDOFF к факту). Force/rebase/amend не применялись.
+- Публикация: `git push origin master` → `f254a5f..d347ee8`, затем `d347ee8..5e975f0`;
+  `git ls-remote origin refs/heads/master` = `git rev-parse HEAD` = `5e975f0`;
+  ahead/behind `0 0`.
+- Секреты: `config/system.local.json`, `services/activepieces/.env`, `.local/**` вне коммита
+  (`git check-ignore` → exit 1 для всех целевых путей, они не игнорируются; сами секреты
+  не стейджились). Скан добавляемых файлов на `api_key|secret|token|password|bearer` дал три
+  совпадения — только слова в инструкциях, значений нет.
+- Оставшиеся untracked перечислены как намеренные:
+  `ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md`, `evidence/status-check-current-tests.txt`.
