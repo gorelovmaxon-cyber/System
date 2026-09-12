@@ -217,9 +217,17 @@ function queueIndex(eventId, files, options = {}) {
   return queued;
 }
 
+// Переиндексация по фактическому API Khoj 1.42.10 — GET /api/update.
+// Эндпоинт синхронен: он не ставит работу в очередь, а выполняет
+// `initialize_content` -> `configure_content` прямо в обработчике и отвечает
+// только после того, как эмбеддинги записаны. Поэтому 200 здесь означает
+// завершённую индексацию источника, а не принятую заявку — в отличие от
+// queue-подобного API, где 2xx подтверждает лишь постановку. Тело ответа
+// проверяется отдельно: `{"status":"ok"}` — то, что релиз возвращает после
+// успешного прохода (khoj 1.42.10; routers/api.py:82, configure.py:293).
 async function reindex(task, config, paths, options = {}) {
-  const url = options.reindexUrl || process.env.KHOJ_REINDEX_URL || config.indexer?.reindex_url;
-  if (!url || String(url).includes('<')) throw Object.assign(new Error('Khoj reindex mechanism is not configured'), { code: 'not-configured' });
+  const reindexUrl = options.reindexUrl || process.env.KHOJ_REINDEX_URL || config.indexer?.reindex_url;
+  if (!reindexUrl || String(reindexUrl).includes('<')) throw Object.assign(new Error('Khoj reindex mechanism is not configured'), { code: 'not-configured' });
   // Задание перепроверяется по факту, а не берётся на веру из журнала (G06/G13):
   // запись журнала могла быть восстановлена/изменена вручную (`../../outside.md`),
   // а законный файл — оказаться за переименованным каталогом, заменённым junction.
@@ -229,8 +237,10 @@ async function reindex(task, config, paths, options = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), config.indexer?.timeout_ms || 5000);
   try {
-    const response = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ file: task.file, root: paths.memory_root }), signal: controller.signal });
+    const response = await fetch(reindexUrl, { signal: controller.signal });
     if (!response.ok) throw Object.assign(new Error('Khoj reindex HTTP ' + response.status), { status: response.status });
+    const body = await response.json().catch(() => null);
+    if (!body || body.status !== 'ok') throw Object.assign(new Error('Khoj reindex did not confirm completion'), { code: 'incomplete' });
   } finally { clearTimeout(timer); }
 }
 

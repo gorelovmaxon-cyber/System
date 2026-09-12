@@ -7,9 +7,47 @@
 > приёмки **опубликованы** 2026-09-12 (`c62fd6a` — пакет приёмки, передача и планы семи
 > чатов; `d347ee8` — отчёт фазы 1). Итог фазы 1 —
 > [.scratch/system-launch/reports/CHAT-01-RESULT.md](.scratch/system-launch/reports/CHAT-01-RESULT.md);
-> следующий шаг — [.scratch/system-launch/CHAT-02-KHOJ.md](.scratch/system-launch/CHAT-02-KHOJ.md).
+> итог фазы 2 — [.scratch/system-launch/reports/CHAT-02-RESULT.md](.scratch/system-launch/reports/CHAT-02-RESULT.md);
+> следующий шаг — [.scratch/system-launch/CHAT-03-ACTIVEPIECES.md](.scratch/system-launch/CHAT-03-ACTIVEPIECES.md).
 
-## Актуальная передача: Фаза 1 принята на `f254a5f`; FIX-01…08 и FIX-10 → `done`
+## Актуальная передача: Khoj 1.42.10 запущен, индекс настоящий, поиск и восстановление проверены
+
+Фаза 2 (2026-09-12), тикеты L02-01…L02-03 закрыты. Отчёт —
+[.scratch/system-launch/reports/CHAT-02-RESULT.md](.scratch/system-launch/reports/CHAT-02-RESULT.md).
+
+**Что работает.** Khoj `1.42.10` установлен в существующий venv
+`D:\SystemTheBest\runtime\khoj-1.42.10`, запускается одной командой и слушает
+`127.0.0.1:42110`. Встроенный PostgreSQL из extra `[local]` (`pgserver==0.1.4`) — Docker не
+потребовался. `khoj --version` и метаданные пакета дают `1.42.10`; закреплённые версии
+зависимостей не менялись.
+
+**Индекс и поиск.** Единственный источник — `.claude/memory/**/*.md`: 19 файлов, ровно
+столько же на диске, лишних нет, других источников в БД нет. Модели локальные
+(`thenlper/gte-small`, `mixedbread-ai/mxbai-rerank-xsmall-v1`, тип endpoint `local`) —
+внешний платный провайдер не используется. Известная запись
+`evt_system2_acceptance_w1_20260912` находится живым сервисом через
+`scripts/memory/search.js` с верным source и scope; запрос по отсутствующей фразе
+возвращает пустой список, а `project_id` вне реестра отклоняется до HTTP.
+
+**Обновление индекса.** `GET /api/update` синхронен: 200 и `{"status":"ok"}` приходят
+после завершённой индексации, поэтому `indexed` ставится по подтверждению, а не по коду
+ответа. Задача `idx_175666186629781b` переведена в `indexed` (ранее была `pending`).
+Останов → `failed` с причиной → запуск → `--requeue-failed` → `indexed` проверено живьём;
+при выключенном Khoj адаптер отвечает `ok:false` + `fallback:"local"`, а запись остаётся
+`persisted`.
+
+**Два дефекта релиза на Windows** обойдены в `services/khoj/run-local.py`: непригодная
+ветка `USE_EMBEDDED_DB` (Unix-сокеты вместо TCP) и отсутствующая в колесе pgserver база
+часовых поясов. Правки внутри пакета не вносились. Разбор и команды —
+[docs/khoj-setup.md](docs/khoj-setup.md), [services/khoj/README.md](services/khoj/README.md).
+
+**Состояние процессов.** Khoj работает; остановка — `…\run-local.py --stop`. Bridge
+`127.0.0.1:8643` не работает, Docker отсутствует, Activepieces не запускался — это фаза 3.
+
+**Рубеж.** Фаза 2 сняла зависимость чата 3 от среды: Activepieces разблокируется
+установкой Docker, Khoj к его работе готов.
+
+## Предыдущая передача: Фаза 1 принята на `f254a5f`; FIX-01…08 и FIX-10 → `done`
 
 Точка остановки на 2026-09-12, ветка `master`. Снимок опубликован пакетом
 [PUB-01…PUB-04](.scratch/system-remediation/issues/SUMMARY.md); фактический SHA remote и результат

@@ -39,7 +39,7 @@ async function diagnose(options = {}) {
   const khoj = paths.config.integrations?.khoj || {};
   const bridge = paths.config.integrations?.bridge || {};
   const activepieces = paths.config.integrations?.activepieces || {};
-  add(await probe(new URL(khoj.health_path || '/health', khoj.base_url || 'http://127.0.0.1:42110')), 'Khoj health', 'Install/start the verified Khoj release and configure its local index.');
+  add(await probe(new URL(khoj.health_path || '/api/health', khoj.base_url || 'http://127.0.0.1:42110')), 'Khoj health', 'Install/start the verified Khoj release and configure its local index.');
   add(await probe(new URL(bridge.health_path || '/health', bridge.base_url || 'http://127.0.0.1:8643')), 'memory bridge ready', 'Start node scripts/memory/bridge-server.js with a local token; health must report ready.');
   add(await probe(new URL('/api/v1/health', activepieces.base_url || 'http://127.0.0.1:8642')), 'Activepieces health', 'Start services/activepieces with Docker Compose.');
   add(true, fs.existsSync(path.join(root, '.local/queue/events.jsonl')) ? 'local event queue available' : 'local event queue not created (valid)', '');

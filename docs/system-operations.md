@@ -8,17 +8,19 @@
 
 1. Проверить `node scripts/memory/doctor.js --json` и запустить bridge:
    `node scripts/memory/bridge-server.js` с локальным `MEMORY_BRIDGE_TOKEN`.
-2. Запустить Khoj способом выбранного релиза из [khoj-setup.md](khoj-setup.md),
-   затем проверить `curl.exe -fsS http://127.0.0.1:42110/health`.
+2. Запустить Khoj: `D:\SystemTheBest\runtime\khoj-1.42.10\Scripts\python.exe
+   services/khoj/run-local.py`, затем проверить
+   `curl.exe -fsS http://127.0.0.1:42110/api/health`. Остановка —
+   `... run-local.py --stop`, состояние — `--status`; подробности в
+   [khoj-setup.md](khoj-setup.md).
 3. Заполнить `services/activepieces/.env` из example и выполнить
    `docker compose -f services/activepieces/docker-compose.yml up -d`.
 4. Проверить `curl.exe -fsS http://localhost:8642/api/v1/health`, UI и worker
    logs; затем container → host bridge по `AP_HOST_BRIDGE_URL`.
-5. Выполнить `node scripts/memory/indexer.js --run` после настройки
-   `indexer.reindex_url`, а затем `doctor.js`.
+5. Выполнить `node scripts/memory/indexer.js --run` и затем `doctor.js`.
 
-На текущей машине Docker/Khoj не установлены; эти health-команды здесь не
-успешны и не выдаются за пройденные.
+На текущей машине Khoj 1.42.10 установлен и запускается этой командой; Docker
+отсутствует, поэтому шаги 3–4 здесь не успешны и не выдаются за пройденные.
 
 ## Ежедневные операции и диагностика
 

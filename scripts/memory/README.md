@@ -64,6 +64,8 @@ node scripts/memory/indexer.js --requeue-failed
 node scripts/memory/indexer.js --file .claude/memory/facts/example.md --event-id evt_manual
 ```
 
-Пока SC-04 не подтвердил API переиндексации, `indexer.reindex_url` остаётся
-placeholder и `--run` помечает задачи `failed` с причиной, не создавая цикл.
+`indexer.reindex_url` указывает на `GET http://127.0.0.1:42110/api/update` — реальный
+эндпоинт Khoj 1.42.10. Он синхронен: отвечает только после завершённого прохода
+индексации, и тело `{"status":"ok"}` подтверждает завершение. Задача переходит в
+`indexed` лишь после этого подтверждения; 2xx без подтверждения считается отказом.
 Статусы `persisted` и `indexed` независимы; синхронизация Git относится к SC-11.

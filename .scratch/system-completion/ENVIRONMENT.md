@@ -89,3 +89,33 @@ Docker/Khoj/AI connection не подтверждены в этой среде.
 Для live-приёмки по-прежнему нужны: решение пользователя об установке Docker/WSL
 и совместимого Python; запуск Khoj и Activepieces 0.86.3; локальные AI/Figma
 секреты без публикации значений; разрешённый Figma-файл; реальный второй ПК.
+
+## Повторная проверка 2026-09-12 — Khoj запущен, Python 3.12 найден
+
+Рабочий каталог: `D:\SystemTheBest\System`. Значения секретов не выводились и не
+записывались. Локальный конфиг Khoj и его данные — в gitignored-путях.
+
+| Компонент | Команда/проверка | Фактический результат |
+|---|---|---|
+| Python | `py -0p`; `python --version` | `C:\Users\1663646\AppData\Local\Programs\Python\Python312\python.exe`, `3.12.10` — не Store-заглушка |
+| Khoj CLI | `khoj --version` | `1.42.10`, совпадает с метаданными пакета |
+| Khoj venv | каталог вне репозитория | `D:\SystemTheBest\runtime\khoj-1.42.10` |
+| Khoj сервис | `GET /api/health` | `{"email": "default@example.com"}` на `http://127.0.0.1:42110` |
+| Docker | `docker --version` | CLI не найден — по-прежнему блокирует Activepieces |
+
+Khoj `1.42.10` установлен одним проверенным путём с официальным prebuilt-индексом
+`llama-cpp-python`; закреплённые версии зависимостей не менялись. Встроенный
+PostgreSQL из extra `[local]` (`pgserver==0.1.4`) — Docker не требуется.
+
+Два дефекта релиза на Windows обойдены в `services/khoj/run-local.py`: непригодная
+ветка `USE_EMBEDDED_DB` (Unix-сокеты вместо TCP) и отсутствующая в колесе pgserver
+база часовых поясов, из-за которой Django падал на `SET TimeZone='UTC'`. Правки
+внутри пакета не вносились.
+
+Источник индекса — ровно `<SYSTEM_ROOT>/.claude/memory/**/*.md`: 19 файлов,
+совпадает с диском, лишних нет. Других источников в БД нет. Модели поиска
+локальные (`thenlper/gte-small`, `mixedbread-ai/mxbai-rerank-xsmall-v1`, тип
+endpoint `local`), внешний платный провайдер не используется.
+
+Установка и эксплуатация: [services/khoj/README.md](../../services/khoj/README.md),
+[docs/khoj-setup.md](../../docs/khoj-setup.md).

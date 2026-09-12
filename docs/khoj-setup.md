@@ -1,62 +1,123 @@
-# Khoj: установка и первичная индексация
+# Khoj: установка, запуск и восстановление
 
-Этот runbook описывает только проверяемый путь. На машине System2 сейчас
-установлен Python 3.14.5, а стабильный пакет Khoj на PyPI требует Python
-`>=3.10,<3.13`; поэтому установка и live-приёмка остановлены до появления
-Python 3.12 или совместимого официального релиза. Не устанавливайте Khoj в
-системный Python 3.14.
+Runbook проверенного пути. Версия зафиксирована по факту живой установки
+**2026-09-12**: Khoj `1.42.10`, встроенный PostgreSQL из extra `[local]`, Docker не
+требуется.
 
-Источники, сверенные 2026-09-08: [официальная установка Khoj](https://github.com/khoj-ai/khoj/blob/master/documentation/docs/get-started/setup.mdx),
-[официальные releases](https://github.com/khoj-ai/khoj/releases) и
-[PyPI metadata](https://pypi.org/project/khoj/). Версию и механизм конфигурации
-нужно повторно зафиксировать после выбора совместимого Python.
+Источники, сверенные 2026-09-12: [официальный setup](https://github.com/khoj-ai/khoj/blob/master/documentation/docs/get-started/setup.mdx),
+[официальные releases](https://github.com/khoj-ai/khoj/releases),
+[метаданные PyPI](https://pypi.org/project/khoj/) и сам установленный релиз — контракт
+API берётся из него, а не из документации прошлых версий.
 
-## Предварительная проверка
+## Требования
 
-```powershell
-python --version
-python -m pip --version
-py -0p
-```
+- Python 3.12 (`requires_python` релиза — `>=3.10,<3.13`). На машине приёмки:
+  `C:\Users\<user>\AppData\Local\Programs\Python\Python312\python.exe`, `Python 3.12.10`.
+- venv вне репозитория: `D:\SystemTheBest\runtime\khoj-1.42.10`.
+- Docker не нужен. `cmake` и Visual Studio не нужны — см. ниже.
 
-Ожидается доступный Python 3.12.x. Создайте отдельное окружение вне репозитория:
+## Установка (один проверенный путь)
 
-```powershell
-py -3.12 -m venv C:\Users\<user>\khoj\.venv
-C:\Users\<user>\khoj\.venv\Scripts\python.exe -m pip install --upgrade pip
-C:\Users\<user>\khoj\.venv\Scripts\python.exe -m pip install "khoj==<версия-после-проверки>"
-```
-
-Точную версию нельзя подставлять из старого черновика: сначала проверьте
-официальный release и совместимость зависимостей, затем запишите её в
-`ENVIRONMENT.md` и `services/khoj/README.md`.
-
-## Разрешённый источник
-
-Khoj должен индексировать только `E:\System2\.claude\memory` (на переносимой
-машине — `<SYSTEM_ROOT>/.claude/memory`), рекурсивно, только Markdown. Не
-добавляйте `.env`, `services/`, `.local/`, `node_modules/` или весь репозиторий.
-После выбора официального механизма конфигурации сохраните локальный конфиг в
-`services/khoj/config.local.yml` или эквиваленте; example-файл не должен
-содержать абсолютный путь и секрет.
-
-## Обязательные проверки после разблокировки
+`llama-cpp-python==0.2.88` — **базовая** зависимость релиза, а не extra, и на PyPI она
+лежит только исходниками. Сборка из sdist на машине без `cmake` и Visual Studio
+невозможна. Версии зависимостей при этом менять нельзя, поэтому подключается
+официальный prebuilt-индекс проекта той же версии:
 
 ```powershell
-khoj --version
-# Запуск и порт берутся из официального setup выбранного релиза.
-curl.exe -fsS http://127.0.0.1:42110/health
-node E:\System2\scripts\memory\search.js --query "explicit stop gates" --project systemqwen --force
+$venv = "D:\SystemTheBest\runtime\khoj-1.42.10"
+& "$venv\Scripts\python.exe" -m pip install "khoj[local]==1.42.10" `
+  --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu `
+  2>&1 | Tee-Object -FilePath "D:\SystemTheBest\runtime\khoj-install.log"
 ```
 
-Результат поиска должен содержать существующий источник внутри
-`.claude/memory/`, а после остановки/старта Khoj — быть доступен без полной
-переиндексации. В отчёт SC-04 нужно записать version, health, один поиск,
-перезапуск, статус индекса и `git check-ignore` для локальных данных.
+Перед запуском убедитесь, что не идёт другая установка: живых `pip`/`python` процессов
+быть не должно. Вторая параллельная установка поверх первой запрещена.
 
-## Текущий статус
+Факт успеха: `Successfully installed ... khoj-1.42.10 ... pgserver-0.1.4 ... torch-2.6.0
+... sentence-transformers-3.4.1 ... llama-cpp-python-0.2.88`. Закреплённые версии
+совпадают с метаданными PyPI — ни одна не заменена вручную.
 
-`khoj --version` не найден, Docker не установлен, Python 3.12 отсутствует.
-SC-04 остаётся `blocked`; `/api/search` и YAML-конфигурация не объявляются
-проверенным контрактом конкретной версии. Адаптер SC-05 корректно использует
-fail-open fallback, пока живой Khoj недоступен.
+## Два дефекта релиза на Windows
+
+Оба обойдены в `services/khoj/run-local.py`; правки самого пакета не вносятся.
+
+1. **`USE_EMBEDDED_DB=true` на Windows не работает.** Ветка релиза безусловно
+   подставляет в `DB_HOST` каталог pgdata, а в `DB_PORT` — пустую строку: она
+   рассчитывает на Unix-сокет (`socket.AF_UNIX`). На Windows pgserver слушает TCP на
+   `127.0.0.1` со свободным портом. `run-local.py` стартует pgserver сам и передаёт
+   Khoj фактические host/port.
+2. **В колесе pgserver 0.1.4 для Windows нет базы часовых поясов.** Каталог
+   `share/postgresql/timezone` отсутствует, из-за чего Django падает на
+   `SET TimeZone='UTC'` до первой миграции. `run-local.py` восстанавливает TZif-файлы
+   из пакета `tzdata`.
+
+## Конфигурация и источник
+
+```powershell
+Copy-Item services/khoj/config.example.env services/khoj/config.local.env
+# заполнить <...> и сгенерировать секреты:
+node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+```
+
+`config.local.env` gitignored; значения секретов не попадают ни в Git, ни в отчёты, ни
+в индекс. Путь `KHOJ_MEMORY_ROOT` указывает ровно на `<SYSTEM_ROOT>/.claude/memory` —
+не на репозиторий, не на `services/` и не на `runtime/`.
+
+Источник индекса прописывается один раз, после первого старта сервиса:
+
+```powershell
+$py = "D:\SystemTheBest\runtime\khoj-1.42.10\Scripts\python.exe"
+& $py services/khoj/run-local.py
+# в другом окне:
+& $py services/khoj/run-local.py --set-memory-source
+```
+
+## Запуск, состояние, остановка
+
+```powershell
+& $py services/khoj/run-local.py            # сервис в foreground
+& $py services/khoj/run-local.py --status   # состояние сервиса и БД
+& $py services/khoj/run-local.py --stop     # сначала pg_ctl -m fast, затем сервис
+```
+
+`--stop` останавливает PostgreSQL первым: postmaster не входит в дерево процессов
+сервиса, и жёсткое завершение сервиса оставило бы его сиротой. Скрытый запуск с логом —
+в [services/khoj/README.md](../../services/khoj/README.md).
+
+## Проверки
+
+```powershell
+& $py -m pip show khoj | Select-String Version   # ожидается 1.42.10
+curl.exe -fsS http://127.0.0.1:42110/api/health  # {"email": "default@example.com"}
+node scripts/memory/search.js --query "explicit stop gates" --project systemqwen
+node scripts/memory/search.js --query "фраза-которой-нет-в-памяти" --project systemqwen
+```
+
+Результат поиска обязан содержать `source` внутри `.claude/memory/`, `scope` и
+актуальное содержимое. Запрос по отсутствующей фразе возвращает `{"ok":true,"results":[]}`,
+а не случайные top-N. После остановки и повторного старта индекс сохраняется: поиск
+работает без полной переиндексации.
+
+## Результаты приёмки 2026-09-12
+
+| Проверка | Результат |
+|---|---|
+| `khoj --version` | `1.42.10`, совпадает с метаданными пакета |
+| `/api/health` | `{"email": "default@example.com"}` |
+| Инвентарь индекса | 19 файлов = 19 файлов на диске, лишних нет, только `.md` внутри памяти |
+| Источники в БД | одна строка `LocalMarkdownConfig`; `org`/`plaintext`/`github`/`notion` — 0 |
+| Модели поиска | `thenlper/gte-small`, `mixedbread-ai/mxbai-rerank-xsmall-v1`, тип endpoint `local`, внешних ключей нет |
+| Отсутствующая фраза | `{"ok":true,"results":[]}` |
+| `project_id` вне реестра | отклонён до обращения к сервису: `unknown-project` |
+| Перезапуск | индекс сохранён, полная переиндексация не потребовалась |
+| При остановленном Khoj | адаптер отвечает `ok:false` + `fallback:"local"`, запись остаётся `persisted` |
+| Обновление индекса | `GET /api/update` синхронен: 200 и `{"status":"ok"}` приходят после завершённой индексации |
+
+## Чего не делать
+
+- Не подставлять версию из старого черновика и не менять закреплённые зависимости при
+  ошибке сборки `llama-cpp` — вместо этого подключить официальный prebuilt-индекс.
+- Не устанавливать Khoj в системный Python и не использовать WindowsApps-заглушку.
+- Не добавлять в индекс `.env`, весь репозиторий, `services/`, `runtime/` и `.local/`.
+- Не считать обычный 2xx подтверждением завершённой индексации: у этого релиза
+  `/api/update` синхронен, и завершение подтверждается телом `{"status":"ok"}`.

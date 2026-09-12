@@ -226,13 +226,20 @@ async function searchKhoj(query, projectId, options = {}) {
     return { ok: false, error: 'khoj-unavailable', message: 'Khoj integration is disabled', fallback: 'local', fallback_results: localResults(query, projectId, { paths, limit, budget }) };
   }
   try {
-    await httpJson(new URL(khoj.health_path || '/health', baseUrl), {}, timeout);
-    const payload = await httpJson(new URL(khoj.search_path || '/api/search', baseUrl), {
-      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q: query, n: limit }),
-    }, timeout);
-    if (!Array.isArray(payload.results)) throw Object.assign(new Error('results must be an array'), { code: 'invalid-response' });
-    const results = payload.results.map(item => {
-      const source = relativeSource(paths.memory_root, item.source || item.file || item.path);
+    await httpJson(new URL(khoj.health_path || '/api/health', baseUrl), {}, timeout);
+    // Контракт Khoj 1.42.10: GET /api/search?q=&n= отвечает голым массивом
+    // SearchResponse. Обёртка {results} — форма прежних релизов; здесь она
+    // принимается, чтобы смена конверта не выдавалась за недоступность сервиса.
+    const searchUrl = new URL(khoj.search_path || '/api/search', baseUrl);
+    searchUrl.searchParams.set('q', query);
+    searchUrl.searchParams.set('n', String(limit));
+    const payload = await httpJson(searchUrl, {}, timeout);
+    const items = Array.isArray(payload) ? payload : payload?.results;
+    if (!Array.isArray(items)) throw Object.assign(new Error('results must be an array'), { code: 'invalid-response' });
+    const results = items.map(item => {
+      // Путь к файлу 1.42.10 отдаёт в additional.file (абсолютный), текст записи — в entry.
+      const additional = item.additional || {};
+      const source = relativeSource(paths.memory_root, additional.file || item.source || item.file || item.path);
       if (!source) return null;
       // Без локального файла scope записи проверить нельзя — сниппет сервиса
       // не является подтверждением (R2). Файл должен лежать внутри настоящего
@@ -243,13 +250,13 @@ async function searchKhoj(query, projectId, options = {}) {
         const scope = record.meta.scope || 'unknown';
         return !projectId || scope === 'user' || scope === projectId;
       });
-      const record = matchEntry(candidates, query, item.snippet || item.text);
+      const record = matchEntry(candidates, query, item.entry || item.snippet || item.text);
       if (!record) return null;
       const scope = record.meta.scope || 'unknown';
       if (projectId && scope !== 'user' && scope !== projectId) return null;
       // snippet пересобирается из тела подтверждённой локальной записи;
       // чужому результату scope запрашивающего проекта не присваивается.
-      return { snippet: snippetFor(record.body, query, budget), source, scope, status_hint: record.meta.status || 'unknown', relevance: Number(item.score ?? item.relevance ?? 0) };
+      return { snippet: snippetFor(record.body, query, budget), source, scope, status_hint: record.meta.status || 'unknown', relevance: Number(item.score ?? item['cross-score'] ?? item.relevance ?? 0) };
     }).filter(Boolean).slice(0, limit);
     return { ok: true, results };
   } catch (error) {

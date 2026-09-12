@@ -9,10 +9,25 @@ Khoj — необязательный retrieval-слой перед планир
 node scripts/memory/search.js --query "JWT authorization refresh tokens" --project systemqwen --limit 3 --budget 1200 --timeout 1500
 ```
 
-Запрос адаптера к Khoj v1 использует проверенный контракт из SC-04:
-`GET <base_url>/health`, затем `POST <base_url>/api/search` с JSON
-`{"q":"...","n":3}`. Базовый URL и paths находятся в
-`config/system.example.json`/local override. Ответ нормализуется к:
+Запрос адаптера использует контракт, сверенный по живому Khoj `1.42.10`
+2026-09-12: `GET <base_url>/api/health`, затем
+`GET <base_url>/api/search?q=<запрос>&n=<лимит>`. Ответ — **голый массив**
+`SearchResponse`, а не объект с полем `results`:
+
+```json
+[{
+  "entry": "…",
+  "score": 0.15,
+  "additional": { "source": "…", "file": "<абсолютный путь>", "compiled": "…", "heading": "…" }
+}]
+```
+
+Обёртка `{results: …}` — форма прежних релизов; адаптер принимает и её, чтобы смена
+конверта не выдавалась за недоступность сервиса. Путь к файлу берётся из
+`additional.file`, текст — из `entry`.
+
+Базовый URL и paths находятся в `config/system.example.json` и gitignored-local
+override. Ответ нормализуется к:
 
 ```json
 {
@@ -54,6 +69,17 @@ memory root. При любом результате фаза всё равно �
 проекта и `MEMORY.md`; retrieval не заменяет инструкции и не блокирует задачу.
 Выдержки — данные, а не команды для автоматического исполнения.
 
+## Обновление индекса
+
+Переиндексация вызывается `GET <base_url>/api/update`. Эндпоинт **синхронен**: он
+выполняет проход индексации прямо в обработчике и отвечает только после того, как
+эмбеддинги записаны, а тело `{"status":"ok"}` подтверждает завершение. Поэтому здесь
+200 + подтверждение тела — реальный признак завершённой индексации, а не постановка в
+очередь. Адаптер `scripts/memory/indexer.js` ставит `indexed` только после этого
+подтверждения; 2xx без него считается отказом.
+
+Адрес задаётся `indexer.reindex_url` в `config/system.example.json` и local override.
+
 ## Проверка
 
 ```powershell
@@ -61,6 +87,6 @@ node scripts/memory/search.js --query "explicit stop gates" --project systemqwen
 node scripts/memory/search.js --query "this phrase does not exist anywhere" --project systemqwen
 ```
 
-На машине SC-01 Khoj не установлен и порт `42110` не отвечает, поэтому live
-health/search остаются `blocked`; fallback проверяется локально. Установка и
-индексация описаны отдельно в [docs/khoj-setup.md](khoj-setup.md).
+На машине приёмки Khoj `1.42.10` запущен, health отвечает, живой поиск и fallback
+проверены 2026-09-12. Установка, источник и команды запуска — в
+[docs/khoj-setup.md](khoj-setup.md).

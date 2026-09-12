@@ -41,6 +41,8 @@
   "integrations": {
     "khoj": {
       "base_url": "http://127.0.0.1:42110",
+      "health_path": "/api/health",
+      "search_path": "/api/search",
       "enabled": false
     },
     "bridge": {
@@ -71,7 +73,7 @@
   },
   "indexer": {
     "retries_max": 5,
-    "timeout_ms": 5000,
-    "reindex_url": "<CONFIGURE_FROM_KHOJ_RELEASE>"
+    "timeout_ms": 600000,
+    "reindex_url": "http://127.0.0.1:42110/api/update"
   }
 }

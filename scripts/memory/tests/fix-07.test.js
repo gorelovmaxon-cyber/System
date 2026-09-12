@@ -23,6 +23,12 @@ async function withFetch(fn, body) {
   try { return await body(); } finally { global.fetch = original; }
 }
 
+// Ответ Khoj 1.42.10 на GET /api/update: 200 приходит только после
+// завершённого прохода индексации, тело подтверждает его статусом ok.
+function okResponse() {
+  return { ok: true, json: async () => ({ status: 'ok', message: 'khoj reloaded' }) };
+}
+
 test('B16: one batch creates one raw pending index record per unique file revision', () => {
   fixture('b16-index-dedupe');
   writer.writeProposal('evt_batch', [proposal('FIRST'), proposal('SECOND')]);
@@ -48,12 +54,12 @@ test('B07: changed file creates a new manual index revision', async () => {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, 'one');
   const first = indexer.queueIndex('manual', file)[0];
-  await withFetch(async () => ({ ok: true }), () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
+  await withFetch(async () => (okResponse()), () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
   fs.writeFileSync(file, 'two');
   const second = indexer.queueIndex('manual', file)[0];
   assert.notEqual(second.task_id, first.task_id);
   let calls = 0;
-  await withFetch(async () => { calls += 1; return { ok: true }; }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
+  await withFetch(async () => { calls += 1; return okResponse(); }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
   assert.equal(calls, 1);
   assert.equal(indexer.status().filter(task => task.status === 'indexed').length, 2);
 });
@@ -82,19 +88,34 @@ test('F06: legacy in-flight task without a lease is recovered by run', async () 
   fs.writeFileSync(file, 'recover');
   const task = indexer.queueIndex('evt_inflight', file)[0];
   indexerLog.append({ ...task, status: 'in-flight' });
-  const result = await withFetch(async () => ({ ok: true }), () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
+  const result = await withFetch(async () => (okResponse()), () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
   assert.equal(result[0].status, 'indexed');
 });
 
 test('F07: writer event is indexed only after every file succeeds', async () => {
   fixture('f07-partial');
   writer.writeProposal('evt_partial', [proposal('FACT'), proposal('DECISION', 'user', 'decisions')]);
-  await withFetch(async (_url, init) => {
-    const payload = JSON.parse(init.body);
-    return { ok: !payload.file.includes('decisions'), status: 503 };
+  // Отказ второго прохода переиндексации: часть файлов события не подтверждена.
+  let calls = 0;
+  await withFetch(async () => {
+    calls += 1;
+    return calls === 1 ? okResponse() : { ok: false, status: 503 };
   }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
   assert.equal(writerLog.get('evt_partial').indexed, false);
   assert.equal(indexer.status().some(task => task.status === 'failed'), true);
+});
+
+test('L02-03: a 2xx that does not confirm completion is not accepted as indexed', async () => {
+  const root = fixture('l0203-unconfirmed');
+  const file = memoryFile(root);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, 'queued-only');
+  indexer.queueIndex('evt_unconfirmed', file);
+  // 200 без подтверждения завершения: заявка принята, индексация не выполнена.
+  const results = await withFetch(async () => ({ ok: true, json: async () => ({ status: 'queued' }) }), () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
+  assert.equal(results[0].status, 'failed');
+  assert.match(results[0].reason, /did not confirm completion/);
+  assert.deepEqual([...indexerLog.records().values()].filter(item => item.status === 'indexed'), []);
 });
 
 test('F05: idempotent writer retry recreates a lost index task', () => {
@@ -120,7 +141,7 @@ test('G06: run refuses a journal path that escapes memory root and never reaches
   // Журнал восстановлен/изменён вручную: задание уводит за корень памяти.
   indexerLog.append({ ...task, file: '../../outside.md', attempts: 0, next_attempt_at: null });
   let calls = 0;
-  const results = await withFetch(async () => { calls += 1; return { ok: true }; }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
+  const results = await withFetch(async () => { calls += 1; return okResponse(); }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
   assert.equal(calls, 0, 'непроверенный путь не передаётся адаптеру');
   assert.equal(results[0].status, 'failed');
   assert.match(results[0].reason, /escapes allowed root/);
@@ -143,7 +164,7 @@ test('G13: a directory replaced by a junction between enqueue and run is not ind
   fs.symlinkSync(path.join(moved, 'facts'), path.dirname(file), process.platform === 'win32' ? 'junction' : 'dir');
   let calls = 0;
   const clock = Date.now();
-  const swapped = await withFetch(async () => { calls += 1; return { ok: true }; }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture', now: clock }));
+  const swapped = await withFetch(async () => { calls += 1; return okResponse(); }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture', now: clock }));
   assert.equal(calls, 0, 'путь через junction не передаётся адаптеру');
   assert.equal(swapped[0].status, 'failed');
   assert.match(swapped[0].reason, /symbolic link|junction/);
@@ -151,7 +172,7 @@ test('G13: a directory replaced by a junction between enqueue and run is not ind
   // Настоящий каталог возвращён: задание выполняется и подтверждается по факту.
   removeLink(path.dirname(file));
   fs.renameSync(path.join(moved, 'facts'), path.dirname(file));
-  const restored = await withFetch(async () => { calls += 1; return { ok: true }; }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture', now: clock + 120000 }));
+  const restored = await withFetch(async () => { calls += 1; return okResponse(); }, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture', now: clock + 120000 }));
   assert.equal(calls, 1);
   assert.equal(restored[0].status, 'indexed');
 });

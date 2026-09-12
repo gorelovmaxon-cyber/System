@@ -20,7 +20,9 @@ async function withFetch(fn, body) {
   try { return await body(); } finally { global.fetch = original; }
 }
 
-const ok = async () => ({ ok: true });
+// Ответ Khoj 1.42.10 на GET /api/update: 200 приходит только после
+// завершённого прохода индексации, тело подтверждает его статусом ok.
+const ok = async () => ({ ok: true, json: async () => ({ status: 'ok', message: 'khoj reloaded' }) });
 
 function index() {
   return withFetch(ok, () => indexer.run({ config: configured(), reindexUrl: 'http://fixture' }));
