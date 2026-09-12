@@ -1,0 +1,133 @@
+{
+  "date": "2026-09-12",
+  "head": "b1607ff65cd498e9b6514387534b73305823a586",
+  "dirtyTree": true,
+  "results": [
+    {
+      "id": "G01",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G01-rKejSi",
+      "before": true,
+      "after": true,
+      "pending": 1,
+      "reproduced": true
+    },
+    {
+      "id": "G02",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G02-2W3Efq",
+      "injected": true,
+      "first": [
+        {
+          "task_id": "idx_119a4ff4270df1e2",
+          "status": "superseded",
+          "reason": "synthetic writer-log write failure"
+        }
+      ],
+      "retry": [],
+      "indexedTasks": [
+        "indexed"
+      ],
+      "writerIndexed": false,
+      "reproduced": true
+    },
+    {
+      "id": "G03",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G03-NEXUtU",
+      "calls": 2,
+      "leaseExpiry": "2026-09-12T09:56:26.326Z",
+      "now": "2026-09-12T09:56:30.326Z",
+      "overlapping": true,
+      "reproduced": true
+    },
+    {
+      "id": "G04",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G04-G3xWZD",
+      "calls": 2,
+      "expiredOnStart": true,
+      "reproduced": true
+    },
+    {
+      "id": "G05",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G05-V40kuq",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-outside-1LLEHm",
+      "response": {
+        "ok": true,
+        "results": [
+          {
+            "snippet": "OUTSIDE_SECRET_MARKER",
+            "source": ".claude/memory/linked/outside.md",
+            "scope": "user",
+            "status_hint": "confirmed",
+            "relevance": 0
+          }
+        ]
+      },
+      "reproduced": true
+    },
+    {
+      "id": "G06",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-Vwb4fD",
+      "sent": {
+        "file": "../../outside.md",
+        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-Vwb4fD\\.claude\\memory"
+      },
+      "reproduced": true
+    },
+    {
+      "id": "G07",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G07-Z9AR3h",
+      "error": "CONFLICT",
+      "reproduced": true
+    },
+    {
+      "id": "G08",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G08-CsUIw2",
+      "inputDecisions": "KEEP_THIS_DECISION",
+      "outputDecisions": [],
+      "reproduced": true
+    },
+    {
+      "id": "G09",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G09-TUjxBz",
+      "remote": {
+        "ok": true,
+        "results": [
+          {
+            "snippet": "GHOST_MARKER",
+            "source": ".claude/memory/facts/ghost.md",
+            "scope": "ghost-project",
+            "status_hint": "confirmed",
+            "relevance": 0
+          }
+        ]
+      },
+      "localError": "unknown-project",
+      "reproduced": true
+    },
+    {
+      "id": "G10",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G10-5L1yEv",
+      "startCount": 2,
+      "reproduced": true
+    },
+    {
+      "id": "G11",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G11-bgPk5I",
+      "base": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-n6mQp5",
+      "work": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-n6mQp5-worktree",
+      "exit": 0,
+      "stdout": "Installed portable hooksPath: .git-hooks-templates\n",
+      "stderr": "",
+      "configured": ".git-hooks-templates",
+      "reproduced": true
+    },
+    {
+      "id": "G12",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G12-vS63v6",
+      "calls": 1,
+      "statusAfterWorkerReturned": "pending",
+      "nextAttempt": "2026-09-12T09:56:32.764Z",
+      "reproduced": true,
+      "classification": "one-shot worker; autonomous scheduling is an integration gap"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+✖ G03: a lease is dated at claim time, so a long previous delivery cannot orphan the next one (1876.005ms)
+✔ G03: an expired generation is still recoverable by a later process (665.6902ms)
+✔ G03: retry backoff is measured from the result, not from the start of the pass (1514.0277ms)
+✖ FIX-05: a delivery longer than the lease keeps its generation (2082.6115ms)
+✖ FIX-05: renewal stops with the delivery and refuses a lost generation (299.9424ms)
+✖ G01: a new file revision withdraws indexed at once, and a completed task restores it (3364.5688ms)
+✖ G01: a file changed outside the queue invalidates the confirmation (1995.5511ms)
+✖ G02: a failed aggregate write is visible and repaired, never reported as a task outcome (1518.1701ms)
+✖ G18: reconcile restores a lost task set and its aggregate, and is idempotent (2465.6762ms)
+✔ G18: an in-flight task left by a dead pass does not confirm the aggregate (2157.8549ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 3
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11659.4463
+
+✖ failing tests:
+
+test at scripts\memory\tests\fix-05.test.js:29:1
+✖ G03: a lease is dated at claim time, so a long previous delivery cannot orphan the next one (1876.005ms)
+  AssertionError [ERR_ASSERTION]: a live delivery must not be reclaimable
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block2\scripts\memory\tests\fix-05.test.js:56:12)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-05.test.js:116:1
+✖ FIX-05: a delivery longer than the lease keeps its generation (2082.6115ms)
+  AssertionError [ERR_ASSERTION]: the lease must still be held after 700 ms with a 400 ms lease
+  + actual - expected
+  
+  + 'pending'
+  - 'in-flight'
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block2\scripts\memory\tests\fix-05.test.js:131:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'pending',
+    expected: 'in-flight',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-05.test.js:139:1
+✖ FIX-05: renewal stops with the delivery and refuses a lost generation (299.9424ms)
+  TypeError: q.startRenewal is not a function
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block2\scripts\memory\tests\fix-05.test.js:144:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at scripts\memory\tests\fix-08.test.js:40:1
+✖ G01: a new file revision withdraws indexed at once, and a completed task restores it (3364.5688ms)
+  AssertionError [ERR_ASSERTION]: a pending task on the current revision cannot be reported as indexed
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block2\scripts\memory\tests\fix-08.test.js:57:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-08.test.js:68:1
+✖ G01: a file changed outside the queue invalidates the confirmation (1995.5511ms)
+  AssertionError [ERR_ASSERTION]: the old task revision does not confirm the current file
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block2\scripts\memory\tests\fix-08.test.js:79:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-08.test.js:92:1
+✖ G02: a failed aggregate write is visible and repaired, never reported as a task outcome (1518.1701ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'superseded'
+  - 'indexed'
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block2\scripts\memory\tests\fix-08.test.js:112:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'superseded',
+    expected: 'indexed',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-08.test.js:126:1
+✖ G18: reconcile restores a lost task set and its aggregate, and is idempotent (2465.6762ms)
+  AssertionError [ERR_ASSERTION]: a lost task set must not stay confirmed
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\SystemTheBest\s2-red-block2\scripts\memory\tests\fix-08.test.js:140:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

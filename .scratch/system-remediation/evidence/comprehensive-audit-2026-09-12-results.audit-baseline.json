@@ -1,0 +1,133 @@
+{
+  "date": "2026-09-12",
+  "head": "fb10b89f92122d2ffca5e55e9e83cdca3e207399",
+  "dirtyTree": true,
+  "results": [
+    {
+      "id": "G01",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G01-q6vXmx",
+      "before": true,
+      "after": true,
+      "pending": 1,
+      "reproduced": true
+    },
+    {
+      "id": "G02",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G02-wCUFQg",
+      "injected": true,
+      "first": [
+        {
+          "task_id": "idx_29e7c3f36ff94aab",
+          "status": "superseded",
+          "reason": "synthetic writer-log write failure"
+        }
+      ],
+      "retry": [],
+      "indexedTasks": [
+        "indexed"
+      ],
+      "writerIndexed": false,
+      "reproduced": true
+    },
+    {
+      "id": "G03",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G03-ZPjQoZ",
+      "calls": 2,
+      "leaseExpiry": "2026-09-12T07:48:56.947Z",
+      "now": "2026-09-12T07:49:00.947Z",
+      "overlapping": true,
+      "reproduced": true
+    },
+    {
+      "id": "G04",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G04-X7B304",
+      "calls": 2,
+      "expiredOnStart": true,
+      "reproduced": true
+    },
+    {
+      "id": "G05",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G05-8K5dhY",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-outside-hrJmk1",
+      "response": {
+        "ok": true,
+        "results": [
+          {
+            "snippet": "OUTSIDE_SECRET_MARKER",
+            "source": ".claude/memory/linked/outside.md",
+            "scope": "user",
+            "status_hint": "confirmed",
+            "relevance": 0
+          }
+        ]
+      },
+      "reproduced": true
+    },
+    {
+      "id": "G06",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-pswa1l",
+      "sent": {
+        "file": "../../outside.md",
+        "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-pswa1l\\.claude\\memory"
+      },
+      "reproduced": true
+    },
+    {
+      "id": "G07",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G07-GE1xa6",
+      "error": "CONFLICT",
+      "reproduced": true
+    },
+    {
+      "id": "G08",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G08-nAAElL",
+      "inputDecisions": "KEEP_THIS_DECISION",
+      "outputDecisions": [],
+      "reproduced": true
+    },
+    {
+      "id": "G09",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G09-HFkScf",
+      "remote": {
+        "ok": true,
+        "results": [
+          {
+            "snippet": "GHOST_MARKER",
+            "source": ".claude/memory/facts/ghost.md",
+            "scope": "ghost-project",
+            "status_hint": "confirmed",
+            "relevance": 0
+          }
+        ]
+      },
+      "localError": "unknown-project",
+      "reproduced": true
+    },
+    {
+      "id": "G10",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G10-EHwyFH",
+      "startCount": 2,
+      "reproduced": true
+    },
+    {
+      "id": "G11",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G11-9IVpeh",
+      "base": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-fVq8rY",
+      "work": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-fVq8rY-worktree",
+      "exit": 0,
+      "stdout": "Installed hooksPath: C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-fVq8rY-worktree/.git-hooks-templates\n",
+      "stderr": "",
+      "configured": "C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-fVq8rY-worktree/.git-hooks-templates",
+      "reproduced": true
+    },
+    {
+      "id": "G12",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G12-ekzlxs",
+      "calls": 1,
+      "statusAfterWorkerReturned": "pending",
+      "nextAttempt": "2026-09-12T07:49:03.197Z",
+      "reproduced": true,
+      "classification": "one-shot worker; autonomous scheduling is an integration gap"
+    }
+  ]
+}
