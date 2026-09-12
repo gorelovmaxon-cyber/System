@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-12",
+  "results": [
+    {
+      "id": "G17",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G17-wWoL5O",
+      "bare": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-bare-STOPat",
+      "before": "7fac9d2426c7deb7f5b8cc7848985a9802b35c9a",
+      "after": "7fac9d2426c7deb7f5b8cc7848985a9802b35c9a",
+      "exit": 0,
+      "stdout": "{\n  \"pushed\": true,\n  \"remote\": \"origin\",\n  \"branch\": \"local-work\",\n  \"output\": \"\"\n}\n",
+      "stderr": "",
+      "createdOtherBranch": true,
+      "reproduced": true
+    },
+    {
+      "id": "G18",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G18-Xk2EBY",
+      "exit": 1,
+      "stderr": "use --file, --run, --status or --requeue-failed\n",
+      "reproduced": true
+    },
+    {
+      "id": "G19",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G19-QDZZej",
+      "project": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-initial-commit-2EV1ex",
+      "exit": 0,
+      "events": 1,
+      "diff": "",
+      "reproduced": true
+    }
+  ]
+}

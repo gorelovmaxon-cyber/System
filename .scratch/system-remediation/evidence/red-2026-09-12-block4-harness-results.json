@@ -1,0 +1,105 @@
+{
+  "date": "2026-09-12",
+  "head": "a8bfaf435b812ee1a685ca8a610a5113dbc7160b",
+  "dirtyTree": true,
+  "results": [
+    {
+      "id": "G01",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G01-5vViJa",
+      "before": true,
+      "after": false,
+      "pending": 1,
+      "reproduced": false
+    },
+    {
+      "id": "G02",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G02-gHaP7p",
+      "injected": true,
+      "first": [
+        {
+          "task_id": "idx_1c16cb9942dba1ce",
+          "status": "indexed",
+          "reason": null
+        }
+      ],
+      "retry": [],
+      "indexedTasks": [
+        "indexed"
+      ],
+      "writerIndexed": true,
+      "reproduced": false
+    },
+    {
+      "id": "G03",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G03-boDZdO",
+      "calls": 2,
+      "leaseExpiry": "2026-09-12T11:41:13.530Z",
+      "now": "2026-09-12T11:41:12.530Z",
+      "overlapping": false,
+      "reproduced": false
+    },
+    {
+      "id": "G04",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G04-Hfn2fQ",
+      "calls": 2,
+      "expiredOnStart": false,
+      "reproduced": false
+    },
+    {
+      "id": "G05",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G05-aDbO32",
+      "outside": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-outside-tTVI7k",
+      "response": {
+        "ok": true,
+        "results": []
+      },
+      "reproduced": false
+    },
+    {
+      "id": "G06",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G06-s5Rc2E",
+      "reproduced": false
+    },
+    {
+      "id": "G07",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G07-Bcj03x",
+      "reproduced": false
+    },
+    {
+      "id": "G08",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G08-ORQHtk",
+      "harness_error": "Error: decisions must be an array of strings\n    at validateInput (C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\scripts\\memory\\events.js:94:13)\n    at createEvent (C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\scripts\\memory\\events.js:111:3)\n    at C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:110:15\n    at test (C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:23:30)\n    at C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:109:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+    },
+    {
+      "id": "G09",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G09-OJrf9n",
+      "harness_error": "Error: unknown project_id: ghost-project\n    at assertKnownProject (C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\scripts\\memory\\search.js:55:17)\n    at Object.searchKhoj (C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\scripts\\memory\\search.js:224:3)\n    at C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:116:33\n    at test (C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:23:30)\n    at C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-red-block4\\.scratch\\system-remediation\\evidence\\comprehensive-audit-2026-09-12.cjs:113:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+    },
+    {
+      "id": "G10",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G10-hIrExp",
+      "startCount": 2,
+      "reproduced": true
+    },
+    {
+      "id": "G11",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G11-IjEOBW",
+      "base": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-aw7Miw",
+      "work": "C:\\Users\\1663646\\AppData\\Local\\Temp\\broad-hooks-worktree-aw7Miw-worktree",
+      "exit": 0,
+      "stdout": "Installed hooksPath: C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-aw7Miw-worktree/.git-hooks-templates\n",
+      "stderr": "",
+      "configured": "C:/Users/1663646/AppData/Local/Temp/broad-hooks-worktree-aw7Miw-worktree/.git-hooks-templates",
+      "reproduced": true
+    },
+    {
+      "id": "G12",
+      "root": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-broad-G12-3QZDcy",
+      "calls": 1,
+      "statusAfterWorkerReturned": "pending",
+      "nextAttempt": "2026-09-12T11:41:16.134Z",
+      "reproduced": true,
+      "classification": "one-shot worker; autonomous scheduling is an integration gap"
+    }
+  ]
+}

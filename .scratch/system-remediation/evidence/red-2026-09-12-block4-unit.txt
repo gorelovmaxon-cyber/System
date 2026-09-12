@@ -1,0 +1,298 @@
+✖ G19: the first commit of a repository is captured with a real diff (1868.589ms)
+✔ G19: a merge commit is captured against its first parent (4446.6353ms)
+✖ G19: a diff that cannot be computed is reported instead of passed off as empty (2533.0126ms)
+✖ G12: a durable event completes after the service returns, without a new commit (167.1844ms)
+✖ G12: watch stops with an honest status instead of retrying forever (159.2997ms)
+✖ G12: only one worker owns the queue at a time (10.3583ms)
+✖ G17: sync --push publishes the upstream destination, not the local branch name (2172.5171ms)
+✖ G17: an explicit --branch names the destination, and no upstream means no push (1439.7096ms)
+✔ B03: explicit root cannot be redirected by another checkout in local config (21.0714ms)
+✔ B04 config merge is recursive and preserves explicit false and zero (14.5103ms)
+✔ B06: repeated init-project preserves an existing managed HANDOFF state (20.8753ms)
+✔ B06: damaged or duplicated managed markers fail closed (14.0951ms)
+✔ B13: project-id uses the merged local registry remote mapping (190.174ms)
+✔ B13: unknown connected project is not attributed to systemqwen (134.1912ms)
+✔ B12: hook installer leaves an active custom hooksPath and its behavior intact (646.7009ms)
+✔ B18: Figma extractor limits node tokens to the requested subtree (3.2299ms)
+✖ G10: reversed managed markers are rejected and the document is left untouched (15.3613ms)
+✖ G10: a corrupted HANDOFF blocks registration and leaves the registry unwritten (17.0903ms)
+✖ G14: --register links the project directory so project_id resolves without an environment override (12.7746ms)
+✖ G14: registration refuses a second project for the same directory or a remapped project (21.319ms)
+✖ G11: installer in a linked worktree does not silently disable the shared user hook (937.9824ms)
+✖ G11: a missing hook template is reported instead of configuring a dead hooks path (685.8458ms)
+✖ FIX-11: init --register then an ordinary commit produces the right project_id (6360.9566ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 9
+ℹ fail 14
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12964.706
+
+✖ failing tests:
+
+test at scripts\memory\tests\fix-11-cycle.test.js:74:1
+✖ G19: the first commit of a repository is captured with a real diff (1868.589ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /INITIAL_DIFF_MARKER/. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11-cycle.test.js:86:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /INITIAL_DIFF_MARKER/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11-cycle.test.js:135:1
+✖ G19: a diff that cannot be computed is reported instead of passed off as empty (2533.0126ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to: ''
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11-cycle.test.js:153:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: '',
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11-cycle.test.js:161:1
+✖ G12: a durable event completes after the service returns, without a new commit (167.1844ms)
+  TypeError: watch is not a function
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11-cycle.test.js:172:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at scripts\memory\tests\fix-11-cycle.test.js:183:1
+✖ G12: watch stops with an honest status instead of retrying forever (159.2997ms)
+  TypeError: watch is not a function
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11-cycle.test.js:188:24)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at scripts\memory\tests\fix-11-cycle.test.js:196:1
+✖ G12: only one worker owns the queue at a time (10.3583ms)
+  TypeError: acquireWorkerLock is not a function
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11-cycle.test.js:199:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)
+
+test at scripts\memory\tests\fix-11-cycle.test.js:215:1
+✖ G17: sync --push publishes the upstream destination, not the local branch name (2172.5171ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'local-work'
+  - 'main'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11-cycle.test.js:239:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'local-work',
+    expected: 'main',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11-cycle.test.js:250:1
+✖ G17: an explicit --branch names the destination, and no upstream means no push (1439.7096ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11-cycle.test.js:262:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11.test.js:120:1
+✖ G10: reversed managed markers are rejected and the document is left untouched (15.3613ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11.test.js:126:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /end marker precedes the start marker/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11.test.js:132:1
+✖ G10: a corrupted HANDOFF blocks registration and leaves the registry unwritten (17.0903ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11.test.js:138:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /end marker precedes the start marker/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11.test.js:146:1
+✖ G14: --register links the project directory so project_id resolves without an environment override (12.7746ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g14-project-YdprMr'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11.test.js:151:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g14-project-YdprMr',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11.test.js:159:1
+✖ G14: registration refuses a second project for the same directory or a remapped project (21.319ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11.test.js:163:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /already registered to project_id new-project/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11.test.js:198:1
+✖ G11: installer in a linked worktree does not silently disable the shared user hook (937.9824ms)
+  AssertionError [ERR_ASSERTION]: Installed hooksPath: C:/Users/1663646/AppData/Local/Temp/s2-g11-base-010WI5-worktree/.git-hooks-templates
+  
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11.test.js:213:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11.test.js:246:1
+✖ G11: a missing hook template is reported instead of configuring a dead hooks path (685.8458ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Hook template is missing/. Input:
+  
+  'node:fs:441\r\n' +
+    '    return binding.readFileUtf8(path, stringToFlags(options.flag));\r\n' +
+    '                   ^\r\n' +
+    '\r\n' +
+    "Error: ENOENT: no such file or directory, open 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g11-target-bgLKyb\\.git-hooks-templates\\post-commit'\r\n" +
+    '    at Object.readFileSync (node:fs:441:20)\r\n' +
+    '    at [eval]:1:69\r\n' +
+    '    at runScriptInThisContext (node:internal/vm:219:10)\r\n' +
+    '    at node:internal/process/execution:451:12\r\n' +
+    '    at [eval]-wrapper:6:24\r\n' +
+    '    at runScriptInContext (node:internal/process/execution:449:60)\r\n' +
+    '    at evalFunction (node:internal/process/execution:283:30)\r\n' +
+    '    at evalTypeScript (node:internal/process/execution:295:3)\r\n' +
+    '    at node:internal/main/eval_string:71:3 {\r\n' +
+    '  errno: -4058,\r\n' +
+    "  code: 'ENOENT',\r\n" +
+    "  syscall: 'open',\r\n" +
+    "  path: 'C:\\\\Users\\\\1663646\\\\AppData\\\\Local\\\\Temp\\\\s2-g11-target-bgLKyb\\\\.git-hooks-templates\\\\post-commit'\r\n" +
+    '}\r\n' +
+    '\r\n' +
+    'Node.js v24.18.0\r\n'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11.test.js:254:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "node:fs:441\r\n    return binding.readFileUtf8(path, stringToFlags(options.flag));\r\n                   ^\r\n\r\nError: ENOENT: no such file or directory, open 'C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-g11-target-bgLKyb\\.git-hooks-templates\\post-commit'\r\n    at Object.readFileSync (node:fs:441:20)\r\n    at [eval]:1:69\r\n    at runScriptInThisContext (node:internal/vm:219:10)\r\n    at node:internal/process/execution:451:12\r\n    at [eval]-wrapper:6:24\r\n    at runScriptInContext (node:internal/process/execution:449:60)\r\n    at evalFunction (node:internal/process/execution:283:30)\r\n    at evalTypeScript (node:internal/process/execution:295:3)\r\n    at node:internal/main/eval_string:71:3 {\r\n  errno: -4058,\r\n  code: 'ENOENT',\r\n  syscall: 'open',\r\n  path: 'C:\\\\Users\\\\1663646\\\\AppData\\\\Local\\\\Temp\\\\s2-g11-target-bgLKyb\\\\.git-hooks-templates\\\\post-commit'\r\n}\r\n\r\nNode.js v24.18.0\r\n",
+    expected: /Hook template is missing/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\fix-11.test.js:258:1
+✖ FIX-11: init --register then an ordinary commit produces the right project_id (6360.9566ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\s2-red-block4\scripts\memory\tests\fix-11.test.js:283:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

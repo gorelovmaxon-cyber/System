@@ -1,0 +1,31 @@
+✔ G19: the first commit of a repository is captured with a real diff (3995.2732ms)
+✔ G19: a merge commit is captured against its first parent (5256.2162ms)
+✔ G19: a diff that cannot be computed is reported instead of passed off as empty (2924.5098ms)
+✔ G12: a durable event completes after the service returns, without a new commit (3538.8967ms)
+✔ G12: watch stops with an honest status instead of retrying forever (2351.8446ms)
+✔ G12: only one worker owns the queue at a time (651.176ms)
+✔ G17: sync --push publishes the upstream destination, not the local branch name (2786.2812ms)
+✔ G17: an explicit --branch names the destination, and no upstream means no push (2088.4785ms)
+✔ B03: explicit root cannot be redirected by another checkout in local config (22.2978ms)
+✔ B04 config merge is recursive and preserves explicit false and zero (15.4075ms)
+✔ B06: repeated init-project preserves an existing managed HANDOFF state (21.6285ms)
+✔ B06: damaged or duplicated managed markers fail closed (13.3277ms)
+✔ B13: project-id uses the merged local registry remote mapping (207.6123ms)
+✔ B13: unknown connected project is not attributed to systemqwen (153.4555ms)
+✔ B12: hook installer leaves an active custom hooksPath and its behavior intact (969.4555ms)
+✔ B18: Figma extractor limits node tokens to the requested subtree (3.1387ms)
+✔ G10: reversed managed markers are rejected and the document is left untouched (18.0513ms)
+✔ G10: a corrupted HANDOFF blocks registration and leaves the registry unwritten (16.6156ms)
+✔ G14: --register links the project directory so project_id resolves without an environment override (58.1349ms)
+✔ G14: registration refuses a second project for the same directory or a remapped project (72.0652ms)
+✔ G11: installer in a linked worktree does not silently disable the shared user hook (3345.5743ms)
+✔ G11: a missing hook template is reported instead of configuring a dead hooks path (631.6832ms)
+✔ FIX-11: init --register then an ordinary commit produces the right project_id (3064.4824ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23773.5195
