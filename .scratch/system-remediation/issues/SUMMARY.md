@@ -193,8 +193,8 @@ writer не подключается к рабочему потоку, live-ин
 |---|---|---|---|
 | [PUB-01](PUB-01-memory-artifact.md) | Зафиксировать артефакт живой проверки W1 в общей памяти | — | awaiting-review (`09c841f`) |
 | [PUB-02](PUB-02-handoff-and-scope.md) | Актуализировать HANDOFF и зафиксировать объём публикации | PUB-01 | awaiting-review |
-| [PUB-03](PUB-03-pre-push-backup.md) | Резервная копия перед публикацией (bundle + инвентаризация) | PUB-01, PUB-02 | awaiting-review |
-| [PUB-04](PUB-04-publish-and-verify.md) | Публикация и проверка свежим клоном | PUB-01…03 | planned |
+| [PUB-03](PUB-03-pre-push-backup.md) | Резервная копия перед публикацией (bundle + инвентаризация) | PUB-01, PUB-02 | awaiting-review (`67b45ec`) |
+| [PUB-04](PUB-04-publish-and-verify.md) | Публикация и проверка свежим клоном | PUB-01…03 | awaiting-review |
 
 Порядок обязателен: bundle (PUB-03) снимается **до** push, потому что он и есть страховка на
 случай отказа сети. Force push, rebase, amend и `reset --hard` в этом пакете запрещены.
