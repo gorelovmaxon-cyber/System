@@ -1,0 +1,74 @@
+{
+  "measured_at": "2026-09-13T19:05:13.847Z",
+  "label": "after-fix",
+  "head": "a499e816518457a39753ff4507eb5a61f39bda1b",
+  "worktree_dirty": true,
+  "subject": "scripts/memory/deliver.js: таймаут отправителя против таймаута Activepieces",
+  "note": "sender используется настоящий deliverEvent; стенд держит контракт 408 / correlated persisted",
+  "scenarios": {
+    "run_failed_ap_returns_408": {
+      "what": "flow-run падает до writer: Activepieces отдаёт HTTP 408 с пустым телом; очередь обязана повторить",
+      "stand_delay_ms": 60,
+      "platform_requests": 3,
+      "platform_responses": 3,
+      "writer_calls_ok": 0,
+      "writer_idempotent_calls": 0,
+      "failed_runs": 0,
+      "queue_passes": [
+        {
+          "pass": 1,
+          "elapsed_ms": 1014,
+          "deliver_ms": 189,
+          "status": "pending",
+          "attempts": 1,
+          "last_error": "HTTP 408: "
+        },
+        {
+          "pass": 2,
+          "elapsed_ms": 883,
+          "deliver_ms": 78,
+          "status": "pending",
+          "attempts": 2,
+          "last_error": "HTTP 408: "
+        },
+        {
+          "pass": 3,
+          "elapsed_ms": 898,
+          "deliver_ms": 79,
+          "status": "failed",
+          "attempts": 3,
+          "last_error": "HTTP 408: "
+        }
+      ],
+      "final_status": "failed",
+      "memory_after": {
+        "records": 0,
+        "bytes": 0
+      }
+    },
+    "slow_run_longer_than_sender_timeout": {
+      "what": "flow-run доходит до writer и отвечает correlated persisted, но позже таймаута отправителя",
+      "stand_delay_ms": 6000,
+      "platform_requests": 1,
+      "platform_responses": 1,
+      "writer_calls_ok": 1,
+      "writer_idempotent_calls": 0,
+      "failed_runs": 0,
+      "queue_passes": [
+        {
+          "pass": 1,
+          "elapsed_ms": 7962,
+          "deliver_ms": 7105,
+          "status": "delivered",
+          "attempts": 0,
+          "last_error": null
+        }
+      ],
+      "final_status": "delivered",
+      "memory_after": {
+        "records": 1,
+        "bytes": 171
+      }
+    }
+  }
+}

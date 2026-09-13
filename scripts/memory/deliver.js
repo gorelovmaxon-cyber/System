@@ -11,11 +11,38 @@ function endpoint() {
   return paths.config.delivery?.endpoint || '';
 }
 
+// Синхронный webhook Activepieces отвечает либо по завершении flow, либо по
+// своему WEBHOOK_TIMEOUT_SECONDS (30 с в поставляемом значении) — и тогда
+// отдаёт 408 без тела. Таймаут отправителя обязан быть больше: иначе он
+// обрывает запрос раньше детерминированного ответа платформы, никогда не
+// узнаёт исход длинного, но успешного run, и оставляет событие в очереди,
+// породив повторный параллельный run (L04-00).
+const DEFAULT_TIMEOUT_MS = 35000;
+
+// Значение берётся из конфигурации: `delivery.timeout_ms` должно превышать
+// WEBHOOK_TIMEOUT_SECONDS того инстанса, в который шлётся событие.
+function timeoutMs(options) {
+  if (options.timeout_ms) return options.timeout_ms;
+  try {
+    const configured = resolvePaths().config.delivery?.timeout_ms;
+    if (configured) return configured;
+  } catch {}
+  return DEFAULT_TIMEOUT_MS;
+}
+
+// 408 — ответ sync webhook, когда run завершился без flow-response: платформа
+// не отвергла событие, а не дождалась его обработки, поэтому попытка
+// повторяема. Прочие 4xx (401, 404, 400) — отказ конфигурации, повтор без
+// правки не поможет.
+function retryableStatus(status) {
+  return status === 408 || status === 429 || status >= 500;
+}
+
 async function deliverEvent(event, options = {}) {
   const url = options.endpoint || endpoint();
   if (!url || url.includes('<')) return { ok: false, error: 'delivery endpoint is not configured' };
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), options.timeout_ms || 5000);
+  const timer = setTimeout(() => controller.abort(), timeoutMs(options));
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -38,7 +65,7 @@ async function deliverEvent(event, options = {}) {
         error: `HTTP ${response.status} accepted without correlated terminal confirmation`,
       };
     }
-    const retryable = response.status >= 500 || response.status === 429;
+    const retryable = retryableStatus(response.status);
     return { ok: false, retryable, error: `HTTP ${response.status}: ${body.slice(0, 200)}` };
   } catch (error) {
     return { ok: false, retryable: true, error: error.name === 'AbortError' ? 'request timeout' : error.message };
@@ -59,5 +86,5 @@ if (require.main === module) {
     });
 }
 
-module.exports = { deliverEvent, endpoint };
+module.exports = { deliverEvent, endpoint, DEFAULT_TIMEOUT_MS };
 
