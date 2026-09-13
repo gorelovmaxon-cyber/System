@@ -1,187 +1,239 @@
 # Отчёт фазы 3 — Activepieces, bridge и flow
 
-Status: blocked
+Status: blocked (L03-03); L03-01 и L03-02 выполнены
 Date: 2026-09-13
-Commit: `9b58d1b` (серия L03; отчёт — коммит этой серии)
+Commit: `f17603e` (L03-01), `653d2b6` (L03-02); отчёт — коммит этой серии
 Requirement IDs: R06, R07; SC-06, SC-08, SC-09, FIX-09
 Source brief/task: [CHAT-03-ACTIVEPIECES.md](../CHAT-03-ACTIVEPIECES.md)
 
 ## Состояние и охват
 
-Фаза 3 **не завершена**: Activepieces не запускался. Независимая подготовка,
-доступная без Docker, выполнена полностью, дефект самой пробы исправлен, и
-получен живой host-smoke через bridge. Всё, что требует контейнеров, owner,
-AI-connection, sync ack и export, остаётся невыполненным и не выдаётся за успех.
-
 | Участок | Итог |
 |---|---|
-| Проба фазы 3 | Дефект исправлен; живой прогон пройден, exit 0 |
-| Host bridge smoke | Подтверждён: health, отказ авторизации, идемпотентный повтор |
-| Резерв конфигов | Манифест проверен (`OK` ×2); восстановление **не** проверялось |
-| WSL / Docker | **Не работают**; административный шаг не выполнен |
-| Activepieces / worker / БД | Не запускались |
-| Flow, AI, ack, replay в AP, export | Не выполнялись |
+| L03-01 — среда WSL/Docker | **pass**: Docker Desktop 4.90.0, движок 29.7.2, Compose v5.5.1 |
+| L03-02 — стек, persistence, bridge из контейнера | **pass**: 4 сервиса healthy, три дефекта compose исправлены, persistence подтверждён |
+| L03-03 — реальный flow, AI, ack, replay, export | **blocked**: у контейнеров нет исходящего интернета |
+| Резерв конфигов | Манифест `OK` ×2; восстановление **не** проверялось |
+
+Общий вывод: среда и стек доведены до рабочего состояния и проверены фактами.
+Единственная причина остановки L03-03 — сетевая изоляция контейнеров, внешняя по
+отношению к проекту. AI-ключ и его выбор на это не влияют.
 
 ## База и коммиты
 
-- base SHA: `8c822b1fcbc77f689a68df97e76db3bebd763d5c` (= `origin/master` на момент старта; локальный HEAD был `acf841d`)
-- фаза 2 сохранена отдельно: `7e3efaa` — до публикации L03, без приписывания авторства проверки GPT
-- реализация L03: `9b58d1b` — исправленная проба, evidence, тикеты L03-01…L03-03, правка `docs/activepieces-setup.md`
+- base SHA: `8c822b1fcbc77f689a68df97e76db3bebd763d5c`
+- фаза 2 сохранена отдельно: `7e3efaa`
+- L03: `9b58d1b` (проба, тикеты, evidence) → `8543e05` (передача после перезагрузки)
+  → `c527ebf` → `f17603e` (L03-01: среда) → `653d2b6` (L03-02: стек и bridge)
+- `07c12c3` (PROC-02) — работа другого чата, не трогалась
 
-## Файлы изменения
+## L03-01 — среда
 
-Серия L03 (`9b58d1b`):
+Docker Desktop `4.90.0 (238679)` установлен официальным установщиком, движок отвечает:
+`docker info` → `ServerVersion=29.7.2`, `OSType=linux`, `Driver=overlayfs`, 8 CPU.
+Требования сверены официальным источником с датой; evidence —
+[l03-01-environment-2026-09-13.json](../evidence/l03-01-environment-2026-09-13.json).
 
-- [.scratch/system-launch/evidence/activepieces-phase3-preflight.cjs](../evidence/activepieces-phase3-preflight.cjs) — исправленная проба
-- [.scratch/system-launch/evidence/activepieces-phase3-preflight-2026-09-13.json](../evidence/activepieces-phase3-preflight-2026-09-13.json) — **неуспешное** evidence, сохранено как есть
-- [.scratch/system-launch/evidence/activepieces-phase3-preflight-host-smoke-2026-09-13.json](../evidence/activepieces-phase3-preflight-host-smoke-2026-09-13.json) — успешный прогон
-- [.scratch/system-launch/issues/L03-01-activepieces-environment.md](../issues/L03-01-activepieces-environment.md), [L03-02](../issues/L03-02-activepieces-stack-and-bridge.md), [L03-03](../issues/L03-03-flow-to-writer.md)
-- [docs/activepieces-setup.md](../../../docs/activepieces-setup.md) — актуальный рабочий путь вместо устаревшего `E:\System2`; точная точка остановки среды
-- [.scratch/system-launch/CHAT-03-ACTIVEPIECES.md](../CHAT-03-ACTIVEPIECES.md) — уточнённое задание фазы
+**Расхождение с документацией:** Windows 10 **Home** Single Language отсутствует в
+формальном списке поддерживаемых редакций Docker Desktop. Движок на ней работает
+(источник допускает Linux-контейнеры для Home), но это факт наблюдения, а не гарантия.
 
-Серия L02 (`7e3efaa`): `services/khoj/run-local.py`, `services/khoj/test_run_local.py`,
-`services/khoj/README.md`, `docs/khoj-setup.md`, `reports/CHAT-02-RESULT.md`,
-`issues/L02-02`, `issues/L02-03`, `evidence/khoj-phase2-live-review*`, `HANDOFF.md`.
+## L03-02 — стек, bridge, persistence
 
-## Исправление пробы
+Проверено реальным запуском. `docker compose ps`: `app`, `worker`, `postgres`, `redis`
+— все `Up (healthy)`; `/api/v1/health` → `{"status":"Healthy"}`; worker подключён к API
+по Socket.IO. Доказательства — [l03-02-stack-and-bridge-2026-09-13.json](../evidence/l03-02-stack-and-bridge-2026-09-13.json).
 
-Предыдущее evidence имело `checks:{}` и ошибку hash: проба останавливалась
-**до любого POST**, поэтому авторизация `/write` и replay не проверялись.
+Образы подтверждены реальным pull, digest совпал с прежним registry-lookup:
 
-Причина сверена по коду: проба хэшировала `JSON.stringify({event_id, proposals})`,
-а [writer.js](../../../scripts/memory/writer.js) в `proposalHash` — `JSON.stringify({eventId, proposals})`.
-Проверено вычислением: ключ `eventId` даёт `e8b0fef…fb8c9e` (совпадает с журналом),
-ключ `event_id` — `706e503…3b821f` (значение из ошибки).
+| Образ | Digest |
+|---|---|
+| `ghcr.io/activepieces/activepieces:0.86.3` | `sha256:208517c4f0d798a477a0c594bf432dd0f4918433f4b6f5b5f188a6e10e638c6c` |
+| `pgvector/pgvector:0.8.0-pg14` | `sha256:c55d7e7deac05dde62139e0ded4fcf4f58363656cbc382dbea82fbed995aa767` |
+| `redis:7.0.7` | `sha256:bb474c35022ca2c5618f4c49ca759bd2c0eea1daf5d934c560bd30092b97b498` |
 
-Исправлено **в пробе**: HTTP-поле запроса осталось `event_id`, контракт writer не
-менялся, `proposalHash` не экспортируется и не вызывался. Проверка совпадения с
-persisted-событием сохранена **до** POST; assert не отключался, память и журналы
-ради зелёного теста не менялись.
+### Три дефекта compose, найденных запуском
 
-Дополнительно: обязательный `--output` с отказом перезаписи существующего файла,
-таймауты внешних команд (15 с) и HTTP (15 с), честный exit code. Факты среды
-(WSL, Docker, registry) записываются отдельно и **не** входят в assert смоука.
+| # | Симптом | Причина | Правка |
+|---|---|---|---|
+| A | `app` unhealthy, порт недоступен | публиковалось `…:80`, приложение слушает `AP_PORT` (8642) | публикация `${AP_PORT:-8642}` с обеих сторон |
+| B | healthcheck не проходил никогда | в образе нет `wget`, есть `curl` | healthcheck на `curl -fsS` |
+| C | worker циклично писал `Socket.IO connection error` | при `AP_CONTAINER_TYPE=WORKER` база API берётся из `AP_FRONTEND_URL`, а там браузерный `localhost` — сам воркер | `AP_FRONTEND_URL: http://app:${AP_PORT:-8642}` **только** для `worker` |
 
-Проверка отказа перезаписи:
+Дефект B был скрытой причиной того, что `worker` вечно висел в `Created`
+(`depends_on: app: condition: service_healthy`).
 
-```
-$ node .scratch/system-launch/evidence/activepieces-phase3-preflight.cjs
-usage: node activepieces-phase3-preflight.cjs --output <new-file.json>      # exit 2
-$ node … --output .scratch/system-launch/evidence/activepieces-phase3-preflight-2026-09-13.json
-refusing to overwrite existing evidence: …activepieces-phase3-preflight-2026-09-13.json   # exit 2
-```
+### Граница bridge из контейнера
 
-## Проверки и сценарии
+`host.docker.internal` из контейнера разрешается в `192.168.65.254` и достигает host
+loopback, поэтому `scripts/memory/bridge-server.js` **не менялся** — bind остался
+`127.0.0.1:8643`, необходимости открывать bridge шире не возникло.
 
-Живой прогон (рабочий каталог `D:\SystemTheBest\System`), exit **0**:
+- положительно: `GET $AP_HOST_BRIDGE_URL/health` из контейнера `worker` → `200 {"status":"ready","writer":true}`
+- отрицательно: `/write` без токена и с неверным токеном → `401 {"error":"unauthorized"}`
+- инвариант: SHA-256 трёх файлов памяти/журналов до и после обоих отказов совпал
+  (`25720bc491d839a57c55c144f94d9e8e908b992f4fcf60ef2e76005dc258c6b7`) — записи нет
 
-```
-node .scratch/system-launch/evidence/activepieces-phase3-preflight.cjs \
-  --output .scratch/system-launch/evidence/activepieces-phase3-preflight-host-smoke-2026-09-13.json
-```
+### Persistence
 
-- **Положительный:** `GET /health` → `200 {"status":"ready","writer":true}`;
-  `POST /write` с токеном для известного события → `200
-  {"status":"persisted","written_files":[".claude/memory/facts/writer-entries.md"],
-  "revision":"0a471effda65","idempotent":true}`.
-- **Негативный (авторизация):** `POST /write` без токена → `401 {"error":"unauthorized"}`,
-  записи нет. Это проверка границы bridge; полный негативный сценарий SC-09
-  (bridge недоступен из контейнера) требует стека и остаётся `blocked`.
-- **Инвариант:** `config_memory_journals_unchanged: true` — SHA-256
-  `config/system.local.json`, `services/activepieces/.env`,
-  `.claude/memory/facts/writer-entries.md`, `.local/writer/processed.jsonl`,
-  `.local/indexer/tasks.jsonl` до и после POST совпали. Повтор не создал дубля.
-- **Регрессия фазы 2:** `<venv>\Scripts\python.exe services/khoj/test_run_local.py`
-  → `Ran 3 tests … OK`, exit 0.
+После `docker compose restart` owner `owner@system2.local` (ADMIN/ACTIVE) входит,
+платформа `O0PRL568R2GmDPfYWsSDY`, проект `b14PZIo3ppZG7S7Z79eyX`, flow
+`EVDV9FqfzueiB7WBnYyWW` читается с совпадающим `projectId` → `PERSISTENCE CONFIRMED`.
 
-Состояние процессов проверено отдельно, без запуска второго экземпляра:
-bridge — PID 6256 (node), слушает `127.0.0.1:8643`; Khoj — PID 11332 (python),
-слушает `127.0.0.1:42110`. PID сам по себе доступность не доказывает; health
-bridge подтверждён HTTP-ответом выше.
+Owner, платформа и flow создавались через API, а не в UI; учётные данные — в
+`.local/services/activepieces-owner.txt` (gitignored), в отчёт и коммит не попадают.
+Одноразово в терминал попал JWT сессии (loopback, срок до 2026-09-20); в файлы и
+коммиты он не записан.
 
-Манифест резерва:
+## L03-03 — почему `blocked`
+
+Тикет требует реального AI-вызова из flow и настоящего export. Обе задачи упираются
+в одно: **контейнеры Activepieces не имеют исходящего доступа в интернет**.
+
+Факты:
 
 ```
-$ tr -d '\r' < MANIFEST.sha256 > /tmp/m.sha256 && sha256sum -c /tmp/m.sha256
-activepieces.env: OK
-system.local.json: OK
+$ docker compose exec app sh -lc 'getent hosts cloud.activepieces.com'
+127.204.0.77    cloud.activepieces.com
+$ docker compose exec app sh -lc 'curl -s -o /dev/null -w "%{http_code}" https://registry.npmjs.org/'
+000
+$ docker compose logs app | grep sync
+ERROR POST /api/v1/pieces/sync 200 — TypeError: fetch failed
+      cause={"code":"ECONNREFUSED","address":"127.204.0.77","port":443}
 ```
 
-Манифест хранится с CRLF, поэтому `sha256sum -c` по исходному файлу даёт
-`No such file or directory`; сверка выполнена после нормализации переводов строк.
+Проверено по четырём доменам (`kerichik.ru`, `ghcr.io`, `github.com`,
+`cloud.activepieces.com`): из контейнера **каждый** резолвится в `127.204.x.x` и
+соединение не устанавливается. При этом с хоста те же имена тоже резолвятся в
+`127.204.x.x`, но соединение **успешно** — значит на хосте есть перехватчик,
+которого нет внутри контейнера. Прокси на хосте не обнаружен: `netsh winhttp show
+proxy` → `Direct access`, кандидатных портов 3128/8080/8888/1080 не слушается.
+
+Следствия:
+
+1. **Pieces не устанавливаются** — `piece_metadata` пуст (0 строк), реестр недостижим,
+   значит flow с шагами webhook/http/code собрать нельзя.
+2. **AI-вызов из flow невозможен** — воркер не дойдёт до `kerichik.ru`.
+
+Подмена DNS ради обхода этого фильтра тикетом запрещена («обход прав … запрещены»),
+поэтому обход не выполнялся.
+
+## AI-подключение: решение и что за ним
+
+Ключа AI в `.env` нет, connections в инстансе 0. По указанию пользователя взят
+токен, которым авторизован Claude Code: `.claude/settings.json` содержит
+`ANTHROPIC_BASE_URL=https://kerichik.ru`, `ANTHROPIC_AUTH_TOKEN` (значение не
+печаталось) и `ANTHROPIC_MODEL=claude-sonnet-5`. Это **не** ключ `api.anthropic.com`,
+а токен сторонней шлюзовой площадки.
+
+Шлюз проверен живым вызовом с хоста: `POST https://kerichik.ru/v1/messages` с моделью
+`claude-sonnet-5` → `200`, ответ содержит блок `text: "ok"`; работают оба варианта
+авторизации (`Authorization: Bearer` и `x-api-key`). То есть шлюз работоспособен.
+
+Из этого следуют два отклонения, которые должен подтвердить планировщик:
+
+1. Шаг `analyze` придётся делать **generic HTTP-запросом**, а не официальным piece
+   Claude (тот ходит на `api.anthropic.com` и base URL не переопределяет). Это отход
+   от [blueprint](../../../services/activepieces/flows/memory-event-to-writer.json).
+2. Содержимое событий памяти будет уходить на сторонний домен.
+
+Оба решения приняты пользователем осознанно; исполнитель их не выбирал сам.
+
+## Настоящий export
+
+**Не получен**, но контракт закреплённой версии установлен фактами, а не догадкой.
+В web-бандле `0.86.3` (`/usr/src/app/dist/packages/web/assets`) экспорт — это
+`downloadFlow` → `Fi.getTemplate(id)`, то есть серверный маршрут
+`GET /api/v1/flows/:id/template`. Проверено на живом инстансе:
+
+```
+GET /api/v1/flows/EVDV9FqfzueiB7WBnYyWW/template -> 200
+ключи: name, type, summary, description, tags, blogUrl, metadata, author,
+       categories, pieces, flows, status        (type=SHARED)
+```
+
+Отдельного `/import` в серверном API `0.86.3` нет — импорт собирается на клиенте
+(`importFlowsFromTemplates` → `POST /api/v1/flows` с `templateId`). Поэтому пункт
+приёмки «проверен на импорт» требует отдельного решения о способе, а не команды.
+
+`services/activepieces/flows/memory-event-to-writer.json` остаётся **blueprint** с
+заглушками и за настоящий export не выдаётся.
 
 ## Версии
 
 | Компонент | Значение | Источник |
 |---|---|---|
-| Khoj | `1.42.10` | фаза 2, `pip show khoj` |
-| Node (bridge) | работает, PID 6256 | `netstat`, HTTP `/health` |
-| Activepieces (закреплено) | `0.86.3` | [docker-compose.yml](../../../services/activepieces/docker-compose.yml) |
-| Образ AP | `ghcr.io/activepieces/activepieces:0.86.3`, digest `sha256:208517c4f0d798a477a0c594bf432dd0f4918433f4b6f5b5f188a6e10e638c6c`, платформы linux/amd64 и linux/arm64 | registry lookup манифеста 2026-09-13, HTTP 200 |
-| Docker | **отсутствует** | `docker --version` → ENOENT |
-| WSL | **не работает** | `wsl --status` → `Wsl/WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED` |
-| ОС | Windows 10 Home Single Language `10.0.19045`, сессия без прав администратора | `Get-Service`, вывод WSL |
+| Activepieces | `0.86.3` | закреплённый [docker-compose.yml](../../../services/activepieces/docker-compose.yml) |
+| Docker / Compose | `29.7.2` / `v5.5.1` | `docker --version`, `docker compose version` |
+| Docker Desktop | `4.90.0 (238679)` | `docker info`, установщик |
+| WSL | `2.7.14.0`, kernel `6.18.33.2-2` | `wsl.exe --version` |
+| Khoj | `1.42.10` | фаза 2 |
+| ОС | Windows 10 Home Single Language `10.0.19045` | `Get-ComputerInfo` |
 
-Образ подтверждён **только как манифест в registry**. Pull, распаковка и запуск
-не выполнялись; digest — наблюдение на дату, а не гарантия.
+## Секреты
+
+`git check-ignore -v` подтверждает: `services/activepieces/.env`, `config/system.local.json`,
+`.local/` игнорируются. Значения AP/JWT/encryption/Postgres и токен bridge не
+перегенерировались, не печатались и не коммитились. Токен шлюза читается скриптами
+из `settings.json` во время выполнения и в файлы проекта не записывается.
+
+Проверки записи выполнялись на контролируемых событиях; основная память после них не
+изменилась (SHA-256 совпал).
+
+## Диск
+
+Публикация и запуск стека утяжелили C:. Замеры: свободно C: `13.3 ГБ` до установки →
+`10.2` после Docker Desktop → `7.9` после pull → `3.37` в минимуме → `16.52` после
+остановки и перезапуска. Диск Docker Desktop лежит на C: по умолчанию:
+`%LOCALAPPDATA%\Docker\wsl\disk\docker_data.vhdx` ≈ `4.3 ГБ`; `docker system df`
+показывает 0 B под очистку (все образы в работе).
+
+Перенос на D: через `settings-store.json` (`"DataFolder": "D:\\DockerData"`) **не
+сработал**: Docker нормализовал ключ и принял его, но данные остались на C:, целевой
+каталог пуст. Перенос выполняется только через GUI (Settings → Resources → Advanced →
+Disk image location) — это шаг пользователя. Перед экспериментом сделаны резервные
+копии трёх volumes в `D:\SystemTheBest\transfer-backups\docker-volumes-20260913\`
+(≈8.9 МБ); целостность стека после двух перезапусков подтверждена.
 
 ## Матрица требований (затронутые строки)
 
 | Требование/критерий | Реализованное поведение | Evidence | Результат |
 |---|---|---|---|
-| R06 / SC-06 — сервис запущен | Не запущен: нет WSL/Docker | `environment.wsl`, `environment.docker` в evidence | **blocked** |
-| R06/R07 / SC-08 — защищённый bridge | Health, отказ без токена, идемпотентный повтор | `checks.*` в host-smoke JSON | pass (host); container→bridge — **blocked** |
-| R06/R07 / SC-09, FIX-09 — flow → writer | Не выполнялось | — | **blocked** |
-| SC-06 — container→host зафиксирован | Не проверялось: нет контейнера | — | **blocked** |
-| Секреты не в Git | `.env` gitignored, значения не выводились и не коммитились | `git check-ignore`, diff серии | pass |
-
-## Настоящий export
-
-**Не получен.** Экспорт flow из живого Activepieces невозможен без стека.
-`services/activepieces/flows/memory-event-to-writer.json` остаётся **blueprint**
-с заглушками webhook/connection и своей ролью; за настоящий export не выдаётся.
-
-## Резерв и пути (без секретов)
-
-- Резерв конфигов: `D:\SystemTheBest\transfer-backups\pre-activepieces-20260913-105607\`
-  (`activepieces.env`, `system.local.json`, `MANIFEST.sha256`).
-- Логи bridge: `.local/services/bridge-phase3.stdout.log`, `bridge-phase3.stderr.log`.
-- Логи проверки фазы 2: `D:\SystemTheBest\runtime\khoj-review-2026-09-13.stderr.log`,
-  `D:\SystemTheBest\runtime\khoj-data\pgserver\log`.
-
-Резерв содержит **два конфига** и не является полным backup runtime/базы;
-проверка восстановления не выполнялась.
+| R06 / SC-06 — сервис запущен | 4 сервиса healthy, health 200, UI доступен | `stack_after_fixes` | pass |
+| R06/R07 / SC-08 — защищённый bridge | Health, отказ без токена и с неверным, инвариант записи | `container_to_bridge` | pass |
+| SC-06 — container→host зафиксирован | `host.docker.internal` → `192.168.65.254` | `container_to_bridge.dns` | pass |
+| Persistence после restart | owner, платформа, flow сохранены | `persistence_restart` | pass |
+| R06/R07 / SC-09, FIX-09 — flow → writer | Не выполнялось: нет интернета в контейнерах | логи `pieces/sync` | **blocked** |
+| Секреты не в Git | `.env` gitignored, значения не выводились | `git check-ignore`, diff | pass |
 
 ## Ограничения и незакрытые проверки
 
-Не выполнено и требует рабочего Docker: `docker info`/Compose, pull и запуск
-pinned-образа, `app`+`worker`+Postgres+Redis, owner, persistence после `restart`,
-достижимость bridge **из контейнера**, реальный AI-вызов, sync ack с тем же
-`event_id`, повторная доставка в AP, негативный сценарий SC-09 и настоящий export.
+Не выполнено и требует решения по среде: установка pieces из реестра, реальный
+AI-вызов из flow, sync ack с тем же `event_id`, повторная доставка, негативный
+сценарий SC-09 с недоступным bridge и настоящий export с проверкой импорта.
 
-Автоматических действий с правами администратора и перезагрузки не выполнялось.
-Актуальные требования Docker Desktop к этой версии Windows не подтверждались
-официальным источником в этом проходе — это часть L03-01 до установки.
+Пункт L03-02 «worker реально способен исполнять flow» закрыт подключением к API,
+готовностью sandbox и отсутствием ошибок в логах, но **не** наблюдением успешного
+прогона: flow с триггером не создавался.
 
 ## Затраты
 
 | Метрика | Значение | Источник |
 |---|---:|---|
 | wall-clock time | `unknown` | не замерялось таймером |
-| retries/repeats | 1 успешный живой прогон пробы + 2 проверки отказа | вывод команд |
-| context/input tokens | `unknown` | метрика недоступна в этом окружении |
-| output tokens | `unknown` | метрика недоступна в этом окружении |
-| monetary cost | `unknown` | внешние платные вызовы не выполнялись |
-
-AI-провайдер не вызывался; платных вызовов не было.
+| retries/repeats | 3 прогона стека, 2 перезапуска Docker Desktop, 1 вызов шлюза | вывод команд |
+| context/input tokens | `unknown` | метрика недоступна |
+| output tokens | `unknown` | метрика недоступна |
+| monetary cost | 1 минимальный вызов шлюза (`max_tokens=32`) | probe |
 
 ## Вывод проверяющего
 
-- [x] Исходное задание и Requirement IDs проверены
-- [x] Положительный и негативный сценарии выполнены; остальные явно ограничены причиной
-- [x] Зависимости и изменённые файлы просмотрены; L02 и L03 разделены коммитами
+- [x] Задание и Requirement IDs проверены
+- [x] Положительные и негативные сценарии выполнены; остальные ограничены названной причиной
+- [x] Diff и изменённые файлы просмотрены; L02, L03 и PROC-02 разделены коммитами
 - [x] Секретов и необоснованных утверждений нет; host-smoke не выдан за контейнерный
-- [ ] **Статус: `blocked`.** Следующее действие: пользователь выполняет
-      `wsl --install --no-distribution` в PowerShell от администратора (перезагрузка —
-      только если потребует установщик), затем исполнитель проверяет результат и
-      продолжает с L03-01. Один шаг, без повторной просьбы вслепую.
+- [ ] **Статус: `blocked` на L03-03.** Следующее действие — решение о среде:
+      (а) разрешить контейнерам исходящий доступ (или назвать поддерживаемый прокси),
+      либо (б) согласовать иной способ доставки события, не требующий интернета из
+      контейнера. Параллельно — подтверждение планировщиком двух отклонений:
+      generic HTTP вместо piece Claude и передача содержимого памяти на сторонний шлюз.

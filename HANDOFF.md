@@ -1,13 +1,29 @@
 # HANDOFF — systemqwen
 
 > Итог фазы 3 от 2026-09-13: [reports/CHAT-03-RESULT.md](.scratch/system-launch/reports/CHAT-03-RESULT.md).
+> L03-01 и L03-02 **выполнены**: Docker Desktop `4.90.0` (`653d2b6` — среда `f17603e`),
+> стек Activepieces `0.86.3` из четырёх сервисов держится `healthy`, health `200`,
+> persistence после restart подтверждён. Запуском найдены и исправлены три дефекта
+> compose: публикация порта `80` вместо `AP_PORT`, нерабочий `wget` в healthcheck
+> (в образе есть только `curl`) и цикл `Socket.IO connection error` у воркера, который
+> берёт базу API из браузерного `AP_FRONTEND_URL`. `host.docker.internal` из
+> контейнера достаёт host loopback, поэтому bridge **не пришлось** открывать шире —
+> bind остался `127.0.0.1:8643`, отказ без токена и с неверным токеном даёт `401`.
+> **L03-03 остаётся `blocked`** — и уже не из-за WSL: у контейнеров нет исходящего
+> доступа в интернет, поэтому pieces из реестра не ставятся и воркер не дойдёт до
+> AI-шлюза. Недостающее решение — разрешить egress или назвать поддерживаемый прокси.
+> Обход фильтра запрещён и не выполнялся. Два замечания: Windows 10 **Home** Single
+> Language нет в формальном списке поддерживаемых редакций Docker Desktop, и перенос
+> диска Docker на D: через `settings-store.json` не сработал — нужен шаг в GUI.
+
+> Ранняя передача фазы 3 от 2026-09-13 (`9b58d1b`, состояние до установки Docker).
 > Дефект пробы исправлен — writer хэширует ключ `eventId`, а не `event_id`; живой
 > host-smoke на bridge пройден (health `ready`, отказ без токена `401`, идемпотентный
 > повтор `persisted`, память и журналы не изменились). Созданы L03-01…L03-03.
-> Activepieces по-прежнему **blocked**: `wsl --status` даёт
-> `WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED`, `docker` не найден. Следующий шаг —
-> пользователь выполняет `wsl --install --no-distribution` в PowerShell от
-> администратора. Результат фазы 2 сохранён отдельным коммитом `7e3efaa`.
+> На тот момент Activepieces был **blocked**: `wsl --status` давал
+> `WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED`, `docker` не найден; шагом разблокировки
+> было `wsl --install --no-distribution` от администратора — выполнено пользователем.
+> Результат фазы 2 сохранён отдельным коммитом `7e3efaa`.
 
 > Проверка фазы 2 от 2026-09-13 по просьбе пользователя: живой Khoj подтверждён,
 > включая новые ревизии в сыром индексе, restart и fallback/requeue. Основная память
