@@ -1,5 +1,14 @@
 # HANDOFF — systemqwen
 
+> Итог фазы 3 от 2026-09-13: [reports/CHAT-03-RESULT.md](.scratch/system-launch/reports/CHAT-03-RESULT.md).
+> Дефект пробы исправлен — writer хэширует ключ `eventId`, а не `event_id`; живой
+> host-smoke на bridge пройден (health `ready`, отказ без токена `401`, идемпотентный
+> повтор `persisted`, память и журналы не изменились). Созданы L03-01…L03-03.
+> Activepieces по-прежнему **blocked**: `wsl --status` даёт
+> `WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED`, `docker` не найден. Следующий шаг —
+> пользователь выполняет `wsl --install --no-distribution` в PowerShell от
+> администратора. Результат фазы 2 сохранён отдельным коммитом `7e3efaa`.
+
 > Проверка фазы 2 от 2026-09-13 по просьбе пользователя: живой Khoj подтверждён,
 > включая новые ревизии в сыром индексе, restart и fallback/requeue. Основная память
 > и индекс default не изменились; исправлены ссылки и SHA в передаче, а также
