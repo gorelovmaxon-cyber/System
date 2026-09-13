@@ -19,7 +19,7 @@ docker info
 ## Первый запуск
 
 ```powershell
-cd E:\System2\services\activepieces
+cd D:\SystemTheBest\System\services\activepieces
 Copy-Item .env.example .env
 ```
 
@@ -86,7 +86,10 @@ docker compose down
 notes, выполнить `docker compose pull` и `up -d --remove-orphans`, затем
 повторить health и smoke-проверку. `.env` не коммитится.
 
-На проверенной машине SC-01 Docker Desktop/WSL отсутствуют, поэтому реальный
-запуск, health, worker, persistence и container-to-host connectivity пока
-имеют статус `blocked`/`awaiting-validation`; конфигурация не выдаётся за
-живой сервис.
+Проверено 2026-09-13 на этой машине: `wsl.exe --status` завершается с
+`Wsl/WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED` («требуется дополнительный компонент
+подсистемы Windows для Linux»), команда `docker` не найдена. Требуются права
+администратора для компонентов Windows. Поэтому реальный запуск, health, worker,
+persistence и container-to-host connectivity остаются `blocked`; конфигурация не
+выдаётся за живой сервис. Точная точка остановки и следующий шаг —
+[L03-01](../.scratch/system-launch/issues/L03-01-activepieces-environment.md).

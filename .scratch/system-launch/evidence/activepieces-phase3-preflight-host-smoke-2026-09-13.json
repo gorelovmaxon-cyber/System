@@ -1,0 +1,68 @@
+{
+  "checked_at": "2026-09-13T08:42:34.553Z",
+  "base_sha": "acf841d92fbe77a9023d64daa970e7be28092e94",
+  "checks": {
+    "bridge_health": {
+      "status": "ready",
+      "writer": true
+    },
+    "unauthorized": {
+      "status": 401,
+      "body": {
+        "error": "unauthorized"
+      }
+    },
+    "replay": {
+      "status": 200,
+      "body": {
+        "status": "persisted",
+        "written_files": [
+          ".claude/memory/facts/writer-entries.md"
+        ],
+        "revision": "0a471effda65",
+        "idempotent": true
+      }
+    },
+    "config_memory_journals_unchanged": true
+  },
+  "environment": {
+    "image": {
+      "reference": "ghcr.io/activepieces/activepieces:0.86.3",
+      "token_status": 200,
+      "status": 200,
+      "digest": "sha256:208517c4f0d798a477a0c594bf432dd0f4918433f4b6f5b5f188a6e10e638c6c",
+      "platforms": [
+        {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        {
+          "architecture": "arm64",
+          "os": "linux"
+        },
+        {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      ]
+    },
+    "wsl": {
+      "exit_code": 4294967295,
+      "error": null,
+      "stdout": "Для этого приложения требуется дополнительный компонент подсистемы Windows для Linux.\r\nУстановите его, выполнив команду wsl.exe --install --no-distribution\r\nЧтобы изменения вступили в силу может потребоваться перезапустить систему.\r\nКод ошибки: Wsl/WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED\r\n",
+      "stderr": ""
+    },
+    "docker": {
+      "exit_code": null,
+      "error": "ENOENT",
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "phase_status": "blocked",
+  "limit": "Host bridge only; Docker/WSL unavailable. No live AP flow, container connectivity, owner, AI call, export, or AP restart verified."
+}
