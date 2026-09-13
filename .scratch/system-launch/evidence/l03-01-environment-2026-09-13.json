@@ -1,0 +1,62 @@
+{
+  "ticket": "L03-01",
+  "requirement_ids": ["R06", "SC-06"],
+  "checked_at": "2026-09-13T11:17:08Z",
+  "method": "raw command output captured on this machine; wsl.exe decoded as UTF-16LE",
+  "host": {
+    "os_caption": "Microsoft Windows 10 Home Single Language",
+    "os_version": "10.0.19045",
+    "os_build": "19045",
+    "physical_memory_bytes": 16040079360,
+    "free_disk_gb": { "C": 10.2, "D": 27.3 },
+    "admin_session": false
+  },
+  "wsl": {
+    "version_exit_code": 0,
+    "version_stdout": "Версия WSL: 2.7.14.0\nВерсия ядра: 6.18.33.2-2\nВерсия WSLg: 1.0.73.2\nВерсия MSRDC: 1.2.7214\nВерсия Direct3D: 1.611.1-81528511\nВерсия DXCore: 10.0.26100.1-240331-1435.ge-release\nВерсия Windows: 10.0.19045.6456",
+    "status_exit_code": 0,
+    "status_stdout": "Дистрибутив по умолчанию: docker-desktop\nВерсия по умолчанию: 2",
+    "distros_exit_code": 0,
+    "distros_stdout": "NAME              STATE           VERSION\n* docker-desktop    Stopped         2",
+    "service": "WSLService: Running/Automatic",
+    "note": "Ранее наблюдавшийся блокер Wsl/WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED больше не воспроизводится: административный шаг выполнен, ПК перезагружен."
+  },
+  "docker": {
+    "version_stdout": "Docker version 29.7.2, build a7dcaa6",
+    "compose_version_stdout": "Docker Compose version v5.5.1",
+    "desktop_version": "Docker Desktop 4.90.0 (238679)",
+    "info_format": "ServerVersion|OSType|Architecture|Driver|MemTotal|NCPU",
+    "info_stdout": "29.7.2|linux|x86_64|overlayfs|7765360640|8",
+    "ps_stdout": "CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES",
+    "installed_by": "winget install --id Docker.DockerDesktop --exact (4.90.0, установщик 238679), установка завершилась кодом 0",
+    "cli_path": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+    "cli_on_machine_path": true,
+    "note": "CLI отсутствует в PATH уже запущенных сессий; новый процесс получает его из Machine PATH. Проверки выполнены с явным обновлением PATH."
+  },
+  "official_requirements_check": {
+    "source": "https://docs.docker.com/desktop/install/windows-install/",
+    "checked_on": "2026-09-13",
+    "rows": [
+      { "requirement": "WSL >= 2.1.5 (WSL 2 backend)", "host_fact": "2.7.14.0", "verdict": "pass" },
+      { "requirement": "Windows 10 64-bit 22H2 (build 19045); перечислены Enterprise/Pro/Education", "host_fact": "Windows 10 Home Single Language, build 19045", "verdict": "Home в формальном списке редакций не названа" },
+      { "requirement": "8 GB RAM минимум", "host_fact": "16040079360 bytes (~16 GB)", "verdict": "pass" },
+      { "requirement": "SLAT, аппаратная виртуализация", "host_fact": "Firmware virtualization=True, SLAT=True (проверено ранее)", "verdict": "pass" },
+      { "requirement": "Служба LanmanServer Running и Automatic", "host_fact": "Running, Automatic", "verdict": "pass" },
+      { "requirement": "Свободное место", "host_fact": "C: 10.2 GB, D: 27.3 GB", "verdict": "впритык; движок уже запущен, но образы складываются на C:" }
+    ],
+    "quote": "Windows Home or Education editions only allow you to run Linux containers",
+    "resolution": "Расхождение по редакции Home проверено реальным запуском движка, а не решено по документации. Используются Linux-контейнеры, что совпадает с оговоркой источника."
+  },
+  "acceptance": {
+    "docker_version": "pass",
+    "docker_compose_version": "pass",
+    "docker_info_reports_running_engine": "pass (ServerVersion=29.7.2, OSType=linux)",
+    "docs_activepieces_setup_has_no_E_System2": "pass — исправлено в 9b58d1b"
+  },
+  "limits": [
+    "Docker Desktop запущен вручную; в автозапуск не входит и после перезагрузки ПК требует повторного запуска.",
+    "4.90.0 — версия на дату; не закреплена в репозитории.",
+    "Образ ghcr.io/activepieces/activepieces:0.86.3 не загружен: pull не выполнялся.",
+    "Соглашение Docker Subscription Service при первом запуске: интерфейс открыт, движок поднялся; условия использования не пересказываются и не интерпретируются здесь."
+  ]
+}
