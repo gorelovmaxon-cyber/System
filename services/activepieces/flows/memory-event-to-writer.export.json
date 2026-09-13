@@ -114,7 +114,7 @@
                     "valid": true,
                     "settings": {
                       "input": {
-                        "url": "http://host.docker.internal:8644/write",
+                        "url": "http://host.docker.internal:8643/write",
                         "body": {
                           "data": {
                             "event_id": "{{trigger['output']['body'].event_id}}",
@@ -163,10 +163,10 @@
                         "propertySettings": {}
                       },
                       "displayName": "Return persisted",
-                      "lastUpdatedDate": "2026-09-13T18:18:12.728Z"
+                      "lastUpdatedDate": "2026-09-13T19:33:01.030Z"
                     },
                     "displayName": "Write to memory bridge",
-                    "lastUpdatedDate": "2026-09-13T18:18:12.579Z"
+                    "lastUpdatedDate": "2026-09-13T19:33:01.122Z"
                   },
                   {
                     "name": "return_no_pattern",
@@ -190,7 +190,7 @@
                       "propertySettings": {}
                     },
                     "displayName": "Return no-pattern",
-                    "lastUpdatedDate": "2026-09-13T18:18:12.958Z"
+                    "lastUpdatedDate": "2026-09-13T19:33:01.030Z"
                   },
                   {
                     "name": "return_failed",
@@ -216,7 +216,7 @@
                       "propertySettings": {}
                     },
                     "displayName": "Return failed",
-                    "lastUpdatedDate": "2026-09-13T18:18:13.101Z"
+                    "lastUpdatedDate": "2026-09-13T19:33:01.030Z"
                   }
                 ],
                 "settings": {
@@ -261,18 +261,18 @@
                   "executionType": "EXECUTE_FIRST_MATCH"
                 },
                 "displayName": "Route",
-                "lastUpdatedDate": "2026-09-13T18:18:12.246Z"
+                "lastUpdatedDate": "2026-09-13T19:33:01.027Z"
               },
               "displayName": "Validate proposals",
-              "lastUpdatedDate": "2026-09-13T18:18:12.168Z"
+              "lastUpdatedDate": "2026-09-13T19:33:01.027Z"
             },
             "displayName": "Analyze (AI gateway)",
-            "lastUpdatedDate": "2026-09-13T18:18:12.095Z"
+            "lastUpdatedDate": "2026-09-13T19:33:01.026Z"
           },
           "displayName": "Prepare prompt",
-          "lastUpdatedDate": "2026-09-13T18:18:11.922Z"
+          "lastUpdatedDate": "2026-09-13T19:33:01.026Z"
         },
-        "lastUpdatedDate": "2026-09-13T18:18:11.828Z",
+        "lastUpdatedDate": "2026-09-13T19:33:01.025Z",
         "type": "PIECE_TRIGGER",
         "settings": {
           "propertySettings": {},
