@@ -1,0 +1,293 @@
+{
+  "name": "L03-03 memory event to writer",
+  "type": "SHARED",
+  "summary": "",
+  "description": "",
+  "tags": [],
+  "blogUrl": "",
+  "metadata": {
+    "externalId": "t8WnqnOUJSiz91LbkB2b6"
+  },
+  "author": "System2 Owner",
+  "categories": [],
+  "pieces": [
+    "@activepieces/piece-webhook",
+    "@activepieces/piece-http"
+  ],
+  "flows": [
+    {
+      "displayName": "L03-03 memory event to writer",
+      "trigger": {
+        "name": "trigger",
+        "valid": true,
+        "displayName": "Catch Webhook",
+        "nextAction": {
+          "name": "prepare_prompt",
+          "type": "CODE",
+          "valid": true,
+          "settings": {
+            "input": {
+              "event": "{{trigger['output']['body']}}"
+            },
+            "sourceCode": {
+              "code": "export const code = async (inputs) => {\n  const event = inputs.event || {};\n  const lines = [];\n  lines.push('Ты аналитик памяти проекта System2. По событию ниже реши, есть ли в нём');\n  lines.push('устойчивое, переиспользуемое знание, которое стоит сохранить в память проекта.');\n  lines.push('');\n  lines.push('Ответ — только JSON, без пояснений и без markdown, ровно такой формы:');\n  lines.push('{\"has_pattern\": true|false, \"proposals\": [{\"category\": \"...\", \"status\": \"...\", \"scope\": \"...\", \"statement\": \"...\", \"evidence\": \"...\"}]}');\n  lines.push('');\n  lines.push('Допустимые значения:');\n  lines.push('  category: user-profile | facts | patterns | decisions | gotchas');\n  lines.push('  status: observation | confirmed | superseded');\n  lines.push('  scope: \"user\" или идентификатор проекта из события (' + (event.project_id || '') + ')');\n  lines.push('statement и evidence — непустые строки в одну строку, без переводов строк.');\n  lines.push('evidence — конкретная ссылка на факт события, не пересказ.');\n  lines.push('Если устойчивого знания нет, верни {\"has_pattern\": false, \"proposals\": []}.');\n  lines.push('');\n  lines.push('--- СОБЫТИЕ ---');\n  lines.push('event_id: ' + (event.event_id || ''));\n  lines.push('project_id: ' + (event.project_id || ''));\n  lines.push('kind: ' + (event.kind || ''));\n  lines.push('summary: ' + (event.summary || ''));\n  lines.push('decisions: ' + JSON.stringify(event.decisions || []));\n  lines.push('user_corrections: ' + JSON.stringify(event.user_corrections || []));\n  lines.push('checks: ' + JSON.stringify(event.checks || []));\n  lines.push('next_action: ' + (event.next_action || ''));\n  return { prompt: lines.join('\\n') };\n};",
+              "packageJson": "{}"
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "analyze",
+            "type": "PIECE",
+            "valid": true,
+            "settings": {
+              "input": {
+                "url": "https://kerichik.ru/v1/messages",
+                "body": {
+                  "data": {
+                    "model": "claude-sonnet-5",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "{{prepare_prompt['output'].prompt}}"
+                      }
+                    ],
+                    "max_tokens": 2048
+                  }
+                },
+                "method": "POST",
+                "headers": {
+                  "content-type": "application/json",
+                  "anthropic-version": "2023-06-01"
+                },
+                "timeout": 25,
+                "authType": "BEARER_TOKEN",
+                "body_type": "json",
+                "authFields": {
+                  "token": "REPLACE_WITH_LOCAL_TOKEN"
+                },
+                "failureMode": "retry_none",
+                "queryParams": {}
+              },
+              "pieceName": "@activepieces/piece-http",
+              "actionName": "send_request",
+              "pieceVersion": "0.11.19",
+              "propertySettings": {}
+            },
+            "nextAction": {
+              "name": "validate",
+              "type": "CODE",
+              "valid": true,
+              "settings": {
+                "input": {
+                  "event_id": "{{trigger['output']['body'].event_id}}",
+                  "response": "{{analyze['output'].body}}",
+                  "project_id": "{{trigger['output']['body'].project_id}}"
+                },
+                "sourceCode": {
+                  "code": "export const code = async (inputs) => {\n  const CATEGORIES = ['user-profile', 'facts', 'patterns', 'decisions', 'gotchas'];\n  const STATUSES = ['observation', 'confirmed', 'superseded'];\n  const errors = [];\n  const raw = inputs.response;\n  let text = '';\n  if (raw && Array.isArray(raw.content)) {\n    text = raw.content\n      .filter((block) => block && typeof block.text === 'string')\n      .map((block) => block.text)\n      .join('\\n');\n  } else if (raw && typeof raw.text === 'string') {\n    text = raw.text;\n  } else if (typeof raw === 'string') {\n    text = raw;\n  }\n  let parsed = null;\n  const match = text.match(/\\{[\\s\\S]*\\}/);\n  if (!match) {\n    errors.push('AI response contains no JSON object');\n  } else {\n    try { parsed = JSON.parse(match[0]); } catch (e) { errors.push('AI response is not valid JSON: ' + e.message); }\n  }\n  if (parsed && typeof parsed.has_pattern !== 'boolean') errors.push('has_pattern must be a boolean');\n  let proposals = [];\n  const wantsProposals = parsed && parsed.has_pattern === true;\n  if (wantsProposals) {\n    if (!Array.isArray(parsed.proposals) || parsed.proposals.length === 0) {\n      errors.push('proposals must be a non-empty array when has_pattern is true');\n    } else {\n      for (const p of parsed.proposals) {\n        const one = (v) => typeof v === 'string' ? v.trim() : '';\n        const category = p && p.category;\n        const status = p && p.status;\n        const scope = p && p.scope;\n        const statement = one(p && p.statement);\n        const evidence = one(p && p.evidence);\n        if (!CATEGORIES.includes(category)) errors.push('invalid category: ' + category);\n        if (!STATUSES.includes(status)) errors.push('invalid status: ' + status);\n        if (scope !== 'user' && scope !== inputs.project_id) errors.push('scope must be \"user\" or the registered project_id: ' + scope);\n        if (!statement || statement.includes('\\n')) errors.push('statement must be a non-empty single line');\n        if (!evidence || evidence.includes('\\n')) errors.push('evidence must be a non-empty single line');\n        if (statement.split('\\n').some((line) => line.startsWith('---'))) errors.push('statement must not contain a line starting with ---');\n        if (statement.length > 19000 || evidence.length > 19000) errors.push('statement/evidence too large');\n      }\n    }\n  }\n  const valid = errors.length === 0;\n  const keep = valid && wantsProposals;\n  return {\n    valid: valid,\n    errors: errors,\n    has_pattern: keep,\n    proposals: keep ? parsed.proposals.map((p) => ({\n      category: p.category,\n      status: p.status,\n      scope: p.scope,\n      statement: String(p.statement).trim(),\n      evidence: String(p.evidence).trim(),\n      source: 'activepieces-flow',\n    })) : [],\n  };\n};",
+                  "packageJson": "{}"
+                },
+                "errorHandlingOptions": {
+                  "retryOnFailure": {
+                    "value": false
+                  },
+                  "continueOnFailure": {
+                    "value": false
+                  }
+                }
+              },
+              "nextAction": {
+                "name": "route",
+                "type": "ROUTER",
+                "valid": true,
+                "children": [
+                  {
+                    "name": "write",
+                    "type": "PIECE",
+                    "valid": true,
+                    "settings": {
+                      "input": {
+                        "url": "http://host.docker.internal:8644/write",
+                        "body": {
+                          "data": {
+                            "event_id": "{{trigger['output']['body'].event_id}}",
+                            "proposals": "{{validate['output'].proposals}}"
+                          }
+                        },
+                        "method": "POST",
+                        "headers": {
+                          "content-type": "application/json"
+                        },
+                        "timeout": 10,
+                        "authType": "BEARER_TOKEN",
+                        "body_type": "json",
+                        "authFields": {
+                          "token": "REPLACE_WITH_LOCAL_TOKEN"
+                        },
+                        "failureMode": "retry_none",
+                        "queryParams": {}
+                      },
+                      "pieceName": "@activepieces/piece-http",
+                      "actionName": "send_request",
+                      "pieceVersion": "0.11.19",
+                      "propertySettings": {}
+                    },
+                    "nextAction": {
+                      "name": "return_persisted",
+                      "type": "PIECE",
+                      "valid": true,
+                      "settings": {
+                        "input": {
+                          "fields": {
+                            "body": {
+                              "bridge": "{{write['output'].body}}",
+                              "status": "persisted",
+                              "event_id": "{{trigger['output']['body'].event_id}}",
+                              "proposals": "{{validate['output'].proposals}}"
+                            },
+                            "status": 200
+                          },
+                          "respond": "stop",
+                          "responseType": "json"
+                        },
+                        "pieceName": "@activepieces/piece-webhook",
+                        "actionName": "return_response",
+                        "pieceVersion": "0.1.41",
+                        "propertySettings": {}
+                      },
+                      "displayName": "Return persisted",
+                      "lastUpdatedDate": "2026-09-13T18:18:12.728Z"
+                    },
+                    "displayName": "Write to memory bridge",
+                    "lastUpdatedDate": "2026-09-13T18:18:12.579Z"
+                  },
+                  {
+                    "name": "return_no_pattern",
+                    "type": "PIECE",
+                    "valid": true,
+                    "settings": {
+                      "input": {
+                        "fields": {
+                          "body": {
+                            "status": "no-pattern",
+                            "event_id": "{{trigger['output']['body'].event_id}}"
+                          },
+                          "status": 200
+                        },
+                        "respond": "stop",
+                        "responseType": "json"
+                      },
+                      "pieceName": "@activepieces/piece-webhook",
+                      "actionName": "return_response",
+                      "pieceVersion": "0.1.41",
+                      "propertySettings": {}
+                    },
+                    "displayName": "Return no-pattern",
+                    "lastUpdatedDate": "2026-09-13T18:18:12.958Z"
+                  },
+                  {
+                    "name": "return_failed",
+                    "type": "PIECE",
+                    "valid": true,
+                    "settings": {
+                      "input": {
+                        "fields": {
+                          "body": {
+                            "errors": "{{validate['output'].errors}}",
+                            "reason": "validation",
+                            "status": "failed",
+                            "event_id": "{{trigger['output']['body'].event_id}}"
+                          },
+                          "status": 500
+                        },
+                        "respond": "stop",
+                        "responseType": "json"
+                      },
+                      "pieceName": "@activepieces/piece-webhook",
+                      "actionName": "return_response",
+                      "pieceVersion": "0.1.41",
+                      "propertySettings": {}
+                    },
+                    "displayName": "Return failed",
+                    "lastUpdatedDate": "2026-09-13T18:18:13.101Z"
+                  }
+                ],
+                "settings": {
+                  "branches": [
+                    {
+                      "branchName": "persist",
+                      "branchType": "CONDITION",
+                      "conditions": [
+                        [
+                          {
+                            "operator": "BOOLEAN_IS_TRUE",
+                            "firstValue": "{{validate['output'].valid}}"
+                          },
+                          {
+                            "operator": "BOOLEAN_IS_TRUE",
+                            "firstValue": "{{validate['output'].has_pattern}}"
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "branchName": "no-pattern",
+                      "branchType": "CONDITION",
+                      "conditions": [
+                        [
+                          {
+                            "operator": "BOOLEAN_IS_TRUE",
+                            "firstValue": "{{validate['output'].valid}}"
+                          },
+                          {
+                            "operator": "BOOLEAN_IS_FALSE",
+                            "firstValue": "{{validate['output'].has_pattern}}"
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "branchName": "fallback",
+                      "branchType": "FALLBACK"
+                    }
+                  ],
+                  "executionType": "EXECUTE_FIRST_MATCH"
+                },
+                "displayName": "Route",
+                "lastUpdatedDate": "2026-09-13T18:18:12.246Z"
+              },
+              "displayName": "Validate proposals",
+              "lastUpdatedDate": "2026-09-13T18:18:12.168Z"
+            },
+            "displayName": "Analyze (AI gateway)",
+            "lastUpdatedDate": "2026-09-13T18:18:12.095Z"
+          },
+          "displayName": "Prepare prompt",
+          "lastUpdatedDate": "2026-09-13T18:18:11.922Z"
+        },
+        "lastUpdatedDate": "2026-09-13T18:18:11.828Z",
+        "type": "PIECE_TRIGGER",
+        "settings": {
+          "propertySettings": {},
+          "pieceName": "@activepieces/piece-webhook",
+          "pieceVersion": "0.1.41",
+          "triggerName": "catch_webhook",
+          "input": {
+            "authType": "none"
+          }
+        }
+      },
+      "valid": true,
+      "schemaVersion": "22",
+      "notes": []
+    }
+  ],
+  "status": "PUBLISHED"
+}

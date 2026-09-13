@@ -7,11 +7,30 @@ Activepieces values, not repository configuration.
 
 ## Build/import
 
-The current machine cannot run Activepieces (Docker Desktop/WSL are absent), so
-the blueprint has not been exported from or imported into a live UI. On a
-Docker-enabled machine, create a Webhook flow, reproduce the listed steps, or
-map the blueprint into the exact export format of the pinned Activepieces
-release, then record the generated connection/webhook IDs only in the local UI.
+The blueprint is not the export format, so it is not importable as-is. A real
+export of the same flow, taken from the pinned `0.86.3` instance and with its
+`token` fields redacted, lives next to it as
+`memory-event-to-writer.export.json` (`type=SHARED`). That file was verified by
+round-tripping it back into the instance:
+
+```
+POST /api/v1/templates                  -> 201 (server validates with IMPORT_FLOW)
+POST /api/v1/flows                      -> 201 (empty flow; templateId alone transfers nothing)
+POST /api/v1/flows/:id  IMPORT_FLOW     -> 200, valid=true
+compare trigger/actions/settings.input  -> identical
+```
+
+There is no server-side `/import` route in this release: content moves through
+the template plus the client `IMPORT_FLOW` operation. After import, re-point the
+local values the export carries: the webhook trigger, the `analyze` endpoint
+(the export names this instance's gateway) and the bridge URL/token. Only the
+`token` fields were redacted, so nothing else in it is a secret — but it is one
+machine's runtime configuration, not portable configuration.
+
+Note that `POST /api/v1/templates` leaves a `type=SHARED` template behind and
+this release refuses to delete those (`AUTHORIZATION`, thrown in
+`template.controller` for both `OFFICIAL` and `SHARED`), so each round-trip
+check adds one undeletable entry to the local instance. Expect the leftovers.
 
 The bridge URL from the compose environment is
 `http://host.docker.internal:8643`; inside a container `localhost` is wrong.
@@ -40,5 +59,7 @@ are safe because writer is idempotent by `event_id`.
 This contract follows the official Activepieces documentation for
 [synchronous webhook limits](https://www.activepieces.com/docs/install/reference/limits)
 and [returning a flow response](https://www.activepieces.com/docs/build-pieces/piece-reference/flow-control).
-The repository pins 0.86.3 (release `8bfbb2f`); a real imported flow remains
-`awaiting-validation` until Docker, worker persistence and the bridge are live.
+The repository pins 0.86.3 (release `8bfbb2f`). At runtime, a failed run produces
+no flow response at all, so the caller waits out `WEBHOOK_TIMEOUT_SECONDS` (30 s
+in the shipped default) and then gets `408` with an empty body — the sender must
+treat that as retryable, never as acceptance.
