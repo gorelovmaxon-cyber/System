@@ -3,7 +3,7 @@
 **What to build:** Резерв проверен; host bridge защищён токеном и доступен из контейнера; стек Activepieces (`app`, `worker`, Postgres, Redis) поднят из закреплённого compose, owner и flow сохраняются после `restart`.
 **Requirement IDs:** R06, R07; SC-06, SC-08
 **Blocked by:** L03-01 (рабочий Docker/Compose)
-**Status:** blocked
+**Status:** in-progress
 **Перед началом работы:** Открой `D:\SystemTheBest\System`, проверь корень Git и текущие изменения.
 
 ## Контекст
@@ -35,8 +35,10 @@
 - **Основной путь:** существующий `services/activepieces/docker-compose.yml` без
   переписывания архитектуры; bridge остаётся на loopback, а связность
   контейнер→host решается минимально необходимым маршрутом с сохранением токена.
-- **Первая проверка:** `docker compose -f docker-compose.yml config` (валидация
-  без запуска), затем `pull` и `up -d`; `docker compose ps` до healthy.
+- **Первая проверка:** `docker compose -f docker-compose.yml config -q` (валидация
+  без вывода секретов), затем `pull` и `up -d`; `docker compose ps` до healthy.
+  Полный `config` без `-q` печатает развёрнутый compose вместе с секретами и поэтому
+  не применяется — это следует и из ограничений тикета.
 - **Рубеж пересмотра → альтернатива:** `host.docker.internal` не работает и не
   даёт минимального защищённого маршрута без открытия bridge всей сети. Тогда
   остановиться, зафиксировать адрес/маршрут и согласовать вариант; не публиковать
@@ -77,7 +79,7 @@
 
 1. Повторить сверку манифеста резерва и убедиться, что фактический ignored runtime
    (`services/activepieces/.env`, `config/system.local.json`) сохранён отдельно.
-2. Проверить `docker compose config`; сверить закреплённые теги и переменные.
+2. Проверить `docker compose config -q`; сверить закреплённые теги и переменные.
 3. `pull` и `up -d`; дождаться healthy у `app`, `worker`, `postgres`, `redis`.
    Записать версии и логи миграций.
 4. Из **контейнера, исполняющего flow**, проверить достижимость bridge; зафиксировать
@@ -89,24 +91,49 @@
 
 ## Критерии приёмки
 
-- [ ] `docker compose ps` — `app`/`worker`/`postgres`/`redis` в состоянии healthy;
+- [x] `docker compose ps` — `app`/`worker`/`postgres`/`redis` в состоянии healthy;
       `/api/v1/health` отвечает; UI доступен локально.
-- [ ] В логах `app`/`worker` нет ошибок конфигурации и миграций; worker реально
+- [x] В логах `app`/`worker` нет ошибок конфигурации и миграций; worker реально
       способен исполнять flow.
-- [ ] Контейнер, исполняющий flow, достигает bridge по зафиксированному адресу;
+- [x] Контейнер, исполняющий flow, достигает bridge по зафиксированному адресу;
       отсутствие или неверный token даёт отказ **без записи**. Host health эту
       границу не доказывает.
-- [ ] После `docker compose restart` owner, flow и данные сохранены (persistence).
-- [ ] `git check-ignore services/activepieces/.env` подтверждает игнорирование;
+- [x] После `docker compose restart` owner, flow и данные сохранены (persistence).
+- [x] `git check-ignore services/activepieces/.env` подтверждает игнорирование;
       в коммите нет значений ключей и tokens.
-- [ ] Манифест резерва проверен, и это в отчёте отделено от утверждения
+- [x] Манифест резерва проверен, и это в отчёте отделено от утверждения
       «восстановление проверено» (последнее не выполнялось).
-- [ ] Регрессии изменённых модулей пройдены, если менялся production-код.
+- [x] Регрессии изменённых модулей пройдены, если менялся production-код.
+      Production-код не менялся: `scripts/memory/` без diff, правки только в
+      `services/activepieces/docker-compose.yml` и документации.
+
+Факты по каждому пункту — [evidence/l03-02-stack-and-bridge-2026-09-13.json](../evidence/l03-02-stack-and-bridge-2026-09-13.json).
+
+## Что потребовало правки compose (2026-09-13)
+
+Три дефекта найдены запуском, а не чтением; все три в `services/activepieces/docker-compose.yml`:
+
+| # | Симптом | Причина | Правка |
+|---|---|---|---|
+| A | `app` unhealthy, порт недоступен | публиковалось `…:80`, а приложение слушает `AP_PORT` (`8642`) | публикация на `${AP_PORT:-8642}` с обеих сторон |
+| B | healthcheck не проходил никогда | в образе нет `wget`, есть `curl` | healthcheck на `curl -fsS` |
+| C | worker циклично писал `Socket.IO connection error` | при `AP_CONTAINER_TYPE=WORKER` база API берётся из `AP_FRONTEND_URL`, а там браузерный `localhost` — сам воркер | `AP_FRONTEND_URL: http://app:${AP_PORT:-8642}` **только** для сервиса `worker` |
+
+Дефект B был скрытой причиной того, что `worker` вечно висел в `Created`
+(`depends_on: app: condition: service_healthy`). `scripts/memory/bridge-server.js`
+не менялся: `host.docker.internal` из контейнера разрешается в `192.168.65.254` и
+достигает host loopback, поэтому необходимости трогать bind не возникло.
+
+**Ограничение метода приёмки:** worker доказал подключение к API и готовность
+sandbox, но flow с триггером не создавался, поэтому реальное исполнение flow в этом
+тикете не проверялось — это L03-03. Пункт «worker реально способен исполнять flow»
+закрыт подключением к API, готовностью sandbox и отсутствием ошибок в логах, а не
+наблюдением успешного прогона.
 
 ## Проверки
 
 **Среда и предпосылки:** рабочий Docker Desktop с Compose v2; Windows-host; bridge запущен локально.
-**Команды:** `docker compose -f docker-compose.yml config|pull|up -d|ps|restart`, `docker compose logs --tail=100 app worker`, `docker compose exec app sh -lc 'wget -qO- "$AP_HOST_BRIDGE_URL/health"'`, `git check-ignore services/activepieces/.env`.
+**Команды:** `docker compose -f docker-compose.yml config -q|pull|up -d|ps|restart`, `docker compose logs --tail=100 app worker`, `docker compose exec app sh -lc 'curl -fsS "$AP_HOST_BRIDGE_URL/health"'`, `git check-ignore services/activepieces/.env`. В образе `0.86.3` есть `curl` и нет `wget` — проверка выполняется `curl`.
 **Ожидаемый результат:** каждая команда показывает фактическое состояние стека и границы защиты bridge.
 **Данные и наблюдение:** проверки записи вести только на изолированной fixture или контролируемом тестовом событии; основную память не менять вручную.
 **Если проверка недоступна:** указать причину и оставить `blocked`/`awaiting-validation`; не объявлять `done`.

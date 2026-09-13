@@ -1,0 +1,101 @@
+{
+  "ticket": "L03-02",
+  "requirement_ids": ["R06", "R07", "SC-06", "SC-08"],
+  "checked_at": "2026-09-13T12:00:00Z",
+  "host": {
+    "docker": "Docker version 29.7.2, build a7dcaa6",
+    "compose": "Docker Compose version v5.5.1",
+    "docker_desktop": "4.90.0 (238679)",
+    "engine": "ServerVersion=29.7.2 OSType=linux Arch=x86_64 Driver=overlayfs MemTotal=7765360640",
+    "free_disk_gb_after_workloads": { "C": 7.9, "D": 27.3 }
+  },
+  "compose_validation": {
+    "command": "docker compose -f docker-compose.yml config -q",
+    "exit_code": 0,
+    "note": "Полный config не выводился: он содержит секреты. Сверялись только целевые поля."
+  },
+  "images_pulled": {
+    "ghcr.io/activepieces/activepieces:0.86.3": "sha256:208517c4f0d798a477a0c594bf432dd0f4918433f4b6f5b5f188a6e10e638c6c",
+    "pgvector/pgvector:0.8.0-pg14": "sha256:c55d7e7deac05dde62139e0ded4fcf4f58363656cbc382dbea82fbed995aa767",
+    "redis:7.0.7": "sha256:bb474c35022ca2c5618f4c49ca759bd2c0eea1daf5d934c560bd30092b97b498"
+  },
+  "real_pull_confirms_registry_lookup": {
+    "registry_lookup_digest_2026_09_13": "sha256:208517c4f0d798a477a0c594bf432dd0f4918433f4b6f5b5f188a6e10e638c6c",
+    "pulled_image_digest": "sha256:208517c4f0d798a477a0c594bf432dd0f4918433f4b6f5b5f188a6e10e638c6c",
+    "verdict": "совпали — прежний lookup был манифестом, теперь образ реально загружен и запущен"
+  },
+  "defects_found_and_fixed": [
+    {
+      "id": "A",
+      "symptom": "app unhealthy, host 8642 недоступен, worker не стартовал",
+      "cause": "compose публиковал 127.0.0.1:${AP_PORT}:80, но `.env` задаёт AP_PORT=8642, а entrypoint/приложение используют AP_PORT как порт прослушивания. Ничего не слушает контейнерный порт 80.",
+      "evidence": "/proc/net/tcp6 в контейнере: единственный listener 0x21C2 = 8642; curl на контейнерный порт 80 → connection refused",
+      "fix": "ports: 127.0.0.1:${AP_PORT:-8642}:${AP_PORT:-8642}"
+    },
+    {
+      "id": "B",
+      "symptom": "healthcheck никогда не проходит",
+      "cause": "в образе нет wget (есть curl); healthcheck вызывал wget",
+      "evidence": "command -v wget → MISSING; command -v curl → /usr/bin/curl",
+      "fix": "test: curl -fsS http://127.0.0.1:${AP_PORT:-8642}/api/v1/health || exit 1"
+    },
+    {
+      "id": "C",
+      "symptom": "worker бесконечно логировал Socket.IO connection error: websocket error",
+      "cause": "при AP_CONTAINER_TYPE=WORKER воркер берёт базу API/socket из AP_FRONTEND_URL (packages/server/worker configs.js getApiUrl), а `.env` хранит браузерный http://localhost:8642 — внутри контейнера это сам воркер",
+      "evidence": "лог воркера: apiUrl=http://localhost:8642/api/ и повторяющиеся websocket error; после правки: Connected to API server via Socket.IO",
+      "fix": "только для сервиса worker: AP_FRONTEND_URL: http://app:${AP_PORT:-8642}"
+    }
+  ],
+  "stack_after_fixes": {
+    "ps": [
+      "system2-activepieces-app|Up (healthy)|127.0.0.1:8642->8642/tcp",
+      "system2-activepieces-postgres|Up (healthy)|5432/tcp",
+      "system2-activepieces-redis|Up (healthy)|6379/tcp",
+      "system2-activepieces-worker|Up (healthy)|80/tcp"
+    ],
+    "host_health": "GET http://127.0.0.1:8642/api/v1/health -> 200 {\"status\":\"Healthy\"}",
+    "host_ui": "GET http://127.0.0.1:8642/ -> 200",
+    "worker": "apiUrl=http://app:8642/api/, Connected to API server via Socket.IO, poll loops 5, executionMode=UNSANDBOXED, sandbox installation complete",
+    "volumes": ["activepieces_activepieces-cache", "activepieces_activepieces-postgres", "activepieces_activepieces-redis"]
+  },
+  "container_to_bridge": {
+    "dns": "getent hosts host.docker.internal -> 192.168.65.254 (из обоих контейнеров)",
+    "positive": "GET $AP_HOST_BRIDGE_URL/health из system2-activepieces-worker (контейнер, исполняющий flow) -> 200 {\"status\":\"ready\",\"writer\":true}; из app -> 200",
+    "negative_no_token": "POST /write без Authorization -> 401 {\"error\":\"unauthorized\"}",
+    "negative_wrong_token": "POST /write с Authorization: Bearer wrong-token -> 401 {\"error\":\"unauthorized\"}",
+    "no_write_proof": "sha256 трёх файлов (.claude/memory/facts/writer-entries.md, .local/writer/processed.jsonl, .local/indexer/tasks.jsonl) до и после обоих отказов совпал: 25720bc491d839a57c55c144f94d9e8e908b992f4fcf60ef2e76005dc258c6b7",
+    "bind_change_required": false,
+    "note": "bridge-server.js не менялся: bind остался 127.0.0.1:8643. Docker Desktop проксирует host.docker.internal на loopback хоста, поэтому маршрут уже минимально необходимый."
+  },
+  "persistence_restart": {
+    "owner": "owner@system2.local, platformRole=ADMIN, status=ACTIVE — sign-in после restart вернул 200",
+    "platform_id": "O0PRL568R2GmDPfYWsSDY",
+    "project_id": "b14PZIo3ppZG7S7Z79eyX",
+    "flow_id": "EVDV9FqfzueiB7WBnYyWW (displayName 'L03-02 persistence probe')",
+    "after_restart": "GET /flows/EVDV9FqfzueiB7WBnYyWW -> 200, projectId совпал; flows in project = 1",
+    "verdict": "PERSISTENCE CONFIRMED"
+  },
+  "backup_manifest": {
+    "path": "D:\\SystemTheBest\\transfer-backups\\pre-activepieces-20260913-105607\\",
+    "command": "tr -d '\\r' < MANIFEST.sha256 > /tmp/m.sha256 && sha256sum -c /tmp/m.sha256",
+    "result": "activepieces.env: OK, system.local.json: OK",
+    "live_runtime_vs_backup": "services/activepieces/.env и config/system.local.json побайтово совпадают с копиями резерва (cmp -s) — отдельный снимок не потребовался",
+    "restore_verified": false,
+    "note": "Проверена целостность копий, не восстановление. Это два конфига, а не полный backup runtime/базы."
+  },
+  "secrets_gitignore": {
+    "git check-ignore -v": [
+      ".gitignore:18:services/activepieces/.env",
+      ".gitignore:11:config/system.local.json",
+      ".gitignore:12:.local/"
+    ],
+    "owner_credential_location": ".local/services/activepieces-owner.txt (gitignored), значения в отчёт и коммит не попадают"
+  },
+  "limits": [
+    "AI-connection не создавалась: реальный AI-вызов, no-pattern ветка, sync ack и настоящий export — L03-03.",
+    "Worker доказал подключение к API и готовность sandbox, но реальное исполнение flow не выполнялось (нет flow с триггером) — это L03-03.",
+    "Docker Desktop запускается вручную, в автозапуск не входит.",
+    "Свободное место C: сократилось до 7.9 ГБ после загрузки образов; рост data-root не контролируется автоматически."
+  ]
+}

@@ -33,11 +33,14 @@ node -e "const c=require('node:crypto'); console.log('AP_API_KEY='+c.randomBytes
 `AP_HOST_BRIDGE_URL=http://host.docker.internal:8643`, затем запустите:
 
 ```powershell
-docker compose -f docker-compose.yml config
+docker compose -f docker-compose.yml config -q
 docker compose -f docker-compose.yml pull
 docker compose -f docker-compose.yml up -d
 docker compose -f docker-compose.yml ps
 ```
+
+`-q` здесь не украшение: без него `config` печатает развёрнутый compose вместе с
+подставленными секретами. Проверка синтаксиса и подстановок этим флагом сохраняется.
 
 Откройте <http://localhost:8642> и создайте owner account в UI при первом
 входе. Health приложения:
@@ -53,8 +56,10 @@ docker compose logs --tail=100 app worker
 контейнер. До импорта flow SC-09 запустите локальный bridge SC-08 и проверьте:
 
 ```powershell
-docker compose exec app sh -lc 'wget -qO- "$AP_HOST_BRIDGE_URL/health"'
+docker compose exec app sh -lc 'curl -fsS "$AP_HOST_BRIDGE_URL/health"'
 ```
+
+`curl` выбран не произвольно: в образе `0.86.3` есть `curl` и нет `wget`.
 
 Ожидается HTTP 200 и JSON health. Если `host.docker.internal` не разрешается,
 проверьте Docker Desktop/WSL и зафиксируйте фактический адрес в `.env`; не
@@ -86,10 +91,20 @@ docker compose down
 notes, выполнить `docker compose pull` и `up -d --remove-orphans`, затем
 повторить health и smoke-проверку. `.env` не коммитится.
 
-Проверено 2026-09-13 на этой машине: `wsl.exe --status` завершается с
-`Wsl/WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED` («требуется дополнительный компонент
-подсистемы Windows для Linux»), команда `docker` не найдена. Требуются права
-администратора для компонентов Windows. Поэтому реальный запуск, health, worker,
-persistence и container-to-host connectivity остаются `blocked`; конфигурация не
-выдаётся за живой сервис. Точная точка остановки и следующий шаг —
-[L03-01](../.scratch/system-launch/issues/L03-01-activepieces-environment.md).
+## Проверено на этой машине 2026-09-13
+
+Стек запущен и проверен: Docker Desktop `4.90.0`, движок `29.7.2`, Compose `v5.5.1`.
+Все четыре сервиса `Up (healthy)`, `/api/v1/health` → `{"status":"Healthy"}`,
+воркер подключён к API по Socket.IO, данные переживают `docker compose restart`,
+а из контейнера достижим host bridge (`host.docker.internal` → `192.168.65.254`).
+
+Две оговорки, которые нужно держать в уме:
+
+- Docker Desktop запускается вручную и в автозапуск не входит; после перезагрузки
+  ПК движок нужно поднять заново, прежде чем обращаться к стеку.
+- Windows 10 Home Single Language отсутствует в формальном списке поддерживаемых
+  редакций Docker Desktop. Движок на ней работает (Home допускает Linux-контейнеры),
+  но это расхождение с документацией, а не гарантия.
+
+Оставшееся — реальный flow, AI connection и экспорт — [L03-03](../.scratch/system-launch/issues/L03-03-flow-to-writer.md).
+Доказательства и ограничения: [evidence/l03-02](../.scratch/system-launch/evidence/l03-02-stack-and-bridge-2026-09-13.json).

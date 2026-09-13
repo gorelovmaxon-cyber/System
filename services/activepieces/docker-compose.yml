@@ -4,7 +4,7 @@ services:
     container_name: system2-activepieces-app
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${AP_PORT:-8642}:80"
+      - "127.0.0.1:${AP_PORT:-8642}:${AP_PORT:-8642}"
     env_file:
       - .env
     environment:
@@ -18,7 +18,7 @@ services:
     volumes:
       - activepieces-cache:/usr/src/app/cache
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/api/v1/health || exit 1"]
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:${AP_PORT:-8642}/api/v1/health || exit 1"]
       interval: 15s
       timeout: 5s
       retries: 10
@@ -32,6 +32,11 @@ services:
       - .env
     environment:
       AP_CONTAINER_TYPE: WORKER
+      # The worker derives its API/socket base from AP_FRONTEND_URL when
+      # AP_CONTAINER_TYPE=WORKER (packages/server/worker configs getApiUrl).
+      # `.env` holds the browser-facing URL, where localhost means the worker
+      # itself, so address the app service on the compose network instead.
+      AP_FRONTEND_URL: http://app:${AP_PORT:-8642}
       AP_HOST_BRIDGE_URL: ${AP_HOST_BRIDGE_URL:-http://host.docker.internal:8643}
     depends_on:
       app:
