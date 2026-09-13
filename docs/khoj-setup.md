@@ -82,9 +82,15 @@ $py = "D:\SystemTheBest\runtime\khoj-1.42.10\Scripts\python.exe"
 
 `--stop` останавливает PostgreSQL первым: postmaster не входит в дерево процессов
 сервиса, и жёсткое завершение сервиса оставило бы его сиротой. Скрытый запуск с логом —
-в [services/khoj/README.md](../../services/khoj/README.md).
+в [services/khoj/README.md](../services/khoj/README.md).
 
 ## Проверки
+
+Дополнение 2026-09-13: после нештатного завершения восстановление PostgreSQL может
+занять больше исходных 10 секунд, жёстко заданных в pgserver 0.1.4. Launcher теперь
+ждёт `pg_ctl start` до 120 секунд (внешний timeout 125 секунд). Не запускать второй
+процесс поверх восстановления; дождаться `/api/health`. Подробности и регрессия —
+в [runbook](../services/khoj/README.md#дополнение-2026-09-13-запуск-после-нештатного-завершения).
 
 ```powershell
 & $py -m pip show khoj | Select-String Version   # ожидается 1.42.10

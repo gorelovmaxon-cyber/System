@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-13",
+  "runtime": "C:\\Users\\1663646\\AppData\\Local\\Temp\\s2-khoj-live-review-vuygcqba",
+  "checks": {
+    "canonical_inventory": 19,
+    "models_local": true,
+    "new_revision_1": "absent -> update -> raw index + adapter present",
+    "new_revision_2": "absent -> update -> raw index + adapter present",
+    "outage": "failed + local fallback; persisted remains",
+    "restart_recovery": "index persisted; failed -> requeue -> indexed; new raw content found",
+    "cleanup": "temporary user/token/index removed; canonical files and default index unchanged"
+  }
+}

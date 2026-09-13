@@ -10,7 +10,7 @@
 
 ## Контекст
 
-Задание [CHAT-02-KHOJ.md](../../CHAT-02-KHOJ.md): локальные embeddings для поиска при
+Задание [CHAT-02-KHOJ.md](../CHAT-02-KHOJ.md): локальные embeddings для поиска при
 совместимости; Khoj не становится платным планировщиком; источник — только
 `.claude/memory`, Markdown; не индексировать `.env`, весь repo, `services/`, `runtime/`.
 Секреты и machine paths — в ignored-конфиге.

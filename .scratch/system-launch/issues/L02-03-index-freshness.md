@@ -7,11 +7,15 @@ placeholder `indexer.reindex_url`; `indexed:true` ставится только 
 **Blocked by:** L02-01, L02-02
 **Status:** done (verified-live, 2026-09-12)
 
+> Проверка 2026-09-13: отдельно подтверждены новое содержимое и его следующая
+> ревизия в сыром индексе Khoj, останов/fallback и восстановление. Изолированная
+> фикстура не меняла основную память. [Дополнение к отчёту](../reports/CHAT-02-RESULT.md#проверка-и-завершение-передачи-2026-09-13).
+
 ## Контекст
 
 `config/system.example.json` содержит `indexer.reindex_url: "<CONFIGURE_FROM_KHOJ_RELEASE>"`,
 а `scripts/memory/indexer.js` при `reindex()` считает любой 2xx успехом и сразу пишет
-`status: indexed`. Задание [CHAT-02-KHOJ.md](../../CHAT-02-KHOJ.md) прямо запрещает это:
+`status: indexed`. Задание [CHAT-02-KHOJ.md](../CHAT-02-KHOJ.md) прямо запрещает это:
 обычный 2xx, только поставивший индексацию в очередь, не даёт права обещать завершённый
 `indexed`. Подтверждение завершения — по реальному API релиза.
 

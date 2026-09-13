@@ -32,6 +32,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_ENV_FILE = SCRIPT_DIR / "config.local.env"
+PG_START_TIMEOUT = 120
 
 
 def ensure_pg_timezone() -> str | None:
@@ -134,6 +135,31 @@ def stop_local(pgdata: Path) -> int:
     return 0 if remaining is None else 1
 
 
+def get_pgserver(pgdata: Path):
+    """Allow crash recovery to finish before pgserver's fixed 10s timeout.
+
+    pgserver 0.1.4 hardcodes subprocess timeout=10 for pg_ctl start. On Windows
+    recovery can take longer (observed 38s). Adjust only this invocation; retain
+    pgserver's locking, process ownership and cleanup, without editing the wheel.
+    """
+    import pgserver
+    import pgserver.postgres_server as implementation
+
+    original = implementation.pg_ctl
+
+    def recovery_aware_ctl(args, **kwargs):
+        if args and args[-1] == "start":
+            args = ["-t", str(PG_START_TIMEOUT), *args]
+            kwargs["timeout"] = PG_START_TIMEOUT + 5
+        return original(args, **kwargs)
+
+    implementation.pg_ctl = recovery_aware_ctl
+    try:
+        return pgserver.get_server(pgdata)
+    finally:
+        implementation.pg_ctl = original
+
+
 def start_pgserver(pgdata: Path):
     """Поднять встроенный PostgreSQL и вернуть (instance, host, port, db_name)."""
     import pgserver
@@ -144,7 +170,7 @@ def start_pgserver(pgdata: Path):
 
     pgdata.mkdir(parents=True, exist_ok=True)
 
-    server = pgserver.get_server(pgdata)
+    server = get_pgserver(pgdata)
     postmaster = server.get_postmaster_info()
 
     db_name = os.environ.get("POSTGRES_DB", "khoj")
