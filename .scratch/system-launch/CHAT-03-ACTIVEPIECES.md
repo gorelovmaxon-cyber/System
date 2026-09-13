@@ -12,7 +12,7 @@
 
 | Участок | Факт при передаче | Действие Sonnet |
 |---|---|---|
-| Git | Последний прочитанный HEAD `acf841d` (PROC-02); до работы субагента HEAD/remote были `8c822b1`. Remote после PROC-02 здесь не сверялся | Проверить заново; не откатывать новые правила ради старого SHA |
+| Git | Сверено 2026-09-13 12:22: `HEAD` = `07c12c3` (доработка PROC-02 от другого чата), `origin/master` = `482d93e`, ahead/behind `0 1`. Рабочее дерево чистое, кроме этого задания | Проверить заново своими командами; `07c12c3` не откатывать и не переписывать |
 | Локальное ядро | Принято Opus на `f254a5f` | Уже выполнено, общую приёмку не повторять |
 | Khoj | Дополнительная проверка GPT завершена: 19 файлов, новые ревизии в сыром индексе, fallback/restart/requeue; 64/64 адаптеров и 3/3 launcher | Только сверить текущий health/известную запись; правки ещё не закоммичены |
 | Bridge | Субагент запустил скрытый Node, последний PID 6256, `127.0.0.1:8643`, health `ready`, `writer:true` | Перепроверить процесс/порт; второй экземпляр не запускать |
@@ -25,8 +25,25 @@
 
 Сообщённый digest AP: `sha256:208517c4f0d798a477a0c594bf432dd0f4918433f4b6f5b5f188a6e10e638c6c` — прошлое наблюдение субагента, не гарантия текущего registry.
 Логи bridge: `.local/services/bridge-phase3.stdout.log`, `bridge-phase3.stderr.log`; обновлён `.local/services/bridge.pid`.
-Коммитов/push фазы 3 не было. L03-тикетов и `reports/CHAT-03-RESULT.md` ещё нет.
-Субагент создал только `evidence/activepieces-phase3-preflight.cjs` и `evidence/activepieces-phase3-preflight-2026-09-13.json`.
+
+**Сделано после остановки субагента — не переделывать, только сверить:**
+
+- `9b58d1b` — исправленная проба, оба evidence, тикеты L03-01…L03-03, правка `docs/activepieces-setup.md`, это задание.
+- `482d93e` — `reports/CHAT-03-RESULT.md` и заметка в `HANDOFF.md`. Оба коммита запушены.
+- Субагент успел создать только `evidence/activepieces-phase3-preflight.cjs` и неуспешный JSON; тикеты, отчёт и успешный host-smoke сделаны позже.
+
+## Сверить перед работой (команды и ожидаемый факт)
+
+Таблица выше — наблюдения на момент передачи, а не доказательство текущего состояния. Прогнать самому и сравнить; расхождение — повод остановиться и разобраться, а не «доделать по тексту».
+
+| Проверка | Команда | Факт на 2026-09-13 12:21 |
+|---|---|---|
+| Git | `git status --short`; `git log --oneline -3`; `git rev-list --left-right --count origin/master...HEAD` | Чисто, кроме этого задания; `HEAD` = `07c12c3`, remote = `482d93e`, `0 1` |
+| WSL | `wsl.exe --status` | `Wsl/WSL_E_WSL_OPTIONAL_COMPONENT_REQUIRED`, exit ≠ 0 → административный шаг **не** выполнен |
+| Docker | `docker --version` | не найдена (ENOENT) |
+| Служба | `Get-Service WSLService` | `Stopped` |
+| Bridge | `Get-NetTCPConnection -LocalPort 8643 -State Listen` + `GET http://127.0.0.1:8643/health` | PID 6256; `{"status":"ready","writer":true}` |
+| Khoj | `Get-NetTCPConnection -LocalPort 42110 -State Listen` | PID 11332 |
 
 ## План и неизвестное
 
@@ -73,7 +90,7 @@
 ### Что не трогать
 
 - Основную `.claude/memory`, writer/queue/ipc-lock/jsonl/path-safety и принятую общую приёмку — не превращать фазу в новый аудит. Соседняя находка не расширяет задание автоматически.
-- `CLAUDE.md`, `TICKET_TEMPLATE.md`, `docs/system-workflow.md`, `docs/planner-brief.md` и PROC-02 — отдельная работа, видимая в `acf841d`; сохранить новые правки, если появятся, не включать в L03.
+- `CLAUDE.md`, `TICKET_TEMPLATE.md`, `docs/system-workflow.md`, `docs/planner-brief.md` и PROC-02 — отдельная работа другого чата; на момент передачи это коммит `07c12c3`, ещё не отправленный на remote. Не редактировать, не откатывать, не переписывать и не включать в серию L03. Если поздний обычный push унесёт `07c12c3` вместе с твоими коммитами — это ожидаемо, историю не «чинить». Перед своим коммитом перечислять файлы явно.
 - `.scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md` и `.scratch/system-remediation/evidence/status-check-current-tests.txt` — намеренные untracked.
 - `.local`, секреты, backup и чужие worktree — не удалять «для чистоты». Существующие ключи не перегенерировать, полные конфиги/развёрнутый compose с секретами не выводить.
 
