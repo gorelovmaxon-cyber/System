@@ -1,0 +1,120 @@
+{
+  "read_only": true,
+  "note": "Текущее состояние — последняя запись по идентификатору; сырые строки журнала включают все переходы.",
+  "logs": {
+    "queue": {
+      "raw_lines": 134,
+      "distinct": 25,
+      "status_counts": {
+        "delivered": 23,
+        "failed": 2
+      },
+      "transitions_per_event": 5.36
+    },
+    "indexer": {
+      "raw_lines": 161,
+      "distinct": 52,
+      "status_counts": {
+        "indexed": 52
+      },
+      "transitions_per_event": 3.1
+    },
+    "writer": {
+      "raw_lines": 78,
+      "distinct": 20,
+      "status_counts": {
+        "persisted": 20
+      },
+      "transitions_per_event": 3.9
+    }
+  },
+  "queue_events": {
+    "distinct": 25,
+    "status_counts": {
+      "delivered": 23,
+      "failed": 2
+    },
+    "by_day": {
+      "2026-09-14": 23,
+      "2026-09-13": 2
+    },
+    "distinct_commits": 25,
+    "kinds": {
+      "commit": 25
+    }
+  },
+  "self_echo": {
+    "definition": "первая строка summary начинается с \"memory:\" — коммит, созданный самим конвейером памяти",
+    "events": 6,
+    "share_of_events": "6/25",
+    "status_counts": {
+      "delivered": 6
+    },
+    "commits": [
+      {
+        "sha": "f9ebcfc2",
+        "status": "delivered",
+        "first_line": "memory: живые записи цикла L04-04 и актуальный статус фазы 4"
+      },
+      {
+        "sha": "247244a1",
+        "status": "delivered",
+        "first_line": "memory: записи коммитов L04-01…L04-04, включая удаление seed-записи"
+      },
+      {
+        "sha": "88d32af6",
+        "status": "delivered",
+        "first_line": "memory: исправление записи о 409/conflict и persisted"
+      },
+      {
+        "sha": "5a3a8966",
+        "status": "delivered",
+        "first_line": "memory: живые записи цикла по коммиту исправления записи о 409/conflict"
+      },
+      {
+        "sha": "52128400",
+        "status": "delivered",
+        "first_line": "memory: живые записи цикла по коммитам фазы 5 (L05-04, L05-01, L05-03)"
+      },
+      {
+        "sha": "65905a36",
+        "status": "delivered",
+        "first_line": "memory: записи цикла о дефекте U+FFFD по коммитам фазы 5"
+      }
+    ]
+  },
+  "work_commits": {
+    "events": 19,
+    "status_counts": {
+      "delivered": 17,
+      "failed": 2
+    },
+    "distinct_commits": 19
+  },
+  "outstanding": {
+    "definition": "события не в терминальном delivered",
+    "events": 2,
+    "list": [
+      {
+        "event_id": "evt_e15b1df50571",
+        "sha": "c46ba834",
+        "status": "failed",
+        "attempts": 5,
+        "last_error": "fetch failed",
+        "first_line": "L05: передача фазы 5 — Figma исключена, GPT-проверка Astra, покрытие маршрутов, дефект U+FFFD открыт",
+        "created_at": "2026-09-14T16:43:36.448Z"
+      },
+      {
+        "event_id": "evt_99ebd34b8471",
+        "sha": "3647a1d3",
+        "status": "failed",
+        "attempts": 5,
+        "last_error": "fetch failed",
+        "first_line": "L06: фаза 6 — приёмка фазы 5 зафиксирована, второй ПК недоступен (blocked), restore проверен в отдельном каталоге",
+        "created_at": "2026-09-14T17:24:10.421Z"
+      }
+    ],
+    "auto_replay": "post-commit hook запускает queue-worker с --no-revive, поэтому терминальный failed сам не оживает; повтор — только явный --redeliver failed."
+  },
+  "failed_commits_not_in_memory": 2
+}
