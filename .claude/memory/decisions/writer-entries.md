@@ -58,3 +58,23 @@ event_id: evt_b1aa44d74de0
 ---
 
 ## За��ершение фазы по факту не равно её приёмке: ограничение «статус не равен приёмке» фиксируется явно в HANDOFF, а знание о конфликте 409 хранится в docs/memory-contract.md и тикете L04-04.
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: activepieces-flow
+evidence: commit evt_ae5e7bea447b: 'в основную память попадают только записи, чей event_id выводится из контракта, — искусственный seed-идентификатор из памяти удаляется' (записи evt_7433fae17dd5, evt_83763b7afdf0, evt_7e10d6cfc928, evt_b1aa44d74de0)
+event_id: evt_ae5e7bea447b
+---
+
+## В основную память проекта попадают только записи, чей event_id выводится из контракта; искусственный seed-идентификатор из памяти удаляется.
+---
+status: observation
+category: decisions
+scope: systemqwen
+source: activepieces-flow
+evidence: commit L05-01: "push в согласованных границах без нового вопроса; старые пе��едачи помечены историческими"
+event_id: evt_95bec4016b3d
+---
+
+## В проекте systemqwen push в согласованных границах выполняется без нового уточняющего вопроса; устаревшие передачи помечаются как исторические.

@@ -120,3 +120,23 @@ event_id: evt_51575e94224b
 ---
 
 ## Коррелированный conflict (HTTP 409) не следует сближать с подтверждённым persisted: это разные состояния, и их смешение в одной записи памяти признано ошибочным.
+---
+status: observation
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: commit L05-04: снято «после подтверждения» в description навыка start и устаревшее утверждение о неопубликованном a499e81
+event_id: evt_0e17e6c13b1c
+---
+
+## Описания навыков и документация не должны содержать шагов, которых нет в реализации (например, «после подтверждения»), и ссылок на неопубликованные коммиты — при расхождении текста с фактическим поведением/состоянием репозитория описание правится.
+---
+status: observation
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: evt_3a12c58da8c3, kind: commit, summary: "L05-03: маршруты dev/sites/marketing проверены живьём; незакрытый критерий живой Figma зафиксирован"
+event_id: evt_3a12c58da8c3
+---
+
+## Критерий приёмки с живой Figma (live Figma) по задаче L05-03 остаётся незакрытым, тогда как маршруты dev/sites/marketing уже проверены на живом стенде; закрытие задачи требует отдельной проверки Figma-критерия.
