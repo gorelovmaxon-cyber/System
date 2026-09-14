@@ -144,6 +144,14 @@ writer обязан возвращаться ответом flow, а не пад
 официальной документации Activepieces 2026-09-11: [лимиты sync webhook](https://www.activepieces.com/docs/install/reference/limits)
 и [flow response control](https://www.activepieces.com/docs/build-pieces/piece-reference/flow-control).
 
+В flow это обеспечивает сам HTTP-шаг: `write` работает с `failureMode: continue_4xx`,
+поэтому 4xx не роняет run, а возвращается отдельной формой вывода —
+`{response:{status,body}, request:{body}}` против успешной `{status,headers,body}` без
+ключа `response`. Следующий за ним `classify_write` превращает 409 в коррелированный
+`conflict`, подтверждённый `persisted` — в `persisted`, а любую другую форму (401, 5xx,
+транспорт, неожиданное тело) — в отказ шага, то есть в повторяемый `408` для
+отправителя, а не в подтверждённый успех.
+
 ## Writer
 
 Единая точка записи — локальный bridge `127.0.0.1:8643`. `POST /write` принимает

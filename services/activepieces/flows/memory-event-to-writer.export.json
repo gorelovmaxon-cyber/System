@@ -131,7 +131,7 @@
                         "authFields": {
                           "token": "REPLACE_WITH_LOCAL_TOKEN"
                         },
-                        "failureMode": "retry_none",
+                        "failureMode": "continue_4xx",
                         "queryParams": {}
                       },
                       "pieceName": "@activepieces/piece-http",
@@ -140,33 +140,54 @@
                       "propertySettings": {}
                     },
                     "nextAction": {
-                      "name": "return_persisted",
-                      "type": "PIECE",
+                      "name": "classify_write",
+                      "type": "CODE",
                       "valid": true,
                       "settings": {
                         "input": {
-                          "fields": {
-                            "body": {
-                              "bridge": "{{write['output'].body}}",
-                              "status": "persisted",
-                              "event_id": "{{trigger['output']['body'].event_id}}",
-                              "proposals": "{{validate['output'].proposals}}"
-                            },
-                            "status": 200
-                          },
-                          "respond": "stop",
-                          "responseType": "json"
+                          "event_id": "{{trigger['output']['body'].event_id}}",
+                          "proposals": "{{validate['output'].proposals}}",
+                          "write_output": "{{write['output']}}"
                         },
-                        "pieceName": "@activepieces/piece-webhook",
-                        "actionName": "return_response",
-                        "pieceVersion": "0.1.41",
-                        "propertySettings": {}
+                        "sourceCode": {
+                          "code": "export const code = async (inputs) => {\n  const eventId = inputs.event_id;\n  const output = inputs.write_output;\n  const detail = (value) => {\n    if (value === undefined || value === null) return '';\n    const text = typeof value === 'string' ? value : JSON.stringify(value);\n    return String(text === undefined ? '' : text).slice(0, 500);\n  };\n  if (!output || typeof output !== 'object') {\n    throw new Error('write produced no output');\n  }\n  if (output.response !== undefined) {\n    const status = output.response ? output.response.status : undefined;\n    const body = output.response ? output.response.body : undefined;\n    if (status === 409) {\n      return {\n        body: {\n          event_id: eventId,\n          status: 'conflict',\n          writer_status: 409,\n          reason: 'writer rejected new proposals for an already persisted event_id',\n          writer_body: detail(body),\n        },\n      };\n    }\n    throw new Error('write was not applied, HTTP ' + detail(status) + ': ' + detail(body));\n  }\n  const status = output.status;\n  const body = output.body;\n  if (typeof status === 'number' && status >= 200 && status < 300 && body && body.status === 'persisted') {\n    return {\n      body: {\n        event_id: eventId,\n        status: 'persisted',\n        bridge: body,\n        proposals: inputs.proposals,\n      },\n    };\n  }\n  throw new Error('unexpected write result: HTTP ' + detail(status) + ', body ' + detail(body));\n};\n",
+                          "packageJson": "{}"
+                        },
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {
+                            "value": false
+                          },
+                          "continueOnFailure": {
+                            "value": false
+                          }
+                        }
                       },
-                      "displayName": "Return persisted",
-                      "lastUpdatedDate": "2026-09-13T19:33:01.030Z"
+                      "nextAction": {
+                        "name": "return_persisted",
+                        "type": "PIECE",
+                        "valid": true,
+                        "settings": {
+                          "input": {
+                            "fields": {
+                              "body": "{{classify_write['output'].body}}",
+                              "status": 200
+                            },
+                            "respond": "stop",
+                            "responseType": "json"
+                          },
+                          "pieceName": "@activepieces/piece-webhook",
+                          "actionName": "return_response",
+                          "pieceVersion": "0.1.41",
+                          "propertySettings": {}
+                        },
+                        "displayName": "Return persisted",
+                        "lastUpdatedDate": "2026-09-14T10:28:43.242Z"
+                      },
+                      "displayName": "Classify write result",
+                      "lastUpdatedDate": "2026-09-14T10:28:43.095Z"
                     },
                     "displayName": "Write to memory bridge",
-                    "lastUpdatedDate": "2026-09-13T19:33:01.122Z"
+                    "lastUpdatedDate": "2026-09-14T10:28:42.994Z"
                   },
                   {
                     "name": "return_no_pattern",
@@ -190,7 +211,7 @@
                       "propertySettings": {}
                     },
                     "displayName": "Return no-pattern",
-                    "lastUpdatedDate": "2026-09-13T19:33:01.030Z"
+                    "lastUpdatedDate": "2026-09-14T10:28:42.907Z"
                   },
                   {
                     "name": "return_failed",
@@ -216,7 +237,7 @@
                       "propertySettings": {}
                     },
                     "displayName": "Return failed",
-                    "lastUpdatedDate": "2026-09-13T19:33:01.030Z"
+                    "lastUpdatedDate": "2026-09-14T10:28:42.907Z"
                   }
                 ],
                 "settings": {
@@ -261,18 +282,18 @@
                   "executionType": "EXECUTE_FIRST_MATCH"
                 },
                 "displayName": "Route",
-                "lastUpdatedDate": "2026-09-13T19:33:01.027Z"
+                "lastUpdatedDate": "2026-09-14T10:28:42.903Z"
               },
               "displayName": "Validate proposals",
-              "lastUpdatedDate": "2026-09-13T19:33:01.027Z"
+              "lastUpdatedDate": "2026-09-14T10:28:42.903Z"
             },
             "displayName": "Analyze (AI gateway)",
-            "lastUpdatedDate": "2026-09-13T19:33:01.026Z"
+            "lastUpdatedDate": "2026-09-14T10:28:42.902Z"
           },
           "displayName": "Prepare prompt",
-          "lastUpdatedDate": "2026-09-13T19:33:01.026Z"
+          "lastUpdatedDate": "2026-09-14T10:28:42.901Z"
         },
-        "lastUpdatedDate": "2026-09-13T19:33:01.025Z",
+        "lastUpdatedDate": "2026-09-14T10:28:42.901Z",
         "type": "PIECE_TRIGGER",
         "settings": {
           "propertySettings": {},
