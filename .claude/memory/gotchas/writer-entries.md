@@ -28,3 +28,63 @@ event_id: evt_2cb2c33b2cbf
 ---
 
 ## Таймаут отправителя обязан быть строго больше WEBHOOK_TIMEOUT_SECONDS платформы (30 с): при фиксированных 5 с отправитель обрывает запрос раньше ответа, что порождает параллельные повторные прогоны, дублирующие write, и ложный статус failed при уже сохранённом событии.
+---
+status: confirmed
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: commit L04-04: "ожидание reviveMs удерживало владение примерно 32 с на каждый commit и не давало watch достичь idle"
+event_id: evt_9ff828f6e482
+---
+
+## Ожидание reviveMs по унаследованному терминальному failed удерживает владение примерно 32 с на каждый commit и не даёт watch достичь idle.
+---
+status: confirmed
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: summary/commit L04-04: 'Writer отвечает 409, шаг write ронял run, flow-response не рождался, отправитель видел от платформы 408 и повторял: живой цикл дал 5 прогонов AI на одно событие и ложный терминальный failed.'
+event_id: evt_0006d3a39705
+---
+
+## В systemqwen повтор уже сохранённого event_id с другим содержимым не эквивалентен сохранению: шаг write ронял run при ответе Writer 409, flow-response не рождался, отправитель получал от платформы 408 и повторял, что давало живой цикл из 5 прогонов AI на одно событие и ложный терминальный failed.
+---
+status: confirmed
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: summary: '409 writer'а становится коррелированным conflict, подтверждённый persisted — persisted, всё осталь��ое (401, 5xx, транспорт, неожиданное тело) роняет шаг: run падает, отправитель получает 408 и повторяет. Ни один неизвестный исход не становится подтверждённым успехом'
+event_id: evt_6dacc432c641
+---
+
+## Ни один неизвестный исход не должен становиться подтверждённым успехом: подтверждённым persisted становится только 409 writer'а как коррелированный conflict, всё остальное (401, 5xx, транспорт, неожиданное тело) роняет шаг — run падает, отправитель получает 408 и повторяет.
+---
+status: confirmed
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: «Прежнее зависание в fix-04 не воспроизвелось — его удерживал процесс предыдущего прогона, а не код; тикет и отчёт обновлены по факту»
+event_id: evt_7c95328725a7
+---
+
+## Зависание прогона в fix-04 вызывал процесс предыдущего прогона, удерживавший ресурс, а не код: при чистом окружении оно не воспроизводится, поэтому перед диагностикой зависаний нужно исключать осиротевшие процессы прошлого запуска.
+---
+status: observation
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: Обрыв до acknowledgement: мост остановлен, отправитель дождался 408 и оставил событие повторяемым, после перезапуска — delivered.
+event_id: evt_7e10d6cfc928
+---
+
+## Обрыв связи до acknowledgement не приводит к потере события: мост останавливается, отправитель получает 408, событие остаётся повторяемым и доставляется (delivered) после перезапуска; доставка — at-least-once, а не exactly-once.
+---
+status: observation
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: deadline 0.877 с, failed за 32.438 с при окне больше reviveMs, busy 0.200 с. Событие с истёкшим окном само не доставляется.
+event_id: evt_7e10d6cfc928
+---
+
+## Пределы watch: deadline срабатывает за 0.877 с, failed наступает за 32.438 с при окне больше reviveMs, busy — за 0.200 с; событие с истёкшим окном само не доставляется и требует повторной отправки.
