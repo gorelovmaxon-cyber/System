@@ -38,3 +38,13 @@ event_id: evt_7e10d6cfc928
 ---
 
 ## Отказ Khoj фиксируется как failed без ложного статуса indexed; после восстановления событие получает indexed и находится поиском.
+---
+status: confirmed
+category: patterns
+scope: systemqwen
+source: activepieces-flow
+evidence: evt_6dacc432c641 отмечена superseded со ссылкой superseded_by, исправленная формулировка записана как evt_80ec195549d7 со связью supersedes; старый текст сохранён без перезаписи
+event_id: evt_51575e94224b
+---
+
+## Исправление ранее записанного знания в память проекта оформляется как новая запись штатным writer'ом (save.js) со связью supersedes, а старая запись помечается superseded со ссылкой superseded_by на новый event_id; старый текст сохраняется без перезаписи.
