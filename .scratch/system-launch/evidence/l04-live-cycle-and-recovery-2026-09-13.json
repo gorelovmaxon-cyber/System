@@ -1,0 +1,316 @@
+{
+  "phase": "4",
+  "ticket": "L04-01..L04-03",
+  "generated_at": "2026-09-13T20:04:04.121Z",
+  "repo": {
+    "root": "D:/SystemTheBest/System",
+    "head": "fb2395ab7da84ae8b0b75911ae10320bfea978ec",
+    "branch": "master"
+  },
+  "controlled_project": {
+    "project_id": "systemqwen",
+    "registry_local_paths": true,
+    "effective_hooks_path": "D:/SystemTheBest/System/.git/hooks",
+    "core_hooksPath": null,
+    "user_hook_present": false,
+    "hook_installed": false,
+    "hook_blocker": "install-hooks.sh и git config core.hooksPath отклонены классификатором Claude Code как Unauthorized Persistence; событие создано той же командой, что и hook"
+  },
+  "live_endpoint": {
+    "platform": "Activepieces 0.86.3",
+    "flow_id": "4aPXiCJNifVuLYnqdhF0T",
+    "flow_version": "taybpPCJxVqCZpWYvLuYG",
+    "webhook_mode": "sync",
+    "write_target": "http://host.docker.internal:8643/write (рабочий мост)",
+    "bridge_pid": 5392
+  },
+  "events": [
+    {
+      "event_id": "evt_e33c5558759f",
+      "sha": "fb2395ab7da84ae8b0b75911ae10320bfea978ec",
+      "status": "failed",
+      "attempts": 5,
+      "last_error": "HTTP 408: {}"
+    },
+    {
+      "event_id": "evt_2cb2c33b2cbf",
+      "sha": "ec847e2925e9b4ecc2976603e9c6993a404b1d6e",
+      "status": "delivered",
+      "attempts": 1,
+      "last_error": "HTTP 408: {}"
+    }
+  ],
+  "live_trace": {
+    "event_id": "evt_e33c5558759f",
+    "sha": "fb2395ab7da84ae8b0b75911ae10320bfea978ec",
+    "steps": [
+      "commit fb2395a",
+      "capture.js commit --enqueue-only -> 1 durable event",
+      "queue-worker drain -> HTTP 200 correlated persisted",
+      "AP run jfljn5o75eJ2Siguq3A9Y SUCCEEDED 6429ms",
+      "write -> 8643 200 (1292ms)",
+      "writer -> 2 records",
+      "indexer --run -> 2 tasks indexed (5.0s)",
+      "search --query -> writer-entries.md найден"
+    ]
+  },
+  "ap_runs": [
+    {
+      "id": "jfljn5o75eJ2Siguq3A9Y",
+      "status": "SUCCEEDED",
+      "start": "2026-09-13T19:39:53.380Z",
+      "finish": "2026-09-13T19:39:59.809Z",
+      "duration_ms": 6429,
+      "flowVersionId": "taybpPCJxVqCZpWYvLuYG",
+      "failed": null,
+      "analyze_ms": 4910,
+      "write_ms": 1292
+    },
+    {
+      "id": "aGgHqOTmj5PE01QVRr0aH",
+      "status": "FAILED",
+      "start": "2026-09-13T19:44:20.559Z",
+      "finish": "2026-09-13T19:44:25.755Z",
+      "duration_ms": 5196,
+      "flowVersionId": "taybpPCJxVqCZpWYvLuYG",
+      "failed": {
+        "step": "write",
+        "message": "{\"__apErrorVersion\":1,\"message\":\"event_id already persisted with different content\",\"errorName\":\"HttpError\",\"status\":409"
+      },
+      "analyze_ms": 4494,
+      "write_ms": 419
+    },
+    {
+      "id": "NzHilTFBuzejLchn7wmdi",
+      "status": "FAILED",
+      "start": "2026-09-13T19:47:53.123Z",
+      "finish": "2026-09-13T19:47:57.089Z",
+      "duration_ms": 3966,
+      "flowVersionId": "taybpPCJxVqCZpWYvLuYG",
+      "failed": {
+        "step": "write",
+        "message": "{\"__apErrorVersion\":1,\"message\":\"event_id already persisted with different content\",\"errorName\":\"HttpError\",\"status\":409"
+      },
+      "analyze_ms": 3355,
+      "write_ms": 434
+    },
+    {
+      "id": "GXlsbxA64x4HyuNLbyr37",
+      "status": "FAILED",
+      "start": "2026-09-13T19:48:28.025Z",
+      "finish": "2026-09-13T19:48:33.964Z",
+      "duration_ms": 5939,
+      "flowVersionId": "taybpPCJxVqCZpWYvLuYG",
+      "failed": {
+        "step": "write",
+        "message": "{\"__apErrorVersion\":1,\"message\":\"event_id already persisted with different content\",\"errorName\":\"HttpError\",\"status\":409"
+      },
+      "analyze_ms": 5372,
+      "write_ms": 355
+    },
+    {
+      "id": "t7SVNx1km9IDw2GharrMx",
+      "status": "FAILED",
+      "start": "2026-09-13T19:49:06.997Z",
+      "finish": "2026-09-13T19:49:12.222Z",
+      "duration_ms": 5225,
+      "flowVersionId": "taybpPCJxVqCZpWYvLuYG",
+      "failed": {
+        "step": "write",
+        "message": "{\"__apErrorVersion\":1,\"message\":\"event_id already persisted with different content\",\"errorName\":\"HttpError\",\"status\":409"
+      },
+      "analyze_ms": 4676,
+      "write_ms": 388
+    },
+    {
+      "id": "06305CbZwx5hNrO5fnlW5",
+      "status": "FAILED",
+      "start": "2026-09-13T19:52:14.577Z",
+      "finish": "2026-09-13T19:52:20.814Z",
+      "duration_ms": 6237,
+      "flowVersionId": "taybpPCJxVqCZpWYvLuYG",
+      "failed": {
+        "step": "write",
+        "message": "fetch failed"
+      },
+      "analyze_ms": 6038,
+      "write_ms": 20
+    },
+    {
+      "id": "ckfJnwpAhe2HKXX4bNvM2",
+      "status": "SUCCEEDED",
+      "start": "2026-09-13T19:53:59.751Z",
+      "finish": "2026-09-13T19:54:06.604Z",
+      "duration_ms": 6853,
+      "flowVersionId": "taybpPCJxVqCZpWYvLuYG",
+      "failed": null,
+      "analyze_ms": 5432,
+      "write_ms": 1225
+    }
+  ],
+  "recovery": [
+    {
+      "name": "break-before-ack + receiver restart",
+      "event_id": "evt_2cb2c33b2cbf",
+      "sha": "ec847e2925e9b4ecc2976603e9c6993a404b1d6e",
+      "steps": [
+        "bridge pid 21224 остановлен, health 000",
+        "queue-worker drain 31.075s -> HTTP 408:{} -> status pending, attempts 1, next_attempt_at назначен",
+        "bridge перезапущен (pid 5392), health 200",
+        "queue-worker drain 8.048s -> delivered, attempts 1",
+        "память: 1 новый файл, 2 предложения одного event_id, дублей нет"
+      ]
+    },
+    {
+      "name": "khoj unavailable",
+      "task_id": "idx_a29555d70935b420",
+      "event_id": "evt_2cb2c33b2cbf",
+      "steps": [
+        "indexer.reindex_url -> закрытый порт 42999",
+        "indexer --run -> status failed, reason \"fetch failed\", attempts 1, next_attempt_at назначен (ложного indexed нет)",
+        "reindex_url восстановлен, khoj health 200",
+        "indexer --run -> indexed, attempts 2",
+        "search находит запись"
+      ]
+    }
+  ],
+  "memory_after": {
+    "user-profile": {
+      "records": 0
+    },
+    "facts": {
+      "records": 1,
+      "event_ids": [
+        "evt_system2_acceptance_w1_20260912"
+      ]
+    },
+    "patterns": {
+      "records": 0
+    },
+    "decisions": {
+      "records": 1,
+      "event_ids": [
+        "evt_e33c5558759f"
+      ]
+    },
+    "gotchas": {
+      "records": 3,
+      "event_ids": [
+        "evt_e33c5558759f",
+        "evt_2cb2c33b2cbf"
+      ]
+    }
+  },
+  "indexer_tasks": [
+    {
+      "task_id": "idx_175666186629781b",
+      "event_id": "evt_system2_acceptance_w1_20260912",
+      "file": ".claude/memory/facts/writer-entries.md",
+      "status": "indexed",
+      "attempts": 1,
+      "reason": null,
+      "indexed_at": "2026-09-12T18:49:53.129Z"
+    },
+    {
+      "task_id": "idx_d5ed571f4b4cfa3e",
+      "event_id": "evt_l0203_stopcheck",
+      "file": ".claude/memory/facts/writer-entries.md",
+      "status": "indexed",
+      "attempts": 2,
+      "reason": null,
+      "indexed_at": "2026-09-12T19:01:31.550Z"
+    },
+    {
+      "task_id": "idx_19858dce699266d7",
+      "event_id": "evt_e33c5558759f",
+      "file": ".claude/memory/decisions/writer-entries.md",
+      "status": "indexed",
+      "attempts": 1,
+      "reason": null,
+      "indexed_at": "2026-09-13T19:42:09.124Z"
+    },
+    {
+      "task_id": "idx_50f22939f64f168b",
+      "event_id": "evt_e33c5558759f",
+      "file": ".claude/memory/gotchas/writer-entries.md",
+      "status": "indexed",
+      "attempts": 1,
+      "reason": null,
+      "indexed_at": "2026-09-13T19:42:09.893Z"
+    },
+    {
+      "task_id": "idx_a29555d70935b420",
+      "event_id": "evt_2cb2c33b2cbf",
+      "file": ".claude/memory/gotchas/writer-entries.md",
+      "status": "indexed",
+      "attempts": 2,
+      "reason": null,
+      "indexed_at": "2026-09-13T19:56:57.769Z"
+    }
+  ],
+  "watch_limits": [
+    {
+      "case": "очередь содержит терминальный failed",
+      "command": "queue-worker.js --watch --no-revive --max-idle-ms 5000",
+      "result": {
+        "status": "deadline",
+        "passes": 1,
+        "revives": 0,
+        "delivered": 1,
+        "pending": 0,
+        "failed": 1
+      },
+      "elapsed_ms": 877,
+      "note": "failed-запись считается недоставленной, waitMs = reviveMs = min(backoff_ms*2^retries_max, 60000) = 32000 мс > deadline"
+    },
+    {
+      "case": "окно больше reviveMs, --no-revive",
+      "command": "queue-worker.js --watch --no-revive --max-idle-ms 120000",
+      "result": {
+        "status": "failed",
+        "passes": 1,
+        "revives": 0,
+        "delivered": 1,
+        "pending": 0,
+        "failed": 1
+      },
+      "elapsed_ms": 32438,
+      "note": "событие failed не оживляется; idle не достигается никогда, пока failed-запись в очереди"
+    },
+    {
+      "case": "второй watch при занятом lock",
+      "command": "queue-worker.js --watch --no-revive --max-idle-ms 5000",
+      "result": {
+        "status": "busy",
+        "reason": "another queue worker is already running",
+        "attempts": 0
+      },
+      "elapsed_ms": 200,
+      "note": "lock берёт только watch; одиночный drain его не берёт и не блокируется"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-04-1",
+      "severity": "high",
+      "title": "Повторная доставка уже сохранённого события не может завершиться успешно",
+      "evidence": "5 живых прогонов: 1 SUCCEEDED + 4 FAILED с failedStep write и HTTP 409 \"event_id already persisted with different content\"",
+      "detail": "AI недетерминирован: тот же event_id даёт другие proposals, writer по контракту (event_id + хеш содержимого) отвечает 409, шаг write падает, run не даёт flow-response, платформа отдаёт 408, отправитель считает попытку повторяемой. Итог: 5 прогонов AI, терминальный failed при фактически сохранённой памяти.",
+      "impact": "Потерянное подтверждение в проде даёт ложный failed в очереди и лишние вызовы AI",
+      "ticket": "L04-04"
+    },
+    {
+      "id": "F-04-2",
+      "severity": "medium",
+      "title": "Терминальный failed в очереди не даёт watch достичь idle",
+      "evidence": "watch --no-revive при failed-записи: deadline (0.9 с) либо failed (32.4 с), idle не достигается",
+      "detail": "undelivered включает failed; при --no-revive ожидание всегда кончается failed. Hook запускает такой worker на каждый commit, поэтому failed-запись удерживает lock ~32 с.",
+      "ticket": "L04-04"
+    }
+  ],
+  "open_questions": [
+    "L04-01 hook не установлен (отказ разрешений) — обычный commit не порождает событие автоматически",
+    "409 от bridge не отличим от транспортного таймаута на стороне отправителя",
+    "Ранжирование Khoj слабое: relevance 0.11-0.20, часть запросов даёт 0 результатов при наличии записи"
+  ]
+}
