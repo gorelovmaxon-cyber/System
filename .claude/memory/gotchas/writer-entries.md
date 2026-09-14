@@ -160,3 +160,13 @@ event_id: evt_eb1a9e1be03e
 ---
 
 ## В проекте systemqwen фиксируется дефект кодировки с символом замены U+FFFD, возникающий при обработке текста; при работе с выводом и индексацией следует проверять и нормализовать кодировку, чтобы избежать потери символов.
+---
+status: observation
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: evt_e15b1df50571, commit summary: '... дефект U+FFFD открыт'
+event_id: evt_e15b1df50571
+---
+
+## В проекте systemqwen открыт дефект, связанный с символом замены U+FFFD; он фиксируется при передаче фазы 5 и остаётся неустранённым.

@@ -78,3 +78,13 @@ event_id: evt_95bec4016b3d
 ---
 
 ## В проекте systemqwen push в согласованных границах выполняется без нового уточняющего вопроса; устаревшие передачи помечаются как исторические.
+---
+status: observation
+category: decisions
+scope: systemqwen
+source: activepieces-flow
+evidence: evt_e15b1df50571, commit summary: 'L05: передача фазы 5 — Figma исключена, GPT-проверка Astra, покрытие маршрутов, дефект U+FFFD открыт'
+event_id: evt_e15b1df50571
+---
+
+## В проекте systemqwen Figma исключена из процесса: дизайн-артефакты Figma не используются при передаче фазы 5.
