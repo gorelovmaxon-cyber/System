@@ -105,7 +105,8 @@ post-commit hook сам запускает `--watch --no-revive --max-idle-ms 12
 3. Запустите bridge → Khoj → Activepieces; восстановите flow и connection в UI.
 4. Перестройте производный Khoj index из `.claude/memory`, не восстанавливайте
    его как источник истины. Проверьте поиск, writer idempotency и test event.
-5. Выполните doctor, evidence report и только затем явный sync/push.
+5. Выполните doctor и evidence report, затем `sync`/`push` в согласованных границах без
+   нового вопроса; вне них — по указанию пользователя.
 
 Проверка на отдельной копии: используйте [second-pc.md](second-pc.md),
 временный clone и репрезентативный backup памяти/flow blueprint/queue. Для

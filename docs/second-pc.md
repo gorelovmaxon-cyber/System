@@ -54,7 +54,8 @@ hooks и запускает doctor. Дальше вручную:
 3. запустить bridge, Activepieces and worker, затем проверить host bridge;
 4. настроить только `<SYSTEM_ROOT>/.claude/memory` в Khoj и перестроить индекс;
 5. прочитать `CLAUDE.md` и `HANDOFF.md`, затем выполнить retrieval fallback;
-6. проверить `node scripts/memory/sync.js --status` и делать push только явно.
+6. проверить `node scripts/memory/sync.js --status` и выполнить `push` в согласованных
+   границах без нового вопроса; вне них — по указанию пользователя.
 
 `.vscode/` с настройками редактора/провайдера, локальные конфиги, `.local/`, backup
 и данные сервисов намеренно исключены из Git. Настроить их отдельно безопасным способом.
