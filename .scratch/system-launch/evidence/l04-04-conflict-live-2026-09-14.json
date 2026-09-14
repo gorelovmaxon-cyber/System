@@ -1,0 +1,228 @@
+{
+  "ticket": "L04-04",
+  "defect": "F-04-1 — конфликт записи неотличим от таймаута",
+  "flow_id": "4aPXiCJNifVuLYnqdhF0T",
+  "at": "2026-09-14T10:39:08.703Z",
+  "step_result_shape_on_409": {
+    "how": "probe-публикация: шаг write с failureMode=continue_4xx, return_persisted возвращал write['output'] напрямую",
+    "ap_run": "zeN6ktmMeOCwN6Sv5WBfP",
+    "flow_version": "PIyn8g2X1VdDhfvkzPT0i",
+    "observed": {
+      "response": {
+        "status": 409,
+        "body": {
+          "error": "event_id already persisted with different content"
+        }
+      },
+      "request": {
+        "body": {
+          "event_id": "evt_l0404conflict1",
+          "proposals": "…3 proposals, source=activepieces-flow…"
+        }
+      }
+    },
+    "source_of_truth": "packages/core … toFailsafeOutput/HttpError.errorMessage() в piece-http 0.11.19 отдаёт ровно {response:{status,body},request:{body}}; успешный ответ той же ветви — {status,headers,body} без ключа response"
+  },
+  "final_conflict_response": "{\"event_id\":\"evt_l0404conflict1\",\"status\":\"conflict\",\"writer_status\":409,\"reason\":\"writer rejected new proposals for an already persisted event_id\",\"writer_body\":\"{\\\"error\\\":\\\"event_id already persisted with different content\\\"}\"}",
+  "bounded_scenario": {
+    "how": "повторная доставка трёх записей очереди, отказавших при недоступном Activepieces, через штатный redeliver",
+    "before": [
+      {
+        "event_id": "evt_e33c5558759f",
+        "status": "failed",
+        "attempts": 5,
+        "outcome": null,
+        "last_error": "HTTP 408: {}"
+      },
+      {
+        "event_id": "evt_2cb2c33b2cbf",
+        "status": "delivered",
+        "attempts": 1,
+        "outcome": null,
+        "last_error": "HTTP 408: {}"
+      },
+      {
+        "event_id": "evt_9ff828f6e482",
+        "status": "failed",
+        "attempts": 5,
+        "outcome": null,
+        "last_error": "fetch failed"
+      },
+      {
+        "event_id": "evt_0006d3a39705",
+        "status": "failed",
+        "attempts": 5,
+        "outcome": null,
+        "last_error": "fetch failed"
+      }
+    ],
+    "after": [
+      {
+        "event_id": "evt_e33c5558759f",
+        "status": "delivered",
+        "attempts": 5,
+        "outcome": "conflict",
+        "last_error": "HTTP 408: {}"
+      },
+      {
+        "event_id": "evt_2cb2c33b2cbf",
+        "status": "delivered",
+        "attempts": 1,
+        "outcome": null,
+        "last_error": "HTTP 408: {}"
+      },
+      {
+        "event_id": "evt_9ff828f6e482",
+        "status": "delivered",
+        "attempts": 5,
+        "outcome": "persisted",
+        "last_error": "fetch failed"
+      },
+      {
+        "event_id": "evt_0006d3a39705",
+        "status": "delivered",
+        "attempts": 5,
+        "outcome": "persisted",
+        "last_error": "fetch failed"
+      }
+    ],
+    "duration_ms": 17925,
+    "runs_on_final_version": [
+      {
+        "id": "YYEf1kYWN21droDGf5ywq",
+        "status": "SUCCEEDED",
+        "start": "2026-09-14 10:33:26.642+00",
+        "seconds": 4.49
+      },
+      {
+        "id": "lSVnqR9f1T7dSp4HDwOut",
+        "status": "SUCCEEDED",
+        "start": "2026-09-14 10:33:31.485+00",
+        "seconds": 4.85
+      },
+      {
+        "id": "AimURlYPd8nYsPeJN5870",
+        "status": "SUCCEEDED",
+        "start": "2026-09-14 10:33:36.744+00",
+        "seconds": 6.08
+      },
+      {
+        "id": "Hfov8kzLTOXQmJZVq0Xt2",
+        "status": "SUCCEEDED",
+        "start": "2026-09-14 10:36:35.145+00",
+        "seconds": 4.2
+      }
+    ],
+    "memory_entries": {
+      "evt_e33c5558759f": [
+        {
+          "file": ".claude/memory/decisions/writer-entries.md",
+          "entries": 1
+        },
+        {
+          "file": ".claude/memory/gotchas/writer-entries.md",
+          "entries": 1
+        }
+      ],
+      "evt_9ff828f6e482": [
+        {
+          "file": ".claude/memory/decisions/writer-entries.md",
+          "entries": 1
+        },
+        {
+          "file": ".claude/memory/gotchas/writer-entries.md",
+          "entries": 1
+        }
+      ],
+      "evt_0006d3a39705": [
+        {
+          "file": ".claude/memory/decisions/writer-entries.md",
+          "entries": 1
+        },
+        {
+          "file": ".claude/memory/gotchas/writer-entries.md",
+          "entries": 1
+        }
+      ]
+    }
+  },
+  "runs_before_fix": {
+    "note": "те же события до правки: write падал на 409, flow-response не рождался, отправитель повторял",
+    "runs": [
+      {
+        "id": "yPv0TyUIhqwLm9SJfxI71",
+        "status": "FAILED",
+        "flow_version": "A7CQZJuD2lLeIoFINa7nU",
+        "start": "2026-09-13 18:20:00.509+00"
+      },
+      {
+        "id": "ZXjqDKmtk1GVLlMNDaku7",
+        "status": "FAILED",
+        "flow_version": "A7CQZJuD2lLeIoFINa7nU",
+        "start": "2026-09-13 18:23:25.826+00"
+      },
+      {
+        "id": "ObLpBn5MFkhgpnRAHcjHy",
+        "status": "FAILED",
+        "flow_version": "A7CQZJuD2lLeIoFINa7nU",
+        "start": "2026-09-13 18:25:04.467+00"
+      },
+      {
+        "id": "aGgHqOTmj5PE01QVRr0aH",
+        "status": "FAILED",
+        "flow_version": "taybpPCJxVqCZpWYvLuYG",
+        "start": "2026-09-13 19:44:20.559+00"
+      },
+      {
+        "id": "NzHilTFBuzejLchn7wmdi",
+        "status": "FAILED",
+        "flow_version": "taybpPCJxVqCZpWYvLuYG",
+        "start": "2026-09-13 19:47:53.123+00"
+      },
+      {
+        "id": "GXlsbxA64x4HyuNLbyr37",
+        "status": "FAILED",
+        "flow_version": "taybpPCJxVqCZpWYvLuYG",
+        "start": "2026-09-13 19:48:28.025+00"
+      },
+      {
+        "id": "t7SVNx1km9IDw2GharrMx",
+        "status": "FAILED",
+        "flow_version": "taybpPCJxVqCZpWYvLuYG",
+        "start": "2026-09-13 19:49:06.997+00"
+      },
+      {
+        "id": "06305CbZwx5hNrO5fnlW5",
+        "status": "FAILED",
+        "flow_version": "taybpPCJxVqCZpWYvLuYG",
+        "start": "2026-09-13 19:52:14.577+00"
+      }
+    ]
+  },
+  "queue_now": [
+    {
+      "event_id": "evt_e33c5558759f",
+      "status": "delivered",
+      "attempts": 5,
+      "outcome": "conflict"
+    },
+    {
+      "event_id": "evt_2cb2c33b2cbf",
+      "status": "delivered",
+      "attempts": 1,
+      "outcome": null
+    },
+    {
+      "event_id": "evt_9ff828f6e482",
+      "status": "delivered",
+      "attempts": 5,
+      "outcome": "persisted"
+    },
+    {
+      "event_id": "evt_0006d3a39705",
+      "status": "delivered",
+      "attempts": 5,
+      "outcome": "persisted"
+    }
+  ]
+}
