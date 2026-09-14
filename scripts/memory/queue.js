@@ -162,7 +162,15 @@ class DurableQueue {
           error.retryable = result?.retryable !== false;
           throw error;
         }
-        this.finish(inflight, { status: 'delivered', delivered_at: new Date().toISOString() });
+        // outcome фиксирует, чем подтвердился контракт: persisted, no-pattern или
+        // conflict. Без него принятый повтор уже сохранённого события неотличим в
+        // очереди от обычной записи, а именно видимость расхождения отличает
+        // этот вариант от молчаливого подтверждения успеха (L04-04, F-04-1).
+        this.finish(inflight, {
+          status: 'delivered',
+          outcome: result.outcome ?? null,
+          delivered_at: new Date().toISOString(),
+        });
       } catch (error) {
         const attempts = (inflight.attempts || 0) + 1;
         const terminal = attempts >= this.retriesMax || error.retryable === false;

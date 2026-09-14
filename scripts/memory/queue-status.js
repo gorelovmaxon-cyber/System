@@ -50,6 +50,7 @@ async function main() {
       kind: item.event.kind,
       project_id: item.event.project_id,
       status: item.status,
+      outcome: item.outcome || null,
       attempts: item.attempts,
       last_error: item.last_error || null,
     })),

@@ -38,6 +38,13 @@ function retryableStatus(status) {
   return status === 408 || status === 429 || status >= 500;
 }
 
+// Терминальные статусы контракта подтверждения. `conflict` — повтор уже
+// сохранённого события с другим содержимым: writer отказал, память не изменилась,
+// и повторять это бессмысленно (AI недетерминирован, тот же event_id даст другие
+// proposal'ы и снова отказ). Отдельный статус, а не `persisted`, чтобы расхождение
+// оставалось видимым, а не выглядело подтверждённым успехом (L04-04, F-04-1).
+const TERMINAL_CONFIRMATIONS = ['persisted', 'no-pattern', 'conflict'];
+
 async function deliverEvent(event, options = {}) {
   const url = options.endpoint || endpoint();
   if (!url || url.includes('<')) return { ok: false, error: 'delivery endpoint is not configured' };
@@ -55,7 +62,7 @@ async function deliverEvent(event, options = {}) {
       let confirmation;
       try { confirmation = JSON.parse(body); } catch {}
       const correlated = confirmation?.event_id === event.event_id;
-      const terminal = confirmation?.status === 'persisted' || confirmation?.status === 'no-pattern';
+      const terminal = TERMINAL_CONFIRMATIONS.includes(confirmation?.status);
       if (correlated && terminal) {
         return { ok: true, status: response.status, outcome: confirmation.status };
       }
@@ -86,5 +93,5 @@ if (require.main === module) {
     });
 }
 
-module.exports = { deliverEvent, endpoint, DEFAULT_TIMEOUT_MS };
+module.exports = { deliverEvent, endpoint, DEFAULT_TIMEOUT_MS, TERMINAL_CONFIRMATIONS };
 
