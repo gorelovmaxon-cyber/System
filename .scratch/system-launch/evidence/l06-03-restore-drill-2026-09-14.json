@@ -1,0 +1,59 @@
+{
+  "drill_root": "D:\\SystemTheBest\\transfer-backups\\restore-drill-20260914-170239",
+  "source": "D:\\SystemTheBest\\transfer-backups\\pre-live-cycle-20260913-221624",
+  "steps": [
+    {
+      "step": "isolated target created",
+      "ok": true,
+      "detail": "D:\\SystemTheBest\\transfer-backups\\restore-drill-20260914-170239"
+    },
+    {
+      "step": "memory + local config restored from package",
+      "ok": true,
+      "detail": "system.local.json.backup"
+    },
+    {
+      "step": "sha256 of every restored file vs manifest",
+      "ok": true
+    },
+    {
+      "step": "backup freshness vs live memory",
+      "ok": true,
+      "detail": "restoring this package alone would not return the live memory set"
+    },
+    {
+      "step": "forward index is derived, not restored",
+      "ok": true,
+      "detail": "no index/embedding artifacts among restored memory files; the index is rebuilt from memory"
+    }
+  ],
+  "integrity": {
+    "manifest_entries": 19,
+    "restored_files": 19,
+    "sha256_mismatch": [],
+    "missing_from_restore": [],
+    "restored_but_not_in_manifest": [],
+    "verdict": "PASS"
+  },
+  "freshness": {
+    "live_files": 22,
+    "restored_files": 19,
+    "in_live_not_in_backup": [
+      "decisions/writer-entries.md",
+      "gotchas/writer-entries.md",
+      "patterns/writer-entries.md"
+    ]
+  },
+  "local_state_package": {
+    "source": "D:\\SystemTheBest\\transfer-backups\\pre-push-20260912-182546\\runtime\\.local",
+    "files": [
+      "indexer/tasks.jsonl",
+      "services/bridge.pid",
+      "services/bridge.stderr.log",
+      "services/bridge.stdout.log",
+      "services/doctor-2026-09-12.json",
+      "writer/processed.jsonl"
+    ],
+    "index_artifacts_in_memory_package": []
+  }
+}
