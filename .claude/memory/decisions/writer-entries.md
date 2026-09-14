@@ -48,3 +48,13 @@ event_id: evt_83763b7afdf0
 ---
 
 ## Опубликованная версия flow переведена с fixture-моста L03-03 на рабочий мост на порту 8643.
+---
+status: observation
+category: decisions
+scope: systemqwen
+source: activepieces-flow
+evidence: HANDOFF дополнен коротким актуальным статусом: фаза 4 закончена по факту и ждёт приёмки, ограничение «статус не равен приёмке» указано явно; Знание о 409 живёт в docs/memory-contract.md и в тикете L04-04
+event_id: evt_b1aa44d74de0
+---
+
+## За��ершение фазы по факту не равно её приёмке: ограничение «статус не равен приёмке» фиксируется явно в HANDOFF, а знание о конфликте 409 хранится в docs/memory-contract.md и тикете L04-04.
