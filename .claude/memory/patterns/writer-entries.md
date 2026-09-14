@@ -48,3 +48,13 @@ event_id: evt_51575e94224b
 ---
 
 ## Исправление ранее записанного знания в память проекта оформляется как новая запись штатным writer'ом (save.js) со связью supersedes, а старая запись помечается superseded со ссылкой superseded_by на новый event_id; старый текст сохраняется без перезаписи.
+---
+status: observation
+category: patterns
+scope: systemqwen
+source: activepieces-flow
+evidence: commit evt_e8c42d66a6a2, summary: "L06: очередь доставлена полностью — conflict как доказанная идемпотентность, цикл замыкается через no-pattern"
+event_id: evt_e8c42d66a6a2
+---
+
+## В конвейере System2 конфликт между событием и уже сохранённой памятью трактуется как доказательство идемпотентности, а цикл обработки очереди замыкается при получении результата no-pattern.
