@@ -38,3 +38,13 @@ event_id: evt_83763b7afdf0
 ---
 
 ## Живой трейс проекта проходит цепочку commit → событие → Activepieces → AI → bridge → writer → indexer → Khoj → Git, при этом состояния persisted и indexed различены.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: activepieces-flow
+evidence: evt_9861052a0dfe (kind: commit), summary: "L06: диагностика очереди — 25 событий по одному на коммит, не 123; исправлены числа и статус приёмки фазы 4"
+event_id: evt_9861052a0dfe
+---
+
+## Диагностика очереди в проекте systemqwen считает 25 событий — по одному на коммит; прежнее значение 123 было неверным, как и статус приёмки фазы 4, который исправлен в том же коммите.
