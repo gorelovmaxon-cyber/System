@@ -30,7 +30,9 @@ function acquireWorkerLock(queue, options = {}) {
 // next_attempt_at (backoff очереди), исчерпавшие попытки события оживляются
 // одним циклом ожидания, а вся работа прекращается по бездействию (maxIdleMs).
 // Это не глобальный оркестратор: процесс ограничен по времени и работает
-// только с одной очередью.
+// только с одной очередью. С `--no-revive` унаследованный терминальный failed не
+// считается недоставленным: доставлять его этот режим не будет, поэтому он не
+// держит владение до истечения reviveMs на каждый commit (L04-04, F-04-2).
 async function watch(options = {}) {
   const queue = options.queue || new DurableQueue();
   const deliver = options.deliver || deliverEvent;
@@ -41,6 +43,13 @@ async function watch(options = {}) {
   const hold = options.lock === false ? null : acquireWorkerLock(queue, options);
   const deadline = now() + maxIdleMs;
   const result = { status: 'idle', passes: 0, revives: 0, delivered: 0, pending: 0, failed: 0 };
+  // С `--no-revive` унаследованный терминальный failed этим watch не доставляется
+  // никогда: он не удерживает владение на reviveMs и не мешает достичь idle
+  // (L04-04, F-04-2). Запись, ставшая failed внутри этого же запуска, остаётся
+  // его собственным исходом — watch сообщает о ней честным `failed` (G12).
+  const inherited = options.revive === false
+    ? new Set(queue.list().filter(record => record.status === 'failed').map(record => record.event.event_id))
+    : null;
   try {
     let nextReviveAt = now() + reviveMs;
     for (;;) {
@@ -48,10 +57,13 @@ async function watch(options = {}) {
       result.passes += 1;
       const undelivered = records.filter(record => record.status !== 'delivered');
       result.delivered = records.length - undelivered.length;
-      result.pending = undelivered.filter(record => record.status !== 'failed').length;
       result.failed = undelivered.filter(record => record.status === 'failed').length;
-      if (!undelivered.length) return { ...result, status: 'idle' };
-      const waiting = undelivered.filter(record => record.status !== 'failed');
+      const actionable = inherited
+        ? undelivered.filter(record => !inherited.has(record.event.event_id))
+        : undelivered;
+      result.pending = actionable.filter(record => record.status !== 'failed').length;
+      if (!actionable.length) return { ...result, status: 'idle' };
+      const waiting = actionable.filter(record => record.status !== 'failed');
       let waitMs;
       if (waiting.length) {
         const due = waiting.some(record => !record.next_attempt_at || Date.parse(record.next_attempt_at) <= now());
@@ -62,6 +74,8 @@ async function watch(options = {}) {
       if (now() + waitMs > deadline) return { ...result, status: 'deadline' };
       if (waitMs > 0) await sleep(waitMs);
       if (!waiting.length) {
+        // Остались только записи, отказавшие внутри этого же запуска: без
+        // оживления это его собственный исход, а не бездействие.
         if (options.revive === false) return { ...result, status: 'failed' };
         // Оживление ожидается до конца: иначе владение снималось бы, пока
         // запущенная доставка ещё идёт, а её ошибка оставалась в фоне (W1).
