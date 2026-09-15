@@ -1,0 +1,41 @@
+commits: 159 | skipped as fixation: 9
+
+=== распознаны как фиксация памяти ===
+41c9645 | writer-memory-fixation | .claude/memory/decisions/writer-entries.md,.claude/memory/gotchas/writer-entries.md,.claude/memory/patterns/writer-entries.md | memory: append-only журналы читаются по последней записи, состояние ср
+d43a495 | writer-memory-fixation | .claude/memory/patterns/writer-entries.md | memory: паттерн цикла — conflict как доказанная идемпотентность, замык
+50d8ebe | writer-memory-fixation | .claude/memory/facts/writer-entries.md,.claude/memory/gotchas/writer-entries.md | memory: живые записи цикла по коммитам 5a8d8e9 (диагностика очереди) и
+c170961 | writer-memory-fixation | .claude/memory/decisions/writer-entries.md,.claude/memory/gotchas/writer-entries.md | memory: живая запись цикла по коммиту c46ba83 — Figma исключена из про
+65905a3 | writer-memory-fixation | .claude/memory/gotchas/writer-entries.md | memory: записи цикла о дефекте U+FFFD по коммитам фазы 5
+5212840 | writer-memory-fixation | .claude/memory/decisions/writer-entries.md,.claude/memory/gotchas/writer-entries.md | memory: живые записи цикла по коммитам фазы 5 (L05-04, L05-01, L05-03)
+5a3a896 | writer-memory-fixation | .claude/memory/gotchas/writer-entries.md,.claude/memory/patterns/writer-entries.md | memory: живые записи цикла по коммиту исправления записи о 409/conflic
+247244a | writer-memory-fixation | .claude/memory/decisions/writer-entries.md,.claude/memory/gotchas/writer-entries.md | memory: записи коммитов L04-01…L04-04, включая удаление seed-записи
+fa514fa | writer-memory-fixation | .claude/memory/decisions/writer-entries.md,.claude/memory/gotchas/writer-entries.md | memory: живые записи фазового цикла L04-02/L04-03
+
+=== НЕ распознаны (уйдут в AI) — только те, что похожи на память ===
+88d32af | removes-content | memory: исправление записи о 409/conflict и persisted
+f9ebcfc | touches-outside-memory | memory: живые записи цикла L04-04 и актуальный статус фазы 4
+4525410 | removes-content | SC-09: define event to memory writer flow
+cee806e | touches-outside-memory | SC-08: add idempotent memory writer bridge
+f0a2628 | removes-content | SC-03: formalize memory quality and evidence statuses
+38ab421 | touches-outside-memory | SC-02: add portable memory root and project registry
+2581041 | touches-outside-memory | feat(memory): add coding-style.md to user profile
+dfbd10a | removes-content | feat(memory): aggressive save rule + writing-tickets skill
+43b0378 | not-a-writer-file | feat(memory): add GitHub remote fact
+d398cac | removes-content | feat(memory): update MEMORY.md index with all imported files
+b0162d3 | not-a-writer-file | feat(memory): add decisions from D:\System\memory
+6a3741e | not-a-writer-file | feat(memory): add gotchas from D:\System\memory
+411ead6 | not-a-writer-file | feat(memory): add facts from D:\System\memory
+3c25fda | not-a-writer-file | feat(memory): add patterns from D:\System\memory
+281c1ff | renames-file | feat(memory): move user-profile to .claude/memory and create centraliz
+ae96d10 | removes-content | fix(memory): fix wording in architecture-prefs.md
+fd0f923 | touches-outside-memory | feat(memory): add work-patterns.md to user profile
+029f06c | touches-outside-memory | feat(memory): add common-mistakes.md to user profile
+6a304d2 | touches-outside-memory | feat(memory): add architecture-prefs.md to user profile
+c01cd3a | touches-outside-memory | feat(memory): add coding-style.md to user profile
+
+=== сводка причин ===
+ 100 removes-content
+  44 touches-outside-memory
+   9 writer-memory-fixation
+   5 not-a-writer-file
+   1 renames-file
