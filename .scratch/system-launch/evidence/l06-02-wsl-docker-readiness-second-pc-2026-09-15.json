@@ -107,5 +107,28 @@
     "only_key_absent": "AP_OPENAI_API_KEY",
     "why_that_is_correct": "по docs/activepieces-setup.md это необязательная локальная переменная, а не готовое подключение: AI connection создаётся в UI Activepieces и там же хранится ключ. Отсутствие ключа не мешает поднять стек",
     "note": "проверка добавлена, чтобы после установки Docker не выяснять отсутствие переменной постфактум; значения ключей здесь не приводятся"
+  },
+  "follow_up_after_installation": {
+    "date": "2026-09-15",
+    "git_head": "2ed9ba2efe916f0fc62de700606d6c9b303a0b26",
+    "git_sync": "HEAD = origin/master; ahead 0, behind 0; рабочее дерево было чистым до обновления evidence",
+    "elevated": false,
+    "observed": {
+      "wsl_version": "2.7.14.0; kernel 6.18.33.2-2",
+      "wsl_status": "Версия по умолчанию: 2; WSL2 пока не запускается, потому что компонент «Платформа виртуальной машины» ещё не вступил в силу",
+      "wsl_distributions": "установленных дистрибутивов нет; до первого запуска Docker Desktop это допустимо",
+      "wsl_service": "WslService Running, Automatic",
+      "docker_desktop": "Docker Desktop 4.91.0 установлен; C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe существует; winget list находит пакет",
+      "docker_cli": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe --version -> Docker version 29.8.0, build 88096ef; PATH текущей дорестартовой сессии ещё не обновлён",
+      "docker_engine": "не запущен: docker info по полному пути не находит npipe docker_engine; com.docker.service Stopped, Manual",
+      "health": "127.0.0.1:8642, :8643 и :42110 не слушают",
+      "cpu_virtualization": "VirtualizationFirmwareEnabled, VMMonitorModeExtensions и SLAT остаются True",
+      "reboot_pending": {
+        "windows_update_reboot_required": true,
+        "cbs_reboot_pending": true,
+        "pending_file_rename_operations": true
+      }
+    },
+    "conclusion": "Два установочных компонента уже появились; повторять установку до перезагрузки не нужно. Текущий блокер — ручная перезагрузка Windows. После неё сначала повторить wsl --status и docker info; только затем запускать Activepieces. Если после перезагрузки wsl --status всё ещё сообщает, что «Платформа виртуальной машины» не включена, повторно выполнить wsl --install --no-distribution из повышенного PowerShell и снова перезагрузить Windows."
   }
 }
