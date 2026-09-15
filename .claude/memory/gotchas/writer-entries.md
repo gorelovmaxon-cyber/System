@@ -180,3 +180,13 @@ event_id: evt_99ebd34b8471
 ---
 
 ## Проверка restore для L06 выполняется в отдельном каталоге, так как второй ПК недоступен (blocked), то есть восстановление валидируется локально, без второго стенда.
+---
+status: observation
+category: gotchas
+scope: systemqwen
+source: activepieces-flow
+evidence: Первая редакция отчёта читала append-only журналы как текущее состояние («123 события, 45 pending»): числа пересчитаны по последней записи на идентификатор
+event_id: evt_93478b794910
+---
+
+## Append-only journals must not be read as current state: counters like event/pending totals must be recomputed from the last record per identifier, otherwise stale cumulative numbers are reported as live state.

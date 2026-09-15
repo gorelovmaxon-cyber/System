@@ -58,3 +58,13 @@ event_id: evt_e8c42d66a6a2
 ---
 
 ## В конвейере System2 конфликт между событием и уже сохранённой памятью трактуется как доказательство идемпотентности, а цикл обработки очереди замыкается при получении результата no-pattern.
+---
+status: observation
+category: patterns
+scope: systemqwen
+source: activepieces-flow
+evidence: Состояние процессов обновлено после контролируемого восстановления (Docker/Activepieces/bridge подняты), а не оставлено снимком на момент отказа
+event_id: evt_93478b794910
+---
+
+## State descriptions in reports must reflect the environment after controlled recovery (Docker/Activepieces/bridge brought back up), not a snapshot frozen at the moment of failure.

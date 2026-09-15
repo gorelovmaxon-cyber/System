@@ -88,3 +88,13 @@ event_id: evt_e15b1df50571
 ---
 
 ## В проекте systemqwen Figma исключена из процесса: дизайн-артефакты Figma не используются при передаче фазы 5.
+---
+status: observation
+category: decisions
+scope: systemqwen
+source: activepieces-flow
+evidence: Утверждение «самонаведённый цикл замыкается сам» опровергнуто продолжением живой цепочки: по девяти коммитам памяти persisted 6, no-pattern 3
+event_id: evt_93478b794910
+---
+
+## The claim that the self-guided memory cycle closes itself is refuted: the live chain continues, with persisted 6 and no-pattern 3 across nine memory commits.
