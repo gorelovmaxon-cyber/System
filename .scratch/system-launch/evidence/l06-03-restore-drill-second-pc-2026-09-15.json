@@ -1,0 +1,91 @@
+{
+  "drill_root": "E:\\SystemTheBest\\transfer-backups\\restore-drill-second-pc-20260915-164123",
+  "source": "E:\\SystemTheBest\\transfer-backups\\second-pc-20260915-191058",
+  "steps": [
+    {
+      "step": "isolated target created",
+      "ok": true,
+      "detail": "E:\\SystemTheBest\\transfer-backups\\restore-drill-second-pc-20260915-164123"
+    },
+    {
+      "step": "memory restored from package",
+      "ok": true,
+      "detail": "E:\\SystemTheBest\\transfer-backups\\second-pc-20260915-191058\\system2-memory"
+    },
+    {
+      "step": "package verified against its own manifest",
+      "ok": true
+    },
+    {
+      "step": "restored memory sha256 verified against package manifest",
+      "ok": true
+    },
+    {
+      "step": "local state restored and read by last record per id",
+      "ok": true
+    },
+    {
+      "step": "index is derived, not restored",
+      "ok": true
+    },
+    {
+      "step": "live memory untouched and compared",
+      "ok": true
+    }
+  ],
+  "package_integrity": {
+    "manifest_entries": 28,
+    "verified": 28,
+    "mismatched": [],
+    "absent": []
+  },
+  "integrity": {
+    "restored_files": 18,
+    "pinned_in_manifest": 18,
+    "matched_sha256": 18,
+    "mismatched": [],
+    "not_in_manifest": []
+  },
+  "local_state": {
+    "queue": {
+      "present": true,
+      "raw_lines": 10,
+      "unique_records": 1,
+      "statuses": {
+        "pending": 1
+      }
+    },
+    "indexer": {
+      "present": true,
+      "raw_lines": 3,
+      "unique_records": 1,
+      "statuses": {
+        "failed": 1
+      }
+    },
+    "writer": {
+      "present": true,
+      "raw_lines": 2,
+      "unique_records": 1,
+      "statuses": {
+        "persisted": 1
+      }
+    }
+  },
+  "derived_index": {
+    "index_artifacts_in_backup": []
+  },
+  "live_comparison": {
+    "live_files": 22,
+    "restored_files": 18,
+    "only_live": [
+      "decisions/writer-entries.md",
+      "facts/writer-entries.md",
+      "gotchas/writer-entries.md",
+      "patterns/writer-entries.md"
+    ],
+    "only_restored": []
+  },
+  "live_memory_sha256": "a75c627b3b49b91d07ec39274f87db2654fe6f6b43c16c11fc69c8ff43ffca08",
+  "restored_memory_sha256": "531f2f7c99965664ea34204d32459d140ba7c24609954929e97d744c0770b5e4"
+}
