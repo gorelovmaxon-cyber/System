@@ -13,7 +13,11 @@ API берётся из него, а не из документации прош
 
 - Python 3.12 (`requires_python` релиза — `>=3.10,<3.13`). На машине приёмки:
   `C:\Users\<user>\AppData\Local\Programs\Python\Python312\python.exe`, `Python 3.12.10`.
-- venv вне репозитория: `D:\SystemTheBest\runtime\khoj-1.42.10`.
+  Если на машине только версия из Microsoft Store (например 3.14.x) — поставить 3.12
+  отдельно: `winget install --id Python.Python.3.12 --scope user`.
+- venv вне репозитория: `D:\SystemTheBest\runtime\khoj-1.42.10` на первом ПК,
+  `E:\SystemTheBest\runtime\khoj-1.42.10` на втором (2026-09-15). Ниже в примерах
+  зафиксирован путь первого ПК — подставляйте свой.
 - Docker не нужен. `cmake` и Visual Studio не нужны — см. ниже.
 
 ## Установка (один проверенный путь)
@@ -37,9 +41,10 @@ $venv = "D:\SystemTheBest\runtime\khoj-1.42.10"
 ... sentence-transformers-3.4.1 ... llama-cpp-python-0.2.88`. Закреплённые версии
 совпадают с метаданными PyPI — ни одна не заменена вручную.
 
-## Два дефекта релиза на Windows
+## Дефекты и обходы на Windows
 
-Оба обойдены в `services/khoj/run-local.py`; правки самого пакета не вносятся.
+Первые два обойдены в `services/khoj/run-local.py`; правки самого пакета не вносятся.
+Третий — про внешнюю сеть, правится переменными окружения.
 
 1. **`USE_EMBEDDED_DB=true` на Windows не работает.** Ветка релиза безусловно
    подставляет в `DB_HOST` каталог pgdata, а в `DB_PORT` — пустую строку: она
@@ -50,6 +55,21 @@ $venv = "D:\SystemTheBest\runtime\khoj-1.42.10"
    `share/postgresql/timezone` отсутствует, из-за чего Django падает на
    `SET TimeZone='UTC'` до первой миграции. `run-local.py` восстанавливает TZif-файлы
    из пакета `tzdata`.
+3. **Протокол HuggingFace Xet рвёт загрузку моделей** *(найдено 2026-09-15 на втором ПК)*.
+   `huggingface_hub` 0.36.2 ходит за весами через `xet_get` и получает
+   `ConnectionError: Network error:`. Внешне это выглядит как дефект индекса, а не сети:
+   `GET /api/update` → `500 Failed to update content index`, `GET /api/search` → `timeout`,
+   поиск уходит в локальный fallback. Лечится переменной `HF_HUB_DISABLE_XET=1` —
+   после неё та же модель скачалась за 3.5 с.
+
+   Сопутствующая причина отказа установки: системный прокси WinINET
+   (`socks=127.0.0.1:10808`, `ProxyEnable=1` в реестре) наследуется `pip` и даёт
+   `ERROR: Could not install packages due to an OSError: Missing dependencies for SOCKS
+   support`. Обходится `NO_PROXY=*` (и `no_proxy=*`) на время установки.
+
+   Обе переменные проще всего задать в `services/khoj/config.local.env`: `run-local.py`
+   переносит все ключи этого файла в окружение процесса, поэтому сервис получает их при
+   каждом старте, а не только в сессии установки.
 
 ## Конфигурация и источник
 

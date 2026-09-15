@@ -1,0 +1,59 @@
+{
+  "ok": false,
+  "checks": [
+    {
+      "status": "OK",
+      "check": "git"
+    },
+    {
+      "status": "OK",
+      "check": "git/remote origin"
+    },
+    {
+      "status": "OK",
+      "check": "git/branch"
+    },
+    {
+      "status": "OK",
+      "check": "node 24.14.0"
+    },
+    {
+      "status": "OK",
+      "check": "resolve-paths and system root"
+    },
+    {
+      "status": "OK",
+      "check": "config/system.local.json"
+    },
+    {
+      "status": "OK",
+      "check": "project HANDOFF.md"
+    },
+    {
+      "status": "PROBLEM",
+      "check": "portable hooksPath",
+      "instruction": "Run bash .git-hooks-templates/install-hooks.sh."
+    },
+    {
+      "status": "OK",
+      "check": "shared memory root"
+    },
+    {
+      "status": "OK",
+      "check": "Khoj health"
+    },
+    {
+      "status": "OK",
+      "check": "memory bridge ready"
+    },
+    {
+      "status": "PROBLEM",
+      "check": "Activepieces health",
+      "instruction": "Start services/activepieces with Docker Compose."
+    },
+    {
+      "status": "OK",
+      "check": "local event queue not created (valid)"
+    }
+  ]
+}
