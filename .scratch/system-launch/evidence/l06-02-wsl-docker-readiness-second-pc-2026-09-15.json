@@ -1,0 +1,111 @@
+{
+  "id": "l06-02-wsl-docker-readiness-second-pc",
+  "date": "2026-09-15",
+  "host": {
+    "name": "DESKTOP-NCLRFDV",
+    "os": "Windows 11 Home 10.0.26200",
+    "system_root": "E:\\SystemTheBest\\System",
+    "user": "DESKTOP-NCLRFDV\\gorel",
+    "elevated": false
+  },
+  "purpose": "Зафиксировать фактическое состояние WSL2/Docker на втором ПК до установки, чтобы администратору не пришлось его выяснять, и чтобы после установки было с чем сравнивать.",
+  "probe_commands": [
+    "wsl.exe --status",
+    "wsl.exe -l -v",
+    "wsl.exe --version",
+    "docker --version",
+    "Test-Path 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe'",
+    "winget list --id Docker.DockerDesktop --disable-interactivity",
+    "Get-Service LxssManager",
+    "Get-Service vmcompute,hns",
+    "Get-AppxPackage -Name '*WindowsSubsystemForLinux*'",
+    "(Get-Item \"$env:SystemRoot\\System32\\wsl.exe\").VersionInfo.ProductVersion",
+    "Get-CimInstance Win32_Processor | Select VirtualizationFirmwareEnabled,VMMonitorModeExtensions,SecondLevelAddressTranslationExtensions",
+    "Test-Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update\\RebootRequired'"
+  ],
+  "observed": {
+    "wsl_status": "Подсистема Windows для Linux не установлена. Для установки выполните команду \"wsl.exe --install\".",
+    "wsl_distributions": "команда вернула тот же ответ: подсистема не установлена",
+    "wsl_exe_stub": {
+      "path": "C:\\Windows\\System32\\wsl.exe",
+      "product_version": "10.0.26100.8875",
+      "meaning": "в System32 лежит только встроенная заглушка установщика; сама подсистема не установлена"
+    },
+    "lxssmanager_service": "служба отсутствует в списке — необязательный компонент Microsoft-Windows-Subsystem-Linux не включён",
+    "vmcompute_hns_services": "обе службы отсутствуют — компонент VirtualMachinePlatform не включён, поэтому бэкенд WSL2 недоступен",
+    "wsl_store_package": "Get-AppxPackage по маске *WindowsSubsystemForLinux* не вернул ничего",
+    "docker_cli": "docker не распознаётся как команда",
+    "docker_desktop_exe": "C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe отсутствует",
+    "winget_docker": "Не найдены установленные пакеты, соответствующие введенным условиям.",
+    "cpu_virtualization": {
+      "cpu": "Intel(R) Core(TM) i5-10600KF CPU @ 4.10GHz",
+      "VirtualizationFirmwareEnabled": true,
+      "VMMonitorModeExtensions": true,
+      "SecondLevelAddressTranslationExtensions": true,
+      "meaning": "аппаратная виртуализация включена в BIOS/UEFI; препятствий для WSL2 нет"
+    },
+    "reboot_pending": {
+      "windows_update_reboot_required": true,
+      "pending_file_rename_operations": false
+    }
+  },
+  "not_readable_without_elevation": [
+    "Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux",
+    "Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform",
+    "причина: The requested operation requires elevation — точное состояние компонентов читается только из-под администратора; косвенно подтверждено отсутствием служб LxssManager, vmcompute и hns"
+  ],
+  "conclusion": "WSL2 и Docker на этом ПК не установлены вовсе — не «остановлены» и не «сломаны». Требуются права администратора и перезагрузка. Аппаратная виртуализация включена, так что установка возможна без правки BIOS.",
+  "required_admin_actions": {
+    "step_1": {
+      "shell": "PowerShell от имени администратора",
+      "command": "wsl --install --no-distribution",
+      "why": "--no-distribution ставит саму WSL2 и VirtualMachinePlatform без Linux-дистрибутива: Docker Desktop приносит свой, лишний не нужен"
+    },
+    "step_2": {
+      "shell": "то же окно администратора",
+      "command": "winget install --id Docker.DockerDesktop --scope machine --accept-package-agreements --accept-source-agreements",
+      "package_version_seen": "4.91.0 (запрошено 2026-09-15 через winget show --id Docker.DockerDesktop)",
+      "note": "на первом ПК стоит 4.90.0; расхождение версий ожидаемо и не является ошибкой — версия проверяется pull/health на конкретной машине"
+    },
+    "step_3": {
+      "action": "перезагрузка ПК",
+      "by": "пользователь, вручную",
+      "why": "включение VirtualMachinePlatform и регистрация WSL2 вступают в силу только после перезагрузки; автоматически она не выполняется"
+    }
+  },
+  "verification_after_reboot": {
+    "wsl2": {
+      "command": "wsl --status",
+      "expect": "сообщение о версии WSL по умолчанию 2 и отсутствие фразы «Подсистема Windows для Linux не установлена»; дополнительно wsl -l -v отвечает списком (пустой список допустим — дистрибутив ставит Docker Desktop)"
+    },
+    "docker_cli": {
+      "command": "docker --version",
+      "expect": "строка вида Docker version 29.x.x, ... (а не «не распознаётся как команда»)"
+    },
+    "docker_engine": {
+      "command": "docker info --format '{{.ServerVersion}}'",
+      "expect": "непустая версия движка; если пусто — Docker Desktop не запущен, его нужно запустить вручную (в автозапуск он не входит)"
+    },
+    "activepieces": {
+      "command": "curl.exe -fsS http://127.0.0.1:8642/api/v1/health",
+      "expect": "{\"status\":\"Healthy\"}",
+      "note": "перед этим: cd services/activepieces; docker compose -f docker-compose.yml pull; docker compose -f docker-compose.yml up -d; docker compose ps — четыре сервиса Up (healthy)"
+    },
+    "doctor": {
+      "command": "node scripts/memory/doctor.js --json",
+      "expect": "PROBLEM ровно по одному пункту — portable hooksPath (hooks включаются последним шагом, после готовности получателя событий). Пункт Activepieces health должен перейти в OK"
+    }
+  },
+  "state_of_working_copy_at_probe": {
+    "git_status": "master...origin/master, рабочее дерево чистое",
+    "services_running": "bridge 8643 и Khoj 42110 не слушают — процессы запускались вручную в прошлой сессии и остановлены; установка Khoj в E:\\SystemTheBest\\runtime\\khoj-1.42.10 на месте",
+    "activepieces_env": "services/activepieces/.env создан локально, все ключи заполнены сгенерированными здесь значениями (в Git не попадает)"
+  },
+  "preflight_of_activepieces_env": {
+    "checked": "сверка ключей services/activepieces/.env с services/activepieces/.env.example и с переменными, которые подставляет docker-compose.yml",
+    "result": "16 ключей; ни одного пустого значения; все переменные, используемые compose (AP_PORT, AP_HOST_BRIDGE_URL, AP_POSTGRES_DATABASE, AP_POSTGRES_USERNAME, AP_POSTGRES_PASSWORD), заданы",
+    "only_key_absent": "AP_OPENAI_API_KEY",
+    "why_that_is_correct": "по docs/activepieces-setup.md это необязательная локальная переменная, а не готовое подключение: AI connection создаётся в UI Activepieces и там же хранится ключ. Отсутствие ключа не мешает поднять стек",
+    "note": "проверка добавлена, чтобы после установки Docker не выяснять отсутствие переменной постфактум; значения ключей здесь не приводятся"
+  }
+}

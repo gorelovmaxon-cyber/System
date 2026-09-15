@@ -1,0 +1,54 @@
+{
+  "id": "l06-02-local-bindings-second-pc",
+  "date": "2026-09-15",
+  "host": "DESKTOP-NCLRFDV",
+  "purpose": "Проверить локальные привязки проектов на втором ПК. Отсутствующие пути и данные не выдумываются: где корень не подтверждён, привязка остаётся заглушкой.",
+  "registry": [
+    { "project_id": "systemqwen", "title": "SystemQwen (система разработки)", "kind": "meta" },
+    { "project_id": "site-portfolio", "title": "C-portfolio", "kind": "client-site" },
+    { "project_id": "trading-dev", "title": "Binance Trading System", "kind": "dev" },
+    { "project_id": "autopilot-framework", "title": "Autopilot Framework", "kind": "dev" }
+  ],
+  "local_paths_in_config": {
+    "site-portfolio": "<ABSOLUTE_SITE_PORTFOLIO_ROOT>",
+    "trading-dev": "<ABSOLUTE_TRADING_ROOT>",
+    "autopilot-framework": "<ABSOLUTE_AUTOPILOT_ROOT>"
+  },
+  "check_commands": [
+    "node scripts/memory/project-id.js",
+    "node scripts/memory/project-id.js E:\\dev\\binance_bot",
+    "node scripts/memory/project-id.js E:\\KWORK",
+    "Get-ChildItem C:\\,E:\\ -Directory -Depth 3 | Where-Object { Test-Path (Join-Path $_.FullName '.git') -PathType Container }",
+    "git -C <candidate> remote -v; git -C <candidate> log -1 --format='%h %ad %s' --date=short"
+  ],
+  "observed": {
+    "system_root": { "command": "node scripts/memory/project-id.js", "result": "systemqwen", "exit": 0 },
+    "outside_system_root": [
+      { "path": "E:\\dev\\binance_bot", "result": "project_id cannot be determined; register the project or set SYSTEM2_PROJECT_ID", "exit": 1 },
+      { "path": "E:\\KWORK", "result": "project_id cannot be determined; register the project or set SYSTEM2_PROJECT_ID", "exit": 1 }
+    ],
+    "git_working_copies_found_on_disk": [
+      { "path": "E:\\dev", "origin": "https://github.com/gorelovmaxon-cyber/straregi.git", "head": "364d886 2026-07-18" },
+      { "path": "E:\\dev\\binance_bot", "origin": "https://github.com/gorelovmaxon-cyber/binance-bot.git", "head": "d39775e 2026-07-18" },
+      { "path": "E:\\git", "origin": null, "head": "529ba5f 2026-05-21" },
+      { "path": "E:\\KWORK", "origin": null, "head": "cdc0453 2026-08-02" },
+      { "path": "E:\\System2", "origin": "https://github.com/gorelovmaxon-cyber/System.git", "head": "69a257c 2026-09-08" },
+      { "path": "E:\\video-ai-digest", "origin": null, "head": "d552a46 2026-08-16" },
+      { "path": "E:\\SystemTheBest\\System", "origin": "https://github.com/gorelovmaxon-cyber/System.git", "head": "origin/master" }
+    ],
+    "candidates_not_confirmed": [
+      { "project_id": "trading-dev", "candidate_roots": ["E:\\dev", "E:\\dev\\binance_bot"], "why_not_confirmed": "каталоги существуют и принадлежат пользователю, но ни один не назван корнем trading-dev ни в реестре, ни в документах; совпадение темы «Binance» не является подтверждением пути" },
+      { "project_id": "site-portfolio", "candidate_roots": ["E:\\KWORK"], "why_not_confirmed": "единственная git-копия с темой сайта, но её origin не задан и связь с проектом C-portfolio не подтверждена" },
+      { "project_id": "autopilot-framework", "candidate_roots": [], "why_not_confirmed": "подходящего каталога на диске не найдено вовсе; найдены только .claude/skills/autopilot внутри чужих копий системы" }
+    ]
+  },
+  "consequence_of_unfilled_paths": "project-id.js:27 явно пропускает значения, начинающиеся с '<', поэтому привязка не подставляется молча. Единственное следствие — вне корня системы project_id не определяется (exit 1) до заполнения local_paths или установки SYSTEM2_PROJECT_ID. Ошибкой это не является: реестр остаётся честным, а не подогнанным под найденные каталоги.",
+  "decision": "local_paths оставлены заглушками. Заполнение возможно только после того, как пользователь подтвердит, какой каталог соответствует какому project_id; автоподстановка по совпадению темы запрещена как выдумывание отсутствующих данных.",
+  "other_local_config_values": {
+    "system_root": "E:\\SystemTheBest\\System — заполнено",
+    "integrations.khoj.enabled": true,
+    "integrations.bridge.enabled": true,
+    "integrations.activepieces.webhook_url": "http://<host>:8642/api/v1/webhooks/<WEBHOOK_ID>/sync — заглушка до подъёма Activepieces и создания webhook",
+    "bridge.token": "задан локально сгенерированным значением; в Git и в отчёт не переносится"
+  }
+}

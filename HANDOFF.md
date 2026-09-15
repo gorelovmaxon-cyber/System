@@ -19,8 +19,35 @@
 > [отчёте фазы 6](.scratch/system-launch/reports/CHAT-06-RESULT.md), раздел «Второй ПК».
 > Данные до изменений сохранены вне репозитория:
 > `E:\SystemTheBest\transfer-backups\second-pc-20260915-191058`. Тикеты L06-01, L06-02 и
-> L06-03 переведены в `awaiting-review`; `done` ставит приёмщик. **Следующий шаг —
-> Docker Desktop + WSL2, затем `install-hooks.sh` после готовности получателя.**
+> L06-03 переведены в `awaiting-review`; `done` ставит приёмщик.
+>
+> **Уточнено 2026-09-15 (продолжение той же работы).** Состояние WSL2/Docker снято точно, а
+> не предположено: `wsl --status` → «Подсистема Windows для Linux не установлена»,
+> `docker` не распознаётся, `Docker Desktop.exe` отсутствует, `winget list --id
+> Docker.DockerDesktop` → «не найдены установленные пакеты» (при этом `winget show` пакет
+> видит — версия `4.91.0`); аппаратная виртуализация включена, правка BIOS не нужна; права
+> администратора у пользователя нет. Запись с командами и ожидаемыми результатами —
+> [evidence](.scratch/system-launch/evidence/l06-02-wsl-docker-readiness-second-pc-2026-09-15.json).
+> Локальные привязки проектов проверены: `local_paths` трёх проектов **остаются заглушками**,
+> потому что корни на этой машине не подтверждены (кандидаты найдены, но ни один не назван
+> корнем проекта) — [evidence](.scratch/system-launch/evidence/l06-02-local-bindings-second-pc-2026-09-15.json).
+> Для ноутбука подготовлено **задание одному локальному исполнителю** — точные шаги,
+> ожидаемые результаты и необходимые доказательства:
+> [CHAT-06-LAPTOP-TASK.md](.scratch/system-launch/CHAT-06-LAPTOP-TASK.md). Оно закрывает
+> вторую половину обмена; пока ноутбук его не выполнит, обмен подтверждён с одной стороны.
+>
+> **Следующий шаг — два административных действия и перезагрузка** (её выполняет
+> пользователь, автоматически она не запускается). В PowerShell **от имени администратора**:
+> `wsl --install --no-distribution`, затем
+> `winget install --id Docker.DockerDesktop --scope machine --accept-package-agreements --accept-source-agreements`.
+> Проверка после перезагрузки: `wsl --status` (версия по умолчанию 2) → `docker --version`
+> → `docker compose -f services/activepieces/docker-compose.yml up -d` → `curl.exe -fsS
+> http://127.0.0.1:8642/api/v1/health` = `{"status":"Healthy"}`. **Только после** этого —
+> импорт flow, локальный `WEBHOOK_ID` в `config/system.local.json`, затем
+> `bash .git-hooks-templates/install-hooks.sh` и повторный `doctor.js --json`: `hooksPath`
+> должен стать ровно `.git-hooks-templates`, а `Activepieces health` — `OK`. Полная таблица
+> проверок с ожидаемыми выводами — в разделе «Ровно следующий шаг» отчёта фазы 6.
+> Сам себе `done`/`READY` не выставляется.
 
 > Статус **первого ПК** (`DESKTOP-BUGF4FI`, `D:\SystemTheBest\System`) на 2026-09-15: **защита от самоповторов памяти выполнена и опубликована**
 > — `1a36ad5` (код, тесты, evidence) и `41c9645` (записи памяти); набор **179/179**.
