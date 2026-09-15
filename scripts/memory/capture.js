@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const { createEvent, parseJsonFile } = require('./events');
 const { DurableQueue } = require('./queue');
 const { deliverEvent } = require('./deliver');
+const { classify } = require('./memory-fixation');
 
 function args(argv) {
   const [kind, ...rest] = argv.slice(2);
@@ -41,6 +42,21 @@ async function main() {
   if (values.file) input = { ...input, ...parseJsonFile(values.file) };
   if (values.text && !input.summary) input.summary = values.text;
   const event = createEvent(input);
+  // Коммит, которым writer фиксирует уже обработанную память, не уходит в
+  // очередь: иначе его захватывает тот же hook, AI снова порождает запись, и
+  // цикл ограничен только ручным прекращением коммитов. Признак считается по
+  // происхождению и составу изменений (memory-fixation.js), а не по префиксу
+  // сообщения: обычный и смешанный коммит не должен теряться.
+  const fixation = classify(input.diff || '');
+  if (fixation.skip) {
+    process.stdout.write(JSON.stringify({
+      event_id: event.event_id,
+      skipped: fixation.reason,
+      files: fixation.files,
+      event_ids: fixation.event_ids,
+    }) + '\n');
+    return;
+  }
   const queue = new DurableQueue();
   const record = queue.enqueue(event);
   if (values.enqueue_only === true) {
