@@ -75,10 +75,11 @@
 
 Дата: 2026-09-20. Полный отчёт — [RESULT.md](RESULT.md).
 
-- Одинаковый PowerShell-счётчик повторён для шести наборов. Final: обязательный набор
-  44 819 символов / 714 строк / 74 339 байт; dev 27 702 / 434 / 45 353; память-очередь
-  54 160 / 840 / 88 407; поиск 38 317 / 661 / 60 197; bridge/AP 33 985 / 597 /
-  53 746; перенос/restore 41 624 / 696 / 65 881. Baseline и состав наборов — в отчёте.
+- Одинаковый PowerShell-счётчик повторён для шести наборов и ещё раз после возврата
+  приёмки. Final: обязательный набор 45 510 символов / 725 строк / 75 596 байт; dev
+  28 393 / 445 / 46 610; память-очередь 54 851 / 851 / 89 664; поиск 39 008 / 672 /
+  61 454; bridge/AP 34 676 / 608 / 55 003; перенос/restore 42 315 / 707 / 67 138.
+  Baseline и состав наборов — в отчёте.
 - Frontmatter-parser: 49 skills, из них 26 model-invoked и 23 user-invoked;
   descriptions model-invoked — 5 172 символа. Телеметрия токенов отсутствует.
 - Метаданные без значений секретов: Claude global MCP `figma`, `firecrawl`,
@@ -92,7 +93,7 @@
 | Metric | Value | Source/method |
 |---|---:|---|
 | wall-clock time | `unknown` | таймер до начала блока не запускался |
-| retries/repeats | 3 | журнал причин в RESULT.md |
+| retries/repeats | 4 | журнал причин и возврат приёмки в RESULT.md |
 | context/input tokens | `unknown` | telemetry недоступна локальному CLI |
 | output tokens | `unknown` | telemetry недоступна локальному CLI |
 | monetary cost | `unknown` | provider billing недоступен |
