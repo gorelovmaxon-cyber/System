@@ -155,16 +155,38 @@ Activepieces там сейчас не запущен (Docker Desktop не в а�
 
 ### Слот первого ПК (`DESKTOP-BUGF4FI`) — заполняет исполнитель ноутбука
 
-- корень рабочей копии: `<заполнить>`
-- ветка и upstream: `<заполнить>`
-- `git log -1` до шага 2: `<заполнить>`
-- `git log --oneline --left-right HEAD...origin/master` до шага 2: `<заполнить>`
-- `git status --short` до шага 2: `<заполнить>`
-- `core.hooksPath`: `<заполнить>`
-- вывод `git pull --no-rebase origin master` (кратко): `<заполнить>`
-- найдена ли отметка `SYSTEM2-EXCHANGE-NCLRFDV`: `<да/нет>`
-- `git log -1` после коммита: `<заполнить>`
-- `git ls-remote origin refs/heads/master`: `<заполнить>`
-- `queue-status.js` (кратко: сколько всего, сколько delivered/failed): `<заполнить>`
-- отметка первого ПК: `<SYSTEM2-EXCHANGE-BUGF4FI-...>`
-- что оказалось не так или потребовало обхода: `<заполнить или «нет»>`
+- корень рабочей копии: `D:\SystemTheBest\System`
+- ветка и upstream: `master`, `origin/master`
+- `git log -1` до шага 2: `6d08ca42a0da18b17d6f9a3fa35f19ced71bc630 2026-09-15 18:52:07 +0300 L06: состояние очереди в передаче описано правилом, а не снимком, который сам себя меняет`
+- `git log --oneline --left-right HEAD...origin/master` до шага 2:
+  ```text
+  > ee706bc L06-03: подготовить продолжение Activepieces после recovery
+  > afd4019 L06-02: подтвердить bridge и Khoj без Docker
+  > 8a2a1b2 L06-01: зафиксировать отсутствие повторяемых non-Docker шагов
+  > fd1059c CO-ACCEPT: record independent acceptance
+  > 691937a CO-REVIEW: fix archive links and handoff next step
+  > b6b6cde CO-03: measure context and review settings
+  > 7272537 CO-02: add task-oriented context map
+  > 801126f CO-01: compact handoff and archive history
+  > a557f72 L06-02: зафиксировать установку WSL и Docker до перезагрузки
+  > 2ed9ba2 L06-02: административное действие и задание ноутбуку названы точно
+  > a812edf L06-02: итог второго ПК записан с границами, а не как объявление готовности
+  > 81a90bf L06-03: restore проверен на втором ПК сверкой с манифестом, а не наличием файлов
+  > a1692e9 L06-02: конфликт одной строки разрешён сохранением обеих версий
+  > 37df900 L06-02: второй ПК правит ту же строку независимо от встречной копии
+  > bad97cb L06-02: встречная копия правит ту же строку, что и второй ПК
+  > d125695 L06-02: обмен изменениями со второго ПК описан точкой конфликта, а не пересказом
+  ```
+- `git status --short` до шага 2:
+  ```text
+  ?? .scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md
+  ?? .scratch/system-remediation/evidence/status-check-current-tests.txt
+  ```
+- `core.hooksPath`: `.git-hooks-templates`
+- вывод `git pull --no-rebase origin master` (кратко): `Updating 6d08ca4..ee706bc`, `Fast-forward`, `27 files changed, 2528 insertions(+), 351 deletions(-)`
+- найдена ли отметка `SYSTEM2-EXCHANGE-NCLRFDV`: `да`
+- `git log -1` после коммита: `<фиксируется после первого push на шаге 5>`
+- `git ls-remote origin refs/heads/master`: `<фиксируется после первого push на шаге 5>`
+- `queue-status.js` (кратко: сколько всего, сколько delivered/failed): `<фиксируется после первого commit на шаге 5>`
+- отметка первого ПК: `SYSTEM2-EXCHANGE-BUGF4FI-ee706bc3fc60`
+- что оказалось не так или потребовало обхода: два существовавших untracked-черновика сохранены вне репозитория со сверкой SHA-256; по прямому указанию пользователя они оставлены на месте и не включаются в коммит обмена. Tracked-файлы до pull были чистыми, пересечения их путей с `origin/master` не было.
