@@ -185,8 +185,8 @@ Activepieces там сейчас не запущен (Docker Desktop не в а�
 - `core.hooksPath`: `.git-hooks-templates`
 - вывод `git pull --no-rebase origin master` (кратко): `Updating 6d08ca4..ee706bc`, `Fast-forward`, `27 files changed, 2528 insertions(+), 351 deletions(-)`
 - найдена ли отметка `SYSTEM2-EXCHANGE-NCLRFDV`: `да`
-- `git log -1` после коммита: `<фиксируется после первого push на шаге 5>`
-- `git ls-remote origin refs/heads/master`: `<фиксируется после первого push на шаге 5>`
-- `queue-status.js` (кратко: сколько всего, сколько delivered/failed): `<фиксируется после первого commit на шаге 5>`
+- `git log -1` после коммита: `f65da92f34a16a5cf0c36efbf5631e8e3efaffd8 L06-02: первый ПК подтверждает обмен (слот в задании обмена)`
+- `git ls-remote origin refs/heads/master`: `f65da92f34a16a5cf0c36efbf5631e8e3efaffd8 refs/heads/master`
+- `queue-status.js` после коммита (кратко): всего `38`, `delivered: 32`, `failed: 6`; новое событие `evt_51105b83d28e` — `failed`, `attempts: 5`, `last_error: fetch failed`; `corrupt_count: 0`
 - отметка первого ПК: `SYSTEM2-EXCHANGE-BUGF4FI-ee706bc3fc60`
-- что оказалось не так или потребовало обхода: два существовавших untracked-черновика сохранены вне репозитория со сверкой SHA-256; по прямому указанию пользователя они оставлены на месте и не включаются в коммит обмена. Tracked-файлы до pull были чистыми, пересечения их путей с `origin/master` не было.
+- что оказалось не так или потребовало обхода: два существовавших untracked-черновика сохранены вне репозитория со сверкой SHA-256; по прямому указанию пользователя они оставлены на месте и не включаются в коммит обмена. Tracked-файлы до pull были чистыми, пересечения их путей с `origin/master` не было. Первый post-push `git ls-remote` завершился временным `schannel: failed to receive handshake`; повторная read-only проверка прошла и вернула SHA выше.
