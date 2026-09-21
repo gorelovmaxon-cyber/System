@@ -1,0 +1,95 @@
+{
+  "schema_version": "1",
+  "captured_at": "2026-09-21T20:34:06.6382287+03:00",
+  "machine": "DESKTOP-NCLRFDV",
+  "system_root": "E:\\SystemTheBest\\System",
+  "git": {
+    "branch": "master",
+    "head": "fd1059c3b0f2d9c2b260d877f3db18e84ccd0f22",
+    "origin_master": "fd1059c3b0f2d9c2b260d877f3db18e84ccd0f22",
+    "ahead": 0,
+    "behind": 0,
+    "worktree_before_changes": "clean"
+  },
+  "scope": {
+    "docker_or_wsl_commands_run": false,
+    "windows_components_changed": false,
+    "hooks_enabled": false,
+    "automatic_reboot_performed": false
+  },
+  "services": {
+    "bridge": {
+      "url": "http://127.0.0.1:8643",
+      "health_http": 200,
+      "health_body": {
+        "status": "ready",
+        "writer": true
+      },
+      "write_without_token_http": 401,
+      "write_with_wrong_token_http": 401,
+      "started_with": "node scripts/memory/bridge-server.js",
+      "log": "E:\\SystemTheBest\\runtime\\bridge-service.log"
+    },
+    "khoj": {
+      "url": "http://127.0.0.1:42110",
+      "health_http": 200,
+      "health_body": {
+        "email": "default@example.com"
+      },
+      "started_with": "E:\\SystemTheBest\\runtime\\khoj-1.42.10\\Scripts\\python.exe services/khoj/run-local.py",
+      "log": "E:\\SystemTheBest\\runtime\\khoj-service.log"
+    }
+  },
+  "search": {
+    "known_query": "push без нового вопроса в согласованных границах",
+    "known_query_ok": true,
+    "known_query_first_source": ".claude/memory/decisions/writer-entries.md",
+    "known_query_has_scope_and_status_hint": true,
+    "negative_query_ok": true,
+    "negative_query_result_count": 0,
+    "unknown_project_rejected_before_http": true,
+    "unknown_project_error": "unknown-project"
+  },
+  "local_state": {
+    "core_hooks_path": null,
+    "queue_event_count": 0,
+    "queue_corrupt_count": 0,
+    "project_id_at_system_root": "systemqwen",
+    "project_id_at_e_dev": "undetermined",
+    "local_paths_changed": false,
+    "reason_local_paths_unchanged": "Candidate directories do not establish an unambiguous directory-to-project mapping from project files and Git remote."
+  },
+  "laptop_exchange": {
+    "task_file": ".scratch/system-launch/CHAT-06-LAPTOP-TASK.md",
+    "laptop_slot_placeholder_count": 12,
+    "laptop_marker_found": false,
+    "conclusion": "The laptop has not published its slot; two copies on this machine are not accepted as two-machine evidence."
+  },
+  "activepieces_preparation": {
+    "stack_started": false,
+    "env_exists": true,
+    "all_present_env_keys_nonempty_or_nonplaceholder": true,
+    "missing_optional_env_keys": [
+      "AP_OPENAI_API_KEY"
+    ],
+    "ai_connection_required_in_ui": true,
+    "compose_exists": true,
+    "flow_export_exists": true,
+    "flow_export_sha256": "20E441752D405D69F14C495EB5EFC3D089A3AEB24D9380A7139F9AECDCFC7E70",
+    "flow_export_last_commit": "7c0b72431b715ada238b9e4d33ce6171238cf65b",
+    "webhook_url_is_placeholder": true,
+    "flow_runtime_parameters_still_required": [
+      "webhook trigger and WEBHOOK_ID",
+      "AI connection and analyze endpoint",
+      "local bridge token"
+    ],
+    "volume_backup_present_on_this_pc_at_documented_d_or_e_path": false,
+    "hooks_left_disabled": true
+  },
+  "windows_recovery": {
+    "source": "user clarification in current task",
+    "state": "incomplete",
+    "last_observed_ui": "Windows 11 25H2 recovery version downloading at 10 percent",
+    "prior_reboot_is_completion_evidence": false
+  }
+}
