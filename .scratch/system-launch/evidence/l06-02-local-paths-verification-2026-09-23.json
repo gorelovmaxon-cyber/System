@@ -14,7 +14,7 @@
       "notes": "Confirmed as user-specified portfolio project. Git remote matches expected repository. No System2 hooks present."
     },
     "trading-dev": {
-      "status": "ambiguous",
+      "status": "requires_user_decision",
       "candidates": [
         {
           "path": "E:\\dev",
@@ -37,15 +37,16 @@
           "exists": true,
           "has_git": false,
           "contains": "MQL4 XAUUSD momentum EA (MetaTrader 4)",
-          "notes": "No Git repository. Contains MQL4 Expert Advisor for gold trading. README mentions 'binance-bot' in FACTS.md memory reference. Not a candidate for trading-dev registry project."
+          "notes": "No Git repository. Contains MQL4 Expert Advisor for gold trading. Cannot be definitively excluded without user confirmation."
         }
       ],
-      "memory_reference": ".claude/memory/facts/projects-overview.md states 'D:\\dev' was trading-dev on first PC, but paths differ",
-      "decision_required": "User must specify which repository corresponds to registry project 'trading-dev'. E:\\dev (straregi) and E:\\dev\\binance_bot (binance-bot) are separate Git repositories.",
-      "notes": "Cannot auto-assign based on name or topic per explicit instruction in CHAT-06-TRANSFER.md and L06-02. E:\\Bot Stacy excluded: no Git repository, different technology stack (MQL4 vs Python/C#)."
+      "memory_reference": ".claude/memory/facts/projects-overview.md states 'D:\\dev' was trading-dev on first PC with components: ATAS Indicators (C#) and Python trading bot",
+      "first_pc_remote_unknown": "Git remote for D:\\dev on DESKTOP-BUGF4FI not documented in available evidence. Cannot definitively match to E:\\dev candidates without this information.",
+      "decision_required": "User must specify which path corresponds to registry project 'trading-dev'. Memory indicates D:\\dev contained both C# indicators AND Python bot components, but E:\\dev candidates are separate repositories.",
+      "notes": "Cannot auto-assign based on name or topic per explicit instruction in CHAT-06-TRANSFER.md and L06-02."
     },
     "autopilot-framework": {
-      "status": "not_found_on_this_pc",
+      "status": "not_found_in_checked_locations",
       "local_path": null,
       "search_attempted": [
         "E:\\System (not found)",
@@ -53,7 +54,7 @@
         "C:\\Users\\gorel\\Documents (not found in quick check)"
       ],
       "memory_reference": ".claude/memory/facts/projects-overview.md states 'D:\\System' was autopilot-framework on first PC (DESKTOP-BUGF4FI)",
-      "notes": "No confirmed copy found on second PC (DESKTOP-NCLRFDV). Not creating placeholder path per explicit instruction in CHAT-06-TRANSFER.md. Binding remains <ABSOLUTE_AUTOPILOT_ROOT> until confirmed copy is located."
+      "notes": "Not found in checked locations on second PC (DESKTOP-NCLRFDV). Not creating placeholder path per explicit instruction in CHAT-06-TRANSFER.md. Binding remains <ABSOLUTE_AUTOPILOT_ROOT> (placeholder, not a working binding) until confirmed copy is located or user confirms project is not needed on this PC."
     }
   }
 }

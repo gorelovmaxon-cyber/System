@@ -42,7 +42,7 @@
 - ✅ Unknown project_id: отклонён до HTTP (`unknown-project`)
 - ✅ `core.hooksPath`: не задан (hooks выключены намеренно, очередь пуста)
 - ✅ Git round-trip: ноутбук опубликовал f65da92, второй ПК получил (7fd93de), отметка `SYSTEM2-EXCHANGE-BUGF4FI-ee706bc3fc60` найдена
-- ⚠️ **local_paths:** site-portfolio подтверждён, trading-dev требует уточнения (straregi vs binance-bot), autopilot-framework не найден на ПК
+- ⚠️ **local_paths:** site-portfolio подтверждён и работает. **Не выполнено:** trading-dev и autopilot-framework остаются placeholders (не рабочие привязки), требуют решения пользователя
 
 ### L06-03: Restore drill в отдельной среде
 **Status:** awaiting-review  
@@ -95,25 +95,28 @@
 | R12 | Приёмка | ✅ Готово | Локальные блоки приняты Фазой 1 на f254a5f |
 | R13 | Restore | ✅ Готово | l06-03-restore-drill-second-pc-2026-09-23.json |
 
-## Открытые вопросы (не блокируют приёмку выполненного)
+## Открытые вопросы (явные границы приёмки)
 
-### 1. trading-dev path ambiguity
+### 1. trading-dev path — требует решения пользователя
 
-**Ситуация:** Два отдельных Git-репозитория на втором ПК:
+**Ситуация:** Три проверенных кандидата на втором ПК:
 - `E:\dev` → `https://github.com/gorelovmaxon-cyber/straregi.git` (C# ATAS indicators)
 - `E:\dev\binance_bot` → `https://github.com/gorelovmaxon-cyber/binance-bot.git` (Python bot)
+- `E:\Bot Stacy` — нет Git, содержит MQL4 EA
 
-**Действие:** Требуется уточнение от пользователя, какой репозиторий соответствует registry project `trading-dev`.
+Memory reference указывает `D:\dev` на первом ПК содержал оба компонента (C# indicators AND Python bot), но на втором ПК это два отдельных Git-репозитория. Git remote для `D:\dev` на ноутбуке (DESKTOP-BUGF4FI) не задокументирован в доступных evidence.
 
-**Не блокирует:** site-portfolio подтверждён и работает, systemqwen (сам System) работает. trading-dev нужен для полноты привязки, но не блокирует core profile functionality.
+**Действие:** Требуется уточнение от пользователя. `E:\Bot Stacy` не может быть окончательно исключён только из-за отсутствия Git — это не доказывает, что пользователь не подразумевал этот проект.
 
-### 2. autopilot-framework not found
+**Граница приёмки:** Привязка `trading-dev` **не выполнена**. Остаётся `<ABSOLUTE_TRADING_ROOT>` (placeholder). site-portfolio подтверждён и работает, systemqwen работает. trading-dev нужен для полноты, но не блокирует базовую функциональность core profile.
 
-**Ситуация:** Memory reference указывает `D:\System` на первом ПК. На втором ПК не найдено.
+### 2. autopilot-framework — не обнаружен в проверенных каталогах
 
-**Действие:** Зафиксировано как `not_found_on_this_pc`. Привязка остаётся `<ABSOLUTE_AUTOPILOT_ROOT>` до обнаружения подтверждённой копии.
+**Ситуация:** Memory reference указывает `D:\System` на первом ПК (DESKTOP-BUGF4FI). Проверены: E:\System (не найдено), C:\Users\gorel\Documents (быстрая проверка). D:\System на втором ПК (другой диск) не проверялся.
 
-**Не блокирует:** Если проект не используется на втором ПК, binding может остаться незаполненным.
+**Статус:** `not_found_in_checked_locations`. Привязка остаётся `<ABSOLUTE_AUTOPILOT_ROOT>` (placeholder, **не рабочая привязка**).
+
+**Граница приёмки:** Привязка `autopilot-framework` **не выполнена**. Если проект не используется на втором ПК, это должно быть явно подтверждено пользователем, а не молчаливо считаться выполненным.
 
 ### 3. Windows recovery in progress
 
@@ -250,9 +253,13 @@ Evidence содержит полный manifest с SHA-256 для каждого
 
 ## Рекомендация
 
-L06-01…L06-04 готовы к независимой приёмке с двумя открытыми вопросами (trading-dev path, autopilot-framework location), которые не блокируют функциональность core profile.
+L06-01, L06-03, L06-04 готовы к независимой приёмке. L06-02 выполнен частично: bootstrap, сервисы и Git-обмен подтверждены, но **две из трёх local_paths привязок не выполнены** (остаются placeholders).
 
-**Приёмка может:**
-- Принять выполненную часть (site-portfolio binding, Git exchange, restore, core profile functionality)
-- Отложить завершение L06-02 до уточнения trading-dev и autopilot-framework paths
-- Перейти к L07 с частично заполненными local_paths (systemqwen и site-portfolio работают)
+**Приёмка должна:**
+- Принять выполненную часть: site-portfolio binding работает, Git exchange подтверждён между реальными машинами, restore drill выполнен трижды с проверкой целостности, core profile функционирует (194/194 теста)
+- **Явно зафиксировать границы:** trading-dev и autopilot-framework привязки **не выполнены**, остаются placeholders (не рабочие привязки)
+- Требовать решения пользователя для завершения L06-02: какой путь соответствует trading-dev (или нужен ли проект на ПК), где autopilot-framework или не нужен
+
+**Не следует:**
+- Молчаливо считать непривязанные проекты выполненными
+- Переходить к L07 без явного понимания границ выполнения L06
