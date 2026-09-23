@@ -2,7 +2,7 @@
 
 **Дата**: 2026-09-23  
 **Исполнитель**: Claude Sonnet 5  
-**SHA**: 921bd30 (опубликован на GitHub)
+**Исходный коммит матрицы**: 0247f28 (опубликован на GitHub); SHA правок L07-03 передаётся после push
 
 ## Выполненные задания
 
@@ -30,7 +30,7 @@
 Подготовлена единая матрица требований R01-R13 с учётом изменений профиля от 2026-09-23:
 - Требование → Evidence → Статус → Остаток
 - Различает "проверено исполнителем" и "принято независимо"
-- Фактические границы восстановления: systemqwen и site-portfolio подтверждены, trading-dev/autopilot-framework требуют настройки local_paths
+- Фактические границы: восстановлены 22 файла общей памяти; привязка `site-portfolio` настроена отдельно, `trading-dev`/`autopilot-framework` требуют подтверждения local_paths
 - Evidence штатного search.js в локальном fallback режиме
 
 **Файл**: ../.scratch/system-launch/L07-RELEASE-MATRIX.md
@@ -49,13 +49,13 @@
 | R06 (writer без AP) | ✅ Проверено исполнителем | CHAT-06A save.js, L06-04 |
 | R07 (события, дубли) | ✅ Проверено исполнителем | core profile, capture отключён |
 | R08 (обновление поиска) | ✅ Проверено исполнителем | search.js видит изменения |
-| R09 (обмен, restore) | ✅ Проверено исполнителем | CHAT-06 restore systemqwen/site-portfolio |
+| R09 (обмен, restore) | ✅ Проверено исполнителем | CHAT-06: обмен; restore 22 файлов общей памяти |
 | R10 (Figma) | ⊘ Исключено | Решение 2026-09-14 |
 | R11 (маршруты проектов) | ⚠️ Частично проверено | systemqwen/site-portfolio OK |
 | R12 (приёмка) | 🕒 Awaiting | L07-02 |
-| R13 (резервирование) | ✅ Проверено исполнителем | CHAT-06 restore, workflow.md |
+| R13 (резервирование) | ✅ Проверено исполнителем в границах общей памяти | CHAT-06: 22 файла, SHA-256; workflow.md |
 
-**Обязательные критерии core профиля**: ✅ Проверены исполнителем  
+**Обязательные критерии core профиля**: частично проверены исполнителем; R11 частично выполнен, R12 ждёт независимую приёмку
 **Независимая приёмка**: 🕒 Awaiting review (L07-02)
 
 ---
@@ -65,11 +65,11 @@
 ### U+FFFD в старых записях памяти
 **Влияние**: Старые записи (до core profile) содержат U+FFFD вместо кириллицы.  
 **Статус**: Новые записи через save.js в core profile сохраняют кириллицу корректно.  
-**Решение**: Адресное восстановление повреждённых строк или явное ограничение использования — отдельный вердикт приёмщика (не блокирует release core профиля).
+**Ограничение**: Повреждённые записи не использовать как подтверждённые факты без сверки источника. Адресное восстановление строк — отдельный вердикт приёмщика.
 
 ### Trading-dev и autopilot-framework
 **Влияние**: Проекты не имеют подтверждённых local_paths в config/system.local.json на E:\SystemTheBest\System.  
-**Статус**: Не блокирует core профиль (systemqwen + site-portfolio подтверждены).
+**Статус**: R11 остаётся частично выполненным до подтверждения обеих привязок.
 
 ---
 
@@ -83,7 +83,7 @@ git pull origin master
 # Проверить local_paths в config/system.local.json
 
 # Сохранить знание
-node scripts/memory/save.js --category decisions --statement "..." --source "CHAT-07" --scope systemqwen
+node scripts/memory/save.js --category facts --statement "Восстановлены 22 файла общей памяти" --evidence ".scratch/system-launch/evidence/l06-03-restore-drill-second-pc-2026-09-23.json: integrity.verdict=PASS, manifest_entries=22" --source "L06-03 restore drill 2026-09-23" --scope systemqwen
 
 # Локальный поиск (без Khoj)
 node scripts/memory/search.js --query "hook detection" --limit 3
@@ -119,8 +119,8 @@ $ git ls-remote origin master
 **Для приёмщика (Astra или Opus)**:
 
 1. **Release matrix**: ../.scratch/system-launch/L07-RELEASE-MATRIX.md
-2. **Evidence CHAT-06A**: CHAT-06A-RESULT.md (тот же каталог)
-3. **Evidence CHAT-06**: CHAT-06-RESULT.md (тот же каталог)
+2. **Evidence CHAT-06A**: [CHAT-06A-RESULT.md](../.scratch/system-launch/reports/CHAT-06A-RESULT.md)
+3. **Evidence CHAT-06**: [CHAT-06-RESULT.md](../.scratch/system-launch/reports/CHAT-06-RESULT.md); [restore JSON](../.scratch/system-launch/evidence/l06-03-restore-drill-second-pc-2026-09-23.json)
 4. **Актуальный plan**: ../.scratch/system-launch/PLAN-GIT-MEMORY-2026-09-23.md
 5. **SPEC редакция 2026-09-23**: ../.scratch/system-completion/SPEC.md
 6. **Известные дефекты**: см. выше (U+FFFD, trading-dev/autopilot)
@@ -131,9 +131,9 @@ $ git ls-remote origin master
 
 ## Итоговый вердикт исполнителя
 
-**Обязательные критерии core профиля**: ✅ Проверены исполнителем  
-**Публикация**: ✅ SHA 921bd30 опубликован на GitHub  
-**Restore**: ✅ Подтверждён для systemqwen/site-portfolio (CHAT-06)  
+**Обязательные критерии core профиля**: частично проверены исполнителем; R11 частично выполнен
+**Публикация**: исходная матрица опубликована в 0247f28; итоговый SHA правок L07-03 передаётся после push
+**Restore**: ✅ Подтверждён для 22 файлов общей памяти (CHAT-06); привязка `site-portfolio` проверена отдельно
 **Независимая приёмка**: 🕒 Awaiting review
 
 **Статус**: Awaiting independent acceptance (L07-02). Автор реализации не ставит финальную READY самостоятельно.
