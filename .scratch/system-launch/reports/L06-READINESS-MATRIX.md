@@ -9,7 +9,7 @@
 | Критерий | Evidence | Результат | Реальный остаток |
 |---|---|---|---|
 | **R01** — роли и шаблон | [CHAT-06A-RESULT.md](CHAT-06A-RESULT.md), docs/system-workflow.md | ✅ Готово | Независимая приёмка |
-| **R02** — локальная привязка | [l06-02-local-paths-verification-2026-09-23.json](../evidence/l06-02-local-paths-verification-2026-09-23.json) | ⚠️ Частично | `trading-dev`: неоднозначность E:\dev (straregi) vs E:\dev\binance_bot (binance-bot). `autopilot-framework`: нет подтверждённой копии на ПК |
+| **R02** — локальная привязка | [l06-02-local-paths-verification-2026-09-23.json](../evidence/l06-02-local-paths-verification-2026-09-23.json) | ⚠️ Частично | `trading-dev`: неоднозначность E:\dev (straregi) vs E:\dev\binance_bot (binance-bot). E:\Bot Stacy исключён (нет Git, MQL4 EA). `autopilot-framework`: не найден на втором ПК |
 | **R03** — качество памяти | 194/194 теста, writer idempotency, Cyrillic preservation | ✅ Готово | U+FFFD известный дефект (открыт отдельно) |
 | **R04/R05** — локальный поиск | [l06-02-post-reboot-nondocker-2026-09-21.json](../evidence/l06-02-post-reboot-nondocker-2026-09-21.json) | ✅ Готово | Khoj опционален, включён и работает |
 | **R06** — writer через исполнителя | [CHAT-06A-RESULT.md](CHAT-06A-RESULT.md), writer entries актуальны | ✅ Готово | AP — необязательная интеграция |
@@ -74,22 +74,24 @@
 
 ### 1. trading-dev: какой репозиторий?
 
-**Ситуация:** На втором ПК найдены три кандидата:
+**Ситуация:** На втором ПК найдены три кандидата, два проверены:
 - `E:\dev` — Git remote `https://github.com/gorelovmaxon-cyber/straregi.git`, содержит C# ATAS indicators
 - `E:\dev\binance_bot` — Git remote `https://github.com/gorelovmaxon-cyber/binance-bot.git`, содержит Python trading bot
-- `E:\Bot Stacy` — существует, но нет .git
+- `E:\Bot Stacy` — **исключён**: нет Git repository, содержит MQL4 EA для MetaTrader 4 (XAUUSD momentum trading), другой стек технологий
 
-Memory reference (`.claude/memory/facts/projects-overview.md`) указывает `D:\dev` как `trading-dev` на первом ПК, но paths на втором ПК другие.
+Memory reference (`.claude/memory/facts/projects-overview.md`) указывает `D:\dev` как `trading-dev` на первом ПК, но paths на втором ПК другие и это два отдельных репозитория.
 
-**Вопрос:** Какой из двух репозиториев (`straregi` или `binance-bot`) соответствует registry project `trading-dev`?
+**Вопрос:** Какой из двух Git-репозиториев (`straregi` или `binance-bot`) соответствует registry project `trading-dev`?
 
 **Блокировка:** Явное указание в CHAT-06-TRANSFER.md: "E:\dev не считать автоматически trading-dev", "не выбирать по одному названию или тематике", "если соответствие неоднозначно — дать короткое сравнение и один точный вопрос".
 
-### 2. autopilot-framework: нет подтверждённой копии
+### 2. autopilot-framework: не найден на втором ПК
 
-**Ситуация:** Memory reference указывает `D:\System` как `autopilot-framework` на первом ПК. На втором ПК подтверждённого каталога нет.
+**Ситуация:** Memory reference указывает `D:\System` как `autopilot-framework` на первом ПК (DESKTOP-BUGF4FI). На втором ПК (DESKTOP-NCLRFDV) поиск в E:\System, быстрая проверка C:\Users\gorel\Documents — не найдено. D:\System (другой диск) не проверялся.
 
-**Решение:** Зафиксировано как "нет подтверждённой копии на этом ПК". Не создавать placeholder, не выдавать фиктивный путь за рабочий.
+**Статус:** Зафиксировано как `not_found_on_this_pc`. Привязка остаётся `<ABSOLUTE_AUTOPILOT_ROOT>` в `config/system.local.json` до обнаружения подтверждённой копии.
+
+**Решение:** Не создавать placeholder, не выдавать фиктивный путь за рабочий (per CHAT-06-TRANSFER.md).
 
 ### 3. Windows recovery
 

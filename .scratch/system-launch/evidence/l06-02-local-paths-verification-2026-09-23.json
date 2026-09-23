@@ -36,17 +36,24 @@
           "path": "E:\\Bot Stacy",
           "exists": true,
           "has_git": false,
-          "notes": "Directory exists but has no .git repository."
+          "contains": "MQL4 XAUUSD momentum EA (MetaTrader 4)",
+          "notes": "No Git repository. Contains MQL4 Expert Advisor for gold trading. README mentions 'binance-bot' in FACTS.md memory reference. Not a candidate for trading-dev registry project."
         }
       ],
       "memory_reference": ".claude/memory/facts/projects-overview.md states 'D:\\dev' was trading-dev on first PC, but paths differ",
       "decision_required": "User must specify which repository corresponds to registry project 'trading-dev'. E:\\dev (straregi) and E:\\dev\\binance_bot (binance-bot) are separate Git repositories.",
-      "notes": "Cannot auto-assign based on name or topic per explicit instruction in CHAT-06-TRANSFER.md and L06-02."
+      "notes": "Cannot auto-assign based on name or topic per explicit instruction in CHAT-06-TRANSFER.md and L06-02. E:\\Bot Stacy excluded: no Git repository, different technology stack (MQL4 vs Python/C#)."
     },
     "autopilot-framework": {
-      "status": "unverified",
+      "status": "not_found_on_this_pc",
       "local_path": null,
-      "notes": "No confirmed copy on this PC. Memory references 'D:\\System' as autopilot-framework on first PC. Not creating placeholder path per explicit instruction."
+      "search_attempted": [
+        "E:\\System (not found)",
+        "D:\\System (different drive, not checked)",
+        "C:\\Users\\gorel\\Documents (not found in quick check)"
+      ],
+      "memory_reference": ".claude/memory/facts/projects-overview.md states 'D:\\System' was autopilot-framework on first PC (DESKTOP-BUGF4FI)",
+      "notes": "No confirmed copy found on second PC (DESKTOP-NCLRFDV). Not creating placeholder path per explicit instruction in CHAT-06-TRANSFER.md. Binding remains <ABSOLUTE_AUTOPILOT_ROOT> until confirmed copy is located."
     }
   }
 }
