@@ -1,0 +1,90 @@
+{
+  "drill_date": "2026-09-23",
+  "drill_root": "E:\\SystemTheBest\\transfer-backups\\restore-drill-20260923-184550",
+  "machine": "Second PC (E:\\SystemTheBest\\System)",
+  "source": "E:\\SystemTheBest\\System\\.claude\\memory",
+  "profile": "core",
+  "steps": [
+    {
+      "step": "isolated target created",
+      "ok": true,
+      "detail": "E:\\SystemTheBest\\transfer-backups\\restore-drill-20260923-184550"
+    },
+    {
+      "step": "memory copied from current state",
+      "ok": true,
+      "detail": "22 files (including writer-entries.md with L06 facts)"
+    },
+    {
+      "step": "sha256 manifest created from source",
+      "ok": true,
+      "manifest": "MANIFEST-source.sha256",
+      "entries": 22
+    },
+    {
+      "step": "sha256 manifest created from restored",
+      "ok": true,
+      "manifest": "MANIFEST-restored.sha256",
+      "entries": 22
+    },
+    {
+      "step": "sha256 integrity check",
+      "ok": true,
+      "detail": "All 22 hashes match between source and restored"
+    },
+    {
+      "step": "local search in restored memory",
+      "ok": true,
+      "detail": "Found evt_9861052a0dfe (Диагностика очереди в проекте systemqwen)"
+    },
+    {
+      "step": "file count verification",
+      "ok": true,
+      "source_files": 22,
+      "restored_files": 22,
+      "difference": 0
+    }
+  ],
+  "integrity": {
+    "manifest_entries": 22,
+    "restored_files": 22,
+    "sha256_mismatch": [],
+    "missing_from_restore": [],
+    "restored_but_not_in_source": [],
+    "verdict": "PASS"
+  },
+  "search_verification": {
+    "method": "grep",
+    "target": "restored memory directory",
+    "query": "evt_9861052a0dfe",
+    "found": true,
+    "result": "## Диагностика очереди в проекте systemqwen считает 25 событий — по одному на коммит...",
+    "cyrillic_preserved": true
+  },
+  "comparison_with_previous_drill": {
+    "previous": "2026-09-15 (19 files from backup)",
+    "current": "2026-09-23 (22 files from live state)",
+    "difference": "+3 files (writer-entries.md in facts, decisions, gotchas)",
+    "note": "Current drill uses live memory state after L06-04, previous used packaged backup"
+  },
+  "notes": [
+    "Working memory (.claude/memory) unchanged by this drill",
+    "Restore performed in isolated directory outside working copy",
+    "No queue events.jsonl in restore (not part of canonical memory)",
+    "Index artifacts not included (derived state, rebuilt from memory)",
+    "Git exchange already confirmed on 7fd93de (SYSTEM2-EXCHANGE-BUGF4FI-ee706bc3fc60)"
+  ],
+  "limitations": [
+    "Activepieces flow/volume restore not tested (Docker not available, core profile)",
+    "local_paths placeholders not resolved (separate open item for L06-02)",
+    "Khoj index not rebuilt (optional in core profile)"
+  ],
+  "criteria_met": {
+    "restore_in_separate_directory": true,
+    "sha256_integrity_check": true,
+    "local_search_verification": true,
+    "working_memory_unchanged": true,
+    "cyrillic_preserved": true,
+    "idempotency_check": "confirmed earlier in save.js test (evt_9da86a8a9fea)"
+  }
+}

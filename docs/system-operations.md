@@ -149,6 +149,15 @@ post-commit hook сам запускает `--watch --no-revive --max-idle-ms 12
 `.scratch/system-launch/evidence/l06-03-restore-drill-2026-09-14.json` и
 [second-pc.md](second-pc.md).
 
+**Что проверено 2026-09-23 (второй ПК, профиль core).** Повторный restore drill из
+живого состояния `.claude/memory` (не из пакета) в изолированный каталог
+`transfer-backups/restore-drill-20260923-184550`: 22/22 файла, sha256 100% совпадение
+источник↔восстановлено, известная запись (`evt_9861052a0dfe`) найдена локальным
+поиском с сохранением кириллицы. Рабочая память и `config/system.local.json` не
+изменялись (`git status` чист до/после). Секретов в восстановленной памяти не
+обнаружено. Полные данные —
+`.scratch/system-launch/evidence/l06-03-restore-drill-second-pc-2026-09-23.json`.
+
 **Что остаётся непроверенным.** Восстановление AP flow/volume из
 `transfer-backups/docker-volumes-*` не выполнялось: для него нужен Docker, а единственный
 рабочий volume для проверки не удаляется. Подтверждение на реальном втором ПК остаётся
