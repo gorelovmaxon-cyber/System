@@ -1,0 +1,52 @@
+{
+  "verification_date": "2026-09-23",
+  "machine": "DESKTOP-NCLRFDV",
+  "system_root": "E:\\SystemTheBest\\System",
+  "projects": {
+    "site-portfolio": {
+      "status": "verified",
+      "local_path": "C:\\Users\\gorel\\OneDrive\\Документы\\claude1\\projects\\C-portfolio-v2",
+      "exists": true,
+      "has_git": true,
+      "git_remote": "https://github.com/gorelovmaxon-cyber/Sait.git",
+      "project_id_check": "site-portfolio",
+      "system2_hooks": "none_found",
+      "notes": "Confirmed as user-specified portfolio project. Git remote matches expected repository. No System2 hooks present."
+    },
+    "trading-dev": {
+      "status": "ambiguous",
+      "candidates": [
+        {
+          "path": "E:\\dev",
+          "exists": true,
+          "has_git": true,
+          "git_remote": "https://github.com/gorelovmaxon-cyber/straregi.git",
+          "contains": "C# ATAS indicators, trading strategies",
+          "notes": "Root contains .NET indicators and strategy files. Remote is 'straregi'."
+        },
+        {
+          "path": "E:\\dev\\binance_bot",
+          "exists": true,
+          "has_git": true,
+          "git_remote": "https://github.com/gorelovmaxon-cyber/binance-bot.git",
+          "contains": "Python trading bot, backtesting framework",
+          "notes": "Subdirectory with separate Git repository. Remote is 'binance-bot'."
+        },
+        {
+          "path": "E:\\Bot Stacy",
+          "exists": true,
+          "has_git": false,
+          "notes": "Directory exists but has no .git repository."
+        }
+      ],
+      "memory_reference": ".claude/memory/facts/projects-overview.md states 'D:\\dev' was trading-dev on first PC, but paths differ",
+      "decision_required": "User must specify which repository corresponds to registry project 'trading-dev'. E:\\dev (straregi) and E:\\dev\\binance_bot (binance-bot) are separate Git repositories.",
+      "notes": "Cannot auto-assign based on name or topic per explicit instruction in CHAT-06-TRANSFER.md and L06-02."
+    },
+    "autopilot-framework": {
+      "status": "unverified",
+      "local_path": null,
+      "notes": "No confirmed copy on this PC. Memory references 'D:\\System' as autopilot-framework on first PC. Not creating placeholder path per explicit instruction."
+    }
+  }
+}
