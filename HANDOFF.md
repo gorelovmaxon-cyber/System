@@ -9,7 +9,10 @@
 (`8c2f4eb`):** расширенная проверка hooks (global, local, direct .git/hooks/post-commit,
 привязанные проекты); doctor различает System2/чужие hooks, uninstall-all-hooks.sh
 удаляет все System2 hooks из всех источников; 194/194 теста проходят.
-L06-04 awaiting-review (все критерии выполнены).
+L06-04 awaiting-review (все критерии выполнены). **L06-03 restore drill на втором ПК
+выполнен трижды** (последний 2026-09-23, `0ea454f`): 22/22 файла памяти восстановлены
+в отдельный каталог с sha256 100% match, локальный поиск evt_9861052a0dfe найден
+с кириллицей, рабочая память не изменялась. L06-03 awaiting-review.
 Старые требования поднимать AP и восстанавливать volume больше не блокируют
 основной профиль; реальный обмен и restore памяти остаются обязательными.
 Windows recovery не прерывать и не чинить в рамках этого плана.
@@ -31,10 +34,11 @@ Docker/WSL в текущем продолжении не диагностиро�
 
 ## Текущая фаза
 
-- Фаза 6 не закрыта: L06-01…L06-03 имеют статус `awaiting-review`; критерии и номера
+- Фаза 6 не закрыта: L06-01…L06-04 имеют статус `awaiting-review`; критерии и номера
   не менялись. Актуальные тикеты: [L06-01](.scratch/system-launch/issues/L06-01-second-pc-access-and-transfer-package.md),
   [L06-02](.scratch/system-launch/issues/L06-02-second-pc-bootstrap-and-roundtrip.md),
-  [L06-03](.scratch/system-launch/issues/L06-03-restore-drill-separate-environment.md).
+  [L06-03](.scratch/system-launch/issues/L06-03-restore-drill-separate-environment.md),
+  [L06-04](.scratch/system-launch/issues/L06-04-git-memory-profile.md).
 - Фаза 7 не начата. Её действующее задание —
   [CHAT-07-RELEASE.md](.scratch/system-launch/CHAT-07-RELEASE.md); L07-01…L07-03
   нельзя считать выполненными или перенумеровывать.
@@ -46,7 +50,7 @@ Docker/WSL в текущем продолжении не диагностиро�
 
 | Машина | Последнее подтверждённое состояние | Дата и источник | Актуальность |
 |---|---|---|---|
-| `DESKTOP-NCLRFDV`, `E:\SystemTheBest\System` (второй ПК, текущая рабочая копия) | Bridge и Khoj запущены штатно и отвечают; известный, отрицательный и unknown-project поиск проверены. Hooks выключены, очередь пуста. Activepieces не запускался. | 2026-09-21: [CHAT-06-RESULT.md](.scratch/system-launch/reports/CHAT-06-RESULT.md), [evidence без Docker](.scratch/system-launch/evidence/l06-02-post-reboot-nondocker-2026-09-21.json) | Текущий health-check только non-Docker части. После следующей перезагрузки проверить заново. |
+| `DESKTOP-NCLRFDV`, `E:\SystemTheBest\System` (второй ПК, текущая рабочая копия) | Bridge и Khoj запущены штатно и отвечают; известный, отрицательный и unknown-project поиск проверены. Hooks выключены, очередь пуста. Restore drill выполнен трижды, последний 2026-09-23 с sha256 100% match. Activepieces не запускался. | 2026-09-23: [CHAT-06-SECOND-PC-SESSION.md](.scratch/system-launch/reports/CHAT-06-SECOND-PC-SESSION.md), [l06-03 evidence](.scratch/system-launch/evidence/l06-03-restore-drill-second-pc-2026-09-23.json) | Текущий health-check только non-Docker части. После следующей перезагрузки проверить заново. |
 | `DESKTOP-BUGF4FI`, `D:\SystemTheBest\System` (первый ПК/ноутбук) | Защита от самоповторов памяти опубликована (`1a36ad5`, `41c9645`, 179/179); сервисы на момент передачи не были подняты. Реальный встречный обмен с этой машиной после подготовки второго ПК не подтверждён. | 2026-09-15: [CHAT-06-RESULT.md](.scratch/system-launch/reports/CHAT-06-RESULT.md), [CHAT-06-LAPTOP-TASK.md](.scratch/system-launch/CHAT-06-LAPTOP-TASK.md) | Историческое наблюдение; текущий доступ и процессы неизвестны. |
 
 **Состояние восстановления Windows.** По
@@ -72,10 +76,12 @@ Git-состояние текущей копии перед оптимизаци
   мешать Windows Update. Activepieces, hooks, настоящий обмен с ноутбуком и все три
   `local_paths` остаются открытыми критериями. `E:\dev` не привязан к `trading-dev`:
   файлы различают `straregi` и отдельный `binance-bot`, однозначного корня нет.
-- L06-03: восстановление Activepieces flow/volume не проверено. Репозиторный export и
-  локальный `.env` есть, но volume backup отсутствует на этом ПК по документированным
-  путям; для восстановления старых данных нужен пакет или доступ. Не удалять и не
-  заменять единственный рабочий volume ради проверки.
+- L06-03: восстановление памяти в отдельный каталог выполнено трижды (2026-09-14 локально,
+  2026-09-15 второй ПК из пакета, 2026-09-23 второй ПК из живого состояния после L06-04);
+  sha256 100% match, локальный поиск работает. Остаётся восстановление Activepieces
+  flow/volume (Docker отсутствует). Репозиторный export и локальный `.env` есть, но volume
+  backup отсутствует на этом ПК по документированным путям; для восстановления старых данных
+  нужен пакет или доступ. Не удалять и не заменять единственный рабочий volume ради проверки.
 - Дефект достоверности памяти `U+FFFD` остаётся открытым: воспроизведение известно,
   причина не установлена. Эта задача его не исправляет.
 - Figma исключена из обязательного объёма решением пользователя 2026-09-14; это
@@ -112,7 +118,10 @@ CO-01–03 приняты независимой проверкой на ком�
 
 <!-- systemqwen:start -->
 - **Выполнено:** non-Docker health bridge/Khoj и поиск подтверждены 2026-09-21; L06-01
-  не требует повторения; подготовка Activepieces сверена без запуска.
+  не требует повторения; подготовка Activepieces сверена без запуска. **L06-03 restore
+  drill выполнен трижды** (последний 2026-09-23, `0ea454f`): 22/22 файла памяти
+  восстановлены в отдельный каталог с sha256 100% match, локальный поиск работает,
+  рабочая память не изменялась.
 - **Ждёт ноутбук:** заполнение и push слота в `CHAT-06-LAPTOP-TASK.md`, затем pull и
   сверка remote SHA на втором ПК.
 - **Ждёт Docker:** Activepieces health/import, hooks, одно событие и AP restore; до
