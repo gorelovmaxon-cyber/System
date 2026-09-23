@@ -118,6 +118,37 @@ test('L06-04: bootstrap in core profile does not install hooks and removes its o
   if (hasBash) assert.equal(hooksPath(root), '');
 });
 
+test('L06-04: bootstrap CLI exit code 0 in core profile when disabled integrations present', { skip: !hasBash }, () => {
+  const root = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-l0604-bootstrap-cli-'));
+  initRepo(root);
+  spawnSync('git', ['remote', 'add', 'origin', 'git@example.invalid:owner/repo.git'], { cwd: root });
+  fs.mkdirSync(path.join(root, 'config'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'config/system.example.json'), JSON.stringify({
+    profile: 'core', memory_root: '.claude/memory', data_dir: '.local', registry: [],
+    integrations: { khoj: { enabled: false }, bridge: { enabled: false } },
+  }));
+  fs.writeFileSync(path.join(root, 'config/system.local.example.json'), JSON.stringify({
+    system_root: '<ABSOLUTE_SYSTEM2_ROOT>', local_paths: {}, integrations: {},
+  }));
+  fs.mkdirSync(path.join(root, '.claude/memory'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'HANDOFF.md'), '# HANDOFF\n');
+  fs.mkdirSync(path.join(root, 'scripts/memory'), { recursive: true });
+  fs.cpSync(REPO, path.join(root, 'scripts/memory'), { recursive: true });
+  withHookTemplates(root);
+
+  const result = spawnSync(process.execPath, [path.join(root, 'scripts/memory/bootstrap.js'), '--root', root], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+  const combinedOutput = result.stdout + result.stderr;
+  const jsonMatch = combinedOutput.match(/\{[\s\S]*\}/);
+  assert.ok(jsonMatch, 'bootstrap must output JSON: ' + combinedOutput);
+  const output = JSON.parse(jsonMatch[0]);
+  assert.equal(result.status, 0, 'bootstrap CLI must exit 0 when only disabled integrations present: ' + combinedOutput);
+  assert.equal(output.ok, true, 'bootstrap ok must be true when disabled integrations present');
+  const khoj = output.checks.find(c => c.check === 'Khoj health');
+  const ap = output.checks.find(c => c.check === 'Activepieces health');
+  assert.equal(khoj?.status, 'disabled');
+  assert.equal(ap?.status, 'disabled');
+});
+
 test('L06-04: doctor reports disabled (not PROBLEM) for an integration turned off in core profile', async () => {
   const root = fixture('l0604-doctor-disabled');
   const example = JSON.parse(fs.readFileSync(path.join(root, 'config/system.example.json'), 'utf8'));

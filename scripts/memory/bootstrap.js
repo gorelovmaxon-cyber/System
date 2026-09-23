@@ -53,8 +53,9 @@ async function main() {
   const rootIndex = argv.indexOf('--root');
   const root = rootIndex >= 0 ? argv[rootIndex + 1] : process.cwd();
   const checks = await bootstrap({ root, startServices: argv.includes('--start-services'), rebuildIndex: argv.includes('--rebuild-index') });
-  process.stdout.write(JSON.stringify({ ok: checks.every(item => item.status === 'OK'), checks }, null, 2) + '\n');
-  if (checks.some(item => item.status !== 'OK')) process.exitCode = 1;
+  const problems = checks.filter(item => item.status !== 'OK' && item.status !== 'disabled');
+  process.stdout.write(JSON.stringify({ ok: problems.length === 0, checks }, null, 2) + '\n');
+  if (problems.length > 0) process.exitCode = 1;
 }
 
 if (require.main === module) main().catch(error => { process.stderr.write(error.message + '\n'); process.exitCode = 1; });
