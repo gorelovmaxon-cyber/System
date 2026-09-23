@@ -6,8 +6,8 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { resolvePaths } = require('./resolve-paths');
 
-function command(name, args, cwd) {
-  const result = spawnSync(name, args, { cwd, encoding: 'utf8', timeout: 5000 });
+function command(name, args, cwd, env) {
+  const result = spawnSync(name, args, { cwd, encoding: 'utf8', timeout: 5000, env: env ? { ...process.env, ...env } : undefined });
   return result.status === 0 ? result.stdout.trim() : null;
 }
 
@@ -46,12 +46,13 @@ function isMixedHook(hookPath, templatePath) {
 
 async function diagnose(options = {}) {
   const root = path.resolve(options.root || process.cwd());
+  const env = options.env;
   const checks = [];
   const add = (ok, label, instruction) => checks.push({ status: ok ? 'OK' : 'PROBLEM', check: label, instruction: ok ? undefined : instruction });
   const addUnchecked = (label, reason) => checks.push({ status: 'unchecked', check: label, instruction: reason });
-  add(Boolean(command('git', ['--version'], root)), 'git', 'Install Git and reopen the terminal.');
-  add(Boolean(command('git', ['remote', 'get-url', 'origin'], root)), 'git/remote origin', 'Configure origin for this clone.');
-  add(Boolean(command('git', ['branch', '--show-current'], root)), 'git/branch', 'Checkout a named synchronization branch.');
+  add(Boolean(command('git', ['--version'], root, env)), 'git', 'Install Git and reopen the terminal.');
+  add(Boolean(command('git', ['remote', 'get-url', 'origin'], root, env)), 'git/remote origin', 'Configure origin for this clone.');
+  add(Boolean(command('git', ['branch', '--show-current'], root, env)), 'git/branch', 'Checkout a named synchronization branch.');
   add(Boolean(process.versions.node), 'node ' + process.versions.node, 'Install Node.js 24 LTS or compatible LTS.');
   let paths;
   try { paths = resolvePaths({ root }); add(true, 'resolve-paths and system root', ''); }
@@ -63,11 +64,11 @@ async function diagnose(options = {}) {
   const expectedHooks = path.join(root, '.git-hooks-templates');
 
   // Проверить все источники hooks: global, local hooksPath, эффективный hook, прямой .git/hooks/post-commit
-  const globalHooksPath = command('git', ['config', '--global', '--get', 'core.hooksPath'], root);
-  const localHooksPath = command('git', ['config', '--local', '--get', 'core.hooksPath'], root);
+  const globalHooksPath = command('git', ['config', '--global', '--get', 'core.hooksPath'], root, env);
+  const localHooksPath = command('git', ['config', '--local', '--get', 'core.hooksPath'], root, env);
 
   // Получить effective hooksPath (откуда Git реально читает hooks)
-  const effectiveHooksDir = command('git', ['rev-parse', '--git-path', 'hooks'], root);
+  const effectiveHooksDir = command('git', ['rev-parse', '--git-path', 'hooks'], root, env);
   // Относительный путь разрешаем относительно репозитория, не cwd процесса
   const effectiveHooksDirAbsolute = effectiveHooksDir ? path.resolve(root, effectiveHooksDir) : null;
   const effectivePostCommit = effectiveHooksDirAbsolute ? path.join(effectiveHooksDirAbsolute, 'post-commit') : null;
@@ -131,7 +132,7 @@ async function diagnose(options = {}) {
       const projectGitDir = path.join(projectPath, '.git');
       if (fs.existsSync(projectGitDir)) {
         connectedProjects.push({ projectId, projectPath });
-        const projectLocalHooks = command('git', ['config', '--local', '--get', 'core.hooksPath'], projectPath);
+        const projectLocalHooks = command('git', ['config', '--local', '--get', 'core.hooksPath'], projectPath, env);
         const projectDirectHook = path.join(projectPath, '.git/hooks/post-commit');
         const projectDirectExists = fs.existsSync(projectDirectHook);
         const projectDirectContent = projectDirectExists ? fs.readFileSync(projectDirectHook, 'utf8') : null;

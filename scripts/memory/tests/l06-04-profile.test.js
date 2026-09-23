@@ -118,12 +118,12 @@ test('L06-04: bootstrap in core profile does not install hooks and removes its o
   }
 
   const { bootstrap } = require(path.join(root, 'scripts/memory/bootstrap.js'));
-  await bootstrap({ root });
+  await bootstrap({ root, env });
 
   if (hasBash) assert.equal(hooksPath(root, env), '', 'core profile must remove hooksPath it owns');
 
   // Повторный bootstrap — idempotent, не переустанавливает hooks.
-  await bootstrap({ root });
+  await bootstrap({ root, env });
   if (hasBash) assert.equal(hooksPath(root, env), '');
 });
 
@@ -169,7 +169,7 @@ test('L06-04: doctor reports disabled (not PROBLEM) for an integration turned of
   fs.writeFileSync(path.join(root, 'HANDOFF.md'), '# HANDOFF\n');
 
   const { diagnose } = mod('doctor');
-  const checks = await diagnose({ root });
+  const checks = await diagnose({ root, env });
   const khoj = checks.find(item => item.check === 'Khoj health');
   const bridge = checks.find(item => item.check === 'memory bridge ready');
   const ap = checks.find(item => item.check === 'Activepieces health');
@@ -197,7 +197,7 @@ test('L06-04: doctor flags an active legacy hooksPath as PROBLEM in core profile
 
   return (async () => {
     const { diagnose } = require(path.join(REPO, 'doctor.js'));
-    const checks = await diagnose({ root });
+    const checks = await diagnose({ root, env });
     const hookCheck = checks.find(item => item.check.includes('local hooksPath points to System2'));
     assert.equal(hookCheck.status, 'PROBLEM');
     assert.match(hookCheck.instruction, /uninstall/);
@@ -217,21 +217,21 @@ test('L06-04: doctor detects global hooksPath pointing to System2 in core profil
   fs.writeFileSync(path.join(root, 'HANDOFF.md'), '# HANDOFF\n');
   withHookTemplates(root);
 
-  // Для global config используем реальный global, не изолированный
-  const globalBefore = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
-  spawnSync('git', ['config', '--global', 'core.hooksPath', path.join(root, '.git-hooks-templates')], { cwd: root });
+  // Используем изолированный global config
+  const globalBefore = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8', env: { ...process.env, ...env } }).stdout.trim();
+  spawnSync('git', ['config', '--global', 'core.hooksPath', path.join(root, '.git-hooks-templates')], { cwd: root, env: { ...process.env, ...env } });
 
   return (async () => {
     try {
       const { diagnose } = require(path.join(REPO, 'doctor.js'));
-      const checks = await diagnose({ root });
+      const checks = await diagnose({ root, env });
       const hookCheck = checks.find(item => item.check.includes('global hooksPath'));
       assert.ok(hookCheck, 'global hooksPath check must exist');
       assert.equal(hookCheck.status, 'PROBLEM');
       assert.match(hookCheck.instruction, /global --unset/);
     } finally {
-      if (globalBefore) spawnSync('git', ['config', '--global', 'core.hooksPath', globalBefore]);
-      else spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath']);
+      if (globalBefore) spawnSync('git', ['config', '--global', 'core.hooksPath', globalBefore], { env: { ...process.env, ...env } });
+      else spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath'], { env: { ...process.env, ...env } });
     }
   })();
 });
@@ -253,7 +253,7 @@ test('L06-04: doctor detects direct .git/hooks/post-commit with System2 marker i
 
   return (async () => {
     const { diagnose } = require(path.join(REPO, 'doctor.js'));
-    const checks = await diagnose({ root });
+    const checks = await diagnose({ root, env });
     const hookCheck = checks.find(item => item.check.includes('direct .git/hooks/post-commit is System2'));
     assert.ok(hookCheck, 'direct hook check must exist');
     assert.equal(hookCheck.status, 'PROBLEM');
@@ -278,7 +278,7 @@ test('L06-04: doctor shows unchecked status for foreign direct .git/hooks/post-c
 
   return (async () => {
     const { diagnose } = require(path.join(REPO, 'doctor.js'));
-    const checks = await diagnose({ root });
+    const checks = await diagnose({ root, env });
     const hookCheck = checks.find(item => item.check.includes('direct .git/hooks/post-commit exists (foreign)'));
     assert.ok(hookCheck, 'foreign hook check must exist');
     assert.equal(hookCheck.status, 'unchecked');
@@ -299,13 +299,13 @@ test('L06-04: uninstall-all-hooks.sh removes System2 hooks from all sources', { 
   fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
   fs.copyFileSync(path.join(root, '.git-hooks-templates/post-commit'), path.join(root, '.git/hooks/post-commit'));
 
-  // Для global config используем реальный global, не изолированный
-  const globalBefore = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
-  spawnSync('git', ['config', '--global', 'core.hooksPath', path.join(root, '.git-hooks-templates')], { cwd: root });
+  // Используем изолированный global config для теста
+  const globalBefore = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8', env: { ...process.env, ...env } }).stdout.trim();
+  spawnSync('git', ['config', '--global', 'core.hooksPath', path.join(root, '.git-hooks-templates')], { cwd: root, env: { ...process.env, ...env } });
 
   try {
-    // Bash-скрипт запускаем без изолированного env чтобы он видел реальный global config
-    const uninstall = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8' });
+    // Bash-скрипт запускаем с изолированным env
+    const uninstall = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8', env: { ...process.env, ...env } });
     assert.equal(uninstall.status, 0, uninstall.stderr);
 
     // После защиты global: ожидаем предупреждение в stderr, но не автоматическое удаление
@@ -316,19 +316,19 @@ test('L06-04: uninstall-all-hooks.sh removes System2 hooks from all sources', { 
     assert.equal(localHooksPath, '', 'local hooksPath must be removed');
     assert.equal(fs.existsSync(path.join(root, '.git/hooks/post-commit')), false, 'direct hook must be removed');
 
-    const globalAfter = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
+    const globalAfter = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8', env: { ...process.env, ...env } }).stdout.trim();
     assert.notEqual(globalAfter, '', 'global hooksPath не должен быть удалён автоматически');
 
     // Вручную очистим global для теста idempotency
-    spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath']);
+    spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath'], { env: { ...process.env, ...env } });
 
     // Повтор — idempotent
-    const again = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8' });
+    const again = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8', env: { ...process.env, ...env } });
     assert.equal(again.status, 0, again.stderr);
     assert.match(again.stdout, /No System2 hooks found/);
   } finally {
-    if (globalBefore) spawnSync('git', ['config', '--global', 'core.hooksPath', globalBefore]);
-    else spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath']);
+    if (globalBefore) spawnSync('git', ['config', '--global', 'core.hooksPath', globalBefore], { env: { ...process.env, ...env } });
+    else spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath'], { env: { ...process.env, ...env } });
   }
 });
 
@@ -392,7 +392,7 @@ test('L06-04: doctor detects System2 hook at arbitrary effective hooksPath in co
 
   return (async () => {
     const { diagnose } = require(path.join(REPO, 'doctor.js'));
-    const checks = await diagnose({ root });
+    const checks = await diagnose({ root, env });
     const hookCheck = checks.find(item => item.check.includes('arbitrary effective hooksPath'));
     assert.ok(hookCheck, 'arbitrary effective hooksPath check must exist');
     assert.equal(hookCheck.status, 'PROBLEM');

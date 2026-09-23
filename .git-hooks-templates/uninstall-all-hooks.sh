@@ -20,7 +20,11 @@ same_path() {
 
 is_our_hook() {
   local file="$1"
-  [ -f "$file" ] && grep -qF "$MARKER" "$file"
+  if [ ! -f "$file" ]; then
+    return 1
+  fi
+  # Использовать node для поиска маркера, чтобы не зависеть от grep в PATH
+  node -e 'const fs=require("fs"); process.exit(fs.readFileSync(process.argv[1],"utf8").includes(process.argv[2])?0:1)' "$file" "$MARKER" 2>/dev/null
 }
 
 is_mixed_hook() {
@@ -28,14 +32,13 @@ is_mixed_hook() {
   if [ ! -f "$file" ]; then
     return 1
   fi
-  if ! grep -qF "$MARKER" "$file"; then
+  if ! is_our_hook "$file"; then
     return 1
   fi
   # Наш маркер есть. Смешанный = файл отличается от эталонного шаблона
   # (дописанный или изменённый пользовательский код).
-  if cmp -s "$file" "$TEMPLATES/post-commit"; then
-    return 1
-  fi
+  # Использовать node для сравнения файлов, чтобы не зависеть от cmp в PATH
+  node -e 'const fs=require("fs"); const a=fs.readFileSync(process.argv[1],"utf8"); const b=fs.readFileSync(process.argv[2],"utf8"); process.exit(a===b?0:1)' "$file" "$TEMPLATES/post-commit" 2>/dev/null && return 1
   return 0
 }
 
@@ -70,7 +73,7 @@ if is_mixed_hook "$DIRECT_HOOK"; then
   echo "WARNING: .git/hooks/post-commit contains System2 marker AND other code (mixed hook)." >&2
   echo "         Manual cleanup required. Not removing automatically to preserve your code." >&2
 elif is_our_hook "$DIRECT_HOOK"; then
-  rm "$DIRECT_HOOK"
+  node -e 'require("fs").unlinkSync(process.argv[1])' "$DIRECT_HOOK"
   echo "Removed System2 .git/hooks/post-commit."
   CHANGES=$((CHANGES + 1))
 elif [ -f "$DIRECT_HOOK" ]; then
