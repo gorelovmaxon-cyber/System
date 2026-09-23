@@ -25,7 +25,8 @@ function bashPath() {
 
 async function bootstrap(options = {}) {
   const root = path.resolve(options.root || process.cwd());
-  run(process.execPath, [path.join(root, 'scripts/memory/init-local-config.js'), '--root', root], root);
+  const result = spawnSync(process.execPath, [path.join(root, 'scripts/memory/init-local-config.js'), '--root', root], { cwd: root, stdio: 'ignore' });
+  if (result.status !== 0) throw new Error('init-local-config.js failed with exit ' + result.status);
   const profile = resolvePaths({ root }).profile;
   const bash = bashPath();
 
