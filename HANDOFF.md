@@ -5,7 +5,11 @@
 Пользователь выбрал продолжение **без обязательного Docker/Activepieces**: локальная
 память через writer, публикация исполнителем в GitHub и получение на другом ПК.
 Профиль `core` реализован и опубликован (`8fe1d4e`, `b7e12a3`); hooks на ноутбуке
-сняты, bootstrap/doctor profile-aware, тесты добавлены. L06-04 awaiting-review.
+сняты, bootstrap/doctor profile-aware, тесты добавлены. **L06-04 замечание 5 закрыто
+(`8c2f4eb`):** расширенная проверка hooks (global, local, direct .git/hooks/post-commit,
+привязанные проекты); doctor различает System2/чужие hooks, uninstall-all-hooks.sh
+удаляет все System2 hooks из всех источников; 194/194 теста проходят.
+L06-04 awaiting-review (все критерии выполнены).
 Старые требования поднимать AP и восстанавливать volume больше не блокируют
 основной профиль; реальный обмен и restore памяти остаются обязательными.
 Windows recovery не прерывать и не чинить в рамках этого плана.
