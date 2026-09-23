@@ -23,24 +23,41 @@ is_our_hook() {
   [ -f "$file" ] && grep -qF "$MARKER" "$file"
 }
 
+is_mixed_hook() {
+  local file="$1"
+  if [ ! -f "$file" ]; then
+    return 1
+  fi
+  # Смешанный hook: содержит маркер System2 И другой существенный код
+  # (не только shebang, комментарии и пустые строки)
+  if ! grep -qF "$MARKER" "$file"; then
+    return 1
+  fi
+  # Чистый System2 hook содержит только комментарии (shebang + маркер)
+  # После их исключения должно остаться 0 исполняемых строк
+  local executable_lines=$(grep -vE '^\s*(#|$)' "$file" | wc -l)
+  [ "$executable_lines" -gt 0 ]
+}
+
 CHANGES=0
 
 # 1. Проверить global hooksPath
 GLOBAL_HOOKS="$(git config --global --get core.hooksPath 2>/dev/null || true)"
 if [ -n "$GLOBAL_HOOKS" ]; then
-  GLOBAL_EFFECTIVE="$(git config --global --path-format=absolute --get core.hooksPath 2>/dev/null || echo "$GLOBAL_HOOKS")"
+  GLOBAL_EFFECTIVE="$(git config --global --type=path --get core.hooksPath 2>/dev/null || echo "$GLOBAL_HOOKS")"
   if same_path "$GLOBAL_EFFECTIVE" "$TEMPLATES" 2>/dev/null; then
-    git config --global --unset core.hooksPath
-    echo "Unset global core.hooksPath (was $GLOBAL_HOOKS)."
-    CHANGES=$((CHANGES + 1))
+    echo "WARNING: global core.hooksPath points to this System2 ($GLOBAL_HOOKS)." >&2
+    echo "         This affects all repositories. To remove it, run manually:" >&2
+    echo "         git config --global --unset core.hooksPath" >&2
+    echo "         Skipping automatic removal." >&2
   fi
 fi
 
 # 2. Проверить local hooksPath
 LOCAL_HOOKS="$(git config --local --get core.hooksPath 2>/dev/null || true)"
 if [ -n "$LOCAL_HOOKS" ]; then
-  LOCAL_EFFECTIVE="$(git rev-parse --path-format=absolute --git-path hooks 2>/dev/null || true)"
-  if [ -n "$LOCAL_EFFECTIVE" ] && same_path "$LOCAL_EFFECTIVE" "$TEMPLATES"; then
+  LOCAL_EFFECTIVE="$(git config --local --type=path --get core.hooksPath 2>/dev/null || echo "$LOCAL_HOOKS")"
+  if same_path "$LOCAL_EFFECTIVE" "$TEMPLATES" 2>/dev/null; then
     git config --local --unset core.hooksPath
     echo "Unset local core.hooksPath (was $LOCAL_HOOKS)."
     CHANGES=$((CHANGES + 1))
@@ -49,7 +66,10 @@ fi
 
 # 3. Проверить прямой .git/hooks/post-commit
 DIRECT_HOOK="$ROOT/.git/hooks/post-commit"
-if is_our_hook "$DIRECT_HOOK"; then
+if is_mixed_hook "$DIRECT_HOOK"; then
+  echo "WARNING: .git/hooks/post-commit contains System2 marker AND other code (mixed hook)." >&2
+  echo "         Manual cleanup required. Not removing automatically to preserve your code." >&2
+elif is_our_hook "$DIRECT_HOOK"; then
   rm "$DIRECT_HOOK"
   echo "Removed System2 .git/hooks/post-commit."
   CHANGES=$((CHANGES + 1))

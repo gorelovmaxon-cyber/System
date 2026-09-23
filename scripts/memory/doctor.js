@@ -52,9 +52,19 @@ async function diagnose(options = {}) {
   const profile = paths.profile;
   const expectedHooks = path.join(root, '.git-hooks-templates');
 
-  // Проверить все источники hooks: global, local hooksPath, прямой .git/hooks/post-commit
+  // Проверить все источники hooks: global, local hooksPath, эффективный hook, прямой .git/hooks/post-commit
   const globalHooksPath = command('git', ['config', '--global', '--get', 'core.hooksPath'], root);
   const localHooksPath = command('git', ['config', '--local', '--get', 'core.hooksPath'], root);
+
+  // Получить effective hooksPath (откуда Git реально читает hooks)
+  const effectiveHooksDir = command('git', ['rev-parse', '--git-path', 'hooks'], root);
+  // Относительный путь разрешаем относительно репозитория, не cwd процесса
+  const effectiveHooksDirAbsolute = effectiveHooksDir ? path.resolve(root, effectiveHooksDir) : null;
+  const effectivePostCommit = effectiveHooksDirAbsolute ? path.join(effectiveHooksDirAbsolute, 'post-commit') : null;
+  const effectiveHookExists = effectivePostCommit && fs.existsSync(effectivePostCommit);
+  const effectiveHookContent = effectiveHookExists ? fs.readFileSync(effectivePostCommit, 'utf8') : null;
+  const effectiveIsOurs = isOurHook(effectiveHookContent);
+
   const directHookPath = path.join(root, '.git/hooks/post-commit');
   const directHookExists = fs.existsSync(directHookPath);
   const directHookContent = directHookExists ? fs.readFileSync(directHookPath, 'utf8') : null;
@@ -63,7 +73,7 @@ async function diagnose(options = {}) {
   const localIsOurs = localHooksPath && (localHooksPath === '.git-hooks-templates' || path.resolve(root, localHooksPath) === expectedHooks);
   const directIsOurs = isOurHook(directHookContent);
 
-  const anyOurHooks = globalIsOurs || localIsOurs || directIsOurs;
+  const anyOurHooks = globalIsOurs || localIsOurs || directIsOurs || effectiveIsOurs;
 
   if (profile === 'activepieces') {
     add(localIsOurs, 'portable hooksPath', 'Run bash .git-hooks-templates/install-hooks.sh.');
@@ -79,6 +89,11 @@ async function diagnose(options = {}) {
     }
     if (directIsOurs) {
       add(false, 'direct .git/hooks/post-commit is System2 (core profile)', 'Remove .git/hooks/post-commit.');
+    }
+    // Проверить effective hook, если он наш, но не обнаружен через global/local/direct
+    if (effectiveIsOurs && !globalIsOurs && !localIsOurs && !directIsOurs) {
+      add(false, 'System2 hook active at arbitrary effective hooksPath (core profile)',
+          `Effective hook location: ${effectiveHooksDirAbsolute}. Check git config core.hooksPath and remove System2 hook.`);
     }
     if (directHookExists && !directIsOurs) {
       addUnchecked('direct .git/hooks/post-commit exists (foreign)', 'Manual inspection required: not recognized as System2.');
