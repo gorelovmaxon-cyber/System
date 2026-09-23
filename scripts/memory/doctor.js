@@ -31,7 +31,17 @@ function addIntegration(checks, label, enabled, ok, instruction) {
 }
 
 function isOurHook(content) {
-  return content && content.includes('System2 event queue capture');
+  return content && content.includes('System2 portable post-commit hook');
+}
+
+function isMixedHook(hookPath, templatePath) {
+  if (!fs.existsSync(hookPath)) return false;
+  const content = fs.readFileSync(hookPath, 'utf8');
+  if (!isOurHook(content)) return false;
+  // Has our marker. Mixed = differs from canonical template.
+  if (!fs.existsSync(templatePath)) return false;
+  const templateContent = fs.readFileSync(templatePath, 'utf8');
+  return content !== templateContent;
 }
 
 async function diagnose(options = {}) {
@@ -88,7 +98,13 @@ async function diagnose(options = {}) {
       add(false, 'local hooksPath points to System2 (core profile)', 'Run bash .git-hooks-templates/uninstall-hooks.sh.');
     }
     if (directIsOurs) {
-      add(false, 'direct .git/hooks/post-commit is System2 (core profile)', 'Remove .git/hooks/post-commit.');
+      const templatePath = path.join(expectedHooks, 'post-commit');
+      if (isMixedHook(directHookPath, templatePath)) {
+        add(false, 'direct .git/hooks/post-commit is mixed (System2 + user code, core profile)',
+            'Manual cleanup required: preserve user code, remove System2 portion.');
+      } else {
+        add(false, 'direct .git/hooks/post-commit is System2 (core profile)', 'Remove .git/hooks/post-commit.');
+      }
     }
     // Проверить effective hook, если он наш, но не обнаружен через global/local/direct
     if (effectiveIsOurs && !globalIsOurs && !localIsOurs && !directIsOurs) {

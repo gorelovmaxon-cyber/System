@@ -249,7 +249,7 @@ test('L06-04: doctor detects direct .git/hooks/post-commit with System2 marker i
   fs.writeFileSync(path.join(root, 'HANDOFF.md'), '# HANDOFF\n');
 
   fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
-  fs.writeFileSync(path.join(root, '.git/hooks/post-commit'), '#!/bin/sh\n# System2 event queue capture\necho test\n', 'utf8');
+  fs.copyFileSync(path.join(REPO, '..', '..', '.git-hooks-templates', 'post-commit'), path.join(root, '.git/hooks/post-commit'));
 
   return (async () => {
     const { diagnose } = require(path.join(REPO, 'doctor.js'));
@@ -297,7 +297,7 @@ test('L06-04: uninstall-all-hooks.sh removes System2 hooks from all sources', { 
 
   // Добавить direct hook (чистый System2, без примесей)
   fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
-  fs.writeFileSync(path.join(root, '.git/hooks/post-commit'), '#!/bin/sh\n# System2 event queue capture\n', 'utf8');
+  fs.copyFileSync(path.join(root, '.git-hooks-templates/post-commit'), path.join(root, '.git/hooks/post-commit'));
 
   // Для global config используем реальный global, не изолированный
   const globalBefore = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
@@ -356,7 +356,7 @@ test('L06-04: uninstall-all-hooks.sh preserves mixed hook (System2 + user code)'
 
   fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
   // Смешанный hook: System2 marker + пользовательский код
-  const mixedContent = '#!/bin/sh\n# System2 event queue capture\necho "user code here"\n';
+  const mixedContent = '#!/bin/sh\n# System2 portable post-commit hook: capture only; never push.\necho "user code here"\n';
   fs.writeFileSync(path.join(root, '.git/hooks/post-commit'), mixedContent, 'utf8');
 
   const uninstall = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8', env: { ...process.env, ...env } });
@@ -385,7 +385,7 @@ test('L06-04: doctor detects System2 hook at arbitrary effective hooksPath in co
   // Создать произвольный каталог с System2 hook
   const arbitraryHooksDir = path.join(root, 'custom-hooks-location');
   fs.mkdirSync(arbitraryHooksDir, { recursive: true });
-  fs.writeFileSync(path.join(arbitraryHooksDir, 'post-commit'), '#!/bin/sh\n# System2 event queue capture\n', 'utf8');
+  fs.copyFileSync(path.join(REPO, '..', '..', '.git-hooks-templates', 'post-commit'), path.join(arbitraryHooksDir, 'post-commit'));
 
   // Установить local hooksPath на произвольный каталог
   spawnSync('git', ['config', '--local', 'core.hooksPath', arbitraryHooksDir], { cwd: root, env: { ...process.env, ...env } });

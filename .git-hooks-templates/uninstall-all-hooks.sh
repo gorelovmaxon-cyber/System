@@ -6,7 +6,7 @@ set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
 TEMPLATES="$ROOT/.git-hooks-templates"
-MARKER="System2 event queue capture"
+MARKER="System2 portable post-commit hook"
 
 same_path() {
   node -e '
@@ -28,15 +28,15 @@ is_mixed_hook() {
   if [ ! -f "$file" ]; then
     return 1
   fi
-  # Смешанный hook: содержит маркер System2 И другой существенный код
-  # (не только shebang, комментарии и пустые строки)
   if ! grep -qF "$MARKER" "$file"; then
     return 1
   fi
-  # Чистый System2 hook содержит только комментарии (shebang + маркер)
-  # После их исключения должно остаться 0 исполняемых строк
-  local executable_lines=$(grep -vE '^\s*(#|$)' "$file" | wc -l)
-  [ "$executable_lines" -gt 0 ]
+  # Наш маркер есть. Смешанный = файл отличается от эталонного шаблона
+  # (дописанный или изменённый пользовательский код).
+  if cmp -s "$file" "$TEMPLATES/post-commit"; then
+    return 1
+  fi
+  return 0
 }
 
 CHANGES=0
