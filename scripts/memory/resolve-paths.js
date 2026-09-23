@@ -122,12 +122,18 @@ function resolvePaths(options = {}) {
   const memoryRoot = path.resolve(root, config.memory_root || '.claude/memory');
   const dataDir = path.resolve(root, config.data_dir || '.local');
 
+  // Отсутствующее поле — предсказуемая миграция старого local config, а не
+  // повод включить AP: profile по умолчанию 'core', даже если example.json
+  // почему-то не задаёт его явно.
+  const profile = config.profile === 'activepieces' ? 'activepieces' : 'core';
+
   return {
     system_root: root,
     memory_root: memoryRoot,
     data_dir: dataDir,
     localConfig: localConfigPath,
     registry: Array.isArray(config.registry) ? config.registry : [],
+    profile,
     config,
   };
 }

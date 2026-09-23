@@ -4,7 +4,36 @@
 `E:\System2` (на другом ПК замените путь). Секреты вводятся локально и никогда
 не копируются через Git.
 
-## Запуск по порядку
+## Профиль `core` — основной путь без Docker (решение пользователя 2026-09-23)
+
+Основной профиль (`config.profile: "core"`, действует по умолчанию, если поле
+не задано ни в example, ни в local config) не требует Docker/Activepieces и не
+устанавливает захват очереди через git hooks:
+
+1. `node scripts/memory/bootstrap.js --root <root>` — создаёт/обновляет
+   `config/system.local.json`, не ставит hooks и не поднимает Docker; если на
+   этой машине раньше был включён hooksPath `.git-hooks-templates` этого
+   репозитория, снимает именно его (чужой hooksPath не трогает).
+2. `node scripts/memory/doctor.js --json` — Khoj/bridge/Activepieces при
+   `enabled: false` показываются как `disabled`, а не `PROBLEM`; включённая, но
+   недоступная интеграция остаётся видимой ошибкой.
+3. Локальная запись и поиск работают без внешних сервисов:
+   `node scripts/memory/save.js --category facts --statement "..." --evidence "..." --source "..."`,
+   затем `node scripts/memory/search.js --query "..." --project <project_id>`
+   (без Khoj — локальный fallback с source/scope).
+4. `node scripts/memory/sync.js --status`, затем `sync.js --push` на границе
+   блока/передачи.
+
+Khoj остаётся полезным необязательным ускорителем поиска — его можно включить
+(`integrations.khoj.enabled: true` в `config/system.local.json`) и запускать
+как раньше; его отсутствие не блокирует ядро. Bridge нужен только клиенту,
+который его использует.
+
+## Профиль `activepieces` — прежний режим (опционально)
+
+Явно выбирается через `"profile": "activepieces"` в `config/system.local.json`.
+Требует Docker и включает старый захват очереди через hooks; шаги ниже
+относятся только к этому профилю и не выполняются по умолчанию.
 
 1. Проверить `node scripts/memory/doctor.js --json` и запустить bridge:
    `node scripts/memory/bridge-server.js` с локальным `MEMORY_BRIDGE_TOKEN`.

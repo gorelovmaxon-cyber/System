@@ -1,6 +1,7 @@
 {
   "schema_version": "1",
   "system_name": "System2",
+  "profile": "core",
   "memory_root": ".claude/memory",
   "data_dir": ".local",
   "registry": [

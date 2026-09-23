@@ -48,3 +48,13 @@ event_id: evt_9861052a0dfe
 ---
 
 ## Диагностика очереди в проекте systemqwen считает 25 событий — по одному на коммит; прежнее значение 123 было неверным, как и статус приёмки фазы 4, который исправлен в том же коммите.
+---
+status: observation
+category: facts
+scope: user
+source: CHAT-06A executor
+evidence: smoke test перед финальным коммитом
+event_id: evt_363ea08c3d85
+---
+
+## тест кириллицы L06-04 профиль core
