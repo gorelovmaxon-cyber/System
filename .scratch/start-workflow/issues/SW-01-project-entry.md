@@ -4,7 +4,7 @@
 после однократного setup команда start доступна в выбранном пользовательском клиенте.
 **Requirement IDs:** SW-R1, SW-R5
 **Blocked by:** none
-**Status:** ready-for-agent
+**Status:** awaiting-review — реализация и ограниченный живой вызов Claude Code выполнены; независимую оценку даёт приёмщик
 **Перед началом работы:** открой E:\\SystemTheBest\\System, проверь root, дерево и remote.
 
 ## Контекст и план

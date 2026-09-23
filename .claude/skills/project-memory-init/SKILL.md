@@ -11,7 +11,7 @@ disable-model-invocation: true
 не создаётся.
 
 ```powershell
-node scripts/memory/init-project.js --root <project-root> --project <project_id>
+node scripts/memory/init-project.js --root <project-root> --project <project_id> --client claude-code
 ```
 
 Скрипт принимает только стабильный kebab-case `project_id` из реестра. Для нового
@@ -24,6 +24,16 @@ gitignored `config/system.local.json`, а не молча в общий example-
 `HANDOFF.md`. Текст вне маркеров принадлежит проекту и не перезаписывается.
 HANDOFF обязан отражать незакоммиченные изменения, результаты проверок,
 незавершённое и конкретный следующий шаг.
+
+Для Claude Code `--client claude-code` создаёт минимальный проектный
+`.claude/skills/start/SKILL.md` и локальный игнорируемый
+`.claude/system2.local.json` с путём к единому System. Локальный
+`.claude/settings.local.json` добавляет System в `permissions.additionalDirectories`
+без изменения глобальных настроек и без подгрузки чужих skills. Команда `/start` доступна
+после открытия нового сеанса Claude Code из корня проекта. Адаптер читает
+канонический start из System; всю систему в проект не копировать. На другом ПК
+повторить setup с его путём к System. Если клиент иной, не обещать поддержку
+`/start` без проверки его механизма навыков.
 
 ## Golden cases
 

@@ -56,8 +56,41 @@ function handoffSection(projectId) {
   ].join('\n');
 }
 
+function claudeStartAdapter() {
+  return [
+    '---',
+    'name: start',
+    'description: Start the connected System2 workflow for this project.',
+    'disable-model-invocation: true',
+    '---',
+    '',
+    '# Project entry for System2',
+    '',
+    'Read `.claude/system2.local.json` in this project. If it is missing or its',
+    '`system_root` is unavailable, stop and tell the user to run the one-time',
+    'setup from the System repository. Do not guess another System root.',
+    'Read this project\'s `AGENTS.md` (if present), `CLAUDE.md`, `HANDOFF.md`,',
+    'and the current task. Then read `<system_root>/CLAUDE.md`,',
+    '`<system_root>/HANDOFF.md`, and `<system_root>/.claude/skills/start/SKILL.md`.',
+    'Follow that canonical start workflow using the configured `project_id`.',
+    'Run memory commands from `system_root`, passing `--project <project_id>` to',
+    '`search.js` and `--scope <project_id>` to `save.js` when appropriate.',
+    'Keep product files and System memory in their own repositories.',
+    'If the client cannot read `system_root`, request directory access; do not',
+    'copy System into this project or claim that start completed.',
+    '',
+  ].join('\n');
+}
+
+function appendIgnore(text, entry) {
+  const lines = text.split(/\r?\n/);
+  if (lines.includes(entry)) return text;
+  return text.trimEnd() + (text.trim() ? '\n' : '') + entry + '\n';
+}
+
 function initProject(options = {}) {
   const root = path.resolve(options.root || process.cwd());
+  if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) throw new Error('project root must be an existing directory: ' + root);
   const projectId = options.projectId;
   if (!projectId || !/^[a-z0-9][a-z0-9-]{1,63}$/.test(projectId)) throw new Error('--project is required and must be a stable kebab-case id');
   const system = resolvePaths({ root: options.systemRoot });
@@ -88,22 +121,70 @@ function initProject(options = {}) {
     throw new Error(`project_id ${projectId} is already registered to another directory: ${mapped}`);
   }
 
-  let localPath = mapped ? path.resolve(mapped) : null;
+  const owner = Object.entries(localPaths).find(([id, value]) => id !== projectId && value && !String(value).startsWith('<') && samePath(value, root));
+  if (owner) throw new Error(`directory is already registered to project_id ${owner[0]}; it was not registered twice`);
+  let localPath = mapped && !String(mapped).startsWith('<') ? path.resolve(mapped) : null;
+  const needsLocalBinding = !localPath;
+  const client = options.client || null;
+  if (client && client !== 'claude-code') throw new Error('unsupported client: ' + client + '; use --client claude-code or omit --client');
+  let adapterFile;
+  let adapterText;
+  let connectionFile;
+  let settingsFile;
+  let settingsText;
+  let ignoreFile;
+  let ignoreText;
+  if (client === 'claude-code') {
+    adapterFile = path.join(root, '.claude', 'skills', 'start', 'SKILL.md');
+    adapterText = claudeStartAdapter();
+    if (fs.existsSync(adapterFile) && fs.readFileSync(adapterFile, 'utf8') !== adapterText) {
+      throw new Error('start skill already exists with different content; inspect it before setup: ' + adapterFile);
+    }
+    connectionFile = path.join(root, '.claude', 'system2.local.json');
+    if (fs.existsSync(connectionFile)) {
+      const current = JSON.parse(fs.readFileSync(connectionFile, 'utf8'));
+      if (current.project_id !== projectId || !samePath(current.system_root, system.system_root)) {
+        throw new Error('existing System2 client connection points elsewhere: ' + connectionFile);
+      }
+    }
+    ignoreFile = path.join(root, '.gitignore');
+    ignoreText = appendIgnore(fs.existsSync(ignoreFile) ? fs.readFileSync(ignoreFile, 'utf8') : '', '/.claude/system2.local.json');
+    ignoreText = appendIgnore(ignoreText, '/.claude/settings.local.json');
+    settingsFile = path.join(root, '.claude', 'settings.local.json');
+    const settings = fs.existsSync(settingsFile) ? JSON.parse(fs.readFileSync(settingsFile, 'utf8')) : {};
+    if (settings.permissions !== undefined && (typeof settings.permissions !== 'object' || settings.permissions === null || Array.isArray(settings.permissions))) {
+      throw new Error('existing Claude local permissions must be an object: ' + settingsFile);
+    }
+    const permissions = { ...(settings.permissions || {}) };
+    const directories = permissions.additionalDirectories || [];
+    if (!Array.isArray(directories)) throw new Error('existing Claude additionalDirectories must be an array: ' + settingsFile);
+    permissions.additionalDirectories = [...directories.filter(value => !samePath(value, system.system_root)), system.system_root];
+    settingsText = JSON.stringify({ ...settings, permissions }, null, 2) + '\n';
+  }
   if (!knownProject) {
-    const owner = Object.entries(localPaths).find(([id, value]) => id !== projectId && value && !String(value).startsWith('<') && samePath(value, root));
-    if (owner) throw new Error(`directory is already registered to project_id ${owner[0]}; it was not registered twice`);
     // Без привязки каталога зарегистрированный проект оставался неразрешимым:
     // hook не мог определить project_id и молча не сохранял событие (G14).
-    localPaths[projectId] = root;
-    localPath = root;
     const remote = remoteUrl(root);
     const registry = [...system.registry, { project_id: projectId, title: options.title, kind: options.kind, ...(remote ? { remote } : {}) }];
+    localPaths[projectId] = root;
+    localPath = root;
     fs.writeFileSync(system.localConfig, JSON.stringify({ ...local, registry, local_paths: localPaths }, null, 2) + '\n', 'utf8');
+  } else if (needsLocalBinding) {
+    localPaths[projectId] = root;
+    localPath = root;
+    fs.writeFileSync(system.localConfig, JSON.stringify({ ...local, local_paths: localPaths }, null, 2) + '\n', 'utf8');
   }
 
   fs.writeFileSync(claude, claudeNext, 'utf8');
   if (handoffNext !== null) fs.writeFileSync(handoff, handoffNext, 'utf8');
-  return { root, project_id: projectId, claude, handoff, registry: knownProject ? 'existing' : 'registered-in-local-config', local_path: localPath };
+  if (client === 'claude-code') {
+    fs.mkdirSync(path.dirname(adapterFile), { recursive: true });
+    fs.writeFileSync(adapterFile, adapterText, 'utf8');
+    fs.writeFileSync(ignoreFile, ignoreText, 'utf8');
+    fs.writeFileSync(connectionFile, JSON.stringify({ system_root: system.system_root, project_id: projectId }, null, 2) + '\n', 'utf8');
+    fs.writeFileSync(settingsFile, settingsText, 'utf8');
+  }
+  return { root, project_id: projectId, claude, handoff, registry: knownProject ? 'existing' : 'registered-in-local-config', local_path: localPath, client, adapter: adapterFile || null };
 }
 
 function parseArgs(argv) {
@@ -115,6 +196,7 @@ function parseArgs(argv) {
     else if (argv[i] === '--register') result.register = true;
     else if (argv[i] === '--title') result.title = argv[++i];
     else if (argv[i] === '--kind') result.kind = argv[++i];
+    else if (argv[i] === '--client') result.client = argv[++i];
   }
   return result;
 }
