@@ -1,22 +1,27 @@
 ---
 name: to-spec
-description: Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
+description: Turn confirmed brief and conversation into a proportionate local spec; external publication is optional.
 disable-model-invocation: true
 ---
 
-This skill takes the current conversation context and codebase understanding and produces a spec (you may know this document as a PRD). Do NOT interview the user — just synthesize what you already know.
-
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
+This skill synthesizes the confirmed brief and project evidence into a spec. From
+System2 `/start`, use the local spec and handoff contract in
+`docs/system-workflow.md`; do not require an external issue tracker or setup
+skill. If a material decision is still unknown, ask for that decision before
+declaring the spec agreed. A short site task gets a short spec; the long template
+below is reference material for complex work, not a minimum length.
 
 ## Process
 
 1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the spec, and respect any ADRs in the area you're touching.
 
-2. Sketch out the seams at which you're going to test the feature. Existing seams should be preferred to new ones. Use the highest seam possible. If new seams are needed, propose them at the highest point you can. The fewer seams across the codebase, the better - the ideal number is one.
+2. State concrete acceptance checks at existing project seams. Ask the user
+   only about decisions that change the result, cost or access.
 
-Check with the user that these seams match their expectations.
-
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the spec in the project's selected task folder (default
+   `.scratch/<task-id>/SPEC.md`). Mark it agreed only after the user confirms
+   the material decisions. Publish to an external tracker only on explicit
+   request; local file status can be `ready-for-agent` when no blocker remains.
 
 <spec-template>
 
@@ -30,7 +35,7 @@ The solution to the problem, from the user's perspective.
 
 ## User Stories
 
-A LONG, numbered list of user stories. Each user story should be in the format of:
+A numbered list of user stories proportional to the task. Each user story should be in the format of:
 
 1. As an <actor>, I want a <feature>, so that <benefit>
 
@@ -38,7 +43,7 @@ A LONG, numbered list of user stories. Each user story should be in the format o
 1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
 </user-story-example>
 
-This list of user stories should be extremely extensive and cover all aspects of the feature.
+Cover accepted behavior and important edge cases without inventing extra scope.
 
 ## Implementation Decisions
 
