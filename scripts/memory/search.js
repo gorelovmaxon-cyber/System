@@ -162,6 +162,9 @@ function localResults(query, projectId, options = {}) {
         source,
         scope: meta.scope || 'unknown',
         status_hint: meta.status || 'unknown',
+        ...(meta.source ? { record_source: meta.source } : {}),
+        ...(meta.date ? { date: meta.date } : {}),
+        ...(JSON.stringify(meta).includes('\uFFFD') || record.body.includes('\uFFFD') ? { encoding_warning: 'U+FFFD' } : {}),
         relevance: Math.min(0.99, hits / queryWords.length),
       });
     }
@@ -256,7 +259,14 @@ async function searchKhoj(query, projectId, options = {}) {
       if (projectId && scope !== 'user' && scope !== projectId) return null;
       // snippet пересобирается из тела подтверждённой локальной записи;
       // чужому результату scope запрашивающего проекта не присваивается.
-      return { snippet: snippetFor(record.body, query, budget), source, scope, status_hint: record.meta.status || 'unknown', relevance: Number(item.score ?? item['cross-score'] ?? item.relevance ?? 0) };
+      return {
+        snippet: snippetFor(record.body, query, budget), source, scope,
+        status_hint: record.meta.status || 'unknown',
+        ...(record.meta.source ? { record_source: record.meta.source } : {}),
+        ...(record.meta.date ? { date: record.meta.date } : {}),
+        ...(JSON.stringify(record.meta).includes('\uFFFD') || record.body.includes('\uFFFD') ? { encoding_warning: 'U+FFFD' } : {}),
+        relevance: Number(item.score ?? item['cross-score'] ?? item.relevance ?? 0),
+      };
     }).filter(Boolean).slice(0, limit);
     return { ok: true, results };
   } catch (error) {
