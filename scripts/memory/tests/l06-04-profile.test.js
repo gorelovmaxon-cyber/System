@@ -189,8 +189,144 @@ test('L06-04: doctor flags an active legacy hooksPath as PROBLEM in core profile
   return (async () => {
     const { diagnose } = require(path.join(REPO, 'doctor.js'));
     const checks = await diagnose({ root });
-    const hookCheck = checks.find(item => item.check === 'legacy capture hooks disabled (core profile)');
+    const hookCheck = checks.find(item => item.check.includes('local hooksPath points to System2'));
     assert.equal(hookCheck.status, 'PROBLEM');
-    assert.match(hookCheck.instruction, /uninstall-hooks\.sh/);
+    assert.match(hookCheck.instruction, /uninstall/);
   })();
+});
+
+test('L06-04: doctor detects global hooksPath pointing to System2 in core profile', { skip: !hasBash }, () => {
+  const root = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-l0604-global-hooks-'));
+  initRepo(root);
+  spawnSync('git', ['remote', 'add', 'origin', 'git@example.invalid:owner/repo.git'], { cwd: root });
+  fs.mkdirSync(path.join(root, 'config'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'config/system.example.json'), JSON.stringify({
+    profile: 'core', memory_root: '.claude/memory', data_dir: '.local', registry: [],
+  }));
+  fs.writeFileSync(path.join(root, 'config/system.local.json'), JSON.stringify({ local_paths: {} }));
+  fs.mkdirSync(path.join(root, '.claude/memory'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'HANDOFF.md'), '# HANDOFF\n');
+  withHookTemplates(root);
+
+  const globalBefore = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
+  spawnSync('git', ['config', '--global', 'core.hooksPath', path.join(root, '.git-hooks-templates')], { cwd: root });
+
+  return (async () => {
+    try {
+      const { diagnose } = require(path.join(REPO, 'doctor.js'));
+      const checks = await diagnose({ root });
+      const hookCheck = checks.find(item => item.check.includes('global hooksPath'));
+      assert.ok(hookCheck, 'global hooksPath check must exist');
+      assert.equal(hookCheck.status, 'PROBLEM');
+      assert.match(hookCheck.instruction, /global --unset/);
+    } finally {
+      if (globalBefore) spawnSync('git', ['config', '--global', 'core.hooksPath', globalBefore]);
+      else spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath']);
+    }
+  })();
+});
+
+test('L06-04: doctor detects direct .git/hooks/post-commit with System2 marker in core profile', { skip: !hasBash }, () => {
+  const root = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-l0604-direct-hook-'));
+  initRepo(root);
+  spawnSync('git', ['remote', 'add', 'origin', 'git@example.invalid:owner/repo.git'], { cwd: root });
+  fs.mkdirSync(path.join(root, 'config'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'config/system.example.json'), JSON.stringify({
+    profile: 'core', memory_root: '.claude/memory', data_dir: '.local', registry: [],
+  }));
+  fs.writeFileSync(path.join(root, 'config/system.local.json'), JSON.stringify({ local_paths: {} }));
+  fs.mkdirSync(path.join(root, '.claude/memory'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'HANDOFF.md'), '# HANDOFF\n');
+
+  fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.git/hooks/post-commit'), '#!/bin/sh\n# System2 event queue capture\necho test\n', 'utf8');
+
+  return (async () => {
+    const { diagnose } = require(path.join(REPO, 'doctor.js'));
+    const checks = await diagnose({ root });
+    const hookCheck = checks.find(item => item.check.includes('direct .git/hooks/post-commit is System2'));
+    assert.ok(hookCheck, 'direct hook check must exist');
+    assert.equal(hookCheck.status, 'PROBLEM');
+    assert.match(hookCheck.instruction, /Remove/);
+  })();
+});
+
+test('L06-04: doctor shows unchecked status for foreign direct .git/hooks/post-commit', { skip: !hasBash }, () => {
+  const root = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-l0604-foreign-direct-'));
+  initRepo(root);
+  spawnSync('git', ['remote', 'add', 'origin', 'git@example.invalid:owner/repo.git'], { cwd: root });
+  fs.mkdirSync(path.join(root, 'config'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'config/system.example.json'), JSON.stringify({
+    profile: 'core', memory_root: '.claude/memory', data_dir: '.local', registry: [],
+  }));
+  fs.writeFileSync(path.join(root, 'config/system.local.json'), JSON.stringify({ local_paths: {} }));
+  fs.mkdirSync(path.join(root, '.claude/memory'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'HANDOFF.md'), '# HANDOFF\n');
+
+  fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.git/hooks/post-commit'), '#!/bin/sh\n# Foreign hook\necho foreign\n', 'utf8');
+
+  return (async () => {
+    const { diagnose } = require(path.join(REPO, 'doctor.js'));
+    const checks = await diagnose({ root });
+    const hookCheck = checks.find(item => item.check.includes('direct .git/hooks/post-commit exists (foreign)'));
+    assert.ok(hookCheck, 'foreign hook check must exist');
+    assert.equal(hookCheck.status, 'unchecked');
+    assert.match(hookCheck.instruction, /Manual inspection/);
+  })();
+});
+
+test('L06-04: uninstall-all-hooks.sh removes System2 hooks from all sources', { skip: !hasBash }, () => {
+  const root = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-l0604-uninstall-all-'));
+  initRepo(root);
+  withHookTemplates(root);
+
+  // Установить local hooksPath
+  spawnSync(BASH, [path.join(root, '.git-hooks-templates/install-hooks.sh')], { cwd: root });
+  assert.equal(hooksPath(root), '.git-hooks-templates');
+
+  // Добавить direct hook
+  fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.git/hooks/post-commit'), '#!/bin/sh\n# System2 event queue capture\necho test\n', 'utf8');
+
+  const globalBefore = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
+  spawnSync('git', ['config', '--global', 'core.hooksPath', path.join(root, '.git-hooks-templates')], { cwd: root });
+
+  try {
+    const uninstall = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8' });
+    assert.equal(uninstall.status, 0, uninstall.stderr);
+    assert.match(uninstall.stdout, /Removed 3 System2 hook/);
+
+    assert.equal(hooksPath(root), '', 'local hooksPath must be removed');
+    assert.equal(fs.existsSync(path.join(root, '.git/hooks/post-commit')), false, 'direct hook must be removed');
+
+    const globalAfter = spawnSync('git', ['config', '--global', '--get', 'core.hooksPath'], { encoding: 'utf8' }).stdout.trim();
+    assert.equal(globalAfter, '', 'global hooksPath must be removed');
+
+    // Повтор — idempotent
+    const again = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8' });
+    assert.equal(again.status, 0, again.stderr);
+    assert.match(again.stdout, /No System2 hooks found/);
+  } finally {
+    if (globalBefore) spawnSync('git', ['config', '--global', 'core.hooksPath', globalBefore]);
+    else spawnSync('git', ['config', '--global', '--unset', 'core.hooksPath']);
+  }
+});
+
+test('L06-04: uninstall-all-hooks.sh preserves foreign direct hook', { skip: !hasBash }, () => {
+  const root = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 's2-l0604-preserve-foreign-'));
+  initRepo(root);
+  withHookTemplates(root);
+
+  fs.mkdirSync(path.join(root, '.git/hooks'), { recursive: true });
+  const foreignContent = '#!/bin/sh\n# Foreign hook\necho foreign\n';
+  fs.writeFileSync(path.join(root, '.git/hooks/post-commit'), foreignContent, 'utf8');
+
+  const uninstall = spawnSync(BASH, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], { cwd: root, encoding: 'utf8' });
+  assert.equal(uninstall.status, 0, uninstall.stderr);
+
+  assert.equal(fs.existsSync(path.join(root, '.git/hooks/post-commit')), true, 'foreign hook must be preserved');
+  const content = fs.readFileSync(path.join(root, '.git/hooks/post-commit'), 'utf8');
+  assert.equal(content, foreignContent, 'foreign hook content must be unchanged');
+  assert.match(uninstall.stderr, /WARNING.*not recognized/, 'must warn about unrecognized hook');
 });

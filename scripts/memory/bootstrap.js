@@ -35,14 +35,13 @@ async function bootstrap(options = {}) {
     if (options.startServices) run('docker', ['compose', '-f', path.join(root, 'services/activepieces/docker-compose.yml'), 'up', '-d'], root);
   } else {
     // core: bootstrap не устанавливает старый захват очереди и не поднимает
-    // Docker. Если этот репозиторий сам раньше включил свой hooksPath (на этой
-    // же машине, до перехода на core), снимаем только его — чужой hooksPath
-    // uninstall-hooks.sh не трогает (см. .git-hooks-templates/uninstall-hooks.sh).
-    // Повторный bootstrap в core — idempotent no-op здесь: если hooksPath уже
-    // не наш (снят или никогда не был установлен), скрипт молча завершится 0/2.
-    const result = runQuiet(bash, [path.join(root, '.git-hooks-templates/uninstall-hooks.sh')], root);
-    if (result.status !== 0 && result.status !== 2) {
-      throw new Error('uninstall-hooks.sh failed with exit ' + result.status + ': ' + (result.stderr || result.stdout));
+    // Docker. Снимаем все System2 hooks из всех источников: global hooksPath,
+    // local hooksPath, прямой .git/hooks/post-commit. Чужие hooks сохраняются.
+    // Повторный bootstrap в core — idempotent: если hooks уже не наши, скрипт
+    // завершится с exit 0 (nothing to uninstall).
+    const result = runQuiet(bash, [path.join(root, '.git-hooks-templates/uninstall-all-hooks.sh')], root);
+    if (result.status !== 0) {
+      throw new Error('uninstall-all-hooks.sh failed with exit ' + result.status + ': ' + (result.stderr || result.stdout));
     }
   }
   if (options.rebuildIndex) run(process.execPath, [path.join(root, 'scripts/memory/indexer.js'), '--run'], root);

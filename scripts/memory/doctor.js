@@ -30,10 +30,15 @@ function addIntegration(checks, label, enabled, ok, instruction) {
   checks.push({ status: ok ? 'OK' : 'PROBLEM', check: label, instruction: ok ? undefined : instruction });
 }
 
+function isOurHook(content) {
+  return content && content.includes('System2 event queue capture');
+}
+
 async function diagnose(options = {}) {
   const root = path.resolve(options.root || process.cwd());
   const checks = [];
   const add = (ok, label, instruction) => checks.push({ status: ok ? 'OK' : 'PROBLEM', check: label, instruction: ok ? undefined : instruction });
+  const addUnchecked = (label, reason) => checks.push({ status: 'unchecked', check: label, instruction: reason });
   add(Boolean(command('git', ['--version'], root)), 'git', 'Install Git and reopen the terminal.');
   add(Boolean(command('git', ['remote', 'get-url', 'origin'], root)), 'git/remote origin', 'Configure origin for this clone.');
   add(Boolean(command('git', ['branch', '--show-current'], root)), 'git/branch', 'Checkout a named synchronization branch.');
@@ -45,20 +50,81 @@ async function diagnose(options = {}) {
   add(fs.existsSync(path.join(root, 'HANDOFF.md')), 'project HANDOFF.md', 'Run node scripts/memory/init-project.js for the connected project.');
 
   const profile = paths.profile;
-  const activeHooks = command('git', ['config', '--get', 'core.hooksPath'], root);
   const expectedHooks = path.join(root, '.git-hooks-templates');
-  const hooksAreOurs = activeHooks === '.git-hooks-templates' || (activeHooks && path.resolve(root, activeHooks) === expectedHooks);
+
+  // Проверить все источники hooks: global, local hooksPath, прямой .git/hooks/post-commit
+  const globalHooksPath = command('git', ['config', '--global', '--get', 'core.hooksPath'], root);
+  const localHooksPath = command('git', ['config', '--local', '--get', 'core.hooksPath'], root);
+  const directHookPath = path.join(root, '.git/hooks/post-commit');
+  const directHookExists = fs.existsSync(directHookPath);
+  const directHookContent = directHookExists ? fs.readFileSync(directHookPath, 'utf8') : null;
+
+  const globalIsOurs = globalHooksPath && (globalHooksPath === '.git-hooks-templates' || path.resolve(root, globalHooksPath) === expectedHooks);
+  const localIsOurs = localHooksPath && (localHooksPath === '.git-hooks-templates' || path.resolve(root, localHooksPath) === expectedHooks);
+  const directIsOurs = isOurHook(directHookContent);
+
+  const anyOurHooks = globalIsOurs || localIsOurs || directIsOurs;
 
   if (profile === 'activepieces') {
-    add(hooksAreOurs, 'portable hooksPath', 'Run bash .git-hooks-templates/install-hooks.sh.');
+    add(localIsOurs, 'portable hooksPath', 'Run bash .git-hooks-templates/install-hooks.sh.');
+    if (globalIsOurs) add(false, 'global hooksPath conflicts with local', 'Unset git config --global core.hooksPath or ensure local overrides it.');
+    if (directIsOurs) add(false, 'direct .git/hooks/post-commit conflicts', 'Remove .git/hooks/post-commit to use hooksPath.');
   } else {
-    // core: старый захват очереди не должен быть включён повторно. Если наш
-    // hooksPath всё ещё активен на этой машине/проекте — это PROBLEM с
-    // указанием на uninstall, а не тихо пропущенная проверка.
-    add(!hooksAreOurs, 'legacy capture hooks disabled (core profile)', 'Run bash .git-hooks-templates/uninstall-hooks.sh.');
+    // core: старый захват не должен быть активен. Проверяем все источники.
+    if (globalIsOurs) {
+      add(false, 'global hooksPath points to System2 (core profile)', 'Run git config --global --unset core.hooksPath.');
+    }
+    if (localIsOurs) {
+      add(false, 'local hooksPath points to System2 (core profile)', 'Run bash .git-hooks-templates/uninstall-hooks.sh.');
+    }
+    if (directIsOurs) {
+      add(false, 'direct .git/hooks/post-commit is System2 (core profile)', 'Remove .git/hooks/post-commit.');
+    }
+    if (directHookExists && !directIsOurs) {
+      addUnchecked('direct .git/hooks/post-commit exists (foreign)', 'Manual inspection required: not recognized as System2.');
+    }
+    if (!anyOurHooks) {
+      add(true, 'legacy capture hooks disabled (core profile)', '');
+    }
   }
 
   add(fs.existsSync(path.join(root, '.claude/memory')), 'shared memory root', 'Restore .claude/memory from Git.');
+
+  // Проверить hooks в привязанных проектах (только для реально подключённых путей)
+  const localPaths = paths.config.local_paths || {};
+  const connectedProjects = [];
+  const unavailableProjects = [];
+
+  for (const [projectId, projectPath] of Object.entries(localPaths)) {
+    if (projectPath && !projectPath.startsWith('<') && fs.existsSync(projectPath)) {
+      const projectGitDir = path.join(projectPath, '.git');
+      if (fs.existsSync(projectGitDir)) {
+        connectedProjects.push({ projectId, projectPath });
+        const projectLocalHooks = command('git', ['config', '--local', '--get', 'core.hooksPath'], projectPath);
+        const projectDirectHook = path.join(projectPath, '.git/hooks/post-commit');
+        const projectDirectExists = fs.existsSync(projectDirectHook);
+        const projectDirectContent = projectDirectExists ? fs.readFileSync(projectDirectHook, 'utf8') : null;
+
+        const projectLocalIsOurs = projectLocalHooks && (projectLocalHooks === '.git-hooks-templates' || path.resolve(projectPath, projectLocalHooks) === expectedHooks);
+        const projectDirectIsOurs = isOurHook(projectDirectContent);
+
+        if (profile === 'core' && (projectLocalIsOurs || projectDirectIsOurs)) {
+          add(false, `project ${projectId} has System2 hooks (core profile)`, `Remove hooks from ${projectPath}.`);
+        }
+        if (profile === 'activepieces' && !projectLocalIsOurs && !projectDirectIsOurs) {
+          addUnchecked(`project ${projectId} hooks status`, `Check hooks in ${projectPath}.`);
+        }
+      }
+    } else if (projectPath && !projectPath.startsWith('<')) {
+      unavailableProjects.push({ projectId, projectPath });
+    }
+  }
+
+  if (unavailableProjects.length > 0) {
+    const projectList = unavailableProjects.map(p => `${p.projectId}: ${p.projectPath}`).join('; ');
+    addUnchecked('unavailable project paths', `Cannot check hooks: ${projectList}`);
+  }
+
   const khoj = paths.config.integrations?.khoj || {};
   const bridge = paths.config.integrations?.bridge || {};
   const activepieces = paths.config.integrations?.activepieces || {};
