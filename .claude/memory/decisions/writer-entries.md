@@ -128,3 +128,13 @@ event_id: journal_system-of-site_61fb366a266e7e74d215e5c6
 ---
 
 ## Maxim sets final commercial price for system-of-site; block calculation remains internal guidance. Repeat B01 brief with early budget and factual source-based questions. Do not auto-quote client budget or internal calculation.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: system-of-site conversation 2026-09-26
+evidence: User request following d8214c4; REQUIREMENTS.md and B01-04 ticket
+event_id: journal_system-of-site_1ba28957b0d687386f782c9e
+---
+
+## System-of-site brief must ask early preferred work format: Tilda, design only, AI-assisted, custom code plus design. Also cover notable partners/clients/public figures, brandbook and logo availability. User generally approved B01-03 and requested targeted B01-04 additions.
