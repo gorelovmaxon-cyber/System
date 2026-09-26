@@ -138,3 +138,13 @@ event_id: journal_system-of-site_1ba28957b0d687386f782c9e
 ---
 
 ## System-of-site brief must ask early preferred work format: Tilda, design only, AI-assisted, custom code plus design. Also cover notable partners/clients/public figures, brandbook and logo availability. User generally approved B01-03 and requested targeted B01-04 additions.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: system-of-site conversation 2026-09-26
+evidence: Explicit user yes after B01 review; blocks/B02-APP-CRM.md
+event_id: journal_system-of-site_b09539805c420cb57c38a1fc
+---
+
+## Maxim selected EspoCRM for system-of-site. B01 accepted; B02 prepared for local persistence and one CRM Lead with duplicate prevention. Live validation on laptop. No paid infrastructure authorized.
