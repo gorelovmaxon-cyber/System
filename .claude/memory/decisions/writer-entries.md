@@ -98,3 +98,23 @@ event_id: evt_93478b794910
 ---
 
 ## The claim that the self-guided memory cycle closes itself is refuted: the live chain continues, with persisted 6 and no-pattern 3 across nine memory commits.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: system-of-site/docs/site-project/REQUIREMENTS.md, 2026-09-26
+evidence: Прямое пожелание в REQUIREMENTS.md, раздел Формат консультации и демо B01, 2026-09-26
+event_id: journal_system-of-site_2606a50d2d9da23b047d78da
+---
+
+## Для консультанта System of Site Максим предпочитает преимущественно вопросы с выбором, сохраняя свободный ввод, свой вариант и возможность ответить «не знаю».
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: system-of-site/docs/site-project/REQUIREMENTS.md, 2026-09-26
+evidence: REQUIREMENTS.md и B01-RESULT.md, 2026-09-26
+event_id: journal_system-of-site_f842cc87e06ba66683bf6de2
+---
+
+## Максим хочет проверить полный демонстрационный разговор консультанта с вымышленным клиентом, которого моделирует исполнитель; синтетическое подтверждение клиента не равно утверждению Максима.

@@ -58,3 +58,13 @@ event_id: evt_sw03_site_assets_997bb71
 ---
 
 ## В проверке сайта C-portfolio успешная сборка TypeScript/Vite сопровождалась шестью ссылками на отсутствующие статические изображения; наличие ассетов проверяется отдельно от сборки.
+---
+status: confirmed
+category: facts
+scope: system-of-site
+source: system-of-site/docs/site-project/REQUIREMENTS.md, 2026-09-26
+evidence: Таблица тарифов REQUIREMENTS.md от 2026-09-26 и B01-RESULT.md
+event_id: journal_system-of-site_20c1f120a14faf2103e957c2
+---
+
+## Для расчёта B01 в System of Site ставка обычного блока Tilda — 3 500 ₽, FAQ — 1 500 ₽, дополнительного языка — 500 ₽ за блок; итоговый расчёт B01 ожидает утверждения Максимом.
