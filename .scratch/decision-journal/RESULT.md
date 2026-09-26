@@ -52,7 +52,7 @@ System: исходный HEAD `21ab375f55bd81efc4cd2a48a3f74513a9df0016`, `origi
 
 System: `scripts/memory/decision-journal.js`, его тест, `docs/decision-journal.md`, активные CLAUDE/workflow/operations/start/auto-learn/profile-update/handoff, канонические файлы writer-памяти, HANDOFF и этот каталог задачи с двумя тикетами. Site: `CLAUDE.md`, `HANDOFF.md`, четыре JSON журнала. Коммит сайта DJ-02: `87cfe940d943db68d096f4103804ffe1cfcad18f`.
 
-System исходный SHA указан выше; итоговый SHA см. `git rev-parse HEAD` в итоговой передаче после публикации (сам SHA коммита нельзя включить в его собственное содержимое). Состояния для каждого репозитория проверяются раздельно: локальное `persisted` memory уже есть; `synced` только после сверки `origin/master`; `indexed` пока не подтверждено.
+System: исходный `21ab375f55bd81efc4cd2a48a3f74513a9df0016`, реализация `ac23946e9992d825fd6fa67e6e2b51db39b014ce`, исправление запуска из каталога проекта `cc01c5eef23b044e7d747ec31cd5b8192bada2d1`. Site: исходный `50e2f3a718d450240bb07f346fcbcd8880165e59`, итоговый `87cfe940d943db68d096f4103804ffe1cfcad18f`. Оба scoped-пакета отправлены в соответствующий `origin/master`; `git ls-remote origin refs/heads/master` совпал с указанными SHA на момент проверки. Локальное `persisted` и Git `synced` подтверждены; `indexed` пока не подтверждено. SHA самого последнего коммита с этим отчётом указан в итоговой передаче и проверяется `git log -1 --format=%H -- .scratch/decision-journal/RESULT.md`: его невозможно включить в содержимое собственного коммита.
 
 ## Следующий шаг независимой проверки
 
