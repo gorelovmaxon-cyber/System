@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 const test = require('node:test');
 const journal = require('../decision-journal');
 
@@ -67,5 +68,18 @@ test('project journal filters scope and rejects credential marker', () => {
     assert.throws(() => add(ctx, 'fact', `token=${marker}`), /credential/);
     assert.throws(() => add(ctx, 'fact', 'broken \uFFFD text'), /U\+FFFD/);
     assert.equal(fs.readdirSync(ctx.dir).length, 1);
+  } finally { fs.rmSync(ctx.root, { recursive: true, force: true }); }
+});
+
+test('CLI uses its System checkout when called from a connected project', () => {
+  const ctx = setup('alpha');
+  try {
+    fs.mkdirSync(path.join(ctx.root, 'config'));
+    fs.writeFileSync(path.join(ctx.root, 'config', 'system.example.json'), '{invalid legacy config}');
+    const result = spawnSync(process.execPath, [path.join(__dirname, '..', 'decision-journal.js'), 'pending', '--project-root', ctx.root], {
+      cwd: ctx.root, encoding: 'utf8', env: { ...process.env, SYSTEM2_PROJECT_ID: 'alpha' },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), []);
   } finally { fs.rmSync(ctx.root, { recursive: true, force: true }); }
 });

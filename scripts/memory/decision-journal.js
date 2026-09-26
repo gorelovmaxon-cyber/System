@@ -110,7 +110,12 @@ function mark(ctx, id, getRecord = writerLog.get) {
 
 function main() {
   const opts = args(process.argv);
-  const ctx = context(opts.project_root || process.cwd());
+  const invocationRoot = process.cwd();
+  // projectId and writerLog resolve System2 from cwd. A connected project may
+  // itself contain a legacy config/system.example.json; keep the writer rooted
+  // in this script's System2 checkout even when invoked from that project.
+  process.chdir(path.resolve(__dirname, '..', '..'));
+  const ctx = context(opts.project_root || invocationRoot);
   let result;
   if (opts.command === 'capture') result = capture(ctx, opts);
   else if (opts.command === 'pending') result = list(ctx).filter(item => item.state === 'pending');
