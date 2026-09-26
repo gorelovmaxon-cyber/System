@@ -118,3 +118,13 @@ event_id: journal_system-of-site_f842cc87e06ba66683bf6de2
 ---
 
 ## Максим хочет проверить полный демонстрационный разговор консультанта с вымышленным клиентом, которого моделирует исполнитель; синтетическое подтверждение клиента не равно утверждению Максима.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: system-of-site user conversation 2026-09-26
+evidence: Explicit user confirmation 2026-09-26; REQUIREMENTS.md pricing clarification and B01-03 ticket
+event_id: journal_system-of-site_61fb366a266e7e74d215e5c6
+---
+
+## Maxim sets final commercial price for system-of-site; block calculation remains internal guidance. Repeat B01 brief with early budget and factual source-based questions. Do not auto-quote client budget or internal calculation.
