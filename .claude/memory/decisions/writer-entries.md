@@ -148,3 +148,13 @@ event_id: journal_system-of-site_b09539805c420cb57c38a1fc
 ---
 
 ## Maxim selected EspoCRM for system-of-site. B01 accepted; B02 prepared for local persistence and one CRM Lead with duplicate prevention. Live validation on laptop. No paid infrastructure authorized.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User chat 2026-10-01; system-of-site/docs/site-project/blocks/B04-CONSULTATION.md
+evidence: Explicit user task attachment in chat 2026-10-01, current B04 consultation block and fact-pipeline task updated from that decision.
+event_id: journal_system-of-site_b3c3464853e0b081b93f989d
+---
+
+## B04 uses model-led consultation: Sonnet interprets free client speech and proposes addressed versioned field changes, while the server controls allowed data, owned sources, history, explicit brief confirmation and idempotent CRM delivery. Fixed question order and per-phrase interpretation dictionaries are no longer the main path. Budget/calculation/commercial approval remain separate future stages.
