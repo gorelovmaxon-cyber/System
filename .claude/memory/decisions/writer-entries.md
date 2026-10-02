@@ -198,3 +198,23 @@ event_id: journal_system-of-site_b4d67bbd68ee651ef8195ef8
 ---
 
 ## B06 local tickets accepted at app4165cbc with284 full tests and real local CRM/PDF/capture/reply/reminder proof. Full B06 awaits user settings, recipients, document branding/scope and reminder/inbound/abandoned consultation decisions; B07-B09 are unfinished.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation2026-10-02; decision journal de21195e109e42a18853cbb8
+evidence: Attachment task2026-10-02 and explicit async answers: settings later; no Sait or second PC now; publish to Git
+event_id: journal_system-of-site_de21195e109e42a18853cbb8
+---
+
+## User authorizes independent B07 then available B08 and B09 preparation while B06 waits. B06 settings will be supplied later; current Sait and second-PC access unavailable, continue on PC later. Publish transferable code docs and sanitized evidence to Git, excluding secrets and private backups. Final dependent acceptance stays after B06.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Execution 2026-10-02; OPUS-B07-B09-HANDOFF.md
+evidence: Reports B07-INDEPENDENT-RESULT.md and B08-PREPARATION-RESULT.md; application fe2f5ad4641a6ef011891baee8ffd49b1081c1b1; bundle SHA256 96e2b2f55ce2fbeb304d40c238593eb7d0610fb331d2b91c3426483ddc900fff
+event_id: journal_system-of-site_7821cb9dcd1ddf58ee42fdba
+---
+
+## B07 independent work and B08-B09 preparation self-checked on app fe2f5ad; actual app/CRM isolated restore, 291 suite tests, health and real process restart PASS; awaiting Opus review and external B06/Sait/second-PC inputs.
