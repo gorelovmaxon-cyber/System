@@ -168,3 +168,13 @@ event_id: journal_system-of-site_596acb592c205bf46a936f1d
 ---
 
 ## For B04, the user selects the latest Downloads settings (1).json connection: Tooken Club, claude-sonnet-5, ANTHROPIC_AUTH_TOKEN paired with its own Base URL. Read the selected file directly without overwriting the old Claude settings or copying either credential. This replaces the old default Ultracode connection for the opt-in live scenario; future paid retries still require their own applicable authorization.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: system-of-site reports/B04-QUESTION-POLICY-RESULT-2026-10-02.md; independent package acceptance 2026-10-02
+evidence: B04-QUESTION-POLICY app b30022e; 237 full PASS, isolated HTTP publication checks, independent Standards/Spec review and verified restored bundle9cb13509; previous7 real model replies revalidated in memory.
+event_id: journal_system-of-site_bedf26b4253f2231bb9a8a7e
+---
+
+## Accepted B04 uses model interpretation and addressed v6 fact changes with free topic selection, but outgoing questions are server-owned text selected by typed topic/intent. Unrestricted model prose cannot publish a price, discount, deadline or false confirmation/delivery. Old v6 prose is accepted only as ignored compatibility input; historical confirmed snapshots remain unchanged.
