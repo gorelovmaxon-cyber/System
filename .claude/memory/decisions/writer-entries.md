@@ -178,3 +178,13 @@ event_id: journal_system-of-site_bedf26b4253f2231bb9a8a7e
 ---
 
 ## Accepted B04 uses model interpretation and addressed v6 fact changes with free topic selection, but outgoing questions are server-owned text selected by typed topic/intent. Unrestricted model prose cannot publish a price, discount, deadline or false confirmation/delivery. Old v6 prose is accepted only as ignored compatibility input; historical confirmed snapshots remain unchanged.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: docs/site-project/reports/B05-RESULT.md; independent Standards and Spec 2026-10-02
+evidence: docs/site-project/reports/B05-RESULT.md
+event_id: journal_system-of-site_d430c2d7c856760b48f8014d
+---
+
+## B05 independently accepted on 8756ffd. Standards P2 demo cleanup fixed by explicit retention of quoted/model-audited sources; independent isolated checks passed. Spec accepts final pinned revision, 22 targeted checks combined and clean restored bundle verified. Final full suite in restored clone: 259 PASS, 176.543 seconds. Real synthetic CRM desktop/mobile proof preserved; no new paid AI or mail/Telegram. B06 local preparation continues; channels, seller details, reminder rules and production remain open.
