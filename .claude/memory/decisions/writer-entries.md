@@ -188,3 +188,13 @@ event_id: journal_system-of-site_d430c2d7c856760b48f8014d
 ---
 
 ## B05 independently accepted on 8756ffd. Standards P2 demo cleanup fixed by explicit retention of quoted/model-audited sources; independent isolated checks passed. Spec accepts final pinned revision, 22 targeted checks combined and clean restored bundle verified. Final full suite in restored clone: 259 PASS, 176.543 seconds. Real synthetic CRM desktop/mobile proof preserved; no new paid AI or mail/Telegram. B06 local preparation continues; channels, seller details, reminder rules and production remain open.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: system-of-site B06-RESULT and independent reviews2026-10-02
+evidence: reports/B06-RESULT.md; full284 PASS235.341s; independent Standards25 PASS32.171s and Spec25 PASS35.564s; clean bundle restore25 PASS28.824s
+event_id: journal_system-of-site_b4d67bbd68ee651ef8195ef8
+---
+
+## B06 local tickets accepted at app4165cbc with284 full tests and real local CRM/PDF/capture/reply/reminder proof. Full B06 awaits user settings, recipients, document branding/scope and reminder/inbound/abandoned consultation decisions; B07-B09 are unfinished.
