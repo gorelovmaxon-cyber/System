@@ -190,3 +190,13 @@ event_id: evt_93478b794910
 ---
 
 ## Append-only journals must not be read as current state: counters like event/pending totals must be recomputed from the last record per identifier, otherwise stale cumulative numbers are reported as live state.
+---
+status: observation
+category: gotchas
+scope: system-of-site
+source: Скриншот пользователя и read-only проверка протоколов, 2026-10-05
+evidence: system-of-site/.system2/decision-journal/964bb7a84733141a637e8016.json; docs/site-project/reports/B08-VPS-PREPARATION-20261005.md
+event_id: journal_system-of-site_964bb7a84733141a637e8016
+---
+
+## VPS System of Site, 2026-10-05: панель провайдера показывает активную аренду и найденную VM, но не получает её состояние: Proxmox-нода не отвечает. Повторный SSH banner-read и HTTP probe timeout. Пока это отказ диагностики провайдера; состояние VM и точная причина SSH не установлены. Перед развёртыванием требуется восстановление доступа провайдером.
