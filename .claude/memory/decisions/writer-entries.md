@@ -218,3 +218,13 @@ event_id: journal_system-of-site_7821cb9dcd1ddf58ee42fdba
 ---
 
 ## B07 independent work and B08-B09 preparation self-checked on app fe2f5ad; actual app/CRM isolated restore, 291 suite tests, health and real process restart PASS; awaiting Opus review and external B06/Sait/second-PC inputs.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Поручение пользователя в приложенном тексте, беседа 2026-10-05
+evidence: system-of-site/.system2/decision-journal/5de6c4c7b6ef69b9a5a19403.json; docs/site-project/blocks/B08-VPS-DEPLOYMENT.md
+event_id: journal_system-of-site_5de6c4c7b6ef69b9a5a19403
+---
+
+## 2026-10-05: пользователь приобрёл VPS и разрешил подключение, настройку, развёртывание System of Site и доступные проверки. Дополнительные покупки, платный AI и внешние сообщения автоматически запрещены. Переключение действующего домена требует отдельного решения; независимая приёмка и практический проход пользователя остаются обязательными.
