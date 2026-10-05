@@ -248,3 +248,13 @@ event_id: journal_system-of-site_84503fdfb428949882e08491
 ---
 
 ## 2026-10-05 PC handoff only: preserve and publish related code/docs/evidence, add no features, deploy nothing and make no paid runs. Next diagnose questionnaire dialogue through actual configuration/transport/contract/UI; target free client input with relevant questions while facts, prices and documents remain server-controlled. VPS diagnosis proceeds independently; proposals remain unapproved until owner decision.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User attachment 2026-10-05: unified request and AI brief product change
+evidence: User-approved product change; docs/site-project/blocks/B08-UNIFIED-BRIEF.md, B08-06 to B08-09
+event_id: journal_system-of-site_3e47dfcee661e1078a1490b5
+---
+
+## User approves unified intake and existing B04 AI brief in cards or conversation: one saved profile/history/request, specialist-only attachments excluded from model, server progress and explicit version confirmation, operator price/documents preserved. Implement scoped B08 tickets and controlled checks; live AI requires current settings and spending permission, VPS later.
