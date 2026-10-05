@@ -238,3 +238,13 @@ event_id: journal_system-of-site_bff6465094d38bdfae92a4a7
 ---
 
 ## Продолжать существующие B06–B09 до эксплуатации: сохранить принятую fe2f5ad и перенос второго ПК, сначала закончить независимую подготовку и собрать недостающие решения одним списком; затем VPS, единый разрешённый живой сценарий, Opus 5.5 и практическое обучение. Платный AI и внешние отправки требуют явного разрешения.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User attachment 2026-10-05: full System of Site PC handoff, scope and continuation sequence
+evidence: User full PC handoff attachment 2026-10-05; PC-HANDOFF-20261005.md records scope and next actions
+event_id: journal_system-of-site_84503fdfb428949882e08491
+---
+
+## 2026-10-05 PC handoff only: preserve and publish related code/docs/evidence, add no features, deploy nothing and make no paid runs. Next diagnose questionnaire dialogue through actual configuration/transport/contract/UI; target free client input with relevant questions while facts, prices and documents remain server-controlled. VPS diagnosis proceeds independently; proposals remain unapproved until owner decision.
