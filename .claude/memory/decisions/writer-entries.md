@@ -278,3 +278,13 @@ event_id: journal_system-of-site_7f4f0f81ac05c336fb8fea95
 ---
 
 ## User authorizes necessary paid corrected B08 conversation using latest downloaded settings and selected claude-sonnet-5; account actual calls and usage postfactum when provider price is unknown. Selected provider metadata: Tooken; secrets remain private.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User messages 2026-10-06: do not count first three form items; start with first question; connect real model so I can try it; then do it
+evidence: User messages 2026-10-06: do not count first three form items; start with first question; connect real model so I can try it; then do it
+event_id: journal_system-of-site_d36a698c507948f4e2e86e47
+---
+
+## User requires initial form fields remembered only as AI context, excluded from brief progress: after choosing cards or AI start with first brief question at zero completed, minimum 25 meaningful brief items. User authorizes connecting the existing private model settings for hands-on real-model testing instead of the scripted preview.
