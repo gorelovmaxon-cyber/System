@@ -258,3 +258,23 @@ event_id: journal_system-of-site_3e47dfcee661e1078a1490b5
 ---
 
 ## User approves unified intake and existing B04 AI brief in cards or conversation: one saved profile/history/request, specialist-only attachments excluded from model, server progress and explicit version confirmation, operator price/documents preserved. Implement scoped B08 tickets and controlled checks; live AI requires current settings and spending permission, VPS later.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User attachment 2026-10-05 correction of unified brief implementation; screenshot and follow-up
+evidence: User attachment 2026-10-05 correction of unified brief implementation; screenshot and follow-up
+event_id: journal_system-of-site_335e279719c94064ca77a0ab
+---
+
+## User rejects unified brief AI conversation and chat UI at cc38631/c651166. Correct existing B08 tickets: separate natural conversational reply from grounded structured edits, answer client questions and help choose using approved knowledge, retain specialist-only attachments and integrations, build true chat/cards with compact progress and explicit review. Controlled preview is not proof of real AI understanding; live validation and independent acceptance remain separate.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User reply 2026-10-05: Downloads, latest downloaded settings, spend as needed
+evidence: User reply 2026-10-05: Downloads, latest downloaded settings, spend as needed
+event_id: journal_system-of-site_7f4f0f81ac05c336fb8fea95
+---
+
+## User authorizes necessary paid corrected B08 conversation using latest downloaded settings and selected claude-sonnet-5; account actual calls and usage postfactum when provider price is unknown. Selected provider metadata: Tooken; secrets remain private.
