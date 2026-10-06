@@ -220,3 +220,13 @@ event_id: journal_system-of-site_8fef2db1a63237429067a6d4
 ---
 
 ## Новые варианты B08: app d234f04, 348 tests и 112 маршрутов/896 мутаций PASS; семь услуг доведены до confirmation с продолжениями, 14 специальных сценариев успешны в ходе исправлений. Недостающие вопросы готовит запланированная вторая фаза по точным темам сервера; две реальные фазы проверены внесённой неисправностью. 89 попыток:64PASS/25failed сохранены,535 фаз,4790357 известных tokens и8безusage. Same-model вердикт не независимая приёмка, B08 awaiting-review; сетевые/JSON сбои и production adapter/лимиты отдельно.
+---
+status: observation
+category: gotchas
+scope: system-of-site
+source: system-of-site/docs/site-project/reports/B08-LATENCY-20261006.md; bounded experiment 2026-10-06
+evidence: B08-LATENCY-EVIDENCE-20261006/results.json and audit.json; all twelve phase records preserved; no browser paint timing or provider thinking breakdown available.
+event_id: journal_system-of-site_4756394d91301fbbf8dc2c4d
+---
+
+## B08 latency audit 2026-10-06: six short adaptive turns, twelve real provider calls with no retries. Explicit thinking disabled on the same Sonnet 5 produced no reliable improvement: current 22.03/17.81/28.90s, disabled26.11/21.16/22.76s. Both variants incorrectly marked unchosen features stated. Runtime unchanged; remove obsolete dialogue prompt catalogues is proposed but untested. No new features, mass tests or scripted questionnaire authorized in this latency task.
