@@ -298,3 +298,13 @@ event_id: journal_system-of-site_9b434ba8cfd8501e20109cb7
 ---
 
 ## User approves Astra batch brief implementation: first prepared questions, then AI analysis and meaningful consecutive groups tailored to initial site/service selection; real chat retained, spinner and honest analysis text before model work.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-06; system-of-site/docs/site-project/transfer/OPUS55-CHAT-LATENCY-AND-SYSTEM-20261006.md
+evidence: User explicitly clarified that this role split is what they proposed; detailed current implementation, timings and unresolved decisions recorded in OPUS55-CHAT-LATENCY-AND-SYSTEM-20261006.md.
+event_id: journal_system-of-site_6d2ee5bb6eb688da249ff55f
+---
+
+## User confirmed role split for System of Site latency: fast model conducts adaptive AI chat in our existing design; Sonnet receives conversation data to assemble final brief and remains responsible for card questions. A detailed manual handoff to Opus 5.5 is requested. Specific fast model/provider and publication/synchronization contract remain open; no new implementation or mass tests in handoff preparation.
