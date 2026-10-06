@@ -288,3 +288,13 @@ event_id: journal_system-of-site_d36a698c507948f4e2e86e47
 ---
 
 ## User requires initial form fields remembered only as AI context, excluded from brief progress: after choosing cards or AI start with first brief question at zero completed, minimum 25 meaningful brief items. User authorizes connecting the existing private model settings for hands-on real-model testing instead of the scripted preview.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User 2026-10-06: approves batch plan, requires semantically coherent groups based on initial site choice and spinner with analysis text.
+evidence: Direct user approval 2026-10-06 in active session; docs/site-project/transfer/ASTRA-B08-BATCH-BRIEF-20261006.md
+event_id: journal_system-of-site_9b434ba8cfd8501e20109cb7
+---
+
+## User approves Astra batch brief implementation: first prepared questions, then AI analysis and meaningful consecutive groups tailored to initial site/service selection; real chat retained, spinner and honest analysis text before model work.
