@@ -200,3 +200,13 @@ event_id: journal_system-of-site_964bb7a84733141a637e8016
 ---
 
 ## VPS System of Site, 2026-10-05: панель провайдера показывает активную аренду и найденную VM, но не получает её состояние: Proxmox-нода не отвечает. Повторный SSH banner-read и HTTP probe timeout. Пока это отказ диагностики провайдера; состояние VM и точная причина SSH не установлены. Перед развёртыванием требуется восстановление доступа провайдером.
+---
+status: observation
+category: gotchas
+scope: system-of-site
+source: docs/site-project/reports/B08-MASS-TESTS-20261006.md; synthetic evidence and app 8bfdeb1; 2026-10-06
+evidence: docs/site-project/reports/B08-MASS-TESTS-20261006.md; synthetic evidence; app 8bfdeb1c92365c3fbb5d1608177f1c5b06e3a161
+event_id: journal_system-of-site_231cc63c84380aa7d24d62e6
+---
+
+## B08 mass tests: 326 unit tests, 112 offline routes and 896 rejected invalid mutations pass; 53 completed live attempts include 21 passes and 32 failures across fixes, with 275 provider responses. App 8bfdeb1 removes contact data from model context and fixes late GET overwriting a running analysis; forced-delay desktop/mobile browser routes pass. Design and consultation full routes, false publication-review refusals and roughly 30-second median group analysis still prevent stable acceptance.
