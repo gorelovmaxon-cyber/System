@@ -308,3 +308,13 @@ event_id: journal_system-of-site_6d2ee5bb6eb688da249ff55f
 ---
 
 ## User confirmed role split for System of Site latency: fast model conducts adaptive AI chat in our existing design; Sonnet receives conversation data to assemble final brief and remains responsible for card questions. A detailed manual handoff to Opus 5.5 is requested. Specific fast model/provider and publication/synchronization contract remain open; no new implementation or mass tests in handoff preparation.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User task 2026-10-06; docs/site-project/reports/B10-USER-FLOW-RESULT-20261006.md
+evidence: Attached user request 2026-10-06; B10-USER-FLOW-RESULT-20261006 and OPUS-B10-USER-FLOW-20261006 describe implementation and verification limits.
+event_id: journal_system-of-site_ded1597b5784ff6b183ec576
+---
+
+## Complete B10 only in its isolated stand, preserving production; streamed chat and separate verified assembly share the existing brief with cards and explicit version confirmation. No mass paid runs or new comparisons; live validation needs current spend approval.
