@@ -841,11 +841,33 @@
       "new_tools_runner_schedules_mcp_memory": false
     },
     "publication": {
-      "status": "pending-push",
+      "status": "verified",
       "origin": "https://github.com/gorelovmaxon-cyber/System.git",
-      "user_authorized": true
+      "command": "git push origin HEAD:master",
+      "source_revision": "30b6f458e4c119f3764f97af2041a5b02d5a4d5f",
+      "published_local_sha": "e157e8f0f3e7fecd9d7d6bd5b5885ac4aee76d7a",
+      "live_origin_master_sha": "e157e8f0f3e7fecd9d7d6bd5b5885ac4aee76d7a",
+      "verification_commands": [
+        "git rev-parse HEAD",
+        "git ls-remote origin refs/heads/master"
+      ],
+      "synced": true,
+      "user_authorized": true,
+      "receipt_scope": "Verified published content snapshot; final receipt commit SHA is verified separately after push."
     },
     "full_suite": "not repeated",
-    "restore_demo_infrastructure": "not repeated"
+    "restore_demo_infrastructure": "not repeated",
+    "knowledge_states": {
+      "journal_systemqwen_abda2410f436b8bc1170e2d7": {
+        "persisted": true,
+        "synced": true,
+        "indexed": "unconfirmed; local fallback"
+      },
+      "journal_systemqwen_13947f838aee699cb456fe54": {
+        "persisted": true,
+        "synced": true,
+        "indexed": "unconfirmed; Khoj unavailable"
+      }
+    }
   }
 }

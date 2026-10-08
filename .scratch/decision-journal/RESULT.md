@@ -323,6 +323,13 @@ reset --hard, clean и публикации чужих черновиков со
 определяется через `git log -1 --format=%H -- .scratch/decision-journal/RESULT.md`.
 Фактические результаты текущего завершения добавлены в существующий
 [roles-checks.json](evidence/roles-checks.json), секция `roles_completion`.
+Обычный `git push origin HEAD:master` выполнен: remote `30b6f45` →
+`e157e8f0f3e7fecd9d7d6bd5b5885ac4aee76d7a`; сразу после него `git rev-parse HEAD`
+и `git ls-remote origin refs/heads/master` вернули один SHA. Это подтверждает
+synced для содержимого пакета и двух записей знаний. Последующая фиксация receipt
+публикуется отдельным scoped-коммитом; собственный SHA отчёта снова проверяется
+после push и приводится в финальном ответе. Receipt содержит конкретный проверенный
+снимок, а не выдуманный собственный SHA файла.
 
 **ROLES-04: поиск пригодного эпизода.** Прочитаны текущие ROLES evidence и журнал
 System2, отчёты `.scratch/decision-journal/RESULT.md` и
@@ -363,7 +370,8 @@ System2, отчёты `.scratch/decision-journal/RESULT.md` и
 проверки; не подтверждённое новое глобальное предпочтение пользователя.
 Состояния persisted, indexed и synced различаются: исходная запись ролей persisted,
 local fallback ранее проверен; Khoj-индексация не подтверждена. Synced подтверждается
-только фактическим push и совпадением живого remote SHA. Новую сессию на этом ПК
+только фактическим push и совпадением живого remote SHA; для опубликованного снимка
+`e157e8f` это выполнено. Новую сессию на этом ПК
 нельзя объявлять межмашинной проверкой.
 
 Проверки завершения — scoped diff/ссылки/UTF-8, сохранность нового remote-пополнения,

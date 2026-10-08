@@ -19,7 +19,9 @@ ROLES-01–03 — **done** по [полученному внешнему вер�
 Реальный journal_id `abda2410f436b8bc1170e2d7`, event_id
 `journal_systemqwen_abda2410f436b8bc1170e2d7`: **persisted** в user-profile/user,
 находится локальным fallback; **indexed** не подтверждён (Khoj недоступен),
-**synced** проверяется фактической публикацией и живым remote SHA в окончательном пакете.
+**synced** подтверждён обычным push: HEAD и живой origin/master совпали на
+`e157e8f0f3e7fecd9d7d6bd5b5885ac4aee76d7a`; receipt в existing evidence.
+SHA последнего коммита передачи сверяется отдельно после её публикации.
 Обычный push scoped-коммитов в origin System2 разрешён последним поручением.
 Старых pending System2
 при входе не было; новая запись отмечена persisted, чужие очереди не разбирались.
