@@ -188,3 +188,173 @@ event_id: journal_system-of-site_be7fe00ae35fb6bd8020a67a
 ---
 
 ## Maxim authorized exactly one paid B04 technical request on app bf5e1bd with claude-sonnet-5, max_calls=1, no retries; full dialogue and other paid scenarios not authorized.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User chat 2026-10-01; system-of-site/docs/site-project/blocks/B04-CONSULTATION.md
+evidence: Explicit user task attachment in chat 2026-10-01, current B04 consultation block and fact-pipeline task updated from that decision.
+event_id: journal_system-of-site_b3c3464853e0b081b93f989d
+---
+
+## B04 uses model-led consultation: Sonnet interprets free client speech and proposes addressed versioned field changes, while the server controls allowed data, owned sources, history, explicit brief confirmation and idempotent CRM delivery. Fixed question order and per-phrase interpretation dictionaries are no longer the main path. Budget/calculation/commercial approval remain separate future stages.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User chat 2026-10-01 and system-of-site reports/B04-MODEL-CONSULTATION-2026-10-01.md
+evidence: User-selected settings metadata checked without revealing values; Tooken returned HTTP 200, claude-sonnet-5 and end_turn on the first attempt. Full live B04 is not yet accepted.
+event_id: journal_system-of-site_596acb592c205bf46a936f1d
+---
+
+## For B04, the user selects the latest Downloads settings (1).json connection: Tooken Club, claude-sonnet-5, ANTHROPIC_AUTH_TOKEN paired with its own Base URL. Read the selected file directly without overwriting the old Claude settings or copying either credential. This replaces the old default Ultracode connection for the opt-in live scenario; future paid retries still require their own applicable authorization.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: system-of-site reports/B04-QUESTION-POLICY-RESULT-2026-10-02.md; independent package acceptance 2026-10-02
+evidence: B04-QUESTION-POLICY app b30022e; 237 full PASS, isolated HTTP publication checks, independent Standards/Spec review and verified restored bundle9cb13509; previous7 real model replies revalidated in memory.
+event_id: journal_system-of-site_bedf26b4253f2231bb9a8a7e
+---
+
+## Accepted B04 uses model interpretation and addressed v6 fact changes with free topic selection, but outgoing questions are server-owned text selected by typed topic/intent. Unrestricted model prose cannot publish a price, discount, deadline or false confirmation/delivery. Old v6 prose is accepted only as ignored compatibility input; historical confirmed snapshots remain unchanged.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: docs/site-project/reports/B05-RESULT.md; independent Standards and Spec 2026-10-02
+evidence: docs/site-project/reports/B05-RESULT.md
+event_id: journal_system-of-site_d430c2d7c856760b48f8014d
+---
+
+## B05 independently accepted on 8756ffd. Standards P2 demo cleanup fixed by explicit retention of quoted/model-audited sources; independent isolated checks passed. Spec accepts final pinned revision, 22 targeted checks combined and clean restored bundle verified. Final full suite in restored clone: 259 PASS, 176.543 seconds. Real synthetic CRM desktop/mobile proof preserved; no new paid AI or mail/Telegram. B06 local preparation continues; channels, seller details, reminder rules and production remain open.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: system-of-site B06-RESULT and independent reviews2026-10-02
+evidence: reports/B06-RESULT.md; full284 PASS235.341s; independent Standards25 PASS32.171s and Spec25 PASS35.564s; clean bundle restore25 PASS28.824s
+event_id: journal_system-of-site_b4d67bbd68ee651ef8195ef8
+---
+
+## B06 local tickets accepted at app4165cbc with284 full tests and real local CRM/PDF/capture/reply/reminder proof. Full B06 awaits user settings, recipients, document branding/scope and reminder/inbound/abandoned consultation decisions; B07-B09 are unfinished.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation2026-10-02; decision journal de21195e109e42a18853cbb8
+evidence: Attachment task2026-10-02 and explicit async answers: settings later; no Sait or second PC now; publish to Git
+event_id: journal_system-of-site_de21195e109e42a18853cbb8
+---
+
+## User authorizes independent B07 then available B08 and B09 preparation while B06 waits. B06 settings will be supplied later; current Sait and second-PC access unavailable, continue on PC later. Publish transferable code docs and sanitized evidence to Git, excluding secrets and private backups. Final dependent acceptance stays after B06.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Execution 2026-10-02; OPUS-B07-B09-HANDOFF.md
+evidence: Reports B07-INDEPENDENT-RESULT.md and B08-PREPARATION-RESULT.md; application fe2f5ad4641a6ef011891baee8ffd49b1081c1b1; bundle SHA256 96e2b2f55ce2fbeb304d40c238593eb7d0610fb331d2b91c3426483ddc900fff
+event_id: journal_system-of-site_7821cb9dcd1ddf58ee42fdba
+---
+
+## B07 independent work and B08-B09 preparation self-checked on app fe2f5ad; actual app/CRM isolated restore, 291 suite tests, health and real process restart PASS; awaiting Opus review and external B06/Sait/second-PC inputs.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Поручение пользователя в приложенном тексте, беседа 2026-10-05
+evidence: system-of-site/.system2/decision-journal/5de6c4c7b6ef69b9a5a19403.json; docs/site-project/blocks/B08-VPS-DEPLOYMENT.md
+event_id: journal_system-of-site_5de6c4c7b6ef69b9a5a19403
+---
+
+## 2026-10-05: пользователь приобрёл VPS и разрешил подключение, настройку, развёртывание System of Site и доступные проверки. Дополнительные покупки, платный AI и внешние сообщения автоматически запрещены. Переключение действующего домена требует отдельного решения; независимая приёмка и практический проход пользователя остаются обязательными.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Поручение пользователя 2026-10-05: Продолжи System of Site до готовности к эксплуатации
+evidence: Поручение пользователя от 2026-10-05; docs/site-project/reports/B06-B09-OPERATIONS-PREPARATION-20261005.md
+event_id: journal_system-of-site_bff6465094d38bdfae92a4a7
+---
+
+## Продолжать существующие B06–B09 до эксплуатации: сохранить принятую fe2f5ad и перенос второго ПК, сначала закончить независимую подготовку и собрать недостающие решения одним списком; затем VPS, единый разрешённый живой сценарий, Opus 5.5 и практическое обучение. Платный AI и внешние отправки требуют явного разрешения.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User attachment 2026-10-05: full System of Site PC handoff, scope and continuation sequence
+evidence: User full PC handoff attachment 2026-10-05; PC-HANDOFF-20261005.md records scope and next actions
+event_id: journal_system-of-site_84503fdfb428949882e08491
+---
+
+## 2026-10-05 PC handoff only: preserve and publish related code/docs/evidence, add no features, deploy nothing and make no paid runs. Next diagnose questionnaire dialogue through actual configuration/transport/contract/UI; target free client input with relevant questions while facts, prices and documents remain server-controlled. VPS diagnosis proceeds independently; proposals remain unapproved until owner decision.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User attachment 2026-10-05: unified request and AI brief product change
+evidence: User-approved product change; docs/site-project/blocks/B08-UNIFIED-BRIEF.md, B08-06 to B08-09
+event_id: journal_system-of-site_3e47dfcee661e1078a1490b5
+---
+
+## User approves unified intake and existing B04 AI brief in cards or conversation: one saved profile/history/request, specialist-only attachments excluded from model, server progress and explicit version confirmation, operator price/documents preserved. Implement scoped B08 tickets and controlled checks; live AI requires current settings and spending permission, VPS later.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User attachment 2026-10-05 correction of unified brief implementation; screenshot and follow-up
+evidence: User attachment 2026-10-05 correction of unified brief implementation; screenshot and follow-up
+event_id: journal_system-of-site_335e279719c94064ca77a0ab
+---
+
+## User rejects unified brief AI conversation and chat UI at cc38631/c651166. Correct existing B08 tickets: separate natural conversational reply from grounded structured edits, answer client questions and help choose using approved knowledge, retain specialist-only attachments and integrations, build true chat/cards with compact progress and explicit review. Controlled preview is not proof of real AI understanding; live validation and independent acceptance remain separate.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User reply 2026-10-05: Downloads, latest downloaded settings, spend as needed
+evidence: User reply 2026-10-05: Downloads, latest downloaded settings, spend as needed
+event_id: journal_system-of-site_7f4f0f81ac05c336fb8fea95
+---
+
+## User authorizes necessary paid corrected B08 conversation using latest downloaded settings and selected claude-sonnet-5; account actual calls and usage postfactum when provider price is unknown. Selected provider metadata: Tooken; secrets remain private.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User messages 2026-10-06: do not count first three form items; start with first question; connect real model so I can try it; then do it
+evidence: User messages 2026-10-06: do not count first three form items; start with first question; connect real model so I can try it; then do it
+event_id: journal_system-of-site_d36a698c507948f4e2e86e47
+---
+
+## User requires initial form fields remembered only as AI context, excluded from brief progress: after choosing cards or AI start with first brief question at zero completed, minimum 25 meaningful brief items. User authorizes connecting the existing private model settings for hands-on real-model testing instead of the scripted preview.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User 2026-10-06: approves batch plan, requires semantically coherent groups based on initial site choice and spinner with analysis text.
+evidence: Direct user approval 2026-10-06 in active session; docs/site-project/transfer/ASTRA-B08-BATCH-BRIEF-20261006.md
+event_id: journal_system-of-site_9b434ba8cfd8501e20109cb7
+---
+
+## User approves Astra batch brief implementation: first prepared questions, then AI analysis and meaningful consecutive groups tailored to initial site/service selection; real chat retained, spinner and honest analysis text before model work.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-06; system-of-site/docs/site-project/transfer/OPUS55-CHAT-LATENCY-AND-SYSTEM-20261006.md
+evidence: User explicitly clarified that this role split is what they proposed; detailed current implementation, timings and unresolved decisions recorded in OPUS55-CHAT-LATENCY-AND-SYSTEM-20261006.md.
+event_id: journal_system-of-site_6d2ee5bb6eb688da249ff55f
+---
+
+## User confirmed role split for System of Site latency: fast model conducts adaptive AI chat in our existing design; Sonnet receives conversation data to assemble final brief and remains responsible for card questions. A detailed manual handoff to Opus 5.5 is requested. Specific fast model/provider and publication/synchronization contract remain open; no new implementation or mass tests in handoff preparation.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User task 2026-10-06; docs/site-project/reports/B10-USER-FLOW-RESULT-20261006.md
+evidence: Attached user request 2026-10-06; B10-USER-FLOW-RESULT-20261006 and OPUS-B10-USER-FLOW-20261006 describe implementation and verification limits.
+event_id: journal_system-of-site_ded1597b5784ff6b183ec576
+---
+
+## Complete B10 only in its isolated stand, preserving production; streamed chat and separate verified assembly share the existing brief with cards and explicit version confirmation. No mass paid runs or new comparisons; live validation needs current spend approval.

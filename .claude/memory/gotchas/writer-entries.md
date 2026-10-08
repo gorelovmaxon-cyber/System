@@ -190,3 +190,43 @@ event_id: evt_93478b794910
 ---
 
 ## Append-only journals must not be read as current state: counters like event/pending totals must be recomputed from the last record per identifier, otherwise stale cumulative numbers are reported as live state.
+---
+status: observation
+category: gotchas
+scope: system-of-site
+source: Скриншот пользователя и read-only проверка протоколов, 2026-10-05
+evidence: system-of-site/.system2/decision-journal/964bb7a84733141a637e8016.json; docs/site-project/reports/B08-VPS-PREPARATION-20261005.md
+event_id: journal_system-of-site_964bb7a84733141a637e8016
+---
+
+## VPS System of Site, 2026-10-05: панель провайдера показывает активную аренду и найденную VM, но не получает её состояние: Proxmox-нода не отвечает. Повторный SSH banner-read и HTTP probe timeout. Пока это отказ диагностики провайдера; состояние VM и точная причина SSH не установлены. Перед развёртыванием требуется восстановление доступа провайдером.
+---
+status: observation
+category: gotchas
+scope: system-of-site
+source: docs/site-project/reports/B08-MASS-TESTS-20261006.md; synthetic evidence and app 8bfdeb1; 2026-10-06
+evidence: docs/site-project/reports/B08-MASS-TESTS-20261006.md; synthetic evidence; app 8bfdeb1c92365c3fbb5d1608177f1c5b06e3a161
+event_id: journal_system-of-site_231cc63c84380aa7d24d62e6
+---
+
+## B08 mass tests: 326 unit tests, 112 offline routes and 896 rejected invalid mutations pass; 53 completed live attempts include 21 passes and 32 failures across fixes, with 275 provider responses. App 8bfdeb1 removes contact data from model context and fixes late GET overwriting a running analysis; forced-delay desktop/mobile browser routes pass. Design and consultation full routes, false publication-review refusals and roughly 30-second median group analysis still prevent stable acceptance.
+---
+status: observation
+category: gotchas
+scope: system-of-site
+source: Беседа 2026-10-06: поручение проверять новые варианты; docs/site-project/reports/B08-VARIANT-TESTS-20261006.md и B08-VARIANT-EVIDENCE-20261006; app d234f0456339ba74dc0de478bb1cecafdaf73916
+evidence: B08-VARIANT-EVIDENCE-20261006: full-suite-348.txt, offline-matrix.json, batch-browser.json, provider-events.json, source-version и source bundle; новые полные AI/прокат, продолжения и controlled_fault PASS.
+event_id: journal_system-of-site_8fef2db1a63237429067a6d4
+---
+
+## Новые варианты B08: app d234f04, 348 tests и 112 маршрутов/896 мутаций PASS; семь услуг доведены до confirmation с продолжениями, 14 специальных сценариев успешны в ходе исправлений. Недостающие вопросы готовит запланированная вторая фаза по точным темам сервера; две реальные фазы проверены внесённой неисправностью. 89 попыток:64PASS/25failed сохранены,535 фаз,4790357 известных tokens и8безusage. Same-model вердикт не независимая приёмка, B08 awaiting-review; сетевые/JSON сбои и production adapter/лимиты отдельно.
+---
+status: observation
+category: gotchas
+scope: system-of-site
+source: system-of-site/docs/site-project/reports/B08-LATENCY-20261006.md; bounded experiment 2026-10-06
+evidence: B08-LATENCY-EVIDENCE-20261006/results.json and audit.json; all twelve phase records preserved; no browser paint timing or provider thinking breakdown available.
+event_id: journal_system-of-site_4756394d91301fbbf8dc2c4d
+---
+
+## B08 latency audit 2026-10-06: six short adaptive turns, twelve real provider calls with no retries. Explicit thinking disabled on the same Sonnet 5 produced no reliable improvement: current 22.03/17.81/28.90s, disabled26.11/21.16/22.76s. Both variants incorrectly marked unchosen features stated. Runtime unchanged; remove obsolete dialogue prompt catalogues is proposed but untested. No new features, mass tests or scripted questionnaire authorized in this latency task.
