@@ -1,0 +1,33 @@
+{
+  "base": "e8b85ee0323e151bd311dc8deae9584ac017fd78",
+  "local_added_event_ids": [
+    "journal_system-of-site_68865a763458655d53b48703",
+    "journal_system-of-site_c3dd8511fda6911cb6879bf1",
+    "journal_system-of-site_4842bcd79f0dcdbbd680282e",
+    "journal_system-of-site_be7fe00ae35fb6bd8020a67a"
+  ],
+  "remote_added_decision_event_ids": [
+    "journal_system-of-site_b3c3464853e0b081b93f989d",
+    "journal_system-of-site_596acb592c205bf46a936f1d",
+    "journal_system-of-site_bedf26b4253f2231bb9a8a7e",
+    "journal_system-of-site_d430c2d7c856760b48f8014d",
+    "journal_system-of-site_b4d67bbd68ee651ef8195ef8",
+    "journal_system-of-site_de21195e109e42a18853cbb8",
+    "journal_system-of-site_7821cb9dcd1ddf58ee42fdba",
+    "journal_system-of-site_5de6c4c7b6ef69b9a5a19403",
+    "journal_system-of-site_bff6465094d38bdfae92a4a7",
+    "journal_system-of-site_84503fdfb428949882e08491",
+    "journal_system-of-site_3e47dfcee661e1078a1490b5",
+    "journal_system-of-site_335e279719c94064ca77a0ab",
+    "journal_system-of-site_7f4f0f81ac05c336fb8fea95",
+    "journal_system-of-site_d36a698c507948f4e2e86e47",
+    "journal_system-of-site_9b434ba8cfd8501e20109cb7",
+    "journal_system-of-site_6d2ee5bb6eb688da249ff55f",
+    "journal_system-of-site_ded1597b5784ff6b183ec576"
+  ],
+  "local_and_remote_record_content_preserved": true,
+  "facts_preserved": true,
+  "remote_gotchas_preserved": true,
+  "new_duplicate_event_ids": {},
+  "foreign_file_sha256": "16b26b2ac88d1dba8d7a73642cb57e76c506551e5ebd37f1b0fcc5e3c152c08e"
+}
