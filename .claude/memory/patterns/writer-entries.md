@@ -68,3 +68,13 @@ event_id: evt_93478b794910
 ---
 
 ## State descriptions in reports must reflect the environment after controlled recovery (Docker/Activepieces/bridge brought back up), not a snapshot frozen at the moment of failure.
+---
+status: observation
+category: patterns
+scope: system-of-site
+source: B10-CONSENT-SESSION-HANDOFF-20261008; browser_b10_private_draft and browser_b10_user_flow evidence; affected test output 2026-10-08
+evidence: Addressed 141 tests PASS; browser_b10_private_draft and browser_b10_user_flow PASS at 1440/390; code diff over a3b1fcb. Overall final check reported separately in the handoff.
+event_id: journal_system-of-site_10168bdf0c7139e9b5355ed5
+---
+
+## B10 completion continues Opus changes on a3b1fcb: page-memory name/phone/email before consent, latest-consent retries, consent recheck before attachment registration, peer rate and atomic live-session ceiling. Attachment quota counts registered bytes only. Turn-state route already checked ownership via history before 4d5078f. Browser form and full flow PASS at 1440/390; affected 141 tests PASS. Linux read-only verification remains open; no paid AI calls or main-app changes.
