@@ -971,7 +971,7 @@
     "knowledge_states": {
       "persisted": true,
       "indexed": "unconfirmed; Khoj unavailable, local fallback found current record with matching source",
-      "synced": false
+      "synced": true
     },
     "checks": {
       "pending_on_entry": [],
@@ -1030,8 +1030,21 @@
       "diff_check": "pass"
     },
     "publication": {
-      "status": "pending",
-      "receipt_scope": "Final commit SHA and live origin/master must be checked after normal push; this file does not invent its own commit SHA."
+      "status": "verified",
+      "origin": "https://github.com/gorelovmaxon-cyber/System.git",
+      "command": "git push origin HEAD:master",
+      "source_revision": "d5775fc42de0e07056b4b65ae915092b1862a6f3",
+      "published_local_sha": "c036775755cbae4b849abc641a21df6bdf72343f",
+      "live_origin_master_sha": "c036775755cbae4b849abc641a21df6bdf72343f",
+      "pre_push_fetch": true,
+      "incoming_changes": 0,
+      "verification_commands": [
+        "git rev-parse HEAD",
+        "git ls-remote origin refs/heads/master"
+      ],
+      "synced": true,
+      "user_authorized": true,
+      "receipt_scope": "Verified published content snapshot. This receipt is published in a subsequent scoped commit; its own final SHA is checked live after push and stated in the final response."
     }
   }
 }

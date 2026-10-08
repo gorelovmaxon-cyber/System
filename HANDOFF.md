@@ -36,7 +36,10 @@ ROLES-05 — **done** по [полученному внешнему вердик
 `journal_systemqwen_bac8c4e15db5b963499fa9f6`, decisions/systemqwen, persisted;
 local fallback найден, indexed не подтверждён (Khoj недоступен). Прежние записи
 сохранены. Эта явная запись поручения не засчитывается в живую пробу ROLES-04;
-synced проверяется после обычного push в существующих evidence.
+synced подтверждён обычным push и совпадением HEAD с живым origin/master на
+`c036775755cbae4b849abc641a21df6bdf72343f`; receipt — в секции
+`roles_handoff_followup` существующего evidence. Собственный SHA receipt-коммита
+сверяется после его публикации и приводится в финальном ответе.
 
 ROLES-04 — **awaiting-validation**: подготовлен
 [сценарий реальной поправки и новой сессии](.scratch/decision-journal/RESULT.md#roles-live-validation),
