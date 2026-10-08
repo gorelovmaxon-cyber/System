@@ -1,0 +1,285 @@
+{
+  "date": "2026-10-08",
+  "root": "System2",
+  "base": "e8b85ee0323e151bd311dc8deae9584ac017fd78",
+  "checks": [
+    {
+      "name": "original decisions full entries preserved",
+      "result": "pass",
+      "detail": {
+        "entries": 19
+      }
+    },
+    {
+      "name": "remote decisions full entries preserved",
+      "result": "pass",
+      "detail": {
+        "entries": 32
+      }
+    },
+    {
+      "name": "original facts full entries preserved",
+      "result": "pass",
+      "detail": {
+        "entries": 10
+      }
+    },
+    {
+      "name": "original gotchas full entries preserved",
+      "result": "pass",
+      "detail": {
+        "entries": 23
+      }
+    },
+    {
+      "name": "journal matches exact UTF-8 payload and scope",
+      "result": "pass",
+      "detail": {
+        "journal_id": "abda2410f436b8bc1170e2d7"
+      }
+    },
+    {
+      "name": "repeat capture creates no new journal entry",
+      "result": "pass",
+      "detail": {
+        "created": false
+      }
+    },
+    {
+      "name": "repeat writer is idempotent and preserves memory bytes",
+      "result": "pass",
+      "detail": {
+        "status": "persisted",
+        "written_files": [
+          ".claude/memory/user-profile/writer-entries.md"
+        ],
+        "revision": "cc2da80fcbe3",
+        "idempotent": true
+      }
+    },
+    {
+      "name": "repeat mark retains persisted and exact memory event",
+      "result": "pass",
+      "detail": {
+        "state": "persisted",
+        "event_id": "journal_systemqwen_abda2410f436b8bc1170e2d7"
+      }
+    },
+    {
+      "name": "only processed System2 entry leaves no pending",
+      "result": "pass",
+      "detail": []
+    },
+    {
+      "name": "local retrieval finds current user-scoped rule",
+      "result": "pass",
+      "detail": {
+        "sources": [
+          ".claude/memory/user-profile/writer-entries.md",
+          ".claude/memory/comparative-analysis-opus-gpt-qwen.md",
+          ".claude/memory/decisions/2026-08-17-systemqwen-architecture.md"
+        ]
+      }
+    },
+    {
+      "name": "merged site-specific entry excluded from systemqwen retrieval",
+      "result": "pass",
+      "detail": {
+        "scopes": [
+          "user",
+          "systemqwen",
+          "systemqwen"
+        ]
+      }
+    },
+    {
+      "name": "no new memory event duplicates",
+      "result": "pass",
+      "detail": {
+        "new_duplicates": [],
+        "existing_duplicate_ids": 12
+      }
+    },
+    {
+      "name": "new decision occurs exactly once",
+      "result": "pass",
+      "detail": {
+        "count": 1
+      }
+    },
+    {
+      "name": "foreign file bytes unchanged",
+      "result": "pass"
+    },
+    {
+      "name": "no changed conflict markers",
+      "result": "pass"
+    },
+    {
+      "name": "no obvious credentials in added text",
+      "result": "pass"
+    },
+    {
+      "name": "added Markdown links and anchors resolve",
+      "result": "pass",
+      "detail": {
+        "checked": 31,
+        "errors": []
+      }
+    },
+    {
+      "name": "working diff check passes",
+      "result": "pass"
+    },
+    {
+      "name": "committed diff check passes",
+      "result": "pass"
+    },
+    {
+      "name": "no mandatory model bindings in active instructions",
+      "result": "pass",
+      "detail": []
+    }
+  ],
+  "links": [
+    {
+      "file": ".claude/memory/MEMORY.md",
+      "target": "user-profile/writer-entries.md"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "#roles-2026-10-08"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "issues/ROLES-01-memory-merge.md"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "evidence/roles-01-merge-verification.json"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "issues/ROLES-02-role-decision.md"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "evidence/roles-02-persistence.json"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "../../.system2/decision-journal/abda2410f436b8bc1170e2d7.json"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "issues/ROLES-03-active-instructions.md"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "evidence/roles-checks.json"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "issues/ROLES-04-live-validation.md"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "#roles-live-validation"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "issues/ROLES-05-app-mechanisms.md"
+    },
+    {
+      "file": ".scratch/decision-journal/RESULT.md",
+      "target": "evidence/roles-checks.json"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-01-memory-merge.md",
+      "target": "../evidence/roles-01-merge-verification.json"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-01-memory-merge.md",
+      "target": "../RESULT.md#roles-2026-10-08"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-02-role-decision.md",
+      "target": "../../../.system2/decision-journal/abda2410f436b8bc1170e2d7.json"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-02-role-decision.md",
+      "target": "../../../.claude/memory/user-profile/writer-entries.md"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-02-role-decision.md",
+      "target": "../evidence/roles-02-persistence.json"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-02-role-decision.md",
+      "target": "../RESULT.md#roles-2026-10-08"
+    },
+    {
+      "file": ".scratch/system-launch/README.md",
+      "target": "../../.system2/decision-journal/abda2410f436b8bc1170e2d7.json"
+    },
+    {
+      "file": ".scratch/system-launch/README.md",
+      "target": "../../docs/system-workflow.md"
+    },
+    {
+      "file": ".scratch/system-launch/README.md",
+      "target": "../../HANDOFF.md"
+    },
+    {
+      "file": "CLAUDE.md",
+      "target": ".scratch/system-launch/README.md"
+    },
+    {
+      "file": "CLAUDE.md",
+      "target": ".system2/decision-journal/abda2410f436b8bc1170e2d7.json"
+    },
+    {
+      "file": "HANDOFF.md",
+      "target": ".scratch/decision-journal/RESULT.md#roles-2026-10-08"
+    },
+    {
+      "file": "HANDOFF.md",
+      "target": ".scratch/decision-journal/RESULT.md#roles-live-validation"
+    },
+    {
+      "file": "docs/system-workflow.md",
+      "target": "../.system2/decision-journal/abda2410f436b8bc1170e2d7.json"
+    },
+    {
+      "file": "docs/system-workflow.md",
+      "target": "../.scratch/system-launch/README.md"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-03-active-instructions.md",
+      "target": "../RESULT.md#roles-2026-10-08"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-04-live-validation.md",
+      "target": "../RESULT.md#roles-live-validation"
+    },
+    {
+      "file": ".scratch/decision-journal/issues/ROLES-05-app-mechanisms.md",
+      "target": "../RESULT.md#roles-2026-10-08"
+    }
+  ],
+  "limitations": [
+    "Text contract checks only; no live new session or automatic checkpoint proved.",
+    "Khoj unavailable: local fallback is not indexed.",
+    "No push: not synced."
+  ],
+  "commands": [
+    "git diff --check",
+    "git diff e8b85ee HEAD --check",
+    "decision-journal.js capture (exact payload repeat)",
+    "save.js (exact payload/event_id repeat)",
+    "decision-journal.js mark and pending --project-root System2",
+    "search.localResults positive user scope / negative foreign project scope",
+    "Full entry comparisons against original backup and origin/master snapshots",
+    "Added Markdown targets and anchors; credential/conflict marker scan"
+  ]
+}

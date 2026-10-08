@@ -28,4 +28,4 @@ journal_id из того же проекта. Не подменять его mem
 - [ ] `persisted` подтверждён; `indexed` не подтверждён, `synced` отсутствует без push.
 
 Evidence: [roles-02-persistence.json](../evidence/roles-02-persistence.json).
-Итог и ограничения: [существующий отчёт](../RESULT.md#доработка-roles-01–05-2026-10-08).
+Итог и ограничения: [существующий отчёт](../RESULT.md#roles-2026-10-08).
