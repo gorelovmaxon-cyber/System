@@ -811,13 +811,13 @@
       ],
       "eligible_real_episode": false,
       "reason": "Old session evidence is synthetic or does not prove unprompted retention; original role decision was explicitly requested; ROLES-03 correction prohibited repeating memory.",
-      "required_next_live_action": "One real user requirement correction to System2; asynchronous question sent, no reply received yet.",
+      "required_next_live_action": "Wait for the next real user clarification during ordinary work; no special correction requests or new test tasks. Ordinary System2 work is not blocked.",
       "isolated_session_started": false,
       "real_new_session_result": null,
       "cross_machine_validation": false
     },
     "roles_05": {
-      "status": "awaiting-review",
+      "status": "done",
       "decision": "No replacements required now.",
       "observed_app_functions": [
         "Conversation and real clarification request",
@@ -838,7 +838,8 @@
         "Actual fresh-session correction continuation",
         "Application-native cross-machine transfer"
       ],
-      "new_tools_runner_schedules_mcp_memory": false
+      "new_tools_runner_schedules_mcp_memory": false,
+      "external_verdict_source": "Беседа 2026-10-08: исходное состояние поручения «Заверши оставшуюся проверку ROLES-04 в System2» и последующее уточнение «Не запрашивай искусственную поправку для ROLES-04»; .scratch/decision-journal/RESULT.md#roles-05-external-verdict."
     },
     "publication": {
       "status": "verified",
@@ -868,6 +869,169 @@
         "synced": true,
         "indexed": "unconfirmed; Khoj unavailable"
       }
+    }
+  },
+  "roles_handoff_followup": {
+    "date": "2026-10-08",
+    "incoming_head": "d5775fc42de0e07056b4b65ae915092b1862a6f3",
+    "source": "Беседа 2026-10-08: исходное состояние поручения «Заверши оставшуюся проверку ROLES-04 в System2» и последующее уточнение «Не запрашивай искусственную поправку для ROLES-04»; .scratch/decision-journal/RESULT.md#roles-05-external-verdict.",
+    "capture": {
+      "created": true,
+      "entry": {
+        "id": "bac8c4e15db5b963499fa9f6",
+        "date": "2026-10-08",
+        "project_id": "systemqwen",
+        "type": "decision",
+        "summary": "ROLES-05 принят внешним проверяющим по вердикту, переданному пользователем: замены механизмов сейчас не требуются. По последнему уточнению пользователя ROLES-04 остаётся awaiting-validation до следующего реального уточнения в обычной работе; специальную поправку ради проверки не запрашивать и новые тестовые задачи не создавать. Незавершённая проверка памяти не блокирует обычную работу System2 и не означает гарантированного автосохранения.",
+        "source": "Беседа 2026-10-08: исходное состояние поручения «Заверши оставшуюся проверку ROLES-04 в System2» и последующее уточнение «Не запрашивай искусственную поправку для ROLES-04»; .scratch/decision-journal/RESULT.md#roles-05-external-verdict.",
+        "verification": "confirmed",
+        "state": "pending",
+        "supersedes": null,
+        "memory_event_id": null,
+        "memory_files": []
+      }
+    },
+    "writer": {
+      "status": "persisted",
+      "written_files": [
+        ".claude/memory/decisions/writer-entries.md"
+      ],
+      "revision": "ec985887928c"
+    },
+    "search": {
+      "ok": false,
+      "error": "khoj-unavailable",
+      "message": "fetch failed",
+      "fallback": "local",
+      "fallback_results": [
+        {
+          "snippet": "## ROLES-05 принят внешним проверяющим по вердикту, переданному пользователем: замены механизмов сейчас не требуются. По последнему уточнению пользователя ROLES-04 остаётся awaiting-validation до следующего реального уточнения в обычной работе; специальную поправку ради проверки не запрашивать и новые тестовые задачи не создавать. Незавершённая проверка памяти не блокирует обычную работу System2 и не означает гарантированного автосохранения.",
+          "source": ".claude/memory/decisions/writer-entries.md",
+          "scope": "systemqwen",
+          "status_hint": "confirmed",
+          "record_source": "Беседа 2026-10-08: исходное состояние поручения «Заверши оставшуюся проверку ROLES-04 в System2» и последующее уточнение «Не запрашивай искусственную поправку для ROLES-04»; .scratch/decision-journal/RESULT.md#roles-05-external-verdict.",
+          "relevance": 0.99
+        },
+        {
+          "snippet": "T1 принят, передавай T2 в Qwen\" или \"⚠️ Нужна доработка: [замечания]\"\n\n**Цикл 2-3 повторяется для каждого тикета до конца.**\n\n### Ключевые правила\n\n**Opus (мозг):**\n- Grill, Spec, Tickets — создаёт детальные тикеты с алгоритмами\n- Review — проверяет результат работы Qwen\n- Останавливается: после тикетов, после каждой проверки\n\n**Qwen (руки):**\n- Читает тикет от Opus\n- Пишет код по алгоритму строго\n- Тестирует, коммитит\n- Останавливается: после каждого тикета\n\n**Пользователь (оркестратор):**\n- Запускает /start [задача]\n- Передаёт тикеты между Opus ↔ Qwen\n- Контролирует процесс на каждом шаге\n\n### Главное правило\n\n**Один тикет = один коммит = одна остановка.**\n\n- Opus не пишет код сам (только примеры в тикетах)\n- Qwen не додумывает за тикет (следует алгоритму строго)\n- Пользователь контролирует каждый шаг (явные остановки)\n\n## Альтернативы рассмотренные\n\n### Отвергнуто: Чистый Opus\n- ✅ Высокое качество\n- ❌ Дорого (~$2-3 на фичу)\n- ❌ Не окупается д…",
+          "source": ".claude/memory/decisions/2026-08-17-systemqwen-architecture.md",
+          "scope": "systemqwen",
+          "status_hint": "confirmed",
+          "record_source": "decision record 2026-08-17 and Git history",
+          "relevance": 0.3333333333333333
+        },
+        {
+          "snippet": "х статуса, включая `conflict`: повтор event_id с другим содержимым не считается успешным сохранением, Writer отвечает 409, очередь прекращает автоматические повторы, исход доступен через поле outcome, а за persisted конфликт не выдаётся; неизвестный коррелированный статус остаётся повторяемым, поэтому худший случай деградирует к прежнему поведению без ложного подтверждения.…",
+          "source": ".claude/memory/decisions/writer-entries.md",
+          "scope": "systemqwen",
+          "status_hint": "confirmed",
+          "record_source": "activepieces-flow",
+          "relevance": 0.3333333333333333
+        },
+        {
+          "snippet": "ub Remote — System2\n\n**Дата:** 2026-08-19\n**Контекст:** Настройка облачной памяти\n\n## Факт\n\nРепозиторий: https://github.com/gorelovmaxon-cyber/System.git\nRemote: origin (master branch)\nНастроен: 2026-08-19\n\n## Правило агрессивного сохранения\n\nПосле важного момента — scoped `git commit`; `push` выполняется только после\nпроверки и явной командой `node scripts/memory/sync.js --push`. Фоновый push,\nforce push и reset чужих изменений запрещены.\n\n## На новом устройстве\n\n```bash\ngit clone https://github.com/gorelovmaxon-cyber/System.git System2\n```…",
+          "source": ".claude/memory/facts/github-remote.md",
+          "scope": "systemqwen",
+          "status_hint": "confirmed",
+          "record_source": "git remote -v, проверено 2026-09-08",
+          "relevance": 0.3333333333333333
+        }
+      ]
+    },
+    "mark": {
+      "id": "bac8c4e15db5b963499fa9f6",
+      "date": "2026-10-08",
+      "project_id": "systemqwen",
+      "type": "decision",
+      "summary": "ROLES-05 принят внешним проверяющим по вердикту, переданному пользователем: замены механизмов сейчас не требуются. По последнему уточнению пользователя ROLES-04 остаётся awaiting-validation до следующего реального уточнения в обычной работе; специальную поправку ради проверки не запрашивать и новые тестовые задачи не создавать. Незавершённая проверка памяти не блокирует обычную работу System2 и не означает гарантированного автосохранения.",
+      "source": "Беседа 2026-10-08: исходное состояние поручения «Заверши оставшуюся проверку ROLES-04 в System2» и последующее уточнение «Не запрашивай искусственную поправку для ROLES-04»; .scratch/decision-journal/RESULT.md#roles-05-external-verdict.",
+      "verification": "confirmed",
+      "state": "persisted",
+      "supersedes": null,
+      "memory_event_id": "journal_systemqwen_bac8c4e15db5b963499fa9f6",
+      "memory_files": [
+        ".claude/memory/decisions/writer-entries.md"
+      ]
+    },
+    "conditions": "Explicit recording of received external acceptance and handoff clarification. This agent was tasked with retention validation; this record is not a ROLES-04 validation episode or proof of guaranteed autosave.",
+    "roles_04": {
+      "status": "awaiting-validation",
+      "test_task_created": false,
+      "isolated_session_started": false,
+      "actual_new_session_response": null,
+      "cross_machine_validation": false,
+      "ordinary_work_blocked": false,
+      "required_next_live_action": "Next real user clarification in ordinary work; no manufactured correction. Reading-only recovery will not prove correct execution."
+    },
+    "roles_05": {
+      "status": "done",
+      "basis": "Received external verdict, not self-acceptance",
+      "decision": "No replacements required now."
+    },
+    "knowledge_states": {
+      "persisted": true,
+      "indexed": "unconfirmed; Khoj unavailable, local fallback found current record with matching source",
+      "synced": false
+    },
+    "checks": {
+      "pending_on_entry": [],
+      "foreign_file_expected_sha256": "16b26b2ac88d1dba8d7a73642cb57e76c506551e5ebd37f1b0fcc5e3c152c08e",
+      "changed_files": [
+        ".claude/memory/decisions/writer-entries.md",
+        ".scratch/decision-journal/RESULT.md",
+        ".scratch/decision-journal/evidence/roles-checks.json",
+        ".scratch/decision-journal/issues/ROLES-04-live-validation.md",
+        ".scratch/decision-journal/issues/ROLES-05-app-mechanisms.md",
+        "HANDOFF.md",
+        ".system2/decision-journal/bac8c4e15db5b963499fa9f6.json"
+      ],
+      "utf8": "pass; no U+FFFD in added lines or new journal",
+      "encoding_check_adjustment": "Initial whole-file U+FFFD check found preexisting historical replacement characters in memory. Old memory preserved exactly; verification narrowed to actual additions.",
+      "links": [
+        {
+          "file": ".scratch/decision-journal/RESULT.md",
+          "target": "#roles-05-external-verdict"
+        },
+        {
+          "file": ".scratch/decision-journal/RESULT.md",
+          "target": "issues/ROLES-05-app-mechanisms.md"
+        },
+        {
+          "file": ".scratch/decision-journal/RESULT.md",
+          "target": "#roles-05-external-verdict"
+        },
+        {
+          "file": ".scratch/decision-journal/RESULT.md",
+          "target": "evidence/roles-checks.json"
+        },
+        {
+          "file": ".scratch/decision-journal/RESULT.md",
+          "target": "#roles-05-external-verdict"
+        },
+        {
+          "file": ".scratch/decision-journal/issues/ROLES-05-app-mechanisms.md",
+          "target": "../RESULT.md#roles-05-external-verdict"
+        },
+        {
+          "file": "HANDOFF.md",
+          "target": ".scratch/decision-journal/RESULT.md#roles-05-external-verdict"
+        }
+      ],
+      "links_check": "pass",
+      "previous_memory_exact_prefix": true,
+      "new_event_count": 1,
+      "journal_mark": "persisted",
+      "pending_after_mark": [],
+      "foreign_file_actual_sha256": "16b26b2ac88d1dba8d7a73642cb57e76c506551e5ebd37f1b0fcc5e3c152c08e",
+      "foreign_file_tracked": false,
+      "secret_pattern_scan": "pass on scoped additions",
+      "full_suite": "not run",
+      "demo_and_new_test_tasks": "not run",
+      "diff_check": "pass"
+    },
+    "publication": {
+      "status": "pending",
+      "receipt_scope": "Final commit SHA and live origin/master must be checked after normal push; this file does not invent its own commit SHA."
     }
   }
 }

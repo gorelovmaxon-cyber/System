@@ -358,3 +358,13 @@ event_id: journal_system-of-site_ded1597b5784ff6b183ec576
 ---
 
 ## Complete B10 only in its isolated stand, preserving production; streamed chat and separate verified assembly share the existing brief with cards and explicit version confirmation. No mass paid runs or new comparisons; live validation needs current spend approval.
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: Беседа 2026-10-08: исходное состояние поручения «Заверши оставшуюся проверку ROLES-04 в System2» и последующее уточнение «Не запрашивай искусственную поправку для ROLES-04»; .scratch/decision-journal/RESULT.md#roles-05-external-verdict.
+evidence: .scratch/decision-journal/RESULT.md#roles-05-external-verdict; прямой внешний вердикт и уточнение передачи пользователем 2026-10-08.
+event_id: journal_systemqwen_bac8c4e15db5b963499fa9f6
+---
+
+## ROLES-05 принят внешним проверяющим по вердикту, переданному пользователем: замены механизмов сейчас не требуются. По последнему уточнению пользователя ROLES-04 остаётся awaiting-validation до следующего реального уточнения в обычной работе; специальную поправку ради проверки не запрашивать и новые тестовые задачи не создавать. Незавершённая проверка памяти не блокирует обычную работу System2 и не означает гарантированного автосохранения.
