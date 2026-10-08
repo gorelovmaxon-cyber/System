@@ -98,3 +98,13 @@ event_id: journal_system-of-site_3c66d99b150bd0e9fb923362
 ---
 
 ## Независимая локальная проверка B04 app af3d0ba приняла исправления: 159 Python OK, совпали SHA bundle и протокола, 53 уникальных HTTP-хода и три confirmed; текущая доставка в EspoCRM и качество живой модели остаются открытыми.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: Беседа 2026-10-08, последнее поручение пользователя «Заверши блок ROLES», пункт 1: переданный внешний вердикт; .scratch/decision-journal/RESULT.md#roles-external-verdict.
+evidence: .scratch/decision-journal/RESULT.md#roles-external-verdict; сообщение пользователя в беседе 2026-10-08, пункт 1, принятая ревизия 73a70fa.
+event_id: journal_systemqwen_13947f838aee699cb456fe54
+---
+
+## Пользователь передал внешний независимый вердикт: ROLES-01–03 приняты; исправление ROLES-03 проверено на 73a70fa089887946676d72bbb90c53d06d14eb1f. Статусы done фиксируют полученную внешнюю приёмку, не самоприёмку исполнителя. Окончательная независимая проверка завершения ROLES-04/05 остаётся отдельной.
