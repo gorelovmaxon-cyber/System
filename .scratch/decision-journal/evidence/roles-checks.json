@@ -290,7 +290,7 @@
   "roles_03_followup": {
     "date": "2026-10-08",
     "base": "d6e6b04f8d8369edd3894f6bf4a04488b51bba5b",
-    "status": "awaiting-review",
+    "status": "done",
     "scope": [
       "docs",
       ".claude/skills",
@@ -632,8 +632,220 @@
     "full_suite": "not run",
     "push": "not performed",
     "limitations": [
-      "Static contract verification; independent review still pending.",
+      "Static contract verification at correction time; external acceptance subsequently received on 73a70fa.",
+      "Completion review of ROLES-04/05 remains independent and pending.",
       "Historical mentions, compatibility names and client/integration references are allowed."
-    ]
+    ],
+    "external_acceptance": {
+      "source": "User message in this conversation, 2026-10-08, final ROLES task item 1",
+      "verified_revision": "73a70fa089887946676d72bbb90c53d06d14eb1f",
+      "reference": ".scratch/decision-journal/RESULT.md#roles-external-verdict",
+      "self_acceptance": false
+    }
+  },
+  "roles_completion": {
+    "date": "2026-10-08",
+    "incoming_live_remote": "30b6f458e4c119f3764f97af2041a5b02d5a4d5f",
+    "merge": "30867e83d026816ad1401294746c100546dfbe48",
+    "incoming_commits": [
+      "c1d0ed7",
+      "30b6f45"
+    ],
+    "merge_conflicts": 0,
+    "remote_patterns_exact_match": true,
+    "new_event_counts": {
+      "journal_system-of-site_10168bdf0c7139e9b5355ed5": 1,
+      "journal_system-of-site_3b67a50ac1c10f723888d1a9": 1,
+      "journal_systemqwen_13947f838aee699cb456fe54": 1
+    },
+    "foreign_file_sha256": "16b26b2ac88d1dba8d7a73642cb57e76c506551e5ebd37f1b0fcc5e3c152c08e",
+    "foreign_file_tracked": false,
+    "changed_links": [
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "#roles-final-packet"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "issues/ROLES-01-memory-merge.md"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "evidence/roles-01-merge-verification.json"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "issues/ROLES-02-role-decision.md"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "evidence/roles-02-persistence.json"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "issues/ROLES-03-active-instructions.md"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "evidence/roles-checks.json"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/RESULT.md",
+        "target": "evidence/roles-checks.json"
+      },
+      {
+        "file": ".scratch/decision-journal/issues/ROLES-01-memory-merge.md",
+        "target": "../RESULT.md#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/issues/ROLES-02-role-decision.md",
+        "target": "../RESULT.md#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/issues/ROLES-03-active-instructions.md",
+        "target": "../RESULT.md#roles-external-verdict"
+      },
+      {
+        "file": ".scratch/decision-journal/issues/ROLES-04-live-validation.md",
+        "target": "../RESULT.md#roles-final-packet"
+      },
+      {
+        "file": ".scratch/decision-journal/issues/ROLES-05-app-mechanisms.md",
+        "target": "../RESULT.md#roles-final-packet"
+      },
+      {
+        "file": "HANDOFF.md",
+        "target": ".scratch/decision-journal/RESULT.md#roles-external-verdict"
+      },
+      {
+        "file": "HANDOFF.md",
+        "target": ".scratch/decision-journal/RESULT.md#roles-final-packet"
+      }
+    ],
+    "diff_check": "pass",
+    "secret_and_local_config_scan": "pass on outgoing scoped diff",
+    "external_acceptance_record": {
+      "capture": {
+        "created": true,
+        "entry": {
+          "id": "13947f838aee699cb456fe54",
+          "date": "2026-10-08",
+          "project_id": "systemqwen",
+          "type": "fact",
+          "summary": "Пользователь передал внешний независимый вердикт: ROLES-01–03 приняты; исправление ROLES-03 проверено на 73a70fa089887946676d72bbb90c53d06d14eb1f. Статусы done фиксируют полученную внешнюю приёмку, не самоприёмку исполнителя. Окончательная независимая проверка завершения ROLES-04/05 остаётся отдельной.",
+          "source": "Беседа 2026-10-08, последнее поручение пользователя «Заверши блок ROLES», пункт 1: переданный внешний вердикт; .scratch/decision-journal/RESULT.md#roles-external-verdict.",
+          "verification": "confirmed",
+          "state": "pending",
+          "supersedes": null,
+          "memory_event_id": null,
+          "memory_files": []
+        }
+      },
+      "writer": {
+        "status": "persisted",
+        "written_files": [
+          ".claude/memory/facts/writer-entries.md"
+        ],
+        "revision": "b87ed324b1b5"
+      },
+      "search": {
+        "ok": false,
+        "error": "khoj-unavailable",
+        "message": "fetch failed",
+        "fallback": "local",
+        "fallback_results": [
+          {
+            "snippet": "## Пользователь передал внешний независимый вердикт: ROLES-01–03 приняты; исправление ROLES-03 проверено на 73a70fa089887946676d72bbb90c53d06d14eb1f. Статусы done фиксируют полученную внешнюю приёмку, не самоприёмку исполнителя. Окончательная независимая проверка завершения ROLES-04/05 остаётся отдельной.",
+            "source": ".claude/memory/facts/writer-entries.md",
+            "scope": "systemqwen",
+            "status_hint": "confirmed",
+            "record_source": "Беседа 2026-10-08, последнее поручение пользователя «Заверши блок ROLES», пункт 1: переданный внешний вердикт; .scratch/decision-journal/RESULT.md#roles-external-verdict.",
+            "relevance": 0.99
+          }
+        ]
+      },
+      "mark": {
+        "id": "13947f838aee699cb456fe54",
+        "date": "2026-10-08",
+        "project_id": "systemqwen",
+        "type": "fact",
+        "summary": "Пользователь передал внешний независимый вердикт: ROLES-01–03 приняты; исправление ROLES-03 проверено на 73a70fa089887946676d72bbb90c53d06d14eb1f. Статусы done фиксируют полученную внешнюю приёмку, не самоприёмку исполнителя. Окончательная независимая проверка завершения ROLES-04/05 остаётся отдельной.",
+        "source": "Беседа 2026-10-08, последнее поручение пользователя «Заверши блок ROLES», пункт 1: переданный внешний вердикт; .scratch/decision-journal/RESULT.md#roles-external-verdict.",
+        "verification": "confirmed",
+        "state": "persisted",
+        "supersedes": null,
+        "memory_event_id": "journal_systemqwen_13947f838aee699cb456fe54",
+        "memory_files": [
+          ".claude/memory/facts/writer-entries.md"
+        ]
+      },
+      "conditions": "Operational recording of the externally reported acceptance; explicitly not evidence of ROLES-04 spontaneous correction retention."
+    },
+    "roles_04": {
+      "status": "awaiting-validation",
+      "sources_read": [
+        ".scratch/decision-journal/RESULT.md",
+        ".scratch/decision-journal/evidence/roles-02-persistence.json",
+        ".scratch/start-workflow/RESULT.md",
+        ".system2/decision-journal/abda2410f436b8bc1170e2d7.json"
+      ],
+      "eligible_real_episode": false,
+      "reason": "Old session evidence is synthetic or does not prove unprompted retention; original role decision was explicitly requested; ROLES-03 correction prohibited repeating memory.",
+      "required_next_live_action": "One real user requirement correction to System2; asynchronous question sent, no reply received yet.",
+      "isolated_session_started": false,
+      "real_new_session_result": null,
+      "cross_machine_validation": false
+    },
+    "roles_05": {
+      "status": "awaiting-review",
+      "decision": "No replacements required now.",
+      "observed_app_functions": [
+        "Conversation and real clarification request",
+        "Local file reads and edits",
+        "Shell command execution and Git operations"
+      ],
+      "mechanisms_retained": [
+        "System2 rules",
+        "HANDOFF",
+        "Project decision journal",
+        "Writer and stable event_id",
+        "Retrieval and Khoj",
+        "Git publication"
+      ],
+      "unproved_replacements": [
+        "Mandatory unprompted checkpoint before every reply",
+        "Application-native replacement for file memory, journal or HANDOFF",
+        "Actual fresh-session correction continuation",
+        "Application-native cross-machine transfer"
+      ],
+      "new_tools_runner_schedules_mcp_memory": false
+    },
+    "publication": {
+      "status": "pending-push",
+      "origin": "https://github.com/gorelovmaxon-cyber/System.git",
+      "user_authorized": true
+    },
+    "full_suite": "not repeated",
+    "restore_demo_infrastructure": "not repeated"
   }
 }
