@@ -148,3 +148,43 @@ event_id: journal_system-of-site_b09539805c420cb57c38a1fc
 ---
 
 ## Maxim selected EspoCRM for system-of-site. B01 accepted; B02 prepared for local persistence and one CRM Lead with duplicate prevention. Live validation on laptop. No paid infrastructure authorized.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-09-27
+evidence: docs/site-project/reports/B04-LIVE-AI-RESULT.md; direct user choice 2026-09-27
+event_id: journal_system-of-site_68865a763458655d53b48703
+---
+
+## Maxim selected Claude Sonnet 5 for B04 live consultation; use NunAway gateway ID claude-sonnet-5. Live validation remains pending.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-09-27
+evidence: User conversation 2026-09-27; docs/site-project/reports/B04-LIVE-AI-RESULT.md
+event_id: journal_system-of-site_c3dd8511fda6911cb6879bf1
+---
+
+## Maxim authorized one B04 live AI trial with retrospective cost accounting, replacing the executor-selected 100 RUB cap for that trial.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-09-27
+evidence: User conversation 2026-09-27; docs/site-project/reports/B04-LIVE-AI-RESULT.md
+event_id: journal_system-of-site_4842bcd79f0dcdbbd680282e
+---
+
+## Maxim authorized one full rental B04 briefing on claude-sonnet-5: maximum 30 generations, no retries, stop on first error, postfactum tokens and gateway units, unknown RUB; no other paid scenarios.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-09-27
+evidence: User conversation 2026-09-27; docs/site-project/reports/B04-LIVE-AI-RESULT.md
+event_id: journal_system-of-site_be7fe00ae35fb6bd8020a67a
+---
+
+## Maxim authorized exactly one paid B04 technical request on app bf5e1bd with claude-sonnet-5, max_calls=1, no retries; full dialogue and other paid scenarios not authorized.
