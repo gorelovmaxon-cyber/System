@@ -8,10 +8,13 @@
 ## Контекст, файлы и план
 
 Точечно согласовать `CLAUDE.md`, `docs/system-workflow.md`, `docs/planner-brief.md`,
-`docs/system-operations.md`, навыки `start`, `systemqwen`, `subagent-pipeline` и
+`docs/system-operations.md`, `docs/usage-guide.md`, навыки `start`, `systemqwen`,
+`autopilot`, `subagent-pipeline` и
 затронутые templates. Проверить доменные routes и task-map; менять только при
 сохранившейся обязательной привязке. Исторический договор запуска пометить ссылкой
 на новое реальное решение; архивные тексты и имена моделей сохранить.
+Повторная проверка по уточнению пользователя: искать обязательные привязки во всех
+действующих `docs/`, `.claude/skills/`, `templates/`, а не только в изменённых файлах.
 
 ## Критерии приёмки и проверки
 

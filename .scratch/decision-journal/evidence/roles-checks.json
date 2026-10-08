@@ -136,9 +136,14 @@
       "result": "pass"
     },
     {
-      "name": "no mandatory model bindings in active instructions",
+      "name": "no mandatory role-to-model bindings across docs/skills/templates",
       "result": "pass",
-      "detail": []
+      "detail": {
+        "original_scan": "selected active instructions only; missed usage-guide and autopilot",
+        "followup": "all files in docs/, .claude/skills/, templates/, including hidden and ignored files; matches classified manually",
+        "files": 137,
+        "mandatory_bindings": []
+      }
     }
   ],
   "links": [
@@ -281,5 +286,354 @@
     "search.localResults positive user scope / negative foreign project scope",
     "Full entry comparisons against original backup and origin/master snapshots",
     "Added Markdown targets and anchors; credential/conflict marker scan"
-  ]
+  ],
+  "roles_03_followup": {
+    "date": "2026-10-08",
+    "base": "d6e6b04f8d8369edd3894f6bf4a04488b51bba5b",
+    "status": "awaiting-review",
+    "scope": [
+      "docs",
+      ".claude/skills",
+      "templates"
+    ],
+    "files_scanned": [
+      ".claude/skills/ask-matt/SKILL.md",
+      ".claude/skills/ask-matt/agents/openai.yaml",
+      ".claude/skills/auto-learn/SKILL.md",
+      ".claude/skills/autopilot/SKILL.md",
+      ".claude/skills/claude-handoff/SKILL.md",
+      ".claude/skills/claude-handoff/agents/openai.yaml",
+      ".claude/skills/code-review/SKILL.md",
+      ".claude/skills/code-review/agents/openai.yaml",
+      ".claude/skills/codebase-design/DEEPENING.md",
+      ".claude/skills/codebase-design/DESIGN-IT-TWICE.md",
+      ".claude/skills/codebase-design/SKILL.md",
+      ".claude/skills/codebase-design/agents/openai.yaml",
+      ".claude/skills/design-an-interface/SKILL.md",
+      ".claude/skills/design-an-interface/agents/openai.yaml",
+      ".claude/skills/diagnosing-bugs/SKILL.md",
+      ".claude/skills/diagnosing-bugs/agents/openai.yaml",
+      ".claude/skills/diagnosing-bugs/scripts/hitl-loop.template.sh",
+      ".claude/skills/domain-modeling/ADR-FORMAT.md",
+      ".claude/skills/domain-modeling/CONTEXT-FORMAT.md",
+      ".claude/skills/domain-modeling/SKILL.md",
+      ".claude/skills/domain-modeling/agents/openai.yaml",
+      ".claude/skills/edit-article/SKILL.md",
+      ".claude/skills/edit-article/agents/openai.yaml",
+      ".claude/skills/evidence-check/SKILL.md",
+      ".claude/skills/evidence-check/examples/golden-case.md",
+      ".claude/skills/evidence-check/tools/report.template.md",
+      ".claude/skills/git-guardrails-claude-code/SKILL.md",
+      ".claude/skills/git-guardrails-claude-code/agents/openai.yaml",
+      ".claude/skills/git-guardrails-claude-code/scripts/block-dangerous-git.sh",
+      ".claude/skills/grill-me/SKILL.md",
+      ".claude/skills/grill-me/agents/openai.yaml",
+      ".claude/skills/grill-with-docs/SKILL.md",
+      ".claude/skills/grill-with-docs/agents/openai.yaml",
+      ".claude/skills/grilling/SKILL.md",
+      ".claude/skills/grilling/agents/openai.yaml",
+      ".claude/skills/handoff/SKILL.md",
+      ".claude/skills/handoff/agents/openai.yaml",
+      ".claude/skills/implement/SKILL.md",
+      ".claude/skills/implement/agents/openai.yaml",
+      ".claude/skills/improve-codebase-architecture/HTML-REPORT.md",
+      ".claude/skills/improve-codebase-architecture/SKILL.md",
+      ".claude/skills/improve-codebase-architecture/agents/openai.yaml",
+      ".claude/skills/loop-me/SKILL.md",
+      ".claude/skills/loop-me/agents/openai.yaml",
+      ".claude/skills/migrate-to-shoehorn/SKILL.md",
+      ".claude/skills/migrate-to-shoehorn/agents/openai.yaml",
+      ".claude/skills/obsidian-vault/SKILL.md",
+      ".claude/skills/obsidian-vault/agents/openai.yaml",
+      ".claude/skills/profile-update/SKILL.md",
+      ".claude/skills/project-memory-init/SKILL.md",
+      ".claude/skills/prototype/LOGIC.md",
+      ".claude/skills/prototype/SKILL.md",
+      ".claude/skills/prototype/UI.md",
+      ".claude/skills/prototype/agents/openai.yaml",
+      ".claude/skills/qa/SKILL.md",
+      ".claude/skills/qa/agents/openai.yaml",
+      ".claude/skills/request-refactor-plan/SKILL.md",
+      ".claude/skills/request-refactor-plan/agents/openai.yaml",
+      ".claude/skills/research/SKILL.md",
+      ".claude/skills/research/agents/openai.yaml",
+      ".claude/skills/resolving-merge-conflicts/SKILL.md",
+      ".claude/skills/resolving-merge-conflicts/agents/openai.yaml",
+      ".claude/skills/scaffold-exercises/SKILL.md",
+      ".claude/skills/scaffold-exercises/agents/openai.yaml",
+      ".claude/skills/setup-matt-pocock-skills/SKILL.md",
+      ".claude/skills/setup-matt-pocock-skills/agents/openai.yaml",
+      ".claude/skills/setup-matt-pocock-skills/domain.md",
+      ".claude/skills/setup-matt-pocock-skills/issue-tracker-github.md",
+      ".claude/skills/setup-matt-pocock-skills/issue-tracker-gitlab.md",
+      ".claude/skills/setup-matt-pocock-skills/issue-tracker-local.md",
+      ".claude/skills/setup-matt-pocock-skills/triage-labels.md",
+      ".claude/skills/setup-pre-commit/SKILL.md",
+      ".claude/skills/setup-pre-commit/agents/openai.yaml",
+      ".claude/skills/setup-ts-deep-modules/SKILL.md",
+      ".claude/skills/setup-ts-deep-modules/agents/openai.yaml",
+      ".claude/skills/setup-ts-deep-modules/dependency-cruiser.config.cjs",
+      ".claude/skills/skill-forge/SKILL.md",
+      ".claude/skills/skill-forge/templates/SKILL.template.md",
+      ".claude/skills/start/SKILL.md",
+      ".claude/skills/subagent-pipeline/SKILL.md",
+      ".claude/skills/subagent-pipeline/examples/golden-case.md",
+      ".claude/skills/subagent-pipeline/tools/accept-ticket.ps1",
+      ".claude/skills/subagent-pipeline/tools/subagent-prompt.template.md",
+      ".claude/skills/systemqwen/SKILL.md",
+      ".claude/skills/tdd/SKILL.md",
+      ".claude/skills/tdd/agents/openai.yaml",
+      ".claude/skills/tdd/mocking.md",
+      ".claude/skills/tdd/tests.md",
+      ".claude/skills/teach/GLOSSARY-FORMAT.md",
+      ".claude/skills/teach/LEARNING-RECORD-FORMAT.md",
+      ".claude/skills/teach/MISSION-FORMAT.md",
+      ".claude/skills/teach/RESOURCES-FORMAT.md",
+      ".claude/skills/teach/SKILL.md",
+      ".claude/skills/teach/agents/openai.yaml",
+      ".claude/skills/to-spec/SKILL.md",
+      ".claude/skills/to-spec/agents/openai.yaml",
+      ".claude/skills/to-tickets/SKILL.md",
+      ".claude/skills/to-tickets/agents/openai.yaml",
+      ".claude/skills/triage/AGENT-BRIEF.md",
+      ".claude/skills/triage/OUT-OF-SCOPE.md",
+      ".claude/skills/triage/SKILL.md",
+      ".claude/skills/triage/agents/openai.yaml",
+      ".claude/skills/ubiquitous-language/SKILL.md",
+      ".claude/skills/ubiquitous-language/agents/openai.yaml",
+      ".claude/skills/wayfinder/SKILL.md",
+      ".claude/skills/wayfinder/agents/openai.yaml",
+      ".claude/skills/wizard/SKILL.md",
+      ".claude/skills/wizard/agents/openai.yaml",
+      ".claude/skills/wizard/template.sh",
+      ".claude/skills/writing-beats/SKILL.md",
+      ".claude/skills/writing-beats/agents/openai.yaml",
+      ".claude/skills/writing-fragments/SKILL.md",
+      ".claude/skills/writing-fragments/agents/openai.yaml",
+      ".claude/skills/writing-great-skills/GLOSSARY.md",
+      ".claude/skills/writing-great-skills/SKILL.md",
+      ".claude/skills/writing-great-skills/agents/openai.yaml",
+      ".claude/skills/writing-shape/SKILL.md",
+      ".claude/skills/writing-shape/agents/openai.yaml",
+      ".claude/skills/writing-tickets-for-qwen/SKILL.md",
+      "docs/activepieces-flow-config.md",
+      "docs/activepieces-setup.md",
+      "docs/decision-journal.md",
+      "docs/khoj-integration.md",
+      "docs/khoj-setup.md",
+      "docs/memory-contract.md",
+      "docs/planner-brief.md",
+      "docs/routes/dev-workflow.md",
+      "docs/routes/marketing-workflow.md",
+      "docs/routes/sites-workflow.md",
+      "docs/second-pc.md",
+      "docs/system-operations.md",
+      "docs/system-workflow.md",
+      "docs/task-map.md",
+      "docs/usage-guide.md",
+      "templates/evidence-report.md",
+      "templates/review-template.md",
+      "templates/ticket-template.md"
+    ],
+    "scan_commands": [
+      [
+        "rg",
+        "--files",
+        "--hidden",
+        "--no-ignore",
+        "docs",
+        ".claude/skills",
+        "templates"
+      ],
+      [
+        "rg",
+        "-n",
+        "-i",
+        "--hidden",
+        "--no-ignore",
+        "\\b(Astra|Sonnet|Opus|Qwen|Sol|Luna|GPT([- ][0-9][.0-9]*)?|Gemini|Grok|DeepSeek|Llama|Mistral)\\b",
+        "docs",
+        ".claude/skills",
+        "templates"
+      ],
+      [
+        "rg",
+        "-n",
+        "-i",
+        "--hidden",
+        "--no-ignore",
+        "model\\s*:|модель.{0,70}(исполн|план|приём)|исполн.{0,70}(модель|обязат)|planner.{0,50}model|executor.{0,50}model|reviewer.{0,50}model",
+        "docs",
+        ".claude/skills",
+        "templates"
+      ]
+    ],
+    "model_name_findings": [
+      {
+        "file": ".claude/skills/autopilot/SKILL.md",
+        "line": 172,
+        "text": "Документация: ../../../QWEN.md",
+        "classification": "QWEN.md compatibility document pointer; document is role-neutral"
+      },
+      {
+        "file": ".claude/skills/writing-tickets-for-qwen/SKILL.md",
+        "line": 2,
+        "text": "name: writing-tickets-for-qwen",
+        "classification": "compatibility skill name; body explicitly targets the selected executor"
+      },
+      {
+        "file": "docs/system-workflow.md",
+        "line": 9,
+        "text": "Историческое уточнение пользователя от 2026-09-12: Astra планирует, один Sonnet/Sol",
+        "classification": "historical distribution explicitly superseded by the 2026-10-08 decision"
+      },
+      {
+        "file": "docs/system-workflow.md",
+        "line": 217,
+        "text": "Неоднозначный запрос требует уточнения. Figma, Gemini, реклама, SEO,",
+        "classification": "optional external tool explicitly not imposed"
+      },
+      {
+        "file": ".claude/skills/subagent-pipeline/examples/golden-case.md",
+        "line": 48,
+        "text": "**Вход.** «Мб стоит использовать Sonnet, а не Opus в каждом чате — для экономии токенов?»",
+        "classification": "quoted user question; expected response preserves user model choice and independent acceptance"
+      },
+      {
+        "file": "docs/system-operations.md",
+        "line": 70,
+        "text": "В целевом чате GPT предоставьте агенту доступ к файлам проекта и инструментам",
+        "classification": "GPT client description and dated historical client trial"
+      },
+      {
+        "file": "docs/system-operations.md",
+        "line": 82,
+        "text": "в поздней пробе не блокирует работу в целевом чате GPT. Живой планирующий проход",
+        "classification": "GPT client description and dated historical client trial"
+      },
+      {
+        "file": "docs/routes/marketing-workflow.md",
+        "line": 14,
+        "text": "Исследование Gemini принимается как внешний входной документ с источником и",
+        "classification": "Gemini research as an external source, no implementation role"
+      },
+      {
+        "file": "docs/decision-journal.md",
+        "line": 34,
+        "text": "В целевом чате GPT с файловыми инструментами доступен контракт в инструкциях и вызываемый CLI. Отдельный подтверждённый hook перед **каждым** финальным ответом для этого интерфейса не установлен. Поэтому нельзя обещать выполнение после каждой реплики без действий агента, фоновое чтение других чатов или спасение сообщения до фактической записи. Claude hooks не доказывают поведение чата GPT. При новой сессии восстановление проверяется чтением опубликованных файлов; сохранённое локально до push не доступно другому ПК.",
+        "classification": "GPT client contract and automation limitation, no model-to-role assignment"
+      },
+      {
+        "file": "docs/khoj-setup.md",
+        "line": 25,
+        "text": "`llama-cpp-python==0.2.88` — **базовая** зависимость релиза, а не extra, и на PyPI она",
+        "classification": "llama-cpp package dependency and installation paths, no workflow role"
+      },
+      {
+        "file": "docs/khoj-setup.md",
+        "line": 33,
+        "text": "  --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu `",
+        "classification": "llama-cpp package dependency and installation paths, no workflow role"
+      },
+      {
+        "file": "docs/khoj-setup.md",
+        "line": 41,
+        "text": "... sentence-transformers-3.4.1 ... llama-cpp-python-0.2.88`. Закреплённые версии",
+        "classification": "llama-cpp package dependency and installation paths, no workflow role"
+      },
+      {
+        "file": "docs/khoj-setup.md",
+        "line": 145,
+        "text": "  ошибке сборки `llama-cpp` — вместо этого подключить официальный prebuilt-индекс.",
+        "classification": "llama-cpp package dependency and installation paths, no workflow role"
+      },
+      {
+        "file": "docs/memory-contract.md",
+        "line": 338,
+        "text": "Немедленное сохранение (требование от 2026-09-09, ревью Opus): важные решения и",
+        "classification": "historical rule provenance: review by Opus on 2026-09-09, no required reviewer model"
+      }
+    ],
+    "role_model_findings": [
+      {
+        "file": ".claude/skills/autopilot/SKILL.md",
+        "line": 185,
+        "text": "планировщик/приёмщик не смешивается с исполнителем. Модель исполнителя выбирает",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": "docs/usage-guide.md",
+        "line": 9,
+        "text": "планировщиком или исполнителем в тех же границах, отдельный обязательный автор тикетов",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": "docs/system-workflow.md",
+        "line": 26,
+        "text": "   исполнитель заканчивает работу. Отделить обязательную приёмку от улучшений.",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": "docs/system-workflow.md",
+        "line": 81,
+        "text": "Модель приёмщика может совпадать с моделью исполнителя: независимость означает",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": "docs/system-workflow.md",
+        "line": 280,
+        "text": "исполнителя. Эти правила не отменяют обязательные проверки проекта/CI и критерии",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": ".claude/skills/start/SKILL.md",
+        "line": 50,
+        "text": "Модель проверяющего может совпадать с моделью исполнителя при отдельной независимой",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": ".claude/skills/writing-fragments/SKILL.md",
+        "line": 40,
+        "text": "The novelist's diary is the model: years of unstructured noticings that later get mined for raw material. Fragments are noticings.",
+        "classification": "literary analogy, not an AI model assignment"
+      },
+      {
+        "file": ".claude/skills/systemqwen/SKILL.md",
+        "line": 30,
+        "text": "   с моделью исполнителя при отдельной независимой проверке.",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": ".claude/skills/subagent-pipeline/tools/subagent-prompt.template.md",
+        "line": 4,
+        "text": "самодостаточным, если исполнителю недоступен прежний контекст. Модель и доступное",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      },
+      {
+        "file": ".claude/skills/subagent-pipeline/SKILL.md",
+        "line": 32,
+        "text": "Модель проверяющего может совпадать с моделью исполнителя при независимой проверке.",
+        "classification": "user choice / model-independent role or generic acceptance rule"
+      }
+    ],
+    "mandatory_bindings": [],
+    "text_contract_scenarios": {
+      "sequential": true,
+      "manual": true,
+      "independent": true
+    },
+    "changed_links": {
+      "checked": 2,
+      "errors": []
+    },
+    "diff_check": "pass",
+    "foreign_file_sha256": "16b26b2ac88d1dba8d7a73642cb57e76c506551e5ebd37f1b0fcc5e3c152c08e",
+    "memory_and_journal": "unchanged; no capture/save/mark used",
+    "full_suite": "not run",
+    "push": "not performed",
+    "limitations": [
+      "Static contract verification; independent review still pending.",
+      "Historical mentions, compatibility names and client/integration references are allowed."
+    ]
+  }
 }
