@@ -318,3 +318,13 @@ event_id: journal_system-of-site_ded1597b5784ff6b183ec576
 ---
 
 ## Complete B10 only in its isolated stand, preserving production; streamed chat and separate verified assembly share the existing brief with cards and explicit version confirmation. No mass paid runs or new comparisons; live validation needs current spend approval.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-09, explicit live-preview connection instructions
+evidence: Explicit user instructions in conversation 2026-10-09; only local runtime preparation and CRM connectivity smoke performed, zero paid AI calls.
+event_id: journal_system-of-site_7a11962baf8e3aa199a457cd
+---
+
+## For local manual preview of unified app fd6f80b, user selects Tooken with requested claude-sonnet-5-5 for chat/cards and OneProvider with requested claude-sonnet-5-5 for assembly. Resolve legacy settings override explicitly, keep private credentials outside Git, preserve requested/returned model validation and records. Pricing stays server-side with operator commercial approval and PDF from agreed data. Real local EspoCRM is authorized; mail, Telegram, reminders, mass paid scenarios and automatic paid retries are not. This does not authorize a new implementation or production deployment.
