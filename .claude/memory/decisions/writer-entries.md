@@ -388,3 +388,13 @@ event_id: journal_system-of-site_6152e001e460ca2109dd3f21
 ---
 
 ## Клиентский путь: единый сохраняющийся попап, короткая форма и один общий план для Тестового опроса и AI-разговора; источники проходят проверяемую сборку, подтверждение точной версии и серверный расчёт. Сохранить Tooken/OneProvider и EspoCRM; рассылки отключены, автоматический живой прогон требует отдельного ограниченного бюджета.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User publication task, 2026-10-09; docs/site-project/blocks/ADAPTIVE-PATH-20261009.md; full prior planner text unavailable
+evidence: User publication task of 2026-10-09 and docs/site-project/blocks/ADAPTIVE-PATH-20261009.md; full prior planner text not found, all three tasks planned, no implementation claimed
+event_id: journal_system-of-site_2d37f3369d9623991e208c5b
+---
+
+## Publish current System of Site app bundle, site and docs without new features. Preserve the next adaptive block: shared topics and state first, then AI behavior and UI in parallel worktrees, UI owner integrates, one independent acceptance. Survey analyzes groups up to five; chat understands each message without a second sequential call; four stages; no speculative next-group generation.
