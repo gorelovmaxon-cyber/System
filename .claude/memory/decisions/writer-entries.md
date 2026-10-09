@@ -368,3 +368,13 @@ event_id: journal_systemqwen_bac8c4e15db5b963499fa9f6
 ---
 
 ## ROLES-05 принят внешним проверяющим по вердикту, переданному пользователем: замены механизмов сейчас не требуются. По последнему уточнению пользователя ROLES-04 остаётся awaiting-validation до следующего реального уточнения в обычной работе; специальную поправку ради проверки не запрашивать и новые тестовые задачи не создавать. Незавершённая проверка памяти не блокирует обычную работу System2 и не означает гарантированного автосохранения.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-09, explicit live-preview connection instructions
+evidence: Explicit user instructions in conversation 2026-10-09; only local runtime preparation and CRM connectivity smoke performed, zero paid AI calls.
+event_id: journal_system-of-site_7a11962baf8e3aa199a457cd
+---
+
+## For local manual preview of unified app fd6f80b, user selects Tooken with requested claude-sonnet-5-5 for chat/cards and OneProvider with requested claude-sonnet-5-5 for assembly. Resolve legacy settings override explicitly, keep private credentials outside Git, preserve requested/returned model validation and records. Pricing stays server-side with operator commercial approval and PDF from agreed data. Real local EspoCRM is authorized; mail, Telegram, reminders, mass paid scenarios and automatic paid retries are not. This does not authorize a new implementation or production deployment.
