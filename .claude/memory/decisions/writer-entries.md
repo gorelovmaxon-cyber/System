@@ -328,3 +328,13 @@ event_id: journal_system-of-site_7a11962baf8e3aa199a457cd
 ---
 
 ## For local manual preview of unified app fd6f80b, user selects Tooken with requested claude-sonnet-5-5 for chat/cards and OneProvider with requested claude-sonnet-5-5 for assembly. Resolve legacy settings override explicitly, keep private credentials outside Git, preserve requested/returned model validation and records. Pricing stays server-side with operator commercial approval and PDF from agreed data. Real local EspoCRM is authorized; mail, Telegram, reminders, mass paid scenarios and automatic paid retries are not. This does not authorize a new implementation or production deployment.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Беседа 2026-10-09, пересказ клиентского пути
+evidence: Прямое задание пользователя, разделы 2–13 приложенного текста; CP-01..CP-05 в docs/site-project/tickets/CLIENT-PATH-20261009.md
+event_id: journal_system-of-site_6152e001e460ca2109dd3f21
+---
+
+## Клиентский путь: единый сохраняющийся попап, короткая форма и один общий план для Тестового опроса и AI-разговора; источники проходят проверяемую сборку, подтверждение точной версии и серверный расчёт. Сохранить Tooken/OneProvider и EspoCRM; рассылки отключены, автоматический живой прогон требует отдельного ограниченного бюджета.
