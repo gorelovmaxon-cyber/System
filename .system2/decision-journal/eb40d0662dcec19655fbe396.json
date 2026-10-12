@@ -1,0 +1,15 @@
+{
+  "id": "eb40d0662dcec19655fbe396",
+  "date": "2026-10-12",
+  "project_id": "systemqwen",
+  "type": "fact",
+  "summary": "SITE-BUILD-02–04: роль и режим определяются до фаз, запуск по таймеру убран; штатный init-project создаёт безопасный адаптер site-build. Навык обнаружен в новой сессии Claude через skills; изолированные агенты спланировали и реализовали тестовый сайт, новая сессия выполнила короткую правку без нового интервью. 209 тестов и браузерная QA на восьми ширинах прошли. Обнаружение навыка не означает генерацию через Claude API; первый снимок памяти требовал очистки scope.",
+  "source": ".scratch/site-build/FOLLOWUP-RESULT.md; .scratch/site-build/evidence/client-discovery.md; browser-qa.json; memory-tests.txt; беседа 2026-10-12",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_eb40d0662dcec19655fbe396",
+  "memory_files": [
+    ".claude/memory/facts/writer-entries.md"
+  ]
+}

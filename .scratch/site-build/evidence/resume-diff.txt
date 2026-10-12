@@ -1,0 +1,42 @@
+Display of resume diff (context-line trailing spaces removed; not an apply patch).
+
+diff --git a/.scratch/site-build-demo/SPEC.md b/.scratch/site-build-demo/SPEC.md
+index a3954fd..91f83c0 100644
+--- a/.scratch/site-build-demo/SPEC.md
++++ b/.scratch/site-build-demo/SPEC.md
+@@ -49,7 +49,7 @@ R4: index.html, styles.css, script.js в корне; без npm-зависимо
+ | Шрифт | system-ui, Segoe UI, sans-serif; без внешней загрузки |
+ | Типографика | h1 clamp(2.25rem, 5vw, 4.5rem), line-height 1.08; h2 1.25rem/1.3; body 1rem/1.6 |
+ | Интервалы | кратные 8px; 8, 16, 24, 32, 48, 64px |
+-| Скругления | карточки и диалог 20px; кнопки 12px |
++| Скругления | карточки и диалог 20px; кнопки 16px |
+ | Карточки | одинаковая структура, внутренние поля 24px, граница 1px |
+ | Кнопки | primary CTA; secondary закрытие, одинаковая высота не менее 48px |
+ | Состояния | hover только у hover-устройств, pressed и focus-visible; loading/disabled неприменимы к синхронному уведомлению |
+@@ -113,6 +113,13 @@ project checkout, синтаксис JS и локальный запуск. Ес
+ evidence, проверяет согласованность всех соответствующих элементов, отдельный
+ scoped-коммит. До конкретной правки новый тикет не выдумывается.
+
++Решение продолжения от 2026-10-12: запрос «Старт: продолжи по HANDOFF.
++Сделай все кнопки круглее — радиус16px вместо12px» заменяет исходное решение
++12px для обеих кнопок на 16px через общий токен `--radius-button`.
++Это локальная обратимая правка DEMO-02; прежние этапы и остальные решения
++сохраняются, новое интервью не требуется. Источник — переданное задание
++новой сессии в рамках TASK.md.
++
+ ## Матрица применимости стандарта
+
+ Полная таблица ID ниже создаётся из прочитанного канонического стандарта;
+diff --git a/styles.css b/styles.css
+index 5b6a215..31b99e9 100644
+--- a/styles.css
++++ b/styles.css
+@@ -15,7 +15,7 @@
+   --space-6: 48px;
+   --space-8: 64px;
+   --radius-panel: 20px;
+-  --radius-button: 12px;
++  --radius-button: 16px;
+   font-family: system-ui, "Segoe UI", sans-serif;
+   color: var(--text);
+   background: var(--background);
