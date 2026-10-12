@@ -24,8 +24,10 @@
 
 Журнал `eb40d0662dcec19655fbe396`, event
 `journal_systemqwen_eb40d0662dcec19655fbe396`: facts/systemqwen **persisted**,
-найден local fallback; **indexed** не подтверждён. Публикация блока проверяется
-отдельно по HEAD/живому origin/master. Чужой L06-04-FIXES сохранён.
+найден local fallback; **indexed** не подтверждён. **Synced** подтверждён:
+обычный push доставил блок, HEAD и живой origin/master совпали на
+`17c7e756ed05dbe6ad4dcc4e7805356d72f7b3e6`; SHA коммита этой фиксации сверять
+отдельно по Git. Чужой L06-04-FIXES сохранён.
 Следующий шаг: пользоваться start/site-build в подключённом проекте;
 для другого ПК обновить System2 и локальную привязку. Старые ROLES-ограничения
 этим тестом не закрываются. Ниже историческая передача первоначального SITE-BUILD-01.
