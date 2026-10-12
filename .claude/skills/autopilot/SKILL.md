@@ -7,9 +7,35 @@ description: Use when the user dictates an app, site, bot, or feature to build e
 
 ## Overview
 
-Autopilot drives a dictated idea through the mattpocock/skills pipeline — grill → spec → tickets → implement — **in one dialogue**, without making the user approve each stage. The user answers questions once at the start and receives a working project at the end. Core principle: **the order is the product** — code is written only in the last phase, and implementation is delegated to one executor that works through related tickets sequentially.
+Autopilot drives an idea through grill → spec → tickets → implementation → verification
+within the selected role and authorized scope. Known answers are reused; clarification
+is needed only for decisions that change the result or permitted work. Code starts
+after a sufficient specification. Related tickets run sequentially.
 
-This skill only orchestrates — the phases below **invoke the pipeline skills and follow their rules**; nothing here restates them. What Autopilot adds: which human gates to remove, and how to run implementation hands-free.
+This skill orchestrates available pipeline skills. It does not create a cross-chat
+runner, assign models, or transfer implementation to a planning agent.
+
+## Контракт запуска — до любой фазы
+
+Сначала прочитай задачу, инструкции и HANDOFF. Зафиксируй роль, режим, разрешённый
+блок и текущую фазу. Последнее явное поручение пользователя имеет приоритет;
+известные решения не требуют повторного подтверждения. Восстановление этапа
+не начинает весь цикл заново.
+
+| Состояние | Разрешённое действие и граница |
+|---|---|
+| Планировщик или `--mode=systemqwen` при планировании | Подготовить brief/spec/тикеты и HANDOFF; закончить передачей до реализации |
+| Исполнитель, есть согласованные тикеты и разрешённый блок | Продолжить Phase 4 для этого блока без повторного grill и подтверждения каждого шага |
+| Разрешён полный цикл, способ исполнения и роли уже определены | Выполнить разрешённые фазы с существующим способом передачи; планировщик не пишет код реализации |
+| Роль/граница исполнения неизвестна | Подготовить доступную часть плана; выяснить только недостающее решение до реализации |
+| Только предложения, аудит или мелкая правка | Соответствующий короткий маршрут; полный цикл не запускать |
+
+`--mode=systemqwen` ограничивает планирующий запуск, а не запрещает отдельно
+назначенному исполнителю выполнять переданный блок. Нельзя одновременно обещать
+реализацию и закончить только документами. Молчание и истечение времени не являются
+разрешением. Уже разрешённую работу продолжать без новых формальных гейтов.
+Автоматическая передача между чатами отсутствует; изолированный запуск другого
+агента возможен только при отдельном явном разрешении пользователя на такую проверку.
 
 **Prerequisite (только для обычного режима):** the pipeline skills must be installed — `grilling`, `to-spec`, `to-tickets`, `implement`, `subagent-pipeline` (mattpocock/skills pack). If any is missing, install first:
 
@@ -35,7 +61,7 @@ npx skills add mattpocock/skills
 Нумерация фаз и общий процесс остаются здесь. Для сайтов применяются
 [контракт ролей и режима](../../../docs/system-workflow.md#один-start-для-новой-задачи-сайта)
 и [стандарт](../../../docs/standards/site-creation.md), включая прямое чтение без Khoj.
-Планирующая роль/systemqwen заканчивает пакетом передачи; разрешённый исполнитель
+Планирующая роль/планирующий запуск systemqwen заканчивает пакетом передачи; разрешённый исполнитель
 продолжает свой блок. Не устанавливай навыки заново только ради прямого чтения
 доступного контракта. Известные ответы и сохранённый этап не проходить повторно.
 Мелкие правки/баги/готовые тикеты используют короткий маршрут.
@@ -177,16 +203,18 @@ Run `/to-spec` on the grilling transcript. No new questions to the user — anyt
 
 ### Phase 3 — Tickets
 
-Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder cannot judge granularity or blocking edges. Validate the breakdown yourself against the skill's own slicing rules, then show the user **one screen of plain-language lines** (what each ticket delivers, no technical detail) with a default: «Запускаю через 60 секунд, если не скажешь стоп». Do not wait for explicit approval — waiting is the failure mode this skill exists to remove.
+Run `/to-tickets`; skip a quiz about ticket granularity. Validate the breakdown
+against scope and dependencies, then report what the tickets deliver in plain
+language. Continue already authorized work. Otherwise finish the handoff defined
+by the launch contract; do not use a countdown or silence as authorization.
 
-Для сайта таймер выше не используется как согласие: продолжай уже разрешённую
-работу, иначе подготовь передачу по роли/режиму. Тикеты содержат конкретные ID
+Для сайта тикеты содержат конкретные ID
 стандарта, требования и способы проверки. Сетка и дизайн-система доступны до
 подробной вёрстки. Ссылки на выбранные документы передаются исполнителю и приёмщику.
 
 ### Phase 3.5 — Проверка режима (systemqwen)
 
-Если параметр `--mode=systemqwen`:
+Если это планирующий запуск с `--mode=systemqwen` или планирующей ролью:
 
 ```
 ✅ Тикеты готовы: T1, T2, T3
@@ -201,9 +229,9 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 
 ---
 
-Если режим обычный (без `--mode=systemqwen`), продолжай Phase 4; для сайта только
-при разрешённом исполнении и выбранной исполняющей роли по контракту выше.
-В планирующей роли сайта сохрани пакет передачи и HANDOFF до Phase 4.
+Иначе применяй контракт запуска выше. Phase 4 доступна назначенному исполнителю
+для разрешённого блока. Если передача другому чату нужна, но ещё не выполнена,
+сохрани пакет; не самоназначайся исполнителем.
 
 ### Phase 4 — Implement (через subagent-pipeline)
 
