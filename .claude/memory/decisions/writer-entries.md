@@ -152,6 +152,46 @@ event_id: journal_system-of-site_b09539805c420cb57c38a1fc
 status: confirmed
 category: decisions
 scope: system-of-site
+source: User conversation 2026-09-27
+evidence: docs/site-project/reports/B04-LIVE-AI-RESULT.md; direct user choice 2026-09-27
+event_id: journal_system-of-site_68865a763458655d53b48703
+---
+
+## Maxim selected Claude Sonnet 5 for B04 live consultation; use NunAway gateway ID claude-sonnet-5. Live validation remains pending.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-09-27
+evidence: User conversation 2026-09-27; docs/site-project/reports/B04-LIVE-AI-RESULT.md
+event_id: journal_system-of-site_c3dd8511fda6911cb6879bf1
+---
+
+## Maxim authorized one B04 live AI trial with retrospective cost accounting, replacing the executor-selected 100 RUB cap for that trial.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-09-27
+evidence: User conversation 2026-09-27; docs/site-project/reports/B04-LIVE-AI-RESULT.md
+event_id: journal_system-of-site_4842bcd79f0dcdbbd680282e
+---
+
+## Maxim authorized one full rental B04 briefing on claude-sonnet-5: maximum 30 generations, no retries, stop on first error, postfactum tokens and gateway units, unknown RUB; no other paid scenarios.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-09-27
+evidence: User conversation 2026-09-27; docs/site-project/reports/B04-LIVE-AI-RESULT.md
+event_id: journal_system-of-site_be7fe00ae35fb6bd8020a67a
+---
+
+## Maxim authorized exactly one paid B04 technical request on app bf5e1bd with claude-sonnet-5, max_calls=1, no retries; full dialogue and other paid scenarios not authorized.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
 source: User chat 2026-10-01; system-of-site/docs/site-project/blocks/B04-CONSULTATION.md
 evidence: Explicit user task attachment in chat 2026-10-01, current B04 consultation block and fact-pipeline task updated from that decision.
 event_id: journal_system-of-site_b3c3464853e0b081b93f989d
@@ -321,6 +361,16 @@ event_id: journal_system-of-site_ded1597b5784ff6b183ec576
 ---
 status: confirmed
 category: decisions
+scope: systemqwen
+source: Беседа 2026-10-08: исходное состояние поручения «Заверши оставшуюся проверку ROLES-04 в System2» и последующее уточнение «Не запрашивай искусственную поправку для ROLES-04»; .scratch/decision-journal/RESULT.md#roles-05-external-verdict.
+evidence: .scratch/decision-journal/RESULT.md#roles-05-external-verdict; прямой внешний вердикт и уточнение передачи пользователем 2026-10-08.
+event_id: journal_systemqwen_bac8c4e15db5b963499fa9f6
+---
+
+## ROLES-05 принят внешним проверяющим по вердикту, переданному пользователем: замены механизмов сейчас не требуются. По последнему уточнению пользователя ROLES-04 остаётся awaiting-validation до следующего реального уточнения в обычной работе; специальную поправку ради проверки не запрашивать и новые тестовые задачи не создавать. Незавершённая проверка памяти не блокирует обычную работу System2 и не означает гарантированного автосохранения.
+---
+status: confirmed
+category: decisions
 scope: system-of-site
 source: User conversation 2026-10-09, explicit live-preview connection instructions
 evidence: Explicit user instructions in conversation 2026-10-09; only local runtime preparation and CRM connectivity smoke performed, zero paid AI calls.
@@ -338,3 +388,13 @@ event_id: journal_system-of-site_6152e001e460ca2109dd3f21
 ---
 
 ## Клиентский путь: единый сохраняющийся попап, короткая форма и один общий план для Тестового опроса и AI-разговора; источники проходят проверяемую сборку, подтверждение точной версии и серверный расчёт. Сохранить Tooken/OneProvider и EspoCRM; рассылки отключены, автоматический живой прогон требует отдельного ограниченного бюджета.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User publication task, 2026-10-09; docs/site-project/blocks/ADAPTIVE-PATH-20261009.md; full prior planner text unavailable
+evidence: User publication task of 2026-10-09 and docs/site-project/blocks/ADAPTIVE-PATH-20261009.md; full prior planner text not found, all three tasks planned, no implementation claimed
+event_id: journal_system-of-site_2d37f3369d9623991e208c5b
+---
+
+## Publish current System of Site app bundle, site and docs without new features. Preserve the next adaptive block: shared topics and state first, then AI behavior and UI in parallel worktrees, UI owner integrates, one independent acceptance. Survey analyzes groups up to five; chat understands each message without a second sequential call; four stages; no speculative next-group generation.

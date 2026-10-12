@@ -4,6 +4,7 @@
 [README.md](README.md), а корень разрешается через [memory contract](../../docs/memory-contract.md).
 
 ## User Profile
+- [Current role selection](user-profile/writer-entries.md) — подтверждённое решение 2026-10-08: роли выбирает пользователь; модели не задают обязанности. Прежние распределения в исторических материалах ниже не переопределяют это решение.
 - [Coding Style](user-profile/coding-style.md) — языки, стек, стиль кода, именование
 - [Architecture Preferences](user-profile/architecture-prefs.md) — философия, паттерны, экономика токенов
 - [Common Mistakes](user-profile/common-mistakes.md) — повторяющиеся ошибки и как их избегать
@@ -28,7 +29,7 @@
 
 ---
 
-**Последнее обновление:** 2026-09-12  
+**Последнее обновление:** 2026-10-08
 **Структура:** относительные пути для переносимости между машинами
 
 ## Observations / анализы
