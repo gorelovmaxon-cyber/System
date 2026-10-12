@@ -14,6 +14,12 @@ Source brief/task: `<path or user request>`
 
 ## Checks and scenarios
 
+For site tickets, include applicable IDs from
+[the site standard](../docs/standards/site-creation.md) and a separate table:
+`Rule ID | проверено / не выполнено / неприменимо / не проверено | evidence / reason`.
+This describes rule coverage, not ticket status. Reference project-specific
+exceptions and distinguish build success, browser verification and independent acceptance.
+
 Record exact command, working directory, date, concise actual output, and whether
 the check is functional rather than merely syntactic. Include one positive,
 negative/error and regression scenario from the ticket. A file existing,

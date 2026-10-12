@@ -1,0 +1,15 @@
+{
+  "id": "423e1896fad3a5d8629740d0",
+  "date": "2026-10-12",
+  "project_id": "systemqwen",
+  "type": "decision",
+  "summary": "Пользователь утвердил стандарт сайтов из опыта MAXMADE: канонический docs/standards/site-creation.md с ID, команда site-build, маршрут start -> site-build -> autopilot, дизайн-система и адаптивная сетка в spec; правила применяются в тикетах и QA, проектные цвета и эффекты не наследуются автоматически.",
+  "source": "Беседа 2026-10-12: одобрение правил и переданное пользователем задание SITE-BUILD-01; .scratch/site-build/REQUEST.md",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_423e1896fad3a5d8629740d0",
+  "memory_files": [
+    ".claude/memory/user-profile/writer-entries.md"
+  ]
+}

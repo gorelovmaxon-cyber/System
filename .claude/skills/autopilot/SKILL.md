@@ -26,6 +26,20 @@ npx skills add mattpocock/skills
 Доменный маршрут (dev/sites/marketing) выбирается в `start` после обязательных
 файлов проекта и retrieval; он не меняет нумерацию фаз.
 
+### Специализация для сайтов
+
+Для нового сайта или существенной переработки вход —
+[site-build](../site-build/SKILL.md). Если пользователь вызвал autopilot напрямую
+для сайта, прочитай стандарт и требования site-build как дополнение фаз;
+не вызывай его обратно как новый маршрут и не запускай start заново.
+Нумерация фаз и общий процесс остаются здесь. Для сайтов применяются
+[контракт ролей и режима](../../../docs/system-workflow.md#один-start-для-новой-задачи-сайта)
+и [стандарт](../../../docs/standards/site-creation.md), включая прямое чтение без Khoj.
+Планирующая роль/systemqwen заканчивает пакетом передачи; разрешённый исполнитель
+продолжает свой блок. Не устанавливай навыки заново только ради прямого чтения
+доступного контракта. Известные ответы и сохранённый этап не проходить повторно.
+Мелкие правки/баги/готовые тикеты используют короткий маршрут.
+
 ## When to Use
 
 - User dictates what to build and expects the finished thing, not a collaboration on process.
@@ -155,9 +169,20 @@ Run `/grilling` on the dictated idea. Autopilot adds three rules:
 
 Run `/to-spec` on the grilling transcript. No new questions to the user — anything still open becomes a PLACEHOLDER in the spec, not an interview.
 
+Для сайта дополнить существующую spec
+[данными планирования стандарта](../../../docs/standards/site-creation.md#артефакты-планирования-и-передача-правил):
+визуальное направление, дизайн-система, адаптивная сетка, анимации, контент/ассеты,
+применимые ID правил, исключения и QA. Бриф и критерии подтверждаются явными
+решениями пользователя; не принимать spec молчанием.
+
 ### Phase 3 — Tickets
 
 Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder cannot judge granularity or blocking edges. Validate the breakdown yourself against the skill's own slicing rules, then show the user **one screen of plain-language lines** (what each ticket delivers, no technical detail) with a default: «Запускаю через 60 секунд, если не скажешь стоп». Do not wait for explicit approval — waiting is the failure mode this skill exists to remove.
+
+Для сайта таймер выше не используется как согласие: продолжай уже разрешённую
+работу, иначе подготовь передачу по роли/режиму. Тикеты содержат конкретные ID
+стандарта, требования и способы проверки. Сетка и дизайн-система доступны до
+подробной вёрстки. Ссылки на выбранные документы передаются исполнителю и приёмщику.
 
 ### Phase 3.5 — Проверка режима (systemqwen)
 
@@ -176,7 +201,9 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 
 ---
 
-Если режим обычный (без `--mode=systemqwen`), продолжай Phase 4.
+Если режим обычный (без `--mode=systemqwen`), продолжай Phase 4; для сайта только
+при разрешённом исполнении и выбранной исполняющей роли по контракту выше.
+В планирующей роли сайта сохрани пакет передачи и HANDOFF до Phase 4.
 
 ### Phase 4 — Implement (через subagent-pipeline)
 
@@ -194,6 +221,10 @@ Run `/to-tickets`, with one override: **skip the user quiz** — a vibecoder can
 - Ticket failed → retry **once** with the error attached. Second failure → stop, tell the user in plain language what is blocking and what you need.
 
 ### Phase 5 — Finish
+
+Для сайта сохраняй evidence по применимым ID стандарта: проверено / не выполнено /
+неприменимо / не проверено. Сборка, визуальная QA и независимая приёмка — отдельные
+доказательства. HANDOFF содержит роль/режим, этап, артефакты и следующий шаг.
 
 Full test suite once. Before the final report, if the session stops before the
 task is complete, update the project `HANDOFF.md` with `НЕ ЗАКОММИЧЕНО`,
