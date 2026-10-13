@@ -438,3 +438,13 @@ event_id: journal_system-of-site_4cb37b88f63de034686f1aed
 ---
 
 ## Independent user review of d88a464 passed 25 tests but found natural unknown replies and redesign under features bypassed intended handling. Keep AI-02 awaiting review; fix durable topic-specific help and rework applicability across agreed fields. Live quality and prior no-text failures remain unverified by scripted tests.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User conversation 2026-10-13: do as many as necessary, reply to budget continuation question
+event_id: journal_system-of-site_3a14fe21032fdbed59015186
+---
+
+## User authorizes as many paid calls as necessary to complete this one AI-03 synthetic live conversation and final brief. Previous seven-call ceiling no longer blocks this scoped continuation. Keep cumulative accounting, no mass scenarios or implicit paid replay, no CRM/messaging sends.
