@@ -418,3 +418,13 @@ event_id: journal_system-of-site_97a950da4ac3c92fd9c5acf8
 ---
 
 ## Choose survey or AI chat once per enquiry. Switching to the other format is forbidden after selection, including back, reload and a contrary view URL. Preserve previous answers and the existing calculation, PDF and CRM pipeline.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User task AI-SUFFICIENCY-TASK-20261013.md, conversation 2026-10-13
+event_id: journal_system-of-site_2baea97336a0100dee1f49bb
+---
+
+## Only AI chat changes: finish on sufficient business, goal, visitor scenario, substantial capabilities, materials/help and applicable conditions. Server calculates stage progress from verified preliminary marks without another AI call; omit question counts and numerical percentages. Unknown budget/deadline remain open. Align assembly and confirmation for chat only; leave survey intact.
