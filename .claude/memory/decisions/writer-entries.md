@@ -448,3 +448,23 @@ event_id: journal_system-of-site_3a14fe21032fdbed59015186
 ---
 
 ## User authorizes as many paid calls as necessary to complete this one AI-03 synthetic live conversation and final brief. Previous seven-call ceiling no longer blocks this scoped continuation. Keep cumulative accounting, no mass scenarios or implicit paid replay, no CRM/messaging sends.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13: explicit MAXMADE repository, tag, commit and canonical launch instructions
+evidence: Explicit user selection 2026-10-13; GitHub tag resolves to specified commit; version-specific HANDOFF and docs/MAXMADE-TRANSFER.md read. npm ci, verify284 files and build passed, canonical localhost5179 HTTP200 after per-process IPv4 DNS preference.
+event_id: journal_system-of-site_d8752e2bf00f441cd4218f54
+---
+
+## User selected the intended MAXMADE website from Sait fixed tag maxmade-v5-2026-10-13, commit bf8c412fa6193d59c302b01d00f0eaa74d1b7679. Obtain it in a new folder, preserve old copies and local edits, verify the release and run dev:canonical at localhost5179. Previous Sait9c35970 and5176 must not be treated as the selected website. This instruction does not authorize rewriting the pinned UI or assuming PHP/CRM works under Vite.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User AI-04 task, conversation 2026-10-13, paraphrased scope
+evidence: User AI-04 task, conversation 2026-10-13, explicit scope; supplied task preserved in project transfer.
+event_id: journal_system-of-site_aee93597561c18c40764d8a3
+---
+
+## AI-04 uses MAXMADE bf8c412 as the visual reference and embeds the existing intake and AI brief in its modal. Preserve the survey, backend contracts, private settings and old worktrees. Use controlled responses with no paid calls or real sends for this styling task.

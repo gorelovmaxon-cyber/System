@@ -128,3 +128,13 @@ event_id: journal_system-of-site_516d6590c5246ad227f1cd97
 ---
 
 ## AI-03 live synthetic conversation reached genuine assembled brief with zero required gaps and enabled confirmation on desktop/mobile. Continuation revealed reviewed-topic navigation and missing scenario field mapping; narrow fixes retain server gate and survey prompt. Aggregate17 attempts13 completed4 failures, known61527 tokens, RUB and failure usage unknown. No real submission or sends; independent review and VPS remain open.
+---
+status: observation
+category: facts
+scope: system-of-site
+source: AI-MAXMADE-STYLE-20261013 report and isolated local check evidence
+evidence: Isolated local tests and browser evidence, AI-MAXMADE-STYLE-20261013 report; managed model and CRM, no paid calls or real sends.
+event_id: journal_system-of-site_4c389678e942913487a6879f
+---
+
+## AI-04 self-check at app d09d43f and MAXMADE c6019d9: 662 tests plus lint and TypeScript pass; managed browser390/768/1440 and previous AI/B10 desktop/mobile pass; survey baseline pixel diff0 all widths; full app bundle restored and built; published controlled launcher cold start smoke passes. Independent acceptance, physical keyboard and production integrations remain open.
