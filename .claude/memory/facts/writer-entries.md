@@ -108,3 +108,13 @@ event_id: journal_systemqwen_13947f838aee699cb456fe54
 ---
 
 ## Пользователь передал внешний независимый вердикт: ROLES-01–03 приняты; исправление ROLES-03 проверено на 73a70fa089887946676d72bbb90c53d06d14eb1f. Статусы done фиксируют полученную внешнюю приёмку, не самоприёмку исполнителя. Окончательная независимая проверка завершения ROLES-04/05 остаётся отдельной.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: Беседа 2026-10-12, разрешённый SITE-BUILD-02–04
+evidence: .scratch/site-build/FOLLOWUP-RESULT.md; .scratch/site-build/evidence/client-discovery.md; .scratch/site-build/evidence/browser-qa.json; .scratch/site-build/evidence/memory-tests.txt
+event_id: journal_systemqwen_eb40d0662dcec19655fbe396
+---
+
+## SITE-BUILD-02–04 (2026-10-12): уточнён контракт роли/режима до фаз, убран запуск по таймеру; init-project с client claude-code добавляет тонкий адаптер site-build с идемпотентностью и защитой пользовательской команды. Навык обнаружен встроенным skills в новой сессии Claude. Изолированная живая проба: планирование, статический сайт с диалогом, новая сессия правки радиуса без нового интервью; 209 тестов и браузерная QA восьми ширин PASS. Генерация через Claude API не проверялась. Первый снимок содержал чужие scope; он очищен, ограничение чтения памяти уточнено. Полные evidence и ограничения — .scratch/site-build/FOLLOWUP-RESULT.md.

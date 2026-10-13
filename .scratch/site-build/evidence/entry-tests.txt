@@ -1,0 +1,27 @@
+✔ B03: explicit root cannot be redirected by another checkout in local config (9.9882ms)
+✔ B04 config merge is recursive and preserves explicit false and zero (16.9712ms)
+✔ B06: repeated init-project preserves an existing managed HANDOFF state (11.8686ms)
+✔ B06: damaged or duplicated managed markers fail closed (8.8946ms)
+✔ B13: project-id uses the merged local registry remote mapping (170.7612ms)
+✔ B13: unknown connected project is not attributed to systemqwen (131.6663ms)
+✔ B12: hook installer leaves an active custom hooksPath and its behavior intact (749.0626ms)
+✔ B18: Figma extractor limits node tokens to the requested subtree (2.1021ms)
+✔ G10: reversed managed markers are rejected and the document is left untouched (7.3538ms)
+✔ G10: a corrupted HANDOFF blocks registration and leaves the registry unwritten (6.7697ms)
+✔ G14: --register links the project directory so project_id resolves without an environment override (60.3829ms)
+✔ G14: registration refuses a second project for the same directory or a remapped project (56.6097ms)
+✔ G11: installer in a linked worktree does not silently disable the shared user hook (2339.2445ms)
+✔ G11: a missing hook template is reported instead of configuring a dead hooks path (524.0216ms)
+✔ FIX-11: init --register then an ordinary commit produces the right project_id (1797.0238ms)
+✔ SW-01: known ID with placeholder gets one local binding and minimal Claude start adapter (35.9694ms)
+✔ SW-01: wrong path, conflicting adapter, and absent System fail without changing project files (12.2911ms)
+✔ SW-01: unknown ID remains local until registry is explicitly published (56.9131ms)
+✔ site-build adapter conflicts fail before any bootstrap or registry mutation (7.1844ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5966.6897

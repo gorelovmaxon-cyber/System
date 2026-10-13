@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Тестовый сайт вымышленной мастерской ремонта мебели. Заявки не отправляются.">
+    <title>Мастерская рядом — тестовый сайт</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="workshop">
+      <p class="brand">Мастерская рядом</p>
+      <h1>Дайте мебели новую жизнь</h1>
+      <p class="intro">Поможем восстановить любимые вещи и сохранить их характер</p>
+
+      <div class="services">
+        <article class="service">
+          <h2>Ремонт мебели</h2>
+          <p>Восстановление креплений и деталей, чтобы мебель снова была удобной</p>
+        </article>
+        <article class="service">
+          <h2>Обновление обивки</h2>
+          <p>Замена покрытия мягкой мебели для свежего и аккуратного вида</p>
+        </article>
+      </div>
+
+      <button class="button button-primary" id="notice-open" type="button" aria-haspopup="dialog" aria-controls="notice">Посмотреть уведомление</button>
+    </main>
+
+    <dialog class="notice" id="notice" aria-labelledby="notice-title" aria-describedby="notice-description">
+      <h2 id="notice-title">Тестовый сайт</h2>
+      <p id="notice-description">Это тестовый сайт. Заявка не отправляется</p>
+      <button class="button button-secondary" id="notice-close" type="button" autofocus>Закрыть</button>
+    </dialog>
+  </body>
+</html>

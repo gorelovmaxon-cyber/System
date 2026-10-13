@@ -29,6 +29,8 @@ test('SW-01: known ID with placeholder gets one local binding and minimal Claude
   assert.equal(fs.readFileSync(path.join(root, 'CLAUDE.md'), 'utf8').split(START).length - 1, 1);
   assert.equal(fs.readFileSync(path.join(root, 'HANDOFF.md'), 'utf8').split(START).length - 1, 1);
   assert.match(fs.readFileSync(first.adapter, 'utf8'), /canonical start workflow/);
+  assert.equal(first.site_adapter, second.site_adapter);
+  assert.match(fs.readFileSync(first.site_adapter, 'utf8'), /canonical site-build workflow/);
   assert.match(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), /\/\.claude\/system2\.local\.json/);
   assert.match(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), /\/\.claude\/settings\.local\.json/);
   assert.deepEqual(JSON.parse(fs.readFileSync(path.join(root, '.claude', 'settings.local.json'), 'utf8')).permissions.additionalDirectories, [system]);
@@ -58,4 +60,21 @@ test('SW-01: unknown ID remains local until registry is explicitly published', (
   const local = JSON.parse(fs.readFileSync(path.join(system, 'config/system.local.json'), 'utf8'));
   assert.equal(local.registry.some(item => item.project_id === 'new-site'), true);
   assert.equal(JSON.parse(fs.readFileSync(path.join(system, 'config/system.example.json'), 'utf8')).registry.some(item => item.project_id === 'new-site'), false);
+});
+
+test('site-build adapter conflicts fail before any bootstrap or registry mutation', () => {
+  const system = fixture('site-build-conflict', { registry: [{ project_id: 'site-portfolio' }] });
+  const root = project('site-build-conflict');
+  const adapter = path.join(root, '.claude/skills/site-build/SKILL.md');
+  fs.mkdirSync(path.dirname(adapter), { recursive: true });
+  fs.writeFileSync(adapter, '# User-owned site command\n');
+  const before = fs.existsSync(path.join(system, 'config/system.local.json'))
+    ? fs.readFileSync(path.join(system, 'config/system.local.json'), 'utf8') : null;
+  assert.throws(() => initProject({ root, systemRoot: system, projectId: 'site-portfolio', client: 'claude-code' }), /site-build skill already exists/);
+  assert.equal(fs.readFileSync(adapter, 'utf8'), '# User-owned site command\n');
+  assert.equal(fs.existsSync(path.join(root, 'CLAUDE.md')), false);
+  assert.equal(fs.existsSync(path.join(root, '.claude/skills/start/SKILL.md')), false);
+  assert.equal(fs.readFileSync(path.join(root, 'HANDOFF.md'), 'utf8'), '# Existing handoff\n\nKeep my state.\n');
+  assert.equal(fs.existsSync(path.join(system, 'config/system.local.json'))
+    ? fs.readFileSync(path.join(system, 'config/system.local.json'), 'utf8') : null, before);
 });

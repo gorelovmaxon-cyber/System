@@ -1,0 +1,15 @@
+{
+  "id": "b683557bf37211aaef64d533",
+  "date": "2026-10-12",
+  "project_id": "site-build-demo",
+  "type": "decision",
+  "summary": "site-build-demo: радиус обеих кнопок 16px вместо исходных 12px; локальная правка DEMO-02 через общий токен, без публикации.",
+  "source": "Задание новой изолированной сессии 2026-10-12: продолжить по HANDOFF и сделать все кнопки круглее, 16px вместо 12px.",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_site-build-demo_b683557bf37211aaef64d533",
+  "memory_files": [
+    ".claude/memory/decisions/writer-entries.md"
+  ]
+}

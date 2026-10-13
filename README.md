@@ -28,6 +28,11 @@ System2 — переносимая рабочая система для прое
 
 См. [QUICKSTART.md](QUICKSTART.md) и [docs/usage-guide.md](docs/usage-guide.md).
 
+Для нового сайта: `start → site-build → autopilot`. Навык
+[site-build](.claude/skills/site-build/SKILL.md) применяет
+[стандарт сайтов](docs/standards/site-creation.md), включая дизайн-систему,
+адаптивную сетку и проверку правил. Работа продолжается в выбранной роли/режиме.
+
 ## Структура
 
 - `CLAUDE.md` — общие правила репозитория.

@@ -88,6 +88,26 @@ function appendIgnore(text, entry) {
   return text.trimEnd() + (text.trim() ? '\n' : '') + entry + '\n';
 }
 
+function claudeSiteBuildAdapter() {
+  return [
+    '---',
+    'name: site-build',
+    'description: Build or continue a site through the connected canonical System2 site-build workflow.',
+    '---',
+    '',
+    '# Project site entry for System2',
+    '',
+    'Read `.claude/system2.local.json` in this project.',
+    'If it is missing or `system_root` is unavailable, report the missing connection;',
+    'do not guess a root or copy the workflow into this project.',
+    'Read `<system_root>/.claude/skills/site-build/SKILL.md` and follow that',
+    'canonical site-build workflow using the configured `project_id`.',
+    'Read the current task and this project\'s instructions and HANDOFF.',
+    'Run System2 memory tools from system_root; keep project files in this project.',
+    '',
+  ].join('\n');
+}
+
 function initProject(options = {}) {
   const root = path.resolve(options.root || process.cwd());
   if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) throw new Error('project root must be an existing directory: ' + root);
@@ -129,6 +149,8 @@ function initProject(options = {}) {
   if (client && client !== 'claude-code') throw new Error('unsupported client: ' + client + '; use --client claude-code or omit --client');
   let adapterFile;
   let adapterText;
+  let siteAdapterFile;
+  let siteAdapterText;
   let connectionFile;
   let settingsFile;
   let settingsText;
@@ -139,6 +161,11 @@ function initProject(options = {}) {
     adapterText = claudeStartAdapter();
     if (fs.existsSync(adapterFile) && fs.readFileSync(adapterFile, 'utf8') !== adapterText) {
       throw new Error('start skill already exists with different content; inspect it before setup: ' + adapterFile);
+    }
+    siteAdapterFile = path.join(root, '.claude', 'skills', 'site-build', 'SKILL.md');
+    siteAdapterText = claudeSiteBuildAdapter();
+    if (fs.existsSync(siteAdapterFile) && fs.readFileSync(siteAdapterFile, 'utf8') !== siteAdapterText) {
+      throw new Error('site-build skill already exists with different content; inspect it before setup: ' + siteAdapterFile);
     }
     connectionFile = path.join(root, '.claude', 'system2.local.json');
     if (fs.existsSync(connectionFile)) {
@@ -180,11 +207,13 @@ function initProject(options = {}) {
   if (client === 'claude-code') {
     fs.mkdirSync(path.dirname(adapterFile), { recursive: true });
     fs.writeFileSync(adapterFile, adapterText, 'utf8');
+    fs.mkdirSync(path.dirname(siteAdapterFile), { recursive: true });
+    fs.writeFileSync(siteAdapterFile, siteAdapterText, 'utf8');
     fs.writeFileSync(ignoreFile, ignoreText, 'utf8');
     fs.writeFileSync(connectionFile, JSON.stringify({ system_root: system.system_root, project_id: projectId }, null, 2) + '\n', 'utf8');
     fs.writeFileSync(settingsFile, settingsText, 'utf8');
   }
-  return { root, project_id: projectId, claude, handoff, registry: knownProject ? 'existing' : 'registered-in-local-config', local_path: localPath, client, adapter: adapterFile || null };
+  return { root, project_id: projectId, claude, handoff, registry: knownProject ? 'existing' : 'registered-in-local-config', local_path: localPath, client, adapter: adapterFile || null, site_adapter: siteAdapterFile || null };
 }
 
 function parseArgs(argv) {

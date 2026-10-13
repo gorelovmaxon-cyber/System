@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "url": "http://127.0.0.1:8765/",
+  "results": [
+    {
+      "width": 320,
+      "overflow": false,
+      "columns": "280px",
+      "descriptionTops": [
+        341.53125,
+        526.3125
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "columns": "335px",
+      "descriptionTops": [
+        341.53125,
+        500.71875
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    },
+    {
+      "width": 639,
+      "overflow": false,
+      "columns": "599px",
+      "descriptionTops": [
+        341.53125,
+        475.125
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    },
+    {
+      "width": 640,
+      "overflow": false,
+      "columns": "276px 276px",
+      "descriptionTops": [
+        341.53125,
+        341.53125
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "columns": "340px 340px",
+      "descriptionTops": [
+        346.71875,
+        346.71875
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    },
+    {
+      "width": 959,
+      "overflow": false,
+      "columns": "435.5px 435.5px",
+      "descriptionTops": [
+        367.34375,
+        367.34375
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    },
+    {
+      "width": 960,
+      "overflow": false,
+      "columns": "420px 420px",
+      "descriptionTops": [
+        415.4375,
+        415.4375
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "columns": "500px 500px",
+      "descriptionTops": [
+        467.28125,
+        467.28125
+      ],
+      "buttonRadius": "16px",
+      "text": "rgb(75, 92, 82)",
+      "background": "rgb(246, 243, 237)",
+      "hoverContrast": 12.201417199870377,
+      "keyboardDialog": "pass"
+    }
+  ],
+  "touch": "pass",
+  "reducedMotion": "pass",
+  "pageErrors": [],
+  "externalRequests": []
+}
