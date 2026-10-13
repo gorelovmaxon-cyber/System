@@ -428,3 +428,13 @@ event_id: journal_system-of-site_2baea97336a0100dee1f49bb
 ---
 
 ## Only AI chat changes: finish on sufficient business, goal, visitor scenario, substantial capabilities, materials/help and applicable conditions. Server calculates stage progress from verified preliminary marks without another AI call; omit question counts and numerical percentages. Unknown budget/deadline remain open. Align assembly and confirmation for chat only; leave survey intact.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User independent review, conversation 2026-10-13; 25 tests in14.745s
+event_id: journal_system-of-site_4cb37b88f63de034686f1aed
+---
+
+## Independent user review of d88a464 passed 25 tests but found natural unknown replies and redesign under features bypassed intended handling. Keep AI-02 awaiting review; fix durable topic-specific help and rework applicability across agreed fields. Live quality and prior no-text failures remain unverified by scripted tests.
