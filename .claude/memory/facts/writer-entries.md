@@ -118,3 +118,13 @@ event_id: journal_systemqwen_eb40d0662dcec19655fbe396
 ---
 
 ## SITE-BUILD-02–04 (2026-10-12): уточнён контракт роли/режима до фаз, убран запуск по таймеру; init-project с client claude-code добавляет тонкий адаптер site-build с идемпотентностью и защитой пользовательской команды. Навык обнаружен встроенным skills в новой сессии Claude. Изолированная живая проба: планирование, статический сайт с диалогом, новая сессия правки радиуса без нового интервью; 209 тестов и браузерная QA восьми ширин PASS. Генерация через Claude API не проверялась. Первый снимок содержал чужие scope; он очищен, ограничение чтения памяти уточнено. Полные evidence и ограничения — .scratch/site-build/FOLLOWUP-RESULT.md.
+---
+status: observation
+category: facts
+scope: system-of-site
+source: Conversation 2026-10-13; reports/AI-LIVE-COMPLETE-20261013.md and allowlisted live evidence
+evidence: Allowlisted live.json: final assembly17 current true, gaps empty; read-only browser1440/390 PASS, submissions0; three regression tests and final662 tests/lint/TS PASS.
+event_id: journal_system-of-site_516d6590c5246ad227f1cd97
+---
+
+## AI-03 live synthetic conversation reached genuine assembled brief with zero required gaps and enabled confirmation on desktop/mobile. Continuation revealed reviewed-topic navigation and missing scenario field mapping; narrow fixes retain server gate and survey prompt. Aggregate17 attempts13 completed4 failures, known61527 tokens, RUB and failure usage unknown. No real submission or sends; independent review and VPS remain open.
