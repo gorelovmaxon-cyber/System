@@ -138,3 +138,13 @@ event_id: journal_system-of-site_4c389678e942913487a6879f
 ---
 
 ## AI-04 self-check at app d09d43f and MAXMADE c6019d9: 662 tests plus lint and TypeScript pass; managed browser390/768/1440 and previous AI/B10 desktop/mobile pass; survey baseline pixel diff0 all widths; full app bundle restored and built; published controlled launcher cold start smoke passes. Independent acceptance, physical keyboard and production integrations remain open.
+---
+status: observation
+category: facts
+scope: system-of-site
+source: AI-MAXMADE-SCOPE-CORRECTION-20261013 report; controlled local tests after user correction
+evidence: Controlled local self-check evidence on committed app98a3841 and site370c26c, final check native exit0 and complete bundle restore/build.
+event_id: journal_system-of-site_e22de5531a9b5e65145071a9
+---
+
+## AI-04 scope correction self-check: app98a3841, MAXMADE370c26c. Site code/styles/config equal bf8c412; only two handoff documents differ. Site284 verification, both builds, browser390/768/1440 and intake/choice/survey pixel diff0 pass. Separate AI to confirmation/estimate and B10 desktop/mobile pass. Final662 tests in580.238s lint/TypeScript native exit0. Full app bundle restored/built; no paid calls or real sends. Independent review and physical keyboard/VPS/live services remain open.

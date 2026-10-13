@@ -468,3 +468,13 @@ event_id: journal_system-of-site_aee93597561c18c40764d8a3
 ---
 
 ## AI-04 uses MAXMADE bf8c412 as the visual reference and embeds the existing intake and AI brief in its modal. Preserve the survey, backend contracts, private settings and old worktrees. Use controlled responses with no paid calls or real sends for this styling task.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13: explicit AI-04 scope correction, paraphrased
+evidence: Direct user scope correction 2026-10-13; supersedes journal aee93597561c18c40764d8a3. Separate site and AI are explicitly required.
+event_id: journal_system-of-site_f671dc0e4dad884bdef39e1b
+---
+
+## AI-04 scope corrected by user: restore MAXMADE native LeadForm, header/menu, cursor, modal and launch configuration to bf8c412. Preserve new styling only on the separate selected AI chat/brief window; shared intake and format choice return to app168d50b. Do not embed AI or add/reassign site buttons. Preserve all logic, private settings, conversations and databases.
