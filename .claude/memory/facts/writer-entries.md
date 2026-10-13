@@ -118,3 +118,13 @@ event_id: journal_systemqwen_eb40d0662dcec19655fbe396
 ---
 
 ## SITE-BUILD-02–04 (2026-10-12): уточнён контракт роли/режима до фаз, убран запуск по таймеру; init-project с client claude-code добавляет тонкий адаптер site-build с идемпотентностью и защитой пользовательской команды. Навык обнаружен встроенным skills в новой сессии Claude. Изолированная живая проба: планирование, статический сайт с диалогом, новая сессия правки радиуса без нового интервью; 209 тестов и браузерная QA восьми ширин PASS. Генерация через Claude API не проверялась. Первый снимок содержал чужие scope; он очищен, ограничение чтения памяти уточнено. Полные evidence и ограничения — .scratch/site-build/FOLLOWUP-RESULT.md.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: Беседа 2026-10-13 и локальные проверки кандидата MAXMADE
+evidence: Выводы id, ss, systemctl, dpkg, ufw, nft, iptables, sshd -T и df в беседе; audit/READINESS.md и audit/PUBLICATION-PLAN.md отдельного снимка audit/vps-readiness-20261013
+event_id: maxmade_vps_audit_20261013
+---
+
+## MAXMADE 2026-10-13: по выводам пользователя VPS Ubuntu 24.04 доступен через SSH root на порту 22 по паролю; свободно 53 ГБ, пакеты веб-стека выбранным фильтром не найдены, UFW неактивен, nftables пуст, iptables ACCEPT. Отдельный локальный снимок подготовки проходит сборку, 35 PHP unit и 37 HTTP-проверок на PHP 8.3/MySQL 8.0. schema.sql относится к D1/SQLite; таблицы MySQL создаёт PHP. Реальная доставка Telegram и работа на VPS не проверены; сервер не изменялся, публикация не выполнялась.
