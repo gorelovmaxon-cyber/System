@@ -1,0 +1,15 @@
+{
+  "id": "4c8ed70fc922b2be12b3176b",
+  "date": "2026-10-13",
+  "project_id": "systemqwen",
+  "type": "decision",
+  "summary": "По поручению пользователя правила создания и доработки производственных ОК сохраняются в общей System2 для любых исходных документов. Канон: docs/standards/operational-cards.md; вход: operational-cards. Подготовка к штатному считыванию отличается от создания карты; требуется ссылочное оглавление, проверка границ, содержания и изображений. Частные инструмент, количество карт и реквизиты примеров не универсализируются.",
+  "source": "Беседа 2026-10-07–09 и поручение 2026-10-13 сохранить общий опыт ОК в System2; предыдущие уточнения пользователя и проверенные артефакты изложены в docs/standards/operational-cards-evidence.md",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_4c8ed70fc922b2be12b3176b",
+  "memory_files": [
+    ".claude/memory/user-profile/writer-entries.md"
+  ]
+}
