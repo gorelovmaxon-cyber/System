@@ -398,3 +398,13 @@ event_id: journal_system-of-site_2d37f3369d9623991e208c5b
 ---
 
 ## Publish current System of Site app bundle, site and docs without new features. Preserve the next adaptive block: shared topics and state first, then AI behavior and UI in parallel worktrees, UI owner integrates, one independent acceptance. Survey analyzes groups up to five; chat understands each message without a second sequential call; four stages; no speculative next-group generation.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User full AI leading brief task and explicit seven-call approval, 2026-10-13; docs/site-project/transfer/AI-LEADING-BRIEF-TASK-20261013.md
+evidence: Full task docs/site-project/transfer/AI-LEADING-BRIEF-TASK-20261013.md and explicit user approval up to7 calls; app base121eb1c, separate AI branch; do not infer another budget from session restart
+event_id: journal_system-of-site_9cda865729d295518cca7195
+---
+
+## AI-01 supersedes the broad AP plan on this PC: improve only the leading AI brief conversation in a separate branch from121eb1c; survey is developed independently on another PC. Keep form/consent/rates/PDF/CRM/provider/model unchanged; no competing shared migrations. User explicitly allowed at most7 automatic live calls total, no automatic retries; local fixtures remain independent.
