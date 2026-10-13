@@ -408,3 +408,13 @@ event_id: journal_system-of-site_9cda865729d295518cca7195
 ---
 
 ## AI-01 supersedes the broad AP plan on this PC: improve only the leading AI brief conversation in a separate branch from121eb1c; survey is developed independently on another PC. Keep form/consent/rates/PDF/CRM/provider/model unchanged; no competing shared migrations. User explicitly allowed at most7 automatic live calls total, no automatic retries; local fixtures remain independent.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User conversation 2026-10-13: explicit format separation requirement and requested chat autoscroll fix.
+event_id: journal_system-of-site_97a950da4ac3c92fd9c5acf8
+---
+
+## Choose survey or AI chat once per enquiry. Switching to the other format is forbidden after selection, including back, reload and a contrary view URL. Preserve previous answers and the existing calculation, PDF and CRM pipeline.
