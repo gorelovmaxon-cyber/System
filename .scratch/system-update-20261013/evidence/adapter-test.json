@@ -1,0 +1,7 @@
+{
+  "command": "node --test scripts/memory/tests/sw-01-project-entry.test.js",
+  "date": "2026-10-13T06:44:27.679Z",
+  "exit": 0,
+  "stdout": "✔ SW-01: known ID with placeholder gets one local binding and minimal Claude start adapter (68.1426ms)\n✔ SW-01: wrong path, conflicting adapter, and absent System fail without changing project files (21.7081ms)\n✔ SW-01: unknown ID remains local until registry is explicitly published (74.0355ms)\n✔ site-build adapter conflicts fail before any bootstrap or registry mutation (18.3332ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 405.1368\n",
+  "stderr": ""
+}

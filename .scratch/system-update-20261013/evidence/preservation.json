@@ -1,0 +1,279 @@
+{
+  "backup": "D:/SystemTheBest/System-update-backups/20261013-UPDATE-2026-10-13T06-36-35-060Z",
+  "backupFilesVerified": 51,
+  "byteIdenticalFiles": 47,
+  "changedPaths": [
+    ".claude/memory/facts/writer-entries.md",
+    "HANDOFF.md",
+    ".claude/memory/user-profile/writer-entries.md"
+  ],
+  "existingConfigValuesPreserved": true,
+  "newConfigKeys": [],
+  "localMemoryEventsPreservedOnce": [
+    "journal_system-of-site_2d2f515c3cdd2e9428a314bd",
+    "journal_system-of-site_7c59df4012581b373b3694f2"
+  ],
+  "publishedMemoryPayloadPreserved": true,
+  "stagedEmpty": true,
+  "results": [
+    {
+      "path": ".claude/memory/facts/writer-entries.md",
+      "backupValid": true,
+      "currentIdentical": false
+    },
+    {
+      "path": "HANDOFF.md",
+      "backupValid": true,
+      "currentIdentical": false
+    },
+    {
+      "path": ".scratch/autopilot-evaluation/TASK.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".scratch/system-remediation/evidence/status-check-current-tests.txt",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".scratch/system-update-20261013/TASK.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".system2/decision-journal/2ff3941ee9de7e974ff8b0f6.json",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/comparative-analysis-opus-gpt-qwen.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/decisions/2026-08-17-systemqwen-architecture.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/decisions/2026-08-18-systemqwen-etap1-completion.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/decisions/writer-entries.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/facts/github-remote.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/facts/projects-overview.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/facts/technology-stack.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/facts/writer-entries.md",
+      "backupValid": true,
+      "currentIdentical": false
+    },
+    {
+      "path": ".claude/memory/gotchas/git-node-windows.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/gotchas/writer-entries.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/MEMORY.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/nick-vels-autopilot-analysis.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/patterns/explicit-stop-gates.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/patterns/model-separation-by-cognitive-load.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/patterns/sequential-subagent-pipeline.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/patterns/writer-entries.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/README.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/token-economics-analysis.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/user-profile/architecture-prefs.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/user-profile/coding-style.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/user-profile/common-mistakes.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/user-profile/work-patterns.md",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".claude/memory/user-profile/writer-entries.md",
+      "backupValid": true,
+      "currentIdentical": false
+    },
+    {
+      "path": ".system2/decision-journal/13947f838aee699cb456fe54.json",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".system2/decision-journal/2ff3941ee9de7e974ff8b0f6.json",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".system2/decision-journal/abda2410f436b8bc1170e2d7.json",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".system2/decision-journal/bac8c4e15db5b963499fa9f6.json",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/applypatch-msg.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/commit-msg.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/fsmonitor-watchman.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/post-update.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/pre-applypatch.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/pre-commit.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/pre-merge-commit.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/pre-push.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/pre-rebase.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/pre-receive.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/prepare-commit-msg.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/push-to-checkout.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/sendemail-validate.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/hooks/update.sample",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": "config/system.local.json",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".git/config",
+      "backupValid": true,
+      "currentIdentical": true
+    },
+    {
+      "path": ".local/writer/processed.jsonl",
+      "backupValid": true,
+      "currentIdentical": true
+    }
+  ],
+  "uniqueBackupPaths": 49,
+  "byteIdenticalUniqueFiles": 46,
+  "localHandoffBlockPreservedOnce": true,
+  "taskStatusOnlyChanged": true
+}
