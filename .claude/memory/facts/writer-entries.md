@@ -178,3 +178,13 @@ event_id: maxmade_bot_identity_verified_20261014
 ---
 
 ## MAXMADE 2026-10-14: пользователь заполнил защищённый локальный файл bot token. Readonly getMe/getWebhookInfo с VPS через прокси прошли: бот @websaitProMax_bot, webhook отсутствует, TLS verification0. Токен не попадал в argv/Git/вывод; временные root-only PHP/token файлы удалены. getUpdates без offset показал0 private chats, updates не подтверждались, переписка не выводилась. Пользователю предложен /start в этом боте со своего аккаунта. Получатель ещё не подтверждён, реальных сообщений не отправляли, application Telegram выключен; далее private chat ID/config и согласованный тест доставки. Выбран maxmade-studio.ru, покупка/DNS/HTTPS ещё не подтверждены.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: Беседа MAXMADE 2026-10-14: /start, явное согласие на1 тест и фактическая отправка/настройка
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/evidence/telegram-config-prepared.json; telegram-test-staged.json; telegram-delivery-test.json; явное разрешение пользователя и finish-telegram-preparation.sh/backup/WHOIS в беседе
+event_id: maxmade_telegram_delivery_verified_20261014
+---
+
+## MAXMADE 2026-10-14: после /start пользователя readonly API нашёл private chat @GnewsMm; getChat подтвердил получателя. Private server config получил token/chat ID без вывода секретов. Пользователь явно разрешил одно тестовое сообщение: MAXMADE: тест уведомлений с VPS. Подключение Telegram работает. Реальный telegram_notice_transport из подготовленного кандидата отправил ровно1 сообщение; API status sent, без автоматических повторов. Это не подтверждение прочтения пользователем. Private config Telegram enabled=true, backup обновлён и скачан вне Git; временные тестовые sources удалены, attempt marker оставлен root-only. Сайт не размещён, цепочка заявка-БД-Telegram после публикации ещё не проверена. Пользователь сообщил, что maxmade-studio.ru пока не куплен; свежий WHOIS No entries found, далее покупка в кабинете пользователя/DNS/HTTPS.
