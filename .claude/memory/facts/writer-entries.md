@@ -158,3 +158,13 @@ event_id: maxmade_tls_proxy_pending_20261014
 ---
 
 ## MAXMADE 2026-10-14: пользователь поручил решить Telegram и домен/HTTPS. Certbot2.9.0/timer/deploy hook установлен и проверен; сертификата пока нет. По публичным Verisign RDAP/TCI WHOIS maxmade.com зарегистрирован1999, maxmade.ru2025; оба указывают на другие серверы, принадлежность пользователю не доказана. maxmade-studio.ru/maxmade-web.ru WHOIS No entries found на дату проверки; пользователь пока не выбрал/не купил домен. Telegram API доступен с ПК и недоступен напрямую с VPS при одинаковом DNS и OUTPUT ACCEPT. Найден свой профиль Proxifier4, его прокси доступен с VPS и требует авторизацию HTTP407. Существующий профиль не менялся; пароль зашифрован, запрошен отдельный No encryption экспорт в защищённую локальную .ssh папку, файла пока нет. Proxy scripts draft, не применены. Пользователь подтвердил бот создан, token/получатель не получены, реальных сообщений нет. Работа не завершена и требует этих входных данных.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: Беседа MAXMADE 2026-10-14, экспорт Disabled и фактическая настройка/проверка прокси
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/evidence/post-proxy-infrastructure.txt; post-proxy-final-check.txt; proxy-health-*.json; фактический credentialed curl CONNECT200/http302/tls0; private backup verification и Windows SSH sudo uid0 в беседе
+event_id: maxmade_telegram_proxy_ready_20261014
+---
+
+## MAXMADE 2026-10-14: пользователь повторно экспортировал Proxifier Default.ppx с Encryption mode disabled. Экспорт перемещён из E:/Downloads в защищённую .ssh папку, ACL только пользователя, значения паролей не выводились. Прокси успешно настроен на VPS: авторизованный CONNECT200, Telegram302/TLS verification0, настоящий Nginx/FPM health показывает telegram_https_reachable=true. Proxy URL в root-only EnvironmentFile0600, env только пулу MAXMADE; Windows Proxifier для VPS не нужен. HTTP/MySQL/private storage/upload limits/session cookies PASS, 0 failed units, прежние SSH/firewall/loopback порты сохранены. Proxy env/FPM/dropin включены в приватный backup и последняя копия скачана вне Git. Токен бота и подтверждённый получатель ещё не получены, сообщения не отправляли, Telegram в приложении выключен. Создан защищённый пустой .ssh/maxmade_telegram_token.txt; пользователь должен заполнить токен. maxmade-studio.ru выбран, покупка/DNS/HTTPS ещё не подтверждены.
