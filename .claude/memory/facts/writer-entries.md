@@ -138,3 +138,13 @@ event_id: maxmade_vps_prep_20261014
 ---
 
 ## MAXMADE 2026-10-14: по разрешению пользователя агент настроил VPS 185.250.47.204: Nginx/PHP-FPM 8.3/MySQL 8.0, UFW только SSH22, fail2ban, key-only SSH, maxmade-admin с sudo, приватные config/uploads, backup timer и проверка restore. Реальные HTTP проверки стека и лимитов вложений проходят; финальный осмотр PASS, 0 failed units, MySQL/Nginx только loopback. Сайт не переносился и не публиковался; эталон v5 и чужая release-prep не изменялись. Kernel147 установлен, работает146, reboot-required; перезагрузка не выполнена ввиду прежнего запрета пользователя. Telegram API HTTPS timeout, реальная доставка не проверена. Root пароль консоли прежний; root password-only SSH отключён. Подключения ключом проверяют saved known_hosts; независимая сверка через провайдера не выполнена. Приватные ключи/пароли/архивы вне Git; подробности и следующий шаг в собственном HANDOFF.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: Беседа 2026-10-14: явное разрешение перезагрузки и фактическое исполнение SSH
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/evidence/post-reboot-identity.txt; post-reboot-infrastructure.txt; post-reboot-final-check.txt; фактический Windows OpenSSH maxmade-admin sudo -n id uid=0
+event_id: maxmade_vps_reboot_20261014
+---
+
+## MAXMADE VPS 2026-10-14: после явного разрешения пользователя да, делай выполнена одна перезагрузка в 16:35 UTC. Новый boot ID подтверждён по свежему SSH, работает ядро 6.8.0-147-generic, reboot-required отсутствует. Сеть eth0 поднялась автоматически с прежним IP185.250.47.204/gateway185.250.47.1; root/maxmade-admin ключом и sudo проверены. После reboot повторно проходят Nginx/FPM/MySQL и HTTP uploads10MiB/превышение/13MiB413, private storage и cookies. Все службы active, 0 failed units, UFW разрешает только SSH22, MySQL/Nginx только loopback, backup timer active. Временные endpoint/таблицы/файлы удалены; сайт не переносился и не опубликован. Telegram HTTPS timeout сохраняется, доставка не готова. Три phased10% обновления не форсировались. Эталон v5 и чужая release-prep не изменялись.
