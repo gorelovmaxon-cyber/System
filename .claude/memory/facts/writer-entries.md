@@ -128,3 +128,13 @@ event_id: maxmade_vps_audit_20261013
 ---
 
 ## MAXMADE 2026-10-13: по выводам пользователя VPS Ubuntu 24.04 доступен через SSH root на порту 22 по паролю; свободно 53 ГБ, пакеты веб-стека выбранным фильтром не найдены, UFW неактивен, nftables пуст, iptables ACCEPT. Отдельный локальный снимок подготовки проходит сборку, 35 PHP unit и 37 HTTP-проверок на PHP 8.3/MySQL 8.0. schema.sql относится к D1/SQLite; таблицы MySQL создаёт PHP. Реальная доставка Telegram и работа на VPS не проверены; сервер не изменялся, публикация не выполнялась.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: Беседа 2026-10-14: разрешение подготовки VPS и фактическое исполнение через SSH
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/VPS-PREP-20261014.md; audit/vps/evidence/final-check.txt; health-get.json; health-upload10.json; health-upload-limit.json; фактический повторный Windows OpenSSH maxmade-admin sudo -n id uid=0
+event_id: maxmade_vps_prep_20261014
+---
+
+## MAXMADE 2026-10-14: по разрешению пользователя агент настроил VPS 185.250.47.204: Nginx/PHP-FPM 8.3/MySQL 8.0, UFW только SSH22, fail2ban, key-only SSH, maxmade-admin с sudo, приватные config/uploads, backup timer и проверка restore. Реальные HTTP проверки стека и лимитов вложений проходят; финальный осмотр PASS, 0 failed units, MySQL/Nginx только loopback. Сайт не переносился и не публиковался; эталон v5 и чужая release-prep не изменялись. Kernel147 установлен, работает146, reboot-required; перезагрузка не выполнена ввиду прежнего запрета пользователя. Telegram API HTTPS timeout, реальная доставка не проверена. Root пароль консоли прежний; root password-only SSH отключён. Подключения ключом проверяют saved known_hosts; независимая сверка через провайдера не выполнена. Приватные ключи/пароли/архивы вне Git; подробности и следующий шаг в собственном HANDOFF.
