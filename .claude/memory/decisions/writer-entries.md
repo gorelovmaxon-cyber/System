@@ -398,3 +398,13 @@ event_id: journal_system-of-site_2d37f3369d9623991e208c5b
 ---
 
 ## Publish current System of Site app bundle, site and docs without new features. Preserve the next adaptive block: shared topics and state first, then AI behavior and UI in parallel worktrees, UI owner integrates, one independent acceptance. Survey analyzes groups up to five; chat understands each message without a second sequential call; four stages; no speculative next-group generation.
+---
+status: confirmed
+category: decisions
+scope: site-portfolio
+source: Беседа MAXMADE 2026-10-14, ответы пользователя и проверка экспортированного профиля
+evidence: Ответ пользователя в беседе 2026-10-14 о списке доменов/выборе имени; локальные выводы пути Downloads и XML encryption mode basic; HANDOFF отдельной ветки аудита
+event_id: maxmade_domain_choice_20261014
+---
+
+## Пользователь выбрал maxmade-studio.ru для покупки и подтвердил отсутствие доменов в своём кабинете AdminVPS. Покупка/DNS ещё не подтверждены. Экспорт Proxifier Default.ppx найден в перенаправленных Загрузках E:/Downloads и перемещён в защищённую пользовательскую .ssh папку с ACL только текущего пользователя. Он всё ещё имеет Encryption mode basic; запрошен повторный экспорт Disabled, пароль не выводился, прокси на VPS ещё не применялся.
