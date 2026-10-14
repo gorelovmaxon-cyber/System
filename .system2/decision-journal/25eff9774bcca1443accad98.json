@@ -1,0 +1,15 @@
+{
+  "id": "25eff9774bcca1443accad98",
+  "date": "2026-10-14",
+  "project_id": "systemqwen",
+  "type": "decision",
+  "summary": "Пользователь потребовал явную короткую команду ОК для надёжного подключения правил. Вход .claude/skills/ok/SKILL.md требует прямого чтения docs/standards/operational-cards.md и основного навыка до выполнения; память и индекс не заменяют чтение. Локальный адаптер установлен для текущего клиента; обнаружение в уже открытой сессии не утверждается.",
+  "source": "Поручение пользователя 2026-10-13 создать команду со ссылкой на ОК; продолжение и запись 2026-10-14",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_25eff9774bcca1443accad98",
+  "memory_files": [
+    ".claude/memory/user-profile/writer-entries.md"
+  ]
+}
