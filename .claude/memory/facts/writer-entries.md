@@ -168,3 +168,13 @@ event_id: maxmade_telegram_proxy_ready_20261014
 ---
 
 ## MAXMADE 2026-10-14: пользователь повторно экспортировал Proxifier Default.ppx с Encryption mode disabled. Экспорт перемещён из E:/Downloads в защищённую .ssh папку, ACL только пользователя, значения паролей не выводились. Прокси успешно настроен на VPS: авторизованный CONNECT200, Telegram302/TLS verification0, настоящий Nginx/FPM health показывает telegram_https_reachable=true. Proxy URL в root-only EnvironmentFile0600, env только пулу MAXMADE; Windows Proxifier для VPS не нужен. HTTP/MySQL/private storage/upload limits/session cookies PASS, 0 failed units, прежние SSH/firewall/loopback порты сохранены. Proxy env/FPM/dropin включены в приватный backup и последняя копия скачана вне Git. Токен бота и подтверждённый получатель ещё не получены, сообщения не отправляли, Telegram в приложении выключен. Создан защищённый пустой .ssh/maxmade_telegram_token.txt; пользователь должен заполнить токен. maxmade-studio.ru выбран, покупка/DNS/HTTPS ещё не подтверждены.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: Беседа MAXMADE 2026-10-14, ответ готово на файл токена и фактические проверки
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/evidence/bot-identity.json; фактические readonly check-telegram-bot.py identity/chats в беседе; удаление временных файлов подтверждено
+event_id: maxmade_bot_identity_verified_20261014
+---
+
+## MAXMADE 2026-10-14: пользователь заполнил защищённый локальный файл bot token. Readonly getMe/getWebhookInfo с VPS через прокси прошли: бот @websaitProMax_bot, webhook отсутствует, TLS verification0. Токен не попадал в argv/Git/вывод; временные root-only PHP/token файлы удалены. getUpdates без offset показал0 private chats, updates не подтверждались, переписка не выводилась. Пользователю предложен /start в этом боте со своего аккаунта. Получатель ещё не подтверждён, реальных сообщений не отправляли, application Telegram выключен; далее private chat ID/config и согласованный тест доставки. Выбран maxmade-studio.ru, покупка/DNS/HTTPS ещё не подтверждены.
