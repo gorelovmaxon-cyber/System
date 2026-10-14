@@ -148,3 +148,13 @@ event_id: maxmade_vps_reboot_20261014
 ---
 
 ## MAXMADE VPS 2026-10-14: после явного разрешения пользователя да, делай выполнена одна перезагрузка в 16:35 UTC. Новый boot ID подтверждён по свежему SSH, работает ядро 6.8.0-147-generic, reboot-required отсутствует. Сеть eth0 поднялась автоматически с прежним IP185.250.47.204/gateway185.250.47.1; root/maxmade-admin ключом и sudo проверены. После reboot повторно проходят Nginx/FPM/MySQL и HTTP uploads10MiB/превышение/13MiB413, private storage и cookies. Все службы active, 0 failed units, UFW разрешает только SSH22, MySQL/Nginx только loopback, backup timer active. Временные endpoint/таблицы/файлы удалены; сайт не переносился и не опубликован. Telegram HTTPS timeout сохраняется, доставка не готова. Три phased10% обновления не форсировались. Эталон v5 и чужая release-prep не изменялись.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: Беседа 2026-10-14: поручение домена и Telegram, ответы о Proxifier и созданном боте
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/TELEGRAM-DOMAIN-PENDING-20261014.md; фактические DNS/curl/iptables/RDAP/TCI WHOIS/certbot SSH проверки в беседе
+event_id: maxmade_tls_proxy_pending_20261014
+---
+
+## MAXMADE 2026-10-14: пользователь поручил решить Telegram и домен/HTTPS. Certbot2.9.0/timer/deploy hook установлен и проверен; сертификата пока нет. По публичным Verisign RDAP/TCI WHOIS maxmade.com зарегистрирован1999, maxmade.ru2025; оба указывают на другие серверы, принадлежность пользователю не доказана. maxmade-studio.ru/maxmade-web.ru WHOIS No entries found на дату проверки; пользователь пока не выбрал/не купил домен. Telegram API доступен с ПК и недоступен напрямую с VPS при одинаковом DNS и OUTPUT ACCEPT. Найден свой профиль Proxifier4, его прокси доступен с VPS и требует авторизацию HTTP407. Существующий профиль не менялся; пароль зашифрован, запрошен отдельный No encryption экспорт в защищённую локальную .ssh папку, файла пока нет. Proxy scripts draft, не применены. Пользователь подтвердил бот создан, token/получатель не получены, реальных сообщений нет. Работа не завершена и требует этих входных данных.
