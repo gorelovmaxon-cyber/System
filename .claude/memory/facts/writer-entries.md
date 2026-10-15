@@ -188,3 +188,24 @@ event_id: maxmade_telegram_delivery_verified_20261014
 ---
 
 ## MAXMADE 2026-10-14: после /start пользователя readonly API нашёл private chat @GnewsMm; getChat подтвердил получателя. Private server config получил token/chat ID без вывода секретов. Пользователь явно разрешил одно тестовое сообщение: MAXMADE: тест уведомлений с VPS. Подключение Telegram работает. Реальный telegram_notice_transport из подготовленного кандидата отправил ровно1 сообщение; API status sent, без автоматических повторов. Это не подтверждение прочтения пользователем. Private config Telegram enabled=true, backup обновлён и скачан вне Git; временные тестовые sources удалены, attempt marker оставлен root-only. Сайт не размещён, цепочка заявка-БД-Telegram после публикации ещё не проверена. Пользователь сообщил, что maxmade-studio.ru пока не куплен; свежий WHOIS No entries found, далее покупка в кабинете пользователя/DNS/HTTPS.
+---
+status: confirmed
+category: facts
+scope: system-of-site
+source: Прямой запрос пользователя 2026-10-15 и локальная UI правка с проверками
+evidence: E:/system-of-site-app-intake-20261012/.local/skip-hover-check-20261015.log; skip-hover-browser-20261015.log; skip-hover-legacy-browser-20261015.log; .local/sector-survey-evidence/survey-skip-hover-1440.png и390.png; live CSS18249
+event_id: skip_question_hover_width_20261015
+---
+
+## 2026-10-15: по прямому запросу пользователя расширена кнопка Пропустить вопрос в опросе app-intake-20261012, frontend/src/SurveyShell.css: min-width180px, горизонтальный padding20px, nowrap, flex auto. Live controlled preview18249 отдаёт новый CSS. npm build прошёл, scripts/check.py ALL CHECKS PASSED с REQUIRE_TEST_DATABASE=1 и существующим .local/check-tools в PYTHONPATH. Browser sector survey1440/390 PASS, hover визуально просмотрен. Указанный в AGENTS старый browser_b10_user_flow.py не стартовал: отсутствует default каталог E:/system-of-site-sait-client-path, WinError267; его прохождение не заявлено. Иные ранее грязные изменения рабочего дерева сохранены; scoped commit включает только ширину/боковые отступы/nowrap, без присвоения других UI правок. VPS, MAXMADE reference5179 и защищённый сайт не менялись.
+---
+status: confirmed
+category: facts
+scope: system-of-site
+source: Фактическая повторная сверка HEAD/рабочего дерева после параллельного коммита
+evidence: git log/show HEAD0b45350 и clean status; .local/skip-hover-check-20261015.log; skip-hover-browser-20261015.log; skip-hover-legacy-browser-20261015.log; screenshots survey-skip-hover1440/390; live CSS18249
+event_id: skip_question_hover_width_20261015_final
+supersedes: skip_question_hover_width_20261015
+---
+
+## Уточнение UI правки 2026-10-15: min-width180px, боковые отступы20px, nowrap/flex auto для Пропустить вопрос применены в app-intake-20261012 и видны в live18249. Build PASS; общий scripts/check.py ALL CHECKS PASSED; browser sector survey1440/390 PASS, hover просмотрен. Старый browser_b10_user_flow.py не стартовал из-за отсутствия default папки E:/system-of-site-sait-client-path (WinError267). Во время работы параллельный процесс сохранил существующие изменения вместе с этой CSS правкой в0b45350, рабочее дерево clean. Наш отдельный scoped commit НЕ создавался: безопасная проверка HEAD остановила устаревшее частичное staging до записи индекса. Предыдущая запись о собственном scoped commit неточна и заменена этой. Иные изменения не откатывались; VPS/MAXMADE5179 не менялись. Preview18249/PID10924 сохранён.
