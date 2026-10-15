@@ -209,3 +209,13 @@ supersedes: skip_question_hover_width_20261015
 ---
 
 ## Уточнение UI правки 2026-10-15: min-width180px, боковые отступы20px, nowrap/flex auto для Пропустить вопрос применены в app-intake-20261012 и видны в live18249. Build PASS; общий scripts/check.py ALL CHECKS PASSED; browser sector survey1440/390 PASS, hover просмотрен. Старый browser_b10_user_flow.py не стартовал из-за отсутствия default папки E:/system-of-site-sait-client-path (WinError267). Во время работы параллельный процесс сохранил существующие изменения вместе с этой CSS правкой в0b45350, рабочее дерево clean. Наш отдельный scoped commit НЕ создавался: безопасная проверка HEAD остановила устаревшее частичное staging до записи индекса. Предыдущая запись о собственном scoped commit неточна и заменена этой. Иные изменения не откатывались; VPS/MAXMADE5179 не менялись. Preview18249/PID10924 сохранён.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: User deployment request and observed SSH/browser results 2026-10-15
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/DEPLOYMENT-20261015.md; audit/vps/evidence/deployment-20261015.txt; audit/vps/evidence/deployed-browser-20261015.json
+event_id: maxmade_deployed_20261015
+---
+
+## MAXMADE 2026-10-15 deployed approved 346-file candidate af9229502261 to VPS185.250.47.204 current symlink. Native PHP form and MySQL initialized; System of Site and AI excluded. Closed VPS preview through SSH tunnel127.0.0.1:5184 to server127.0.0.1:8080. Public domain/HTTPS pending. Browser1440/390 and static SHA checks passed; zero leads, submission and Telegram delivery from form intentionally deferred to next user step. Daily backup includes active site.
