@@ -219,3 +219,13 @@ event_id: maxmade_deployed_20261015
 ---
 
 ## MAXMADE 2026-10-15 deployed approved 346-file candidate af9229502261 to VPS185.250.47.204 current symlink. Native PHP form and MySQL initialized; System of Site and AI excluded. Closed VPS preview through SSH tunnel127.0.0.1:5184 to server127.0.0.1:8080. Public domain/HTTPS pending. Browser1440/390 and static SHA checks passed; zero leads, submission and Telegram delivery from form intentionally deferred to next user step. Daily backup includes active site.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: User request to enable public access and observed SSH and external browser results 2026-10-15
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/PUBLIC-HTTP-20261015.md; audit/vps/evidence/public-http-browser-20261015.json; audit/vps/evidence/public-http-routes-20261015.json
+event_id: maxmade_public_http_20261015
+---
+
+## MAXMADE public HTTP enabled at http://185.250.47.204/ on explicit user request. Nginx and UFW port80 IPv4/IPv6 open, SSH22 preserved, MySQL loopback. Public admin endpoints403 loopback-only, private paths404, lead GET405. External browser1440/390 passed; no lead POST or new Telegram message sent. Domain unpurchased and HTTPS443 pending. Candidate and protected reference unchanged.
