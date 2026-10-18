@@ -1,0 +1,15 @@
+{
+  "id": "431339da088fd46aff273e39",
+  "date": "2026-10-18",
+  "project_id": "systemqwen",
+  "type": "decision",
+  "summary": "2026-10-18: start должен завершаться рекомендацией команды без автоматического перехода к фазам; site-build следует autopilot с правилами сайта; планировщик готовит передачу отдельному исполнителю, включая задачи визуальных макетов. Подготовлен START-ROUTING-01, действующие навыки пока не изменены.",
+  "source": "Беседа 2026-10-18; .scratch/start-routing-2026-10-18/TASK.md",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_431339da088fd46aff273e39",
+  "memory_files": [
+    ".claude/memory/decisions/writer-entries.md"
+  ]
+}

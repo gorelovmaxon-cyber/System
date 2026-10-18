@@ -408,3 +408,13 @@ event_id: maxmade_domain_choice_20261014
 ---
 
 ## Пользователь выбрал maxmade-studio.ru для покупки и подтвердил отсутствие доменов в своём кабинете AdminVPS. Покупка/DNS ещё не подтверждены. Экспорт Proxifier Default.ppx найден в перенаправленных Загрузках E:/Downloads и перемещён в защищённую пользовательскую .ssh папку с ACL только текущего пользователя. Он всё ещё имеет Encryption mode basic; запрошен повторный экспорт Disabled, пароль не выводился, прокси на VPS ещё не применялся.
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: Беседа 2026-10-18; .scratch/start-routing-2026-10-18/TASK.md
+evidence: .scratch/start-routing-2026-10-18/TASK.md; прямое решение пользователя
+event_id: journal_systemqwen_431339da088fd46aff273e39
+---
+
+## 2026-10-18: start должен завершаться рекомендацией команды без автоматического перехода к фазам; site-build следует autopilot с правилами сайта; планировщик готовит передачу отдельному исполнителю, включая задачи визуальных макетов. Подготовлен START-ROUTING-01, действующие навыки пока не изменены.
