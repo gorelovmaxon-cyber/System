@@ -229,3 +229,13 @@ event_id: maxmade_public_http_20261015
 ---
 
 ## MAXMADE public HTTP enabled at http://185.250.47.204/ on explicit user request. Nginx and UFW port80 IPv4/IPv6 open, SSH22 preserved, MySQL loopback. Public admin endpoints403 loopback-only, private paths404, lead GET405. External browser1440/390 passed; no lead POST or new Telegram message sent. Domain unpurchased and HTTPS443 pending. Candidate and protected reference unchanged.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: .scratch/start-routing-2026-10-18/TASK.md; .scratch/start-routing-2026-10-18/RESULT.md; беседа 2026-10-18, пользователь назначил исполнителя и поручил «делай».
+evidence: Локальный diff START-ROUTING-01; проверка файлов, frontmatter и ссылок; отсутствие живого прогона отмечено в RESULT.
+event_id: journal_systemqwen_3f320293e3e479ececbbd01c
+---
+
+## START-ROUTING-01: действующие инструкции start/site-build/autopilot и связанные документы изменены по решению пользователя от 2026-10-18. Start ограничен рекомендацией и остановкой, запуск site-build явный, реализацию включая визуальные макеты передают отдельному исполнителю. Структура шести навыков, локальные ссылки и документальные сценарии проверены; живой прогон не проведён. Штатный quick_validate недоступен из-за отсутствующего PyYAML. Пакет awaiting-review; публикация не входит в разрешённый блок.
