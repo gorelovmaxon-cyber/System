@@ -269,3 +269,13 @@ event_id: maxmade_seo_deployed_20261019
 ---
 
 ## MAXMADE technical SEO fixes deployed 2026-10-19 at https://maxmadepro.ru. Active release maxmade-20261019-seo-933fb77acdc0; source E:/MAXMADE-seo-20261019 branch site/seo-20261019 from f90fa5c. Working robots and sitemap53, unique canonical/title/OG, prerendered React HTML, crawlable links, real404, gzip/cache/HTTP2, deferred case chunk and cropped lossless rail previews. Original CSS/animation parameters,356 pre-SEO files except homepage and10 PHP files preserved. Build,65 public HTTP checks, browser navigation and visual comparisons320/390/1440 passed with mocked form POST, zero real leads/Telegram messages. Final Lighthouse13.5 mobile75 SEO100 FCP2.1s LCP5.3s TBT170ms CLS0, desktop100 SEO100 LCP0.5s; baseline mobile57/92/LCP7.5s desktop93/92/LCP1.4s. Lab only; mobile LCP still needs improvement, actual index/fieldCWV unknown. User confirmed Search Console and Yandex Webmaster not added. Protected5179, main, other worktrees and System of Site/brief/AI unchanged; no Git push.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: User budget button request with screenshots and observed public browser/VPS evidence 2026-10-19
+evidence: E:/MAXMADE-seo-20261019/docs/reports/BUDGET-BUTTONS-20261019.md
+event_id: maxmade_budget_buttons_20261019
+---
+
+## MAXMADE 2026-10-19 budget CTA update deployed at https://maxmadepro.ru. Active release maxmade-20261019-budget-buttons-9714351b3122 supersedes SEO release933fb77acdc0. Working copy E:/MAXMADE-seo-20261019 branch site/budget-buttons-20261019 from99c4778. Lower Calculate cost button opens standard OrderModal/LeadForm. Upper Match budget opens same form with desired website cost label and question placeholder. Typed intent budget is reset on each open; budget value uses existing project field, PHP/API/Telegram unchanged. Build and browser320/390/1440 local/staged/public passed: alternating modes, cleared values, mocked submissions with attachments, success, old hero prefill. All398 prior non-generated-page files including10 PHP preserved by SHA. Backups before/after, old release retained. No real leads/Telegram messages, no main/reference5179/other worktree changes or Git push.
