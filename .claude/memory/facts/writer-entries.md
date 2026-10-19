@@ -249,3 +249,13 @@ event_id: maxmade_domain_https_20261019
 ---
 
 ## MAXMADE 2026-10-19: purchased domain maxmadepro.ru at Timeweb connected to VPS185.250.47.204, apex and www A verified by Google/Cloudflare, AAAA absent after user removed hidden Timeweb record. HTTPS https://maxmadepro.ru/ enabled with Lets Encrypt ECDSA SAN apex+www expiring2027-01-17; HTTP/IP/www308 redirect canonical. External normal-DNS TLS and browser1440/390 checks passed, native lead GET405, no POST/Telegram test. Certbot renew dry-run succeeded, timer enabled active; private backups include TLS keys. Preserved preexisting active release maxmade-20261016-forumtech-zoom-26bde4e972a8 with all file SHA unchanged. Public admin stays403, loopback8080 admin via SSH remains. Protected reference, main and survey/AI unchanged.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: User SEO-readiness question and observed public HTTPS Lighthouse/browser audit 2026-10-19
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/SEO-AUDIT-20261019.md; audit/vps/evidence/seo-20261019/lighthouse-summary.json; audit/vps/evidence/seo-20261019/http.json; audit/vps/evidence/seo-20261019/rendered.json
+event_id: maxmade_seo_audit_20261019
+---
+
+## MAXMADE public-site read-only SEO audit 2026-10-19: technical SEO incomplete. robots.txt and sitemap.xml return homepage HTML200; no rel canonical; unknown route200 renders homepage. Bittly case query URL keeps homepage title/description, case buttons have no href links. Raw body empty without JavaScript; FAQPage JSON-LD exists after render, so indexing is not categorically blocked. Static JS526600B/CSS117423B delivered without gzip or explicit Cache-Control, HTML gzip works. Lighthouse13.5 single mobile run performance57/SEO92/LCP7.5s, desktop93/92/LCP1.4s. Lab data only, no field CWV/INP or Search Console/Yandex index verification. No VPS changes, lead submissions or Telegram test. Preserve active20261016 release and analyze animations only.
