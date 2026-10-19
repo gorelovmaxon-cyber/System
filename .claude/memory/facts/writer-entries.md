@@ -259,3 +259,13 @@ event_id: maxmade_seo_audit_20261019
 ---
 
 ## MAXMADE public-site read-only SEO audit 2026-10-19: technical SEO incomplete. robots.txt and sitemap.xml return homepage HTML200; no rel canonical; unknown route200 renders homepage. Bittly case query URL keeps homepage title/description, case buttons have no href links. Raw body empty without JavaScript; FAQPage JSON-LD exists after render, so indexing is not categorically blocked. Static JS526600B/CSS117423B delivered without gzip or explicit Cache-Control, HTML gzip works. Lighthouse13.5 single mobile run performance57/SEO92/LCP7.5s, desktop93/92/LCP1.4s. Lab data only, no field CWV/INP or Search Console/Yandex index verification. No VPS changes, lead submissions or Telegram test. Preserve active20261016 release and analyze animations only.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: User-authorized SEO corrections with VPS SHA, public HTTP, browser, Lighthouse evidence 2026-10-19
+evidence: E:/MAXMADE-seo-20261019/docs/reports/SEO-FIXES-20261019.md; E:/MAXMADE-seo-20261019/docs/reports/evidence/seo-20261019/final-summary.json
+event_id: maxmade_seo_deployed_20261019
+---
+
+## MAXMADE technical SEO fixes deployed 2026-10-19 at https://maxmadepro.ru. Active release maxmade-20261019-seo-933fb77acdc0; source E:/MAXMADE-seo-20261019 branch site/seo-20261019 from f90fa5c. Working robots and sitemap53, unique canonical/title/OG, prerendered React HTML, crawlable links, real404, gzip/cache/HTTP2, deferred case chunk and cropped lossless rail previews. Original CSS/animation parameters,356 pre-SEO files except homepage and10 PHP files preserved. Build,65 public HTTP checks, browser navigation and visual comparisons320/390/1440 passed with mocked form POST, zero real leads/Telegram messages. Final Lighthouse13.5 mobile75 SEO100 FCP2.1s LCP5.3s TBT170ms CLS0, desktop100 SEO100 LCP0.5s; baseline mobile57/92/LCP7.5s desktop93/92/LCP1.4s. Lab only; mobile LCP still needs improvement, actual index/fieldCWV unknown. User confirmed Search Console and Yandex Webmaster not added. Protected5179, main, other worktrees and System of Site/brief/AI unchanged; no Git push.
