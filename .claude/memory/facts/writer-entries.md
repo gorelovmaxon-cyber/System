@@ -239,3 +239,13 @@ event_id: journal_systemqwen_3f320293e3e479ececbbd01c
 ---
 
 ## START-ROUTING-01: действующие инструкции start/site-build/autopilot и связанные документы изменены по решению пользователя от 2026-10-18. Start ограничен рекомендацией и остановкой, запуск site-build явный, реализацию включая визуальные макеты передают отдельному исполнителю. Структура шести навыков, локальные ссылки и документальные сценарии проверены; живой прогон не проведён. Штатный quick_validate недоступен из-за отсутствующего PyYAML. Пакет awaiting-review; публикация не входит в разрешённый блок.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: User DNS configuration confirmations and observed SSH TLS/browser results 2026-10-19
+evidence: E:/MAXMADE-vps-audit-20261013/audit/vps/DOMAIN-HTTPS-20261019.md; audit/vps/evidence/domain-https-routes-20261019.json; audit/vps/evidence/domain-https-renewal-20261019.json
+event_id: maxmade_domain_https_20261019
+---
+
+## MAXMADE 2026-10-19: purchased domain maxmadepro.ru at Timeweb connected to VPS185.250.47.204, apex and www A verified by Google/Cloudflare, AAAA absent after user removed hidden Timeweb record. HTTPS https://maxmadepro.ru/ enabled with Lets Encrypt ECDSA SAN apex+www expiring2027-01-17; HTTP/IP/www308 redirect canonical. External normal-DNS TLS and browser1440/390 checks passed, native lead GET405, no POST/Telegram test. Certbot renew dry-run succeeded, timer enabled active; private backups include TLS keys. Preserved preexisting active release maxmade-20261016-forumtech-zoom-26bde4e972a8 with all file SHA unchanged. Public admin stays403, loopback8080 admin via SSH remains. Protected reference, main and survey/AI unchanged.
