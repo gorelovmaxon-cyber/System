@@ -498,3 +498,13 @@ event_id: journal_system-of-site_f671dc0e4dad884bdef39e1b
 ---
 
 ## AI-04 scope corrected by user: restore MAXMADE native LeadForm, header/menu, cursor, modal and launch configuration to bf8c412. Preserve new styling only on the separate selected AI chat/brief window; shared intake and format choice return to app168d50b. Do not embed AI or add/reassign site buttons. Preserve all logic, private settings, conversations and databases.
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: Беседа 2026-10-20, поручение «Доработай /start» с наблюдавшимся расплывчатым ответом; .scratch/start-routing-2026-10-18/issues/START-ROUTING-02.md; .scratch/start-routing-2026-10-18/RESULT.md#start-routing-02.
+evidence: Прямое уточнение пользователя 2026-10-20, критерии завершения и сценарии А–Е; живая проверка awaiting-validation, push запрещён.
+event_id: journal_systemqwen_26f61512a56c539e5e04b97c
+---
+
+## START-ROUTING-02, решение пользователя 2026-10-20: start завершён только после выбора одного основного маршрута с точной доступной командой и задачей либо готовым текстовым поручением. Без подтверждённого slash-интерфейса нужен текст с путём к каноническому навыку. При существенном неизвестном — один короткий вопрос и состояние «маршрут ещё не выбран»; ответ продолжает текущую маршрутизацию. Слово «система» не определяет масштаб; малая определённая правка идёт прямым поручением с проверкой. Неизвестная роль не блокирует понятную рекомендацию и не назначает агента исполнителем. Grill/spec/тикеты/реализация внутри start запрещены; выбранный затем autopilot ведёт разрешённые фазы до передачи планировщика без повторного start. Живая проверка пока не проведена, PDF-памятка от 08.10.2026 устарела в описании start.

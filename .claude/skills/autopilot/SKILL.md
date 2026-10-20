@@ -15,6 +15,12 @@ after a sufficient specification. Related tickets run sequentially.
 This skill orchestrates available pipeline skills. It does not create a cross-chat
 runner, assign models, or transfer implementation to a planning agent.
 
+После явного выбора autopilot веди разрешённые фазы контекст/память → grill →
+согласованная spec → тикеты без повторного start и ручного вызова каждой фазы.
+Планировщик завершает передачей до реализации; назначенный исполнитель продолжает
+согласованный блок. Слово «система» в запросе само по себе не основание для полного
+цикла: небольшое определённое изменение идёт прямым поручением с короткой проверкой.
+
 ## Контракт запуска — до любой фазы
 
 Сначала прочитай задачу, инструкции и HANDOFF. Зафиксируй роль, режим, разрешённый
