@@ -1,0 +1,10 @@
+Host maxmade-vps
+    HostName 185.250.47.204
+    User maxmade-admin
+    Port 22
+    IdentityFile ~/.ssh/maxmade_laptop
+    IdentitiesOnly yes
+    StrictHostKeyChecking yes
+    UserKnownHostsFile ~/.ssh/maxmade_known_hosts
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
