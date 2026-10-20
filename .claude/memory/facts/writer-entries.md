@@ -340,3 +340,14 @@ confidence: 1
 ---
 
 ## MAXMADE brief integration source is gorelovmaxon-cyber/gotovaya-sistema-brifa, main e9c4868b0f55d5e4abb4be167e67cc76007942a2, folder готовая система, pushed 2026-10-20 19:39:10 MSK. User requires current VPS website/design/SEO preserved and all application CTAs opening this system; do not add a separate button or intercept navigation. Fresh isolated checks: 963 tests in 301.739s, lint/types PASS; survey/AI browser 1440/390 through CRM/quote/approval/demo PDF PASS with no paid calls or real sends. Current VPS release remains maxmade-20261019-budget-buttons-9714351b3122, website source 5d58c4f. Packaged site is old bf8c412; never replace current website with it. Integration is not deployed: CTA context bridge, runtime/routes/storage/backup, private AI and Telegram/proxy remain. Full AI block planning and final commercial PDF are incomplete.
+---
+status: observation
+category: facts
+scope: site-portfolio
+source: User authorized deployment after preflight on 2026-10-20; code commits 0e0f1a9 and 16a7cbd; report ce55386
+evidence: E:/MAXMADE-system-preflight-20261020/brief-system/готовая система/docs/VPS-DEPLOYED-20261020.md and docs/evidence/vps-deployed-20261020/RESULT.json; report commit ce55386; site handoff 84bc976
+event_id: evt_685a5cd0285f
+confidence: 1
+---
+
+## 2026-10-20 follow-up supersedes the earlier not-deployed preflight state: the selected gotovaya-sistema-brifa/готовая система is now deployed at maxmadepro.ru. Existing website/design/cases/SEO preserved; all application CTAs open it, navigation/FAQ remain unchanged. Site current maxmade-20261020-brief-5ec8fda91785; system current /srv/maxmade-brief/releases/20261020-71ae55dbf12d. Separate maxmade-brief and maxmade-brief-telegram systemd services, SQLite/files under /var/lib/maxmade-brief; credentials outside webroot. 967 tests in 368.787s OK; public browser 22 home CTAs at 1440/390 PASS; 52 case URLs/1275 CTA launches PASS; 53 SEO URLs/canonicals, HTTPS/cookies/CSRF/Origin/ownership/operator login PASS. Separately authorized exactly one live AI opening completed and one real synthetic form notification Telegram sent:1. Daily backup and restore integrity PASS, guarded rollback stored on VPS. Old MySQL data retained without import. PDF remains demo and full AI block planning remains incomplete. Code and handoff committed locally, no GitHub push.
