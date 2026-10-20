@@ -279,3 +279,33 @@ event_id: maxmade_budget_buttons_20261019
 ---
 
 ## MAXMADE 2026-10-19 budget CTA update deployed at https://maxmadepro.ru. Active release maxmade-20261019-budget-buttons-9714351b3122 supersedes SEO release933fb77acdc0. Working copy E:/MAXMADE-seo-20261019 branch site/budget-buttons-20261019 from99c4778. Lower Calculate cost button opens standard OrderModal/LeadForm. Upper Match budget opens same form with desired website cost label and question placeholder. Typed intent budget is reset on each open; budget value uses existing project field, PHP/API/Telegram unchanged. Build and browser320/390/1440 local/staged/public passed: alternating modes, cleared values, mocked submissions with attachments, success, old hero prefill. All398 prior non-generated-page files including10 PHP preserved by SHA. Backups before/after, old release retained. No real leads/Telegram messages, no main/reference5179/other worktree changes or Git push.
+---
+status: observation
+category: facts
+scope: system-of-site
+source: Conversation 2026-10-13; reports/AI-LIVE-COMPLETE-20261013.md and allowlisted live evidence
+evidence: Allowlisted live.json: final assembly17 current true, gaps empty; read-only browser1440/390 PASS, submissions0; three regression tests and final662 tests/lint/TS PASS.
+event_id: journal_system-of-site_516d6590c5246ad227f1cd97
+---
+
+## AI-03 live synthetic conversation reached genuine assembled brief with zero required gaps and enabled confirmation on desktop/mobile. Continuation revealed reviewed-topic navigation and missing scenario field mapping; narrow fixes retain server gate and survey prompt. Aggregate17 attempts13 completed4 failures, known61527 tokens, RUB and failure usage unknown. No real submission or sends; independent review and VPS remain open.
+---
+status: observation
+category: facts
+scope: system-of-site
+source: AI-MAXMADE-STYLE-20261013 report and isolated local check evidence
+evidence: Isolated local tests and browser evidence, AI-MAXMADE-STYLE-20261013 report; managed model and CRM, no paid calls or real sends.
+event_id: journal_system-of-site_4c389678e942913487a6879f
+---
+
+## AI-04 self-check at app d09d43f and MAXMADE c6019d9: 662 tests plus lint and TypeScript pass; managed browser390/768/1440 and previous AI/B10 desktop/mobile pass; survey baseline pixel diff0 all widths; full app bundle restored and built; published controlled launcher cold start smoke passes. Independent acceptance, physical keyboard and production integrations remain open.
+---
+status: observation
+category: facts
+scope: system-of-site
+source: AI-MAXMADE-SCOPE-CORRECTION-20261013 report; controlled local tests after user correction
+evidence: Controlled local self-check evidence on committed app98a3841 and site370c26c, final check native exit0 and complete bundle restore/build.
+event_id: journal_system-of-site_e22de5531a9b5e65145071a9
+---
+
+## AI-04 scope correction self-check: app98a3841, MAXMADE370c26c. Site code/styles/config equal bf8c412; only two handoff documents differ. Site284 verification, both builds, browser390/768/1440 and intake/choice/survey pixel diff0 pass. Separate AI to confirmation/estimate and B10 desktop/mobile pass. Final662 tests in580.238s lint/TypeScript native exit0. Full app bundle restored/built; no paid calls or real sends. Independent review and physical keyboard/VPS/live services remain open.

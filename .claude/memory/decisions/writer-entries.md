@@ -418,3 +418,83 @@ event_id: journal_systemqwen_431339da088fd46aff273e39
 ---
 
 ## 2026-10-18: start должен завершаться рекомендацией команды без автоматического перехода к фазам; site-build следует autopilot с правилами сайта; планировщик готовит передачу отдельному исполнителю, включая задачи визуальных макетов. Подготовлен START-ROUTING-01, действующие навыки пока не изменены.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User full AI leading brief task and explicit seven-call approval, 2026-10-13; docs/site-project/transfer/AI-LEADING-BRIEF-TASK-20261013.md
+evidence: Full task docs/site-project/transfer/AI-LEADING-BRIEF-TASK-20261013.md and explicit user approval up to7 calls; app base121eb1c, separate AI branch; do not infer another budget from session restart
+event_id: journal_system-of-site_9cda865729d295518cca7195
+---
+
+## AI-01 supersedes the broad AP plan on this PC: improve only the leading AI brief conversation in a separate branch from121eb1c; survey is developed independently on another PC. Keep form/consent/rates/PDF/CRM/provider/model unchanged; no competing shared migrations. User explicitly allowed at most7 automatic live calls total, no automatic retries; local fixtures remain independent.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User conversation 2026-10-13: explicit format separation requirement and requested chat autoscroll fix.
+event_id: journal_system-of-site_97a950da4ac3c92fd9c5acf8
+---
+
+## Choose survey or AI chat once per enquiry. Switching to the other format is forbidden after selection, including back, reload and a contrary view URL. Preserve previous answers and the existing calculation, PDF and CRM pipeline.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User task AI-SUFFICIENCY-TASK-20261013.md, conversation 2026-10-13
+event_id: journal_system-of-site_2baea97336a0100dee1f49bb
+---
+
+## Only AI chat changes: finish on sufficient business, goal, visitor scenario, substantial capabilities, materials/help and applicable conditions. Server calculates stage progress from verified preliminary marks without another AI call; omit question counts and numerical percentages. Unknown budget/deadline remain open. Align assembly and confirmation for chat only; leave survey intact.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User independent review, conversation 2026-10-13; 25 tests in14.745s
+event_id: journal_system-of-site_4cb37b88f63de034686f1aed
+---
+
+## Independent user review of d88a464 passed 25 tests but found natural unknown replies and redesign under features bypassed intended handling. Keep AI-02 awaiting review; fix durable topic-specific help and rework applicability across agreed fields. Live quality and prior no-text failures remain unverified by scripted tests.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13
+evidence: User conversation 2026-10-13: do as many as necessary, reply to budget continuation question
+event_id: journal_system-of-site_3a14fe21032fdbed59015186
+---
+
+## User authorizes as many paid calls as necessary to complete this one AI-03 synthetic live conversation and final brief. Previous seven-call ceiling no longer blocks this scoped continuation. Keep cumulative accounting, no mass scenarios or implicit paid replay, no CRM/messaging sends.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13: explicit MAXMADE repository, tag, commit and canonical launch instructions
+evidence: Explicit user selection 2026-10-13; GitHub tag resolves to specified commit; version-specific HANDOFF and docs/MAXMADE-TRANSFER.md read. npm ci, verify284 files and build passed, canonical localhost5179 HTTP200 after per-process IPv4 DNS preference.
+event_id: journal_system-of-site_d8752e2bf00f441cd4218f54
+---
+
+## User selected the intended MAXMADE website from Sait fixed tag maxmade-v5-2026-10-13, commit bf8c412fa6193d59c302b01d00f0eaa74d1b7679. Obtain it in a new folder, preserve old copies and local edits, verify the release and run dev:canonical at localhost5179. Previous Sait9c35970 and5176 must not be treated as the selected website. This instruction does not authorize rewriting the pinned UI or assuming PHP/CRM works under Vite.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User AI-04 task, conversation 2026-10-13, paraphrased scope
+evidence: User AI-04 task, conversation 2026-10-13, explicit scope; supplied task preserved in project transfer.
+event_id: journal_system-of-site_aee93597561c18c40764d8a3
+---
+
+## AI-04 uses MAXMADE bf8c412 as the visual reference and embeds the existing intake and AI brief in its modal. Preserve the survey, backend contracts, private settings and old worktrees. Use controlled responses with no paid calls or real sends for this styling task.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: User conversation 2026-10-13: explicit AI-04 scope correction, paraphrased
+evidence: Direct user scope correction 2026-10-13; supersedes journal aee93597561c18c40764d8a3. Separate site and AI are explicitly required.
+event_id: journal_system-of-site_f671dc0e4dad884bdef39e1b
+---
+
+## AI-04 scope corrected by user: restore MAXMADE native LeadForm, header/menu, cursor, modal and launch configuration to bf8c412. Preserve new styling only on the separate selected AI chat/brief window; shared intake and format choice return to app168d50b. Do not embed AI or add/reassign site buttons. Preserve all logic, private settings, conversations and databases.
