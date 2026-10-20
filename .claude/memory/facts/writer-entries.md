@@ -351,3 +351,14 @@ confidence: 1
 ---
 
 ## 2026-10-20 follow-up supersedes the earlier not-deployed preflight state: the selected gotovaya-sistema-brifa/готовая система is now deployed at maxmadepro.ru. Existing website/design/cases/SEO preserved; all application CTAs open it, navigation/FAQ remain unchanged. Site current maxmade-20261020-brief-5ec8fda91785; system current /srv/maxmade-brief/releases/20261020-71ae55dbf12d. Separate maxmade-brief and maxmade-brief-telegram systemd services, SQLite/files under /var/lib/maxmade-brief; credentials outside webroot. 967 tests in 368.787s OK; public browser 22 home CTAs at 1440/390 PASS; 52 case URLs/1275 CTA launches PASS; 53 SEO URLs/canonicals, HTTPS/cookies/CSRF/Origin/ownership/operator login PASS. Separately authorized exactly one live AI opening completed and one real synthetic form notification Telegram sent:1. Daily backup and restore integrity PASS, guarded rollback stored on VPS. Old MySQL data retained without import. PDF remains demo and full AI block planning remains incomplete. Code and handoff committed locally, no GitHub push.
+---
+status: observation
+category: facts
+scope: site-portfolio
+source: User requested full Git publication and laptop access handoff on 2026-10-20; Git pushes and live ls-remote verification
+evidence: Live GitHub refs Sait c0f58b1515f03da84cf3f002ee5b576b09fefdeb and gotovaya-sistema-brifa b9a5bc070260960b237bdd67ccdb582f7b70e527; System docs/transfers/MAXMADE-LAPTOP-20261020.md; 5 installer checks OK; PowerShell parse PASS; outgoing Git blobs secret scan PASS
+event_id: evt_d76b47e95dc3
+confidence: 1
+---
+
+## MAXMADE deployment code and handoff are now published for laptop continuation: Sait branch integration/brief-vps-20261020 at c0f58b1515f03da84cf3f002ee5b576b09fefdeb; gotovaya-sistema-brifa branch integration/vps-20261020 at b9a5bc070260960b237bdd67ccdb582f7b70e527, work inside folder готовая система. Both local HEADs matched live GitHub refs after ordinary push. System2 laptop guide is docs/transfers/MAXMADE-LAPTOP-20261020.md with public known_hosts and a dedicated laptop-key registration script. Read-only SSH rechecked maxmade-admin and sudo -n, passwordauthentication no. Private bootstrap SSH key and CRM password JSON must transfer outside Git; no secret values published. Laptop key is not registered until the user runs the script on that device and confirms login. Profile unchanged; indexing remains unconfirmed.

@@ -2,6 +2,12 @@
 
 ## MAXMADE: передача на ноутбук и публикация — 2026-10-20
 
+Sait integration/brief-vps-20261020 опубликована наc0f58b1515f03da84cf3f002ee5b576b09fefdeb;
+gotovaya-sistema-brifa integration/vps-20261020 — наb9a5bc070260960b237bdd67ccdb582f7b70e527.
+Оба живых GitHub ref совпали с локальными HEAD после push. [Receipt](docs/transfers/maxmade-20261020/PUBLICATION.md).
+System2 master публикуется завершающим коммитом; совпадение его HEAD/ref сверяется
+после push. Khoj/bridge недоступны, fallback находит deployed, indexed не подтверждён.
+
 Пользователь поручил записать весь результат и выложить в Git System2, сайт и
 систему брифа, добавить инструкцию подключения для ноутбука. Точка входа:
 [MAXMADE-LAPTOP-20261020](docs/transfers/MAXMADE-LAPTOP-20261020.md).
