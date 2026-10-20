@@ -319,3 +319,13 @@ event_id: journal_systemqwen_f81ce7e1939761e3d064264f
 ---
 
 ## 2026-10-20: по прямому поручению пользователя System2 опубликована обычным push в origin/master. Merge ea05557f3e4d09aa1ce9398c348143857539ef8e сохранил 18 локальных и 8 удалённых коммитов; полные новые записи памяти обеих сторон проверены, потерь и новых дублей нет. HEAD и живой remote совпали на этом SHA. START-ROUTING-01 остаётся awaiting-review, ROLES-04 awaiting-validation; публикация не является независимой приёмкой и не гарантирует автосохранение.
+---
+status: confirmed
+category: facts
+scope: site-portfolio
+source: User file-transfer request and explicit remote-work clarification; read-only VPS and source/archive checks 2026-10-20
+evidence: E:/MAXMADE-seo-20261019/docs/transfer/MAXMADE-VPS-LAPTOP-20261020.md; E:/MAXMADE-seo-20261019/docs/transfer/evidence/MAXMADE-VPS-LAPTOP-20261020.json; site documentation commit1d533d5
+event_id: maxmade_vps_laptop_packet_20261020
+---
+
+## User clarified 2026-10-20: laptop is the SSH management client; MAXMADE and System of Site changes/build/deployment must happen on VPS185.250.47.204, not by replacing the public site with a laptop demo. Prepared E:/Downloads/MAXMADE-VPS-LAPTOP-20261020.zip (65555874 bytes, SHA256 521c9b778a81939c6f093c4a5805d058778b829fe28cf25f5bec4ada6141b05e) and standalone MD inside its extracted directory. Contains self-contained VPS/SSH/API/system integration guide, nonsecret metadata, public host key, SSH template,451 source files from site commit5d58c4f plus manifests; no private keys, passwords, tokens, runtime/customer data or Git history. Read-only SSH reconfirmed current budget-buttons-9714351b3122, services active, all10 PHP files match source; Node/npm/Docker absent in PATH and proposed source/system directories absent. Laptop key not enrolled, provider-independent host fingerprint verification still pending. System app locally read at fe2f5ad B08-02; current accepted laptop app/CRM state unknown, so app was not packaged. Guide documents route/CSRF/Host/cookie/iframe, PHP-vs-Python storage, proxy and CRM localhost pitfalls. No VPS or website changes, no system installation or publication.
