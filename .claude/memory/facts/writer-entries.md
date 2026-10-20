@@ -329,3 +329,14 @@ event_id: maxmade_vps_laptop_packet_20261020
 ---
 
 ## User clarified 2026-10-20: laptop is the SSH management client; MAXMADE and System of Site changes/build/deployment must happen on VPS185.250.47.204, not by replacing the public site with a laptop demo. Prepared E:/Downloads/MAXMADE-VPS-LAPTOP-20261020.zip (65555874 bytes, SHA256 521c9b778a81939c6f093c4a5805d058778b829fe28cf25f5bec4ada6141b05e) and standalone MD inside its extracted directory. Contains self-contained VPS/SSH/API/system integration guide, nonsecret metadata, public host key, SSH template,451 source files from site commit5d58c4f plus manifests; no private keys, passwords, tokens, runtime/customer data or Git history. Read-only SSH reconfirmed current budget-buttons-9714351b3122, services active, all10 PHP files match source; Node/npm/Docker absent in PATH and proposed source/system directories absent. Laptop key not enrolled, provider-independent host fingerprint verification still pending. System app locally read at fe2f5ad B08-02; current accepted laptop app/CRM state unknown, so app was not packaged. Guide documents route/CSRF/Host/cookie/iframe, PHP-vs-Python storage, proxy and CRM localhost pitfalls. No VPS or website changes, no system installation or publication.
+---
+status: observation
+category: facts
+scope: site-portfolio
+source: User request and fresh repository/VPS assessment on 2026-10-20; audit commit 9e12b5f
+evidence: E:/MAXMADE-system-preflight-20261020/brief-system/готовая система/docs/VPS-COMPATIBILITY-20261020.md; docs/evidence/vps-compatibility-20261020/RESULT.json; audit commit 9e12b5f; read-only VPS checkedUtc 2026-10-20T17:57:29.759957+00:00
+event_id: evt_d10a795a2dc8
+confidence: 1
+---
+
+## MAXMADE brief integration source is gorelovmaxon-cyber/gotovaya-sistema-brifa, main e9c4868b0f55d5e4abb4be167e67cc76007942a2, folder готовая система, pushed 2026-10-20 19:39:10 MSK. User requires current VPS website/design/SEO preserved and all application CTAs opening this system; do not add a separate button or intercept navigation. Fresh isolated checks: 963 tests in 301.739s, lint/types PASS; survey/AI browser 1440/390 through CRM/quote/approval/demo PDF PASS with no paid calls or real sends. Current VPS release remains maxmade-20261019-budget-buttons-9714351b3122, website source 5d58c4f. Packaged site is old bf8c412; never replace current website with it. Integration is not deployed: CTA context bridge, runtime/routes/storage/backup, private AI and Telegram/proxy remain. Full AI block planning and final commercial PDF are incomplete.
