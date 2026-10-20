@@ -309,3 +309,13 @@ event_id: journal_system-of-site_e22de5531a9b5e65145071a9
 ---
 
 ## AI-04 scope correction self-check: app98a3841, MAXMADE370c26c. Site code/styles/config equal bf8c412; only two handoff documents differ. Site284 verification, both builds, browser390/768/1440 and intake/choice/survey pixel diff0 pass. Separate AI to confirmation/estimate and B10 desktop/mobile pass. Final662 tests in580.238s lint/TypeScript native exit0. Full app bundle restored/built; no paid calls or real sends. Independent review and physical keyboard/VPS/live services remain open.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: Беседа 2026-10-20, поручение пользователя «Выложи в гит наш по системе»; .scratch/start-routing-2026-10-18/RESULT.md#публикация-2026-10-20; фактические git push и ls-remote.
+evidence: Проверенный merge ea05557f3e4d09aa1ce9398c348143857539ef8e; git push origin HEAD:master и git ls-remote origin refs/heads/master подтвердили одинаковый local/remote SHA; статусы сверены с TASK/HANDOFF.
+event_id: journal_systemqwen_f81ce7e1939761e3d064264f
+---
+
+## 2026-10-20: по прямому поручению пользователя System2 опубликована обычным push в origin/master. Merge ea05557f3e4d09aa1ce9398c348143857539ef8e сохранил 18 локальных и 8 удалённых коммитов; полные новые записи памяти обеих сторон проверены, потерь и новых дублей нет. HEAD и живой remote совпали на этом SHA. START-ROUTING-01 остаётся awaiting-review, ROLES-04 awaiting-validation; публикация не является независимой приёмкой и не гарантирует автосохранение.
