@@ -362,3 +362,13 @@ confidence: 1
 ---
 
 ## MAXMADE deployment code and handoff are now published for laptop continuation: Sait branch integration/brief-vps-20261020 at c0f58b1515f03da84cf3f002ee5b576b09fefdeb; gotovaya-sistema-brifa branch integration/vps-20261020 at b9a5bc070260960b237bdd67ccdb582f7b70e527, work inside folder готовая система. Both local HEADs matched live GitHub refs after ordinary push. System2 laptop guide is docs/transfers/MAXMADE-LAPTOP-20261020.md with public known_hosts and a dedicated laptop-key registration script. Read-only SSH rechecked maxmade-admin and sudo -n, passwordauthentication no. Private bootstrap SSH key and CRM password JSON must transfer outside Git; no secret values published. Laptop key is not registered until the user runs the script on that device and confirms login. Profile unchanged; indexing remains unconfirmed.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: Беседа 2026-10-21, «сделай тогда эти все исправления» после аудита 2026-10-20; .scratch/system-checks-2026-10-21/RESULT.md; npm run test:all.
+evidence: npm run test:all exit 0: memory210/210, Figma7/7, Python3/3, checker3/3; real YAML50. Первое падение изолированного runner исправлено включением extractor в копию, ожидания не ослаблялись.
+event_id: journal_systemqwen_75fc99eabace498d68c70a7a
+---
+
+## CHECKS-20261021: по поручению пользователя устранены противоречия autopilot/handoff/claude-handoff/skill-forge, исправлены YAML systemqwen и ссылка qa. Добавлены воспроизводимые npm run check и test:all, локальный pinned PyYAML, Figma-тесты без рабочего env и CI workflow без публикации. Git-фикстуры не зависят от пользовательского pull/templates/PATH; transport cause сохраняется в очереди без скрытого retry. Итог: 210 memory, 7 Figma, 3 Python и 3 checker теста прошли, YAML 50 навыков валиден. Пакет awaiting-review; живые сценарии и GitHub CI awaiting-validation, push не выполнялся. Причина исходного редкого fetch failed не доказана; улучшена диагностика, HTTP408-проверка сохранена.

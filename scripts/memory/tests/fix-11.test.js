@@ -177,8 +177,12 @@ const BASH = 'C:\\Program Files\\Git\\usr\\bin\\bash.exe';
 const hasBash = fs.existsSync(BASH);
 
 function installer(dir, args = []) {
+  const env = { ...process.env };
+  const pathKey = Object.keys(env).find(key => key.toLowerCase() === 'path') || 'PATH';
+  // Git Bash does not add usr/bin when launched directly from a native client.
+  env[pathKey] = path.dirname(BASH) + path.delimiter + (env[pathKey] || '');
   return spawnSync(BASH, [path.join(dir, '.git-hooks-templates/install-hooks.sh'), ...args], {
-    cwd: dir, encoding: 'utf8', windowsHide: true, timeout: 30000,
+    cwd: dir, env, encoding: 'utf8', windowsHide: true, timeout: 30000,
   });
 }
 
@@ -206,6 +210,8 @@ test('G11: installer in a linked worktree does not silently disable the shared u
   spawnSync('git', ['-c', 'core.hooksPath=' + empty, 'commit', '-qm', 'fixture'], { cwd: base });
   assert.equal(spawnSync('git', ['worktree', 'add', '-qb', 'fixture-work', work], { cwd: base, encoding: 'utf8' }).status, 0);
   const sharedHook = path.join(base, '.git', 'hooks', 'post-commit');
+  // A clean/isolated Git template may deliberately omit the hooks directory.
+  fs.mkdirSync(path.dirname(sharedHook), { recursive: true });
   const userHookSource = '#!/usr/bin/env bash\necho USER_HOOK\n';
   fs.writeFileSync(sharedHook, userHookSource, 'utf8');
 

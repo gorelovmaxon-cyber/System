@@ -25,15 +25,24 @@ function configure(root, patch) {
 }
 
 async function stand(handler) {
+  const diagnostics = { requests: 0, clientErrors: [] };
   const server = http.createServer((req, res) => {
     let body = '';
     req.setEncoding('utf8');
     req.on('data', chunk => { body += chunk; });
-    req.on('end', () => handler(JSON.parse(body || '{}'), res));
+    req.on('end', () => {
+      diagnostics.requests += 1;
+      handler(JSON.parse(body || '{}'), res);
+    });
+  });
+  server.on('clientError', (error, socket) => {
+    diagnostics.clientErrors.push(error.code || error.message);
+    socket.destroy();
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   return {
     url: `http://127.0.0.1:${server.address().port}/sync`,
+    diagnostics,
     close: () => new Promise(resolve => server.close(resolve)),
   };
 }
@@ -69,11 +78,35 @@ test('L04-00: a 408 keeps the event retryable in the durable queue instead of fa
     assert.equal(record.status, 'pending');
     assert.equal(record.attempts, 1);
     assert.ok(record.next_attempt_at, 'a retry must be scheduled');
-    assert.match(record.last_error, /HTTP 408/);
+    assert.match(record.last_error, /HTTP 408/, JSON.stringify({ record, server: webhook.diagnostics }));
   } finally {
     if (previous === undefined) delete process.env.MEMORY_DELIVERY_ENDPOINT;
     else process.env.MEMORY_DELIVERY_ENDPOINT = previous;
     await webhook.close();
+  }
+});
+
+test('transport failure preserves its cause in the durable queue and does not retry inside deliver', async () => {
+  const root = fixture('l04-00-transport-cause');
+  const previousFetch = global.fetch;
+  let calls = 0;
+  global.fetch = async () => {
+    calls += 1;
+    const cause = Object.assign(new Error('synthetic socket closure'), { code: 'ECONNRESET' });
+    throw new TypeError('fetch failed', { cause });
+  };
+  try {
+    const event = createEvent({ kind: 'commit', project_id: 'A', sha: 'abc12345', summary: 'transport diagnostic' });
+    const queue = new DurableQueue({ dir: path.join(root, '.local/queue'), retriesMax: 3, backoffMs: 1 });
+    queue.enqueue(event);
+    const records = await queue.process(item => deliverEvent(item, { endpoint: 'http://fixture.invalid/sync' }));
+    const record = records.find(item => item.event.event_id === event.event_id);
+    assert.equal(record.status, 'pending');
+    assert.equal(record.attempts, 1);
+    assert.match(record.last_error, /fetch failed.*ECONNRESET/);
+    assert.equal(calls, 1, 'no hidden automatic delivery retry');
+  } finally {
+    global.fetch = previousFetch;
   }
 });
 

@@ -1,5 +1,40 @@
 # HANDOFF — systemqwen
 
+## CHECKS-20261021 — исправления после аудита, 2026-10-21
+
+Пользователь разрешил все предложенные исправления аудита. [Тикет](.scratch/system-checks-2026-10-21/TASK.md)
+и [результат](.scratch/system-checks-2026-10-21/RESULT.md) — **awaiting-review**.
+Согласованы autopilot/claude-handoff/handoff/skill-forge, исправлены YAML systemqwen
+и ссылка qa. Нет обязательных session-summary/полного suite/установок при каждом
+завершении, повторных вопросов о согласованной записи или фонового запуска по
+одному слову handoff. Политика ручного вызова навыков сохранена.
+
+Добавлены [check/test:all и подготовка](docs/checks.md), локальный pinned PyYAML,
+Figma dependencies из прежнего lockfile, GitHub workflow с закреплёнными SHA.
+Git-фикстуры не зависят от пользовательского pull/templates/PATH; deliver сохраняет
+ограниченный код transport cause в last_error без нового retry. Диагностика
+HTTP408 усилена, ожидания не ослаблены; исходная редкая transport-причина не доказана.
+Итог: **210/210 memory**, **7/7 Figma**, **3/3 Python**, **3/3 checker**;
+синтаксис 66 JS/CJS и настоящий YAML 50 навыков валидны. `test:all` exit 0.
+Первый runner потерял extractor при копировании: список исходников исправлен,
+повтор целиком прошёл. Успешный полный набор без нового основания не повторять.
+
+Тесты используют Temp/фикстуры, без рабочей памяти, .env и production-сервисов.
+Локальные зависимости игнорируются Git, глобальные настройки и продуктовые
+репозитории/`.ssh` не менялись. Живые 50 навыков и GitHub CI — **awaiting-validation**:
+агенты не запускались, workflow не публиковался, branch protection не менялась.
+Матрица дальнейшей живой проверки есть в отчёте; статика не заменяет фактический ответ.
+
+Journal_id `75fc99eabace498d68c70a7a`, event_id
+`journal_systemqwen_75fc99eabace498d68c70a7a`, facts/systemqwen, **persisted**;
+writer revision `ceed1efe2b32`, local fallback найден с source, **indexed**
+не подтверждён, **synced** не заявляется. Повторно знание не записывать.
+Один scoped-коммит определяется по `git log -1 --format=%H --
+.scratch/system-checks-2026-10-21/TASK.md`. Push не выполнять; чужой untracked
+L06-04-FIXES сохраняется и исключён из коммита. Следующий шаг — независимая приёмка
+пакета, затем отдельно разрешённые живые сценарии/публикация CI. ROLES-04 и прежний
+START-ROUTING-02 этим исправлением самостоятельно не принимаются.
+
 ## START-ROUTING-02 — конкретная рекомендация start, 2026-10-20
 
 По явному поручению пользователя исправлены договор start, выбор масштаба,

@@ -1,0 +1,15 @@
+{
+  "id": "75fc99eabace498d68c70a7a",
+  "date": "2026-10-21",
+  "project_id": "systemqwen",
+  "type": "fact",
+  "summary": "CHECKS-20261021: по поручению пользователя устранены противоречия autopilot/handoff/claude-handoff/skill-forge, исправлены YAML systemqwen и ссылка qa. Добавлены воспроизводимые npm run check и test:all, локальный pinned PyYAML, Figma-тесты без рабочего env и CI workflow без публикации. Git-фикстуры не зависят от пользовательского pull/templates/PATH; transport cause сохраняется в очереди без скрытого retry. Итог: 210 memory, 7 Figma, 3 Python и 3 checker теста прошли, YAML 50 навыков валиден. Пакет awaiting-review; живые сценарии и GitHub CI awaiting-validation, push не выполнялся. Причина исходного редкого fetch failed не доказана; улучшена диагностика, HTTP408-проверка сохранена.",
+  "source": "Беседа 2026-10-21, «сделай тогда эти все исправления» после аудита 2026-10-20; .scratch/system-checks-2026-10-21/RESULT.md; npm run test:all.",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_75fc99eabace498d68c70a7a",
+  "memory_files": [
+    ".claude/memory/facts/writer-entries.md"
+  ]
+}

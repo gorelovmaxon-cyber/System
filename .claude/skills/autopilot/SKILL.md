@@ -58,13 +58,13 @@ ImageGen, Figma и конечные ассеты. Название «эскиз�
 Автоматическая передача между чатами отсутствует; изолированный запуск другого
 агента возможен только при отдельном явном разрешении пользователя на такую проверку.
 
-**Prerequisite (только для обычного режима):** the pipeline skills must be installed — `grilling`, `to-spec`, `to-tickets`, `implement`, `subagent-pipeline` (mattpocock/skills pack). If any is missing, install first:
-
-```bash
-npx skills add mattpocock/skills
-```
-
-**Для режима `--mode=systemqwen` prerequisite НЕ нужны** — используется только создание тикетов (grilling, to-spec, to-tickets), реализацию выполняет выбранный исполнитель в отдельном чате.
+Сначала используй канонические доступные инструкции `grilling`, `to-spec`,
+`to-tickets`, `implement`, `subagent-pipeline` в System2. Регистрация slash-команды
+не требуется для прямого чтения контракта. Недоступный вложенный вызов не обходи.
+Если нужных инструкций действительно нет, укажи пробел и продолжай независимую
+разрешённую работу; установка внешнего пакета — отдельное изменение окружения
+в согласованных пользователем границах, не обязательная фаза autopilot.
+В планирующем systemqwen реализацию выполняет отдельный исполнитель после передачи.
 
 ## Параметры (опционально)
 
@@ -280,19 +280,22 @@ by the launch contract; do not use a countdown or silence as authorization.
 неприменимо / не проверено. Сборка, визуальная QA и независимая приёмка — отдельные
 доказательства. HANDOFF содержит роль/режим, этап, артефакты и следующий шаг.
 
-Full test suite once. Before the final report, if the session stops before the
-task is complete, update the project `HANDOFF.md` with `НЕ ЗАКОММИЧЕНО`,
-`Незавершённое` and a concrete `Следующий шаг`. Write exactly one SC-07
-`session-summary` event for this session; it is separate from knowledge capture.
-Then run `/auto-learn` once for confirmed knowledge only. If the user says
-"nothing" / "разовое" — continue without a memory entry.
+Выбирай достаточные проверки по [workflow](../../../docs/system-workflow.md#достаточная-проверка):
+полный suite нужен при изменении общих primitives или явном гейте проекта,
+а не при каждом завершении. Успешные проверки без нового основания не повторяй.
+До финального ответа обнови HANDOFF: незакоммиченное, незавершённое и конкретный
+следующий шаг. В core достаточно проектного журнала и HANDOFF; SC-07 session-summary
+не обязателен, его отдельный активный режим требует соответствующего решения.
+Подтверждённое новое знание перенеси один раз штатным writer/search/mark по
+[журналу](../../../docs/decision-journal.md); если нового знания нет — no-op.
+Запрет записи или режим только чтения сохраняют приоритет. Не копируй весь чат.
 
 Final report in the user's language: what was built and the exact command to run it; what was NOT built (the spec's Out of Scope list); open items — placeholders, keys to add, manual steps left.
 
-### Phase 8 — Learn & Update (после завершения)
+### Phase 8 — Learn & Update (перед финальным ответом)
 
-После финального отчёта Phase 5 не запускай второй раз тот же auto-learn или
-session-summary:
+До финального отчёта проверь актуальность передачи и документов, без повторной
+записи уже обработанного знания:
 
 1. **Проверить CLAUDE.md:**
    - Появилась ли новая информация о проекте? (новые команды, структура, зависимости)
@@ -303,10 +306,11 @@ session-summary:
      git commit -m "docs: update CLAUDE.md after [краткое описание задачи]"
      ```
 
-2. **Проверить разделение записей:** session-summary уже записан в Phase 5,
-   auto-learn уже обработал только выбранное знание; повторный разбор не делать.
+2. **Проверить разделение записей:** сохранённые event_id переданы в HANDOFF;
+   повторно то же знание не переносится. При отсутствии нового знания — no-op.
 
-**Готово, когда:** CLAUDE.md актуален (или обновлений не было), auto-learn завершён.
+**Готово, когда:** CLAUDE.md и HANDOFF актуальны, новое знание обработано либо no-op,
+проверки и ограничения фактически зафиксированы. Автор не ставит себе done/READY.
 
 ---
 

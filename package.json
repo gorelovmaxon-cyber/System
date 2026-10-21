@@ -1,0 +1,14 @@
+{
+  "name": "system2-checks",
+  "private": true,
+  "version": "1.0.0",
+  "engines": { "node": ">=24 <25" },
+  "scripts": {
+    "check": "node scripts/check.js",
+    "test:checks": "node --test scripts/checks.test.js",
+    "test:memory": "node scripts/run-memory-tests.js",
+    "test:figma": "node scripts/run-figma-tests.js",
+    "test:python": "python -B services/khoj/test_run_local.py -v",
+    "test:all": "node scripts/run-all-checks.js"
+  }
+}

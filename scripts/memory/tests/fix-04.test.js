@@ -169,6 +169,8 @@ test('F04: divergence on the same memory file conflicts on pull; resolution keep
   runGit(root, ['init', '-b', 'master']);
   runGit(root, ['config', 'user.email', 'test@example.com']);
   runGit(root, ['config', 'user.name', 'Test']);
+  // The regression exercises a merge conflict, regardless of the user's pull policy.
+  runGit(root, ['config', 'pull.rebase', 'false']);
   runGit(root, ['add', '.']);
   runGit(root, ['commit', '-m', 'base']);
   runGit(root, ['remote', 'add', 'origin', remotePath]);
@@ -200,7 +202,7 @@ test('F04: divergence on the same memory file conflicts on pull; resolution keep
   assert.equal(runGit(other, ['push', 'origin', 'master']).status, 0);
 
   // pull в A даёт настоящий content-конфликт в общем файле (оба добавляли в конец)
-  const pull = runGit(root, ['pull', 'origin', 'master']);
+  const pull = runGit(root, ['pull', '--no-rebase', 'origin', 'master']);
   assert.notEqual(pull.status, 0, 'pull must conflict on the shared file: ' + pull.stdout + pull.stderr);
 
   const facts = path.join(root, '.claude/memory/facts/writer-entries.md');

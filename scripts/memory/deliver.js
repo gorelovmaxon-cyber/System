@@ -75,7 +75,12 @@ async function deliverEvent(event, options = {}) {
     const retryable = retryableStatus(response.status);
     return { ok: false, retryable, error: `HTTP ${response.status}: ${body.slice(0, 200)}` };
   } catch (error) {
-    return { ok: false, retryable: true, error: error.name === 'AbortError' ? 'request timeout' : error.message };
+    // fetch wraps socket failures in a generic TypeError. Preserve the bounded
+    // transport code without logging request bodies, URLs or credential-bearing causes.
+    const causeCode = error.cause?.code;
+    const detail = typeof causeCode === 'string' && /^[A-Z][A-Z0-9_]{0,63}$/.test(causeCode)
+      ? ` [${causeCode}]` : '';
+    return { ok: false, retryable: true, error: error.name === 'AbortError' ? 'request timeout' : error.message + detail };
   } finally {
     clearTimeout(timer);
   }
