@@ -116,11 +116,26 @@
   "knowledge": {
     "persisted": true,
     "indexed": "unconfirmed; Khoj unavailable",
-    "synced": false,
+    "synced": true,
     "local_fallback_found": true
   },
   "live_skills": "awaiting-validation; no agent launch",
-  "push": false,
+  "push": true,
+  "publication": {
+    "date": "2026-10-21",
+    "authorization": "Последующее поручение пользователя опубликовать обновлённую System2",
+    "remote": "https://github.com/gorelovmaxon-cyber/System.git",
+    "branch": "master",
+    "remote_before": "30c9d555b61077074ed544a3496d7856e503541d",
+    "payload_head": "a5eb818f54f3e4c20b0bd71c447de1a54ec08363",
+    "payload_live_remote_equal": true,
+    "method": "git push origin HEAD:master",
+    "checks": "npm run check passed; range diff --check and additions scope/secret pattern scan passed",
+    "full_suite_repeated": false,
+    "github_actions": "awaiting-validation; workflow published, public API HTTP 404; run result unconfirmed",
+    "receipt_commit": "separate scoped commit; final HEAD/live remote checked after its push",
+    "acceptance": "awaiting-review unchanged"
+  },
   "final_checks": {
     "scope_files": 29,
     "markdown_files_checked": 14,
