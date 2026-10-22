@@ -124,12 +124,37 @@ function snippetFor(text, query, budget) {
   return value.length < text.length ? value + '…' : value;
 }
 
+const SEARCH_FIELDS = ['event_id', 'evidence', 'source', 'supersedes'];
+function queryMatch(record, query) {
+  const queryWords = words(query);
+  const body = record.body.toLowerCase();
+  const ambiguous = (record.duplicated || []).some(key => key === 'scope' || key === 'status');
+  const fields = ambiguous ? [] : SEARCH_FIELDS.filter(key => typeof record.meta[key] === 'string');
+  const lower = [record.body, ...fields.map(key => record.meta[key])].join('\n').toLowerCase();
+  return {
+    hits: queryWords.filter(word => lower.includes(word)).length,
+    bodyHits: queryWords.filter(word => body.includes(word)).length,
+    exact: fields.includes('event_id') && record.meta.event_id === String(query).trim(),
+    fields: fields.filter(key => queryWords.some(word => record.meta[key].toLowerCase().includes(word))),
+  };
+}
+
+function recordSnippet(record, query, budget) {
+  const match = queryMatch(record, query);
+  if (match.bodyHits || !match.fields.length) return snippetFor(record.body, query, budget);
+  const field = match.exact ? 'event_id' : match.fields[0];
+  const max = Math.max(80, Math.floor(budget * 4));
+  const excerpt = snippetFor(record.meta[field], query, Math.min(160, max / 2) / 4).slice(0, Math.floor(max / 2));
+  const hint = `[metadata ${field}: ${JSON.stringify(excerpt)}]`;
+  return record.body.slice(0, Math.max(0, max - hint.length - 1)) + '\n' + hint;
+}
+
 function localResults(query, projectId, options = {}) {
   const paths = options.paths || resolvePaths({ root: options.root });
   const limit = options.limit ?? DEFAULTS.limit;
   const budget = options.budget ?? DEFAULTS.budget;
   const queryWords = words(query);
-  if (!queryWords.length) return [];
+  if (!String(query).trim()) return [];
   const registry = paths.registry || configFor(paths.system_root).registry || [];
   assertKnownProject({ ...paths, registry }, projectId);
   const files = [];
@@ -153,19 +178,19 @@ function localResults(query, projectId, options = {}) {
       // или своим project_id; неизвестный/отсутствующий scope не открывает
       // файл проекту (R3) — виден только на пользовательском уровне.
       if (projectId && meta.scope !== 'user' && meta.scope !== projectId) continue;
-      const lower = record.body.toLowerCase();
-      const hits = queryWords.filter(word => lower.includes(word)).length;
-      if (!hits) continue;
+      const match = queryMatch(record, query);
+      const hits = match.hits;
+      if (!hits && !match.exact) continue;
       const source = relativeSource(paths.memory_root, file);
       results.push({
-        snippet: snippetFor(record.body, query, budget),
+        snippet: recordSnippet(record, query, budget),
         source,
         scope: meta.scope || 'unknown',
         status_hint: meta.status || 'unknown',
         ...(meta.source ? { record_source: meta.source } : {}),
         ...(meta.date ? { date: meta.date } : {}),
         ...(JSON.stringify(meta).includes('\uFFFD') || record.body.includes('\uFFFD') ? { encoding_warning: 'U+FFFD' } : {}),
-        relevance: Math.min(0.99, hits / queryWords.length),
+        relevance: match.exact ? 1 : Math.min(0.99, hits / queryWords.length),
       });
     }
   }
@@ -200,16 +225,17 @@ function classify(error) {
 // (R2: scope и snippet берутся из локального файла, текст сервиса как источник
 // доверия не используется).
 function matchEntry(records, query, snippet) {
-  const queryWords = words(query);
   const tokens = new Set(String(snippet || '').toLowerCase().match(/[\p{L}\p{N}_-]{2,}/gu) || []);
   let best = null;
   for (const record of records) {
-    const lower = record.body.toLowerCase();
-    const hits = queryWords.filter(word => lower.includes(word)).length;
-    if (!hits) continue;
-    const overlap = [...tokens].filter(token => lower.includes(token)).length;
+    const match = queryMatch(record, query);
+    const hits = match.hits;
+    if (!hits && !match.exact) continue;
+    const overlap = [...tokens].filter(token => record.body.toLowerCase().includes(token)).length;
     const score = hits * 1000 + overlap;
-    if (!best || score > best.score) best = { record, score };
+    if (!best || (match.exact && !best.exact) || (match.exact === best.exact && score > best.score)) {
+      best = { record, score, exact: match.exact };
+    }
   }
   return best ? best.record : null;
 }
@@ -260,14 +286,16 @@ async function searchKhoj(query, projectId, options = {}) {
       // snippet пересобирается из тела подтверждённой локальной записи;
       // чужому результату scope запрашивающего проекта не присваивается.
       return {
-        snippet: snippetFor(record.body, query, budget), source, scope,
+        snippet: recordSnippet(record, query, budget), source, scope,
+        _exactMatch: queryMatch(record, query).exact,
         status_hint: record.meta.status || 'unknown',
         ...(record.meta.source ? { record_source: record.meta.source } : {}),
         ...(record.meta.date ? { date: record.meta.date } : {}),
         ...(JSON.stringify(record.meta).includes('\uFFFD') || record.body.includes('\uFFFD') ? { encoding_warning: 'U+FFFD' } : {}),
         relevance: Number(item.score ?? item['cross-score'] ?? item.relevance ?? 0),
       };
-    }).filter(Boolean).slice(0, limit);
+    }).filter(Boolean).sort((a, b) => Number(b._exactMatch) - Number(a._exactMatch))
+      .slice(0, limit).map(({ _exactMatch, ...result }) => result);
     return { ok: true, results };
   } catch (error) {
     let fallbackResults = [];
