@@ -18,12 +18,12 @@ test at scripts\checks.test.js:43:1
 ✖ C02: URL-encoded HTML ids and invalid escapes have consistent diagnostics (6.4068ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
   + actual - expected
-  
+
   + [
   +   'missing anchor target.md#%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0'
   + ]
   - []
-  
+
       at TestContext.<anonymous> (D:\SystemTheBest\System\scripts\checks.test.js:47:10)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1325:25)
@@ -42,9 +42,9 @@ test at scripts\checks.test.js:43:1
 test at scripts\checks.test.js:54:1
 ✖ C02: main checks the explicit canonical entry points without walking historical memory (1375.9343ms)
   AssertionError [ERR_ASSERTION]: must check OPUS.md
-  
+
   0 !== 1
-  
+
       at TestContext.<anonymous> (D:\SystemTheBest\System\scripts\checks.test.js:73:12)
       at Test.runInAsyncScope (node:async_hooks:227:14)
       at Test.run (node:internal/test_runner/test:1325:25)
