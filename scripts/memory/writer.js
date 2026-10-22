@@ -229,13 +229,15 @@ function writeProposal(eventId, input) {
       // Index tasks are derived state. Reconcile them on every idempotent
       // writer retry so a prior enqueue failure cannot lose persisted data.
       const existingFiles = proposals.map(proposal => targetFile(proposal.category));
+      let indexError;
       try {
-        queueIndex(eventId, existingFiles);
-        if (previous.index_error) writerLog.append({ ...previous, hash, indexed: false, index_error: null });
+        queueIndex(eventId, existingFiles, { strictRefresh: true });
       } catch (error) {
-        writerLog.append({ ...previous, hash, indexed: false, index_error: error.message });
+        indexError = error.message;
+        writerLog.append({ ...writerLog.get(eventId), hash, indexed: false, index_error: indexError });
       }
-      return { status: 'persisted', written_files: previous.written_files, revision: previous.revision, idempotent: true };
+      return { status: 'persisted', written_files: previous.written_files, revision: previous.revision, idempotent: true,
+        ...(indexError ? { index_error: indexError } : {}) };
     }
     const files = [];
     const revisions = [];

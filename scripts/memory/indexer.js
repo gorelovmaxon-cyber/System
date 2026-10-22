@@ -113,12 +113,13 @@ function syncAggregate(record, paths, tasks) {
   if (!record || record.status !== 'persisted') return null;
   const state = aggregateState(record, paths, tasks);
   const result = { event_id: record.event_id, indexed: state.indexed, changed: false, error: null };
-  if (Boolean(record.indexed) === state.indexed) return result;
+  if (Boolean(record.indexed) === state.indexed && !(state.indexed && record.index_error)) return result;
   try {
     writerLog.append({
       ...record,
       indexed: state.indexed,
       index_state: state.indexed ? null : { missing: state.missing, pending: state.pending },
+      ...(state.indexed ? { index_error: null } : {}),
     });
     result.changed = true;
   } catch (error) {
@@ -212,7 +213,10 @@ function queueIndex(eventId, files, options = {}) {
   // же моделью, что и в run/reconcile, а не отдельной веткой сброса флага.
   if (options.refresh !== false) {
     const result = refreshEvent(eventId, paths);
-    if (result?.error) warn(`index aggregate refresh failed for ${eventId}: ${result.error}`);
+    if (result?.error) {
+      if (options.strictRefresh) throw new Error(`index aggregate refresh failed for ${eventId}: ${result.error}`);
+      warn(`index aggregate refresh failed for ${eventId}: ${result.error}`);
+    }
   }
   return queued;
 }
