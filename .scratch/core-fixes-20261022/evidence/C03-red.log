@@ -36,9 +36,9 @@ test at scripts\memory\tests\core-journal.test.js:43:1
 test at scripts\memory\tests\core-journal.test.js:70:1
 ✖ C03: concurrent close/mark and interrupted replacement preserve one terminal transition (234.7337ms)
   AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
-  
+
   1 !== 23
-  
+
       at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-8aaO2G\source\scripts\memory\tests\core-journal.test.js:85:10)
       at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
       at async Test.run (node:internal/test_runner/test:1332:7)
