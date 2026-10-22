@@ -1,6 +1,8 @@
 # CORE-FIX-20261022 — C01–C06
 
-Status: **awaiting-review**: C01–C05 проверены; C06 подготовлен, публикация ожидается.
+Status: **awaiting-review, synced**. C01–C05 проверены; C06 опубликован обычным push,
+локальный HEAD и live master совпали на `84eab5be8a0c82ebd87b5d69f90000e6e49e04c5`.
+Коммит receipt публикуется следом; окончательный SHA/сверка — в `evidence/final-state.json`.
 Date: 2026-10-22, Europe/Moscow. Source: [TASK.md](TASK.md).
 Исходный HEAD `34693496cbca89fbe65a3917991c8f326cb4d4a8`, master.
 Origin `https://github.com/gorelovmaxon-cyber/System.git`.
@@ -91,8 +93,21 @@ credential assignments без печати значений; кандидато�
 сохраняются. Dirty независимый вердикт UPDATE в RESULT/HANDOFF в этот пакет не входит.
 [Перечень и обнаруженные ссылки](evidence/handoff-artifacts.json).
 Намеренные AP-EVAL/remediation/pending не staging-уются. TASK CORE меняется только в статусе.
-Обычный push выполняется после итогового suite и финальной сверки remote/диапазона;
-SHA и receipt будут дополнены после фактической публикации.
+Перед push финальный fetch вновь подтвердил `5f631d9…`. Полная повторная проверка
+16 коммитов/111 уникальных blob (включая TASK/receipts) не нашла credential-кандидатов,
+незамкнутых committed-ссылок или неразрешённых продуктовых путей:
+[outgoing-final.json](evidence/outgoing-final.json). После неё добавлен только
+документальный audit/форматирование, весь публикуемый диапазон — 17 коммитов.
+Хвостовые пробелы в сохранённых логах красных тестов убраны отдельными коммитами,
+без изменения сообщений/результатов тестов и без переписывания истории.
+`git diff origin/master HEAD --check`, staged/unstaged check завершились успешно.
+
+`git push origin master` завершился exit 0: `5f631d9..84eab5b master -> master`.
+`git rev-parse HEAD` и `git ls-remote origin refs/heads/master` вернули один и тот же
+`84eab5be8a0c82ebd87b5d69f90000e6e49e04c5`. [Receipt публикации](evidence/publication.json).
+Это публикация накопленной истории System и исправлений; независимые статусы не повышались.
+Для передачи результата этот receipt и краткий статус сохраняются и публикуются
+отдельным документальным коммитом; успешные тесты без новых изменений кода не повторяются.
 
 ## Ограничения и передача
 
