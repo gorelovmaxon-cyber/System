@@ -1,0 +1,8 @@
+{
+  "command": "node scripts/memory/doctor.js --root D:\\SystemTheBest\\System --json",
+  "date": "2026-10-22T07:48:16.909Z",
+  "exit": 1,
+  "seconds": 0.548,
+  "stdout": "{\n  \"ok\": false,\n  \"checks\": [\n    {\n      \"status\": \"OK\",\n      \"check\": \"git\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"git/remote origin\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"git/branch\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"node 24.18.0\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"resolve-paths and system root\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"config/system.local.json\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"project HANDOFF.md\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"legacy capture hooks disabled (core profile)\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"shared memory root\"\n    },\n    {\n      \"status\": \"PROBLEM\",\n      \"check\": \"Khoj health\",\n      \"instruction\": \"Install/start the verified Khoj release and configure its local index.\"\n    },\n    {\n      \"status\": \"PROBLEM\",\n      \"check\": \"memory bridge ready\",\n      \"instruction\": \"Start node scripts/memory/bridge-server.js with a local token; health must report ready.\"\n    },\n    {\n      \"status\": \"disabled\",\n      \"check\": \"Activepieces health\"\n    },\n    {\n      \"status\": \"OK\",\n      \"check\": \"local event queue available\"\n    }\n  ]\n}\n",
+  "stderr": ""
+}

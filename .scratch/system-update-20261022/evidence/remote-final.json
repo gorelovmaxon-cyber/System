@@ -1,0 +1,9 @@
+{
+  "command": "git ls-remote origin refs/heads/master",
+  "date": "2026-10-22T07:52:51.766Z",
+  "exit": null,
+  "error": "spawnSync git ETIMEDOUT",
+  "stdout": "",
+  "stderr": "",
+  "previousAttempt": "schannel TLS handshake failed"
+}

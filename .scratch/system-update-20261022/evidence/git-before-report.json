@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-22T07:54:59.583Z",
+  "initialHead": "b296af92266a36f501e131098ac230c81cee34a7",
+  "pinnedRemote": "5f631d917a8a2880c667f8a2990fa9b7ff9bca4f",
+  "mergeHead": "2b91c6260aa640d95b1d66e7b99f89d206a28564",
+  "baselineBackup": "D:/SystemTheBest/System-update-backups/20261022-UPDATE-2026-10-22T07-45-07-122Z",
+  "oldDirtyMemoryRestoredExactly": true,
+  "oldDirtyHandoffSectionsRestored": 4,
+  "calls": [
+    {
+      "command": "git merge-base --is-ancestor b296af92266a36f501e131098ac230c81cee34a7 HEAD",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git merge-base --is-ancestor 5f631d917a8a2880c667f8a2990fa9b7ff9bca4f HEAD",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --cached --name-only",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --name-status 5f631d917a8a2880c667f8a2990fa9b7ff9bca4f HEAD",
+      "exit": 0,
+      "stdout": "M\t.claude/memory/user-profile/writer-entries.md\nA\t.claude/skills/ok/SKILL.md\nA\t.claude/skills/operational-cards/SKILL.md\nM\t.claude/skills/start/SKILL.md\nA\t.scratch/system-update-20261013/RESULT.md\nA\t.scratch/system-update-20261013/evidence/adapter-test.json\nA\t.scratch/system-update-20261013/evidence/bootstrap.json\nA\t.scratch/system-update-20261013/evidence/doctor.json\nA\t.scratch/system-update-20261013/evidence/preservation.json\nA\t.scratch/system-update-20261013/evidence/search.json\nA\t.system2/decision-journal/25eff9774bcca1443accad98.json\nA\t.system2/decision-journal/4c8ed70fc922b2be12b3176b.json\nM\tCLAUDE.md\nM\tHANDOFF.md\nA\tdocs/standards/operational-cards-evidence.md\nA\tdocs/standards/operational-cards-okconstructor.md\nA\tdocs/standards/operational-cards.md\nM\tdocs/task-map.md",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --numstat",
+      "exit": 0,
+      "stdout": "130\t0\t.claude/memory/decisions/writer-entries.md\n50\t0\t.claude/memory/facts/writer-entries.md\n40\t0\tHANDOFF.md",
+      "stderr": "warning: in the working copy of '.claude/memory/decisions/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.claude/memory/facts/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'HANDOFF.md', LF will be replaced by CRLF the next time Git touches it"
+    },
+    {
+      "command": "git rev-list --left-right --count HEAD...origin/master",
+      "exit": 0,
+      "stdout": "8\t0",
+      "stderr": ""
+    },
+    {
+      "command": "git config --show-origin --get-all core.hooksPath",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git rev-parse --git-path hooks",
+      "exit": 0,
+      "stdout": ".git/hooks",
+      "stderr": ""
+    }
+  ]
+}

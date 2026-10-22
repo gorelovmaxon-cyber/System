@@ -1,0 +1,1270 @@
+TAP version 13
+# Subtest: capture, exact repeat, correction and no-op
+ok 1 - capture, exact repeat, correction and no-op
+  ---
+  duration_ms: 28.8738
+  type: 'test'
+  ...
+# Subtest: promotion requires writer proof and repeat after crash stays one entry
+ok 2 - promotion requires writer proof and repeat after crash stays one entry
+  ---
+  duration_ms: 18.7189
+  type: 'test'
+  ...
+# Subtest: open question and unverified observation cannot become confirmed by journal
+ok 3 - open question and unverified observation cannot become confirmed by journal
+  ---
+  duration_ms: 15.2914
+  type: 'test'
+  ...
+# Subtest: project journal filters scope and rejects credential marker
+ok 4 - project journal filters scope and rejects credential marker
+  ---
+  duration_ms: 10.2255
+  type: 'test'
+  ...
+# Subtest: CLI uses its System checkout when called from a connected project
+ok 5 - CLI uses its System checkout when called from a connected project
+  ---
+  duration_ms: 115.0424
+  type: 'test'
+  ...
+# Subtest: F01: batch of two proposals in same category persists both; repeat is idempotent
+ok 6 - F01: batch of two proposals in same category persists both; repeat is idempotent
+  ---
+  duration_ms: 1929.0966
+  type: 'test'
+  ...
+# Subtest: F01: batch write queues one pending index task per written file; repeat does not duplicate
+ok 7 - F01: batch write queues one pending index task per written file; repeat does not duplicate
+  ---
+  duration_ms: 2029.523
+  type: 'test'
+  ...
+# Subtest: F02: intent without memory file is recovered into a real persisted entry
+ok 8 - F02: intent without memory file is recovered into a real persisted entry
+  ---
+  duration_ms: 2193.9133
+  type: 'test'
+  ...
+# Subtest: F02: partial write (one category already present) is completed without duplicates
+ok 9 - F02: partial write (one category already present) is completed without duplicates
+  ---
+  duration_ms: 3373.1438
+  type: 'test'
+  ...
+# Subtest: R1: same statement with different scope persists both proposals of one event
+ok 10 - R1: same statement with different scope persists both proposals of one event
+  ---
+  duration_ms: 1804.0282
+  type: 'test'
+  ...
+# Subtest: R1: same statement and scope but different evidence persists both
+ok 11 - R1: same statement and scope but different evidence persists both
+  ---
+  duration_ms: 1101.0404
+  type: 'test'
+  ...
+# Subtest: R1: fully identical proposals in one event are written once, repeat is idempotent
+ok 12 - R1: fully identical proposals in one event are written once, repeat is idempotent
+  ---
+  duration_ms: 1788.9554
+  type: 'test'
+  ...
+# Subtest: R4: repeat after LF->CRLF conversion is idempotent, no duplicate entries
+ok 13 - R4: repeat after LF->CRLF conversion is idempotent, no duplicate entries
+  ---
+  duration_ms: 1943.098
+  type: 'test'
+  ...
+# Subtest: R4: partial recovery works after LF->CRLF conversion (writer normalizes EOL)
+ok 14 - R4: partial recovery works after LF->CRLF conversion (writer normalizes EOL)
+  ---
+  duration_ms: 2162.0338
+  type: 'test'
+  ...
+# Subtest: control: exact repeat keeps revision and does not add intent lines; different content conflicts
+ok 15 - control: exact repeat keeps revision and does not add intent lines; different content conflicts
+  ---
+  duration_ms: 2077.508
+  type: 'test'
+  ...
+# Subtest: S2: CR/LF in source, evidence, supersedes and event_id is rejected
+ok 16 - S2: CR/LF in source, evidence, supersedes and event_id is rejected
+  ---
+  duration_ms: 21.642
+  type: 'test'
+  ...
+# Subtest: S2: statement line starting with --- (record boundary) is rejected
+ok 17 - S2: statement line starting with --- (record boundary) is rejected
+  ---
+  duration_ms: 8.6315
+  type: 'test'
+  ...
+# Subtest: S2: round-trip of all fields through write and re-parse is lossless; repeat idempotent
+ok 18 - S2: round-trip of all fields through write and re-parse is lossless; repeat idempotent
+  ---
+  duration_ms: 1743.3935
+  type: 'test'
+  ...
+# Subtest: S3: CRLF multiline statement is stored once in LF; repeat is idempotent
+ok 19 - S3: CRLF multiline statement is stored once in LF; repeat is idempotent
+  ---
+  duration_ms: 1758.3181
+  type: 'test'
+  ...
+# Subtest: S3: mixed EOL in multiline statement is normalized to LF; repeat idempotent
+ok 20 - S3: mixed EOL in multiline statement is normalized to LF; repeat idempotent
+  ---
+  duration_ms: 1737.3459
+  type: 'test'
+  ...
+# Subtest: S3: LF and CRLF forms of the same content hash identically (idempotent, not CONFLICT)
+ok 21 - S3: LF and CRLF forms of the same content hash identically (idempotent, not CONFLICT)
+  ---
+  duration_ms: 1775.1186
+  type: 'test'
+  ...
+# Subtest: S3: partial recovery after CRLF input completes without duplicates
+ok 22 - S3: partial recovery after CRLF input completes without duplicates
+  ---
+  duration_ms: 2242.5789
+  type: 'test'
+  ...
+# Subtest: S3: normalization does not hide real content differences (CONFLICT preserved)
+ok 23 - S3: normalization does not hide real content differences (CONFLICT preserved)
+  ---
+  duration_ms: 1244.8119
+  type: 'test'
+  ...
+# Subtest: B01: required evidence rejects missing and non-string values
+ok 24 - B01: required evidence rejects missing and non-string values
+  ---
+  duration_ms: 10.8843
+  type: 'test'
+  ...
+# Subtest: B17: empty batch is rejected without reserving the event id
+ok 25 - B17: empty batch is rejected without reserving the event id
+  ---
+  duration_ms: 1001.9477
+  type: 'test'
+  ...
+# Subtest: B15: exact legacy intent with edge whitespace recovers under canonical hash
+ok 26 - B15: exact legacy intent with edge whitespace recovers under canonical hash
+  ---
+  duration_ms: 2400.6064
+  type: 'test'
+  ...
+# Subtest: B02: writer rejects a junction that redirects a category outside memory root
+ok 27 - B02: writer rejects a junction that redirects a category outside memory root
+  ---
+  duration_ms: 312.0274
+  type: 'test'
+  ...
+# Subtest: G07: the order of JSON keys does not change proposal identity
+ok 28 - G07: the order of JSON keys does not change proposal identity
+  ---
+  duration_ms: 1744.2023
+  type: 'test'
+  ...
+# Subtest: G07: an explicit optional default equals the omitted one
+ok 29 - G07: an explicit optional default equals the omitted one
+  ---
+  duration_ms: 1752.5827
+  type: 'test'
+  ...
+# Subtest: G07: an unknown proposal field is rejected instead of changing identity invisibly
+ok 30 - G07: an unknown proposal field is rejected instead of changing identity invisibly
+  ---
+  duration_ms: 4.7137
+  type: 'test'
+  ...
+# Subtest: G07: a substantive difference still conflicts
+ok 31 - G07: a substantive difference still conflicts
+  ---
+  duration_ms: 1556.057
+  type: 'test'
+  ...
+# Subtest: G07: an interrupted legacy intent is recoverable and republished canonically
+ok 32 - G07: an interrupted legacy intent is recoverable and republished canonically
+  ---
+  duration_ms: 1359.2975
+  type: 'test'
+  ...
+# Subtest: U1: a killed keeper does not admit a second owner while the writer lives
+ok 33 - U1: a killed keeper does not admit a second owner while the writer lives
+  ---
+  duration_ms: 1264.6976
+  type: 'test'
+  ...
+# Subtest: U1: a paused live owner keeps authority for the whole critical section
+ok 34 - U1: a paused live owner keeps authority for the whole critical section
+  ---
+  duration_ms: 853.904
+  type: 'test'
+  ...
+# Subtest: U1: the death of the writer releases authority for the next owner
+ok 35 - U1: the death of the writer releases authority for the next owner
+  ---
+  duration_ms: 543.0432
+  type: 'test'
+  ...
+# Subtest: U1: a keeper that cannot start fails closed without publishing ownership
+ok 36 - U1: a keeper that cannot start fails closed without publishing ownership
+  ---
+  duration_ms: 271.5927
+  type: 'test'
+  ...
+# Subtest: U1: assertHeld rejects a replaced ownership record
+ok 37 - U1: assertHeld rejects a replaced ownership record
+  ---
+  duration_ms: 156.2617
+  type: 'test'
+  ...
+# Subtest: U1: a normal release hands the resource to the next owner
+ok 38 - U1: a normal release hands the resource to the next owner
+  ---
+  duration_ms: 610.3143
+  type: 'test'
+  ...
+# Subtest: V1: a refused contender neither replaces nor removes the ownership of a live owner
+ok 39 - V1: a refused contender neither replaces nor removes the ownership of a live owner
+  ---
+  duration_ms: 2472.7237
+  type: 'test'
+  ...
+# Subtest: V1: the death of a keeper does not admit a contender while the owner is in its section
+ok 40 - V1: the death of a keeper does not admit a contender while the owner is in its section
+  ---
+  duration_ms: 814.6292
+  type: 'test'
+  ...
+# Subtest: V1: an orphaned publication of this very process is taken over; release leaves no state
+ok 41 - V1: an orphaned publication of this very process is taken over; release leaves no state
+  ---
+  duration_ms: 170.8094
+  type: 'test'
+  ...
+# Subtest: V1: a foreign-host ownership record is an explicit refusal, never a shared memory
+ok 42 - V1: a foreign-host ownership record is an explicit refusal, never a shared memory
+  ---
+  duration_ms: 61.0795
+  type: 'test'
+  ...
+# Subtest: V1: contenders on one memory terminate in bounded time without corrupting it
+ok 43 - V1: contenders on one memory terminate in bounded time without corrupting it
+  ---
+  duration_ms: 1314.5687
+  type: 'test'
+  ...
+# Subtest: G15: two configurations with different data_dir serialize on one shared memory root
+ok 44 - G15: two configurations with different data_dir serialize on one shared memory root
+  ---
+  duration_ms: 2042.5764
+  type: 'test'
+  ...
+# Subtest: G15: one memory reached through a junction has one lock identity
+ok 45 - G15: one memory reached through a junction has one lock identity
+  ---
+  duration_ms: 845.5719
+  type: 'test'
+  ...
+# Subtest: G15: a journal transaction through a junction alias closes the canonical journal path
+ok 46 - G15: a journal transaction through a junction alias closes the canonical journal path
+  ---
+  duration_ms: 2004.592
+  type: 'test'
+  ...
+# Subtest: F03: empty lock (crash right after wx) does not block a new write
+ok 47 - F03: empty lock (crash right after wx) does not block a new write
+  ---
+  duration_ms: 987.3022
+  type: 'test'
+  ...
+# Subtest: F03: lock owned by a dead pid is recovered
+ok 48 - F03: lock owned by a dead pid is recovered
+  ---
+  duration_ms: 1063.9981
+  type: 'test'
+  ...
+# Subtest: F03: lock with unparseable owner content is recovered
+ok 49 - F03: lock with unparseable owner content is recovered
+  ---
+  duration_ms: 988.5785
+  type: 'test'
+  ...
+# Subtest: F03: live lock is not stolen; write times out; after holder exit write succeeds
+ok 50 - F03: live lock is not stolen; write times out; after holder exit write succeeds
+  ---
+  duration_ms: 8410.8718
+  type: 'test'
+  ...
+# Subtest: V1: a contender paused before entry cannot enter while a live owner holds authority, and its refusal destroys nothing
+ok 51 - V1: a contender paused before entry cannot enter while a live owner holds authority, and its refusal destroys nothing
+  ---
+  duration_ms: 621.5886
+  type: 'test'
+  ...
+# Subtest: R5: release deletes only its own lock; a foreign lock is refused, not silently shared
+ok 52 - R5: release deletes only its own lock; a foreign lock is refused, not silently shared
+  ---
+  duration_ms: 685.7277
+  type: 'test'
+  ...
+# Subtest: R6: conflict decision is made under the lock; racing process gets CONFLICT
+ok 53 - R6: conflict decision is made under the lock; racing process gets CONFLICT
+  ---
+  duration_ms: 1383.5969
+  type: 'test'
+  ...
+# Subtest: R6: sequential write of different content to same event_id in another process conflicts
+ok 54 - R6: sequential write of different content to same event_id in another process conflicts
+  ---
+  duration_ms: 1466.4332
+  type: 'test'
+  ...
+# Subtest: R6: exact repeat of the same event_id in another process is idempotent
+ok 55 - R6: exact repeat of the same event_id in another process is idempotent
+  ---
+  duration_ms: 1956.2847
+  type: 'test'
+  ...
+# Subtest: V1: a contender that started over a stale owner record cannot displace the live owner who took it over
+ok 56 - V1: a contender that started over a stale owner record cannot displace the live owner who took it over
+  ---
+  duration_ms: 777.176
+  type: 'test'
+  ...
+# Subtest: V1: a second contender cannot enter the critical section while the first holder owns it
+ok 57 - V1: a second contender cannot enter the critical section while the first holder owns it
+  ---
+  duration_ms: 808.1039
+  type: 'test'
+  ...
+# Subtest: S1: takeover of a dead owner leaves no quarantine or keeper leftovers
+ok 58 - S1: takeover of a dead owner leaves no quarantine or keeper leftovers
+  ---
+  duration_ms: 233.9862
+  type: 'test'
+  ...
+# Subtest: T1: changing diagnostic metadata never frees authority for a third process
+ok 59 - T1: changing diagnostic metadata never frees authority for a third process
+  ---
+  duration_ms: 3995.5056
+  type: 'test'
+  ...
+# Subtest: F04: entry of project B in a shared file is not visible from project A
+ok 60 - F04: entry of project B in a shared file is not visible from project A
+  ---
+  duration_ms: 30.7297
+  type: 'test'
+  ...
+# Subtest: F04: isolation holds with reversed order (project entry written first)
+ok 61 - F04: isolation holds with reversed order (project entry written first)
+  ---
+  duration_ms: 23.4867
+  type: 'test'
+  ...
+# Subtest: R3: hand-written single-entry file without frontmatter is visible only at user level
+ok 62 - R3: hand-written single-entry file without frontmatter is visible only at user level
+  ---
+  duration_ms: 14.8251
+  type: 'test'
+  ...
+# Subtest: F04: status_hint and scope come from the matching entry, not the file first entry
+ok 63 - F04: status_hint and scope come from the matching entry, not the file first entry
+  ---
+  duration_ms: 13.9294
+  type: 'test'
+  ...
+# Subtest: F04: one file with several entries can yield several results; limit applies
+ok 64 - F04: one file with several entries can yield several results; limit applies
+  ---
+  duration_ms: 27.8365
+  type: 'test'
+  ...
+# Subtest: F04: searchKhoj local fallback is isolated per project
+ok 65 - F04: searchKhoj local fallback is isolated per project
+  ---
+  duration_ms: 18.0624
+  type: 'test'
+  ...
+# Subtest: R2: Khoj positive path attributes each hit to the local entry and keeps project isolation
+ok 66 - R2: Khoj positive path attributes each hit to the local entry and keeps project isolation
+  ---
+  duration_ms: 25.2812
+  type: 'test'
+  ...
+# Subtest: R2: all allowed source forms resolve to the same local file
+ok 67 - R2: all allowed source forms resolve to the same local file
+  ---
+  duration_ms: 24.7646
+  type: 'test'
+  ...
+# Subtest: R2: hit whose local file is missing is dropped; service text is not trusted
+ok 68 - R2: hit whose local file is missing is dropped; service text is not trusted
+  ---
+  duration_ms: 14.4154
+  type: 'test'
+  ...
+# Subtest: R2: hit not confirmed by any local entry is dropped
+ok 69 - R2: hit not confirmed by any local entry is dropped
+  ---
+  duration_ms: 15.3496
+  type: 'test'
+  ...
+# Subtest: R2: hit with unknown scope is hidden from projects, visible at user level
+ok 70 - R2: hit with unknown scope is hidden from projects, visible at user level
+  ---
+  duration_ms: 20.3618
+  type: 'test'
+  ...
+# Subtest: R3: CRLF file does not break entry splitting nor project isolation
+ok 71 - R3: CRLF file does not break entry splitting nor project isolation
+  ---
+  duration_ms: 17.51
+  type: 'test'
+  ...
+# Subtest: R3: relativeSource normalizes all allowed forms
+ok 72 - R3: relativeSource normalizes all allowed forms
+  ---
+  duration_ms: 5.8959
+  type: 'test'
+  ...
+# Subtest: S2: duplicate scope in a record is fail-closed (hidden from every project; user level sees unknown)
+ok 73 - S2: duplicate scope in a record is fail-closed (hidden from every project; user level sees unknown)
+  ---
+  duration_ms: 17.0986
+  type: 'test'
+  ...
+# Subtest: S2: duplicate status in a record is fail-closed (status_hint unknown)
+ok 74 - S2: duplicate status in a record is fail-closed (status_hint unknown)
+  ---
+  duration_ms: 8.9829
+  type: 'test'
+  ...
+# Subtest: B04: minimal local config preserves nested search and Khoj defaults
+ok 75 - B04: minimal local config preserves nested search and Khoj defaults
+  ---
+  duration_ms: 17.6674
+  type: 'test'
+  ...
+# Subtest: B05: Khoj hit resolves against a configured custom memory root
+ok 76 - B05: Khoj hit resolves against a configured custom memory root
+  ---
+  duration_ms: 17.7115
+  type: 'test'
+  ...
+# Subtest: B14: an allowed record is selected before a better forbidden record
+ok 77 - B14: an allowed record is selected before a better forbidden record
+  ---
+  duration_ms: 14.6186
+  type: 'test'
+  ...
+# Subtest: G05: a Khoj hit through a junction inside memory root is not read outside it
+ok 78 - G05: a Khoj hit through a junction inside memory root is not read outside it
+  ---
+  duration_ms: 13.4268
+  type: 'test'
+  ...
+# Subtest: G05: the local walk does not descend into a junction inside memory root
+ok 79 - G05: the local walk does not descend into a junction inside memory root
+  ---
+  duration_ms: 8.9744
+  type: 'test'
+  ...
+# Subtest: G09: an unregistered project_id is rejected on the positive Khoj path, before HTTP
+ok 80 - G09: an unregistered project_id is rejected on the positive Khoj path, before HTTP
+  ---
+  duration_ms: 9.5155
+  type: 'test'
+  ...
+# Subtest: G09: the verdict for an unknown project does not depend on Khoj availability
+ok 81 - G09: the verdict for an unknown project does not depend on Khoj availability
+  ---
+  duration_ms: 16.5194
+  type: 'test'
+  ...
+# Subtest: F04: CLI save without services persists; a new process finds the record
+ok 82 - F04: CLI save without services persists; a new process finds the record
+  ---
+  duration_ms: 1191.0533
+  type: 'test'
+  ...
+# Subtest: F04: interrupted save (intent only, process died) is recovered, not falsely persisted
+ok 83 - F04: interrupted save (intent only, process died) is recovered, not falsely persisted
+  ---
+  duration_ms: 2545.7733
+  type: 'test'
+  ...
+# Subtest: F04: kill mid-save then repeat never yields false persisted or duplicates
+ok 84 - F04: kill mid-save then repeat never yields false persisted or duplicates
+  ---
+  duration_ms: 4771.1805
+  type: 'test'
+  ...
+# Subtest: F04: deterministic crash at each write stage is recovered by the real writer
+ok 85 - F04: deterministic crash at each write stage is recovered by the real writer
+  ---
+  duration_ms: 10542.792
+  type: 'test'
+  ...
+# Subtest: F04: index queue failure keeps write persisted and records a visible cause
+ok 86 - F04: index queue failure keeps write persisted and records a visible cause
+  ---
+  duration_ms: 763.9676
+  type: 'test'
+  ...
+# Subtest: F04: writeAtomic cleans up its temp file when the rename fails
+ok 87 - F04: writeAtomic cleans up its temp file when the rename fails
+  ---
+  duration_ms: 320.029
+  type: 'test'
+  ...
+# Subtest: F04: divergence on the same memory file conflicts on pull; resolution keeps both versions
+ok 88 - F04: divergence on the same memory file conflicts on pull; resolution keeps both versions
+  ---
+  duration_ms: 6488.277
+  type: 'test'
+  ...
+# Subtest: G03: a lease is dated at claim time, so a long previous delivery cannot orphan the next one
+ok 89 - G03: a lease is dated at claim time, so a long previous delivery cannot orphan the next one
+  ---
+  duration_ms: 1993.6755
+  type: 'test'
+  ...
+# Subtest: G03: an expired generation is still recoverable by a later process
+ok 90 - G03: an expired generation is still recoverable by a later process
+  ---
+  duration_ms: 683.8127
+  type: 'test'
+  ...
+# Subtest: G03: retry backoff is measured from the result, not from the start of the pass
+ok 91 - G03: retry backoff is measured from the result, not from the start of the pass
+  ---
+  duration_ms: 1851.0862
+  type: 'test'
+  ...
+# Subtest: FIX-05: a delivery longer than the lease keeps its generation
+ok 92 - FIX-05: a delivery longer than the lease keeps its generation
+  ---
+  duration_ms: 2433.6172
+  type: 'test'
+  ...
+# Subtest: FIX-05: renewal stops with the delivery and refuses a lost generation
+ok 93 - FIX-05: renewal stops with the delivery and refuses a lost generation
+  ---
+  duration_ms: 2745.7266
+  type: 'test'
+  ...
+# Subtest: B10: UTF-8 truncation preserves code points and the byte limit
+ok 94 - B10: UTF-8 truncation preserves code points and the byte limit
+  ---
+  duration_ms: 2.3006
+  type: 'test'
+  ...
+# Subtest: B11: event validation rejects missing identity and malformed list fields
+ok 95 - B11: event validation rejects missing identity and malformed list fields
+  ---
+  duration_ms: 26.9853
+  type: 'test'
+  ...
+# Subtest: B11: queue validates direct API input before append
+ok 96 - B11: queue validates direct API input before append
+  ---
+  duration_ms: 14.0148
+  type: 'test'
+  ...
+# Subtest: G08: capture rejects a wrongly typed list instead of silently emptying it
+ok 97 - G08: capture rejects a wrongly typed list instead of silently emptying it
+  ---
+  duration_ms: 5.1971
+  type: 'test'
+  ...
+# Subtest: G08: correct arrays and absent optional fields keep the documented meaning
+ok 98 - G08: correct arrays and absent optional fields keep the documented meaning
+  ---
+  duration_ms: 11.8288
+  type: 'test'
+  ...
+# Subtest: G08: capture --file with a wrongly typed field fails loudly and enqueues nothing
+ok 99 - G08: capture --file with a wrongly typed field fails loudly and enqueues nothing
+  ---
+  duration_ms: 147.733
+  type: 'test'
+  ...
+# Subtest: B09/F10: truncated tails are quarantined and valid writer/indexer/queue records survive
+ok 100 - B09/F10: truncated tails are quarantined and valid writer/indexer/queue records survive
+  ---
+  duration_ms: 924.361
+  type: 'test'
+  ...
+# Subtest: B09: corruption in the middle is fail-closed and is not silently removed
+ok 101 - B09: corruption in the middle is fail-closed and is not silently removed
+  ---
+  duration_ms: 167.9748
+  type: 'test'
+  ...
+# Subtest: F09: recapture of the same commit ignores timestamp-only differences
+ok 102 - F09: recapture of the same commit ignores timestamp-only differences
+  ---
+  duration_ms: 465.4188
+  type: 'test'
+  ...
+# Subtest: F08: only one concurrent worker delivers a live lease
+ok 103 - F08: only one concurrent worker delivers a live lease
+  ---
+  duration_ms: 1603.1432
+  type: 'test'
+  ...
+# Subtest: F08: an expired worker cannot overwrite a newer delivered generation
+ok 104 - F08: an expired worker cannot overwrite a newer delivered generation
+  ---
+  duration_ms: 2221.0091
+  type: 'test'
+  ...
+# Subtest: U2: a failed quarantine write leaves the journal byte-identical
+ok 105 - U2: a failed quarantine write leaves the journal byte-identical
+  ---
+  duration_ms: 262.6013
+  type: 'test'
+  ...
+# Subtest: U2: a failed repaired-copy write keeps prefix and tail recoverable
+ok 106 - U2: a failed repaired-copy write keeps prefix and tail recoverable
+  ---
+  duration_ms: 266.6642
+  type: 'test'
+  ...
+# Subtest: U2: a failed replacement leaves the journal intact and no repair leftovers
+ok 107 - U2: a failed replacement leaves the journal intact and no repair leftovers
+  ---
+  duration_ms: 250.264
+  type: 'test'
+  ...
+# Subtest: U2: process death at a repair boundary keeps both parts recoverable
+ok 108 - U2: process death at a repair boundary keeps both parts recoverable
+  ---
+  duration_ms: 469.952
+  type: 'test'
+  ...
+# Subtest: U2: the canonical journal is only replaced by an atomic rename of a prepared sibling
+ok 109 - U2: the canonical journal is only replaced by an atomic rename of a prepared sibling
+  ---
+  duration_ms: 154.8121
+  type: 'test'
+  ...
+# Subtest: U2: a valid final record without LF is not rewritten and stays appendable
+ok 110 - U2: a valid final record without LF is not rewritten and stays appendable
+  ---
+  duration_ms: 510.0324
+  type: 'test'
+  ...
+# Subtest: U2: an append is flushed to disk through its own fd
+ok 111 - U2: an append is flushed to disk through its own fd
+  ---
+  duration_ms: 297.2272
+  type: 'test'
+  ...
+# Subtest: U2/FIX-06 plan: corrupt_count is reported without touching the journal
+ok 112 - U2/FIX-06 plan: corrupt_count is reported without touching the journal
+  ---
+  duration_ms: 469.5218
+  type: 'test'
+  ...
+# Subtest: U2/FIX-06 plan: quarantine moves the torn tail to a sidecar and is idempotent
+ok 113 - U2/FIX-06 plan: quarantine moves the torn tail to a sidecar and is idempotent
+  ---
+  duration_ms: 970.4773
+  type: 'test'
+  ...
+# Subtest: U2/FIX-06 plan: queue-status reports corrupt_count and quarantines on request
+ok 114 - U2/FIX-06 plan: queue-status reports corrupt_count and quarantines on request
+  ---
+  duration_ms: 2510.4679
+  type: 'test'
+  ...
+# Subtest: U2/FIX-06 plan: a journal with middle corruption is reported, not swallowed
+ok 115 - U2/FIX-06 plan: a journal with middle corruption is reported, not swallowed
+  ---
+  duration_ms: 1161.1055
+  type: 'test'
+  ...
+# Subtest: B16: one batch creates one raw pending index record per unique file revision
+ok 116 - B16: one batch creates one raw pending index record per unique file revision
+  ---
+  duration_ms: 1146.2771
+  type: 'test'
+  ...
+# Subtest: B19: indexer rejects dot-dot and junction escapes
+ok 117 - B19: indexer rejects dot-dot and junction escapes
+  ---
+  duration_ms: 13.148
+  type: 'test'
+  ...
+# Subtest: B07: changed file creates a new manual index revision
+ok 118 - B07: changed file creates a new manual index revision
+  ---
+  duration_ms: 1791.0545
+  type: 'test'
+  ...
+# Subtest: B08: failed index task observes backoff before retry
+ok 119 - B08: failed index task observes backoff before retry
+  ---
+  duration_ms: 1930.9278
+  type: 'test'
+  ...
+# Subtest: F06: legacy in-flight task without a lease is recovered by run
+ok 120 - F06: legacy in-flight task without a lease is recovered by run
+  ---
+  duration_ms: 973.0963
+  type: 'test'
+  ...
+# Subtest: F07: writer event is indexed only after every file succeeds
+ok 121 - F07: writer event is indexed only after every file succeeds
+  ---
+  duration_ms: 2429.3858
+  type: 'test'
+  ...
+# Subtest: L02-03: a 2xx that does not confirm completion is not accepted as indexed
+ok 122 - L02-03: a 2xx that does not confirm completion is not accepted as indexed
+  ---
+  duration_ms: 965.7615
+  type: 'test'
+  ...
+# Subtest: F05: idempotent writer retry recreates a lost index task
+ok 123 - F05: idempotent writer retry recreates a lost index task
+  ---
+  duration_ms: 1713.9243
+  type: 'test'
+  ...
+# Subtest: G06: run refuses a journal path that escapes memory root and never reaches the adapter
+ok 124 - G06: run refuses a journal path that escapes memory root and never reaches the adapter
+  ---
+  duration_ms: 1168.38
+  type: 'test'
+  ...
+# Subtest: G13: a directory replaced by a junction between enqueue and run is not indexed
+ok 125 - G13: a directory replaced by a junction between enqueue and run is not indexed
+  ---
+  duration_ms: 1416.0435
+  type: 'test'
+  ...
+# Subtest: G01: a new file revision withdraws indexed at once, and a completed task restores it
+ok 126 - G01: a new file revision withdraws indexed at once, and a completed task restores it
+  ---
+  duration_ms: 6670.6509
+  type: 'test'
+  ...
+# Subtest: G01: a file changed outside the queue invalidates the confirmation
+ok 127 - G01: a file changed outside the queue invalidates the confirmation
+  ---
+  duration_ms: 5212.1817
+  type: 'test'
+  ...
+# Subtest: G02: a failed aggregate write is visible and repaired, never reported as a task outcome
+ok 128 - G02: a failed aggregate write is visible and repaired, never reported as a task outcome
+  ---
+  duration_ms: 2942.0291
+  type: 'test'
+  ...
+# Subtest: G18: reconcile restores a lost task set and its aggregate, and is idempotent
+ok 129 - G18: reconcile restores a lost task set and its aggregate, and is idempotent
+  ---
+  duration_ms: 6844.2017
+  type: 'test'
+  ...
+# Subtest: G18: an in-flight task left by a dead pass does not confirm the aggregate
+ok 130 - G18: an in-flight task left by a dead pass does not confirm the aggregate
+  ---
+  duration_ms: 2605.5255
+  type: 'test'
+  ...
+# Subtest: FIX-09: generic webhook 2xx is not a persistence acknowledgement
+ok 131 - FIX-09: generic webhook 2xx is not a persistence acknowledgement
+  ---
+  duration_ms: 20.447
+  type: 'test'
+  ...
+# Subtest: FIX-09: only correlated persisted or no-pattern responses acknowledge delivery
+ok 132 - FIX-09: only correlated persisted or no-pattern responses acknowledge delivery
+  ---
+  duration_ms: 16.6713
+  type: 'test'
+  ...
+# Subtest: doctor boundary: bridge health is not ready without a configured token
+ok 133 - doctor boundary: bridge health is not ready without a configured token
+  ---
+  duration_ms: 118.8683
+  type: 'test'
+  ...
+# Subtest: G19: the first commit of a repository is captured with a real diff
+ok 134 - G19: the first commit of a repository is captured with a real diff
+  ---
+  duration_ms: 3593.5834
+  type: 'test'
+  ...
+# Subtest: G19: a merge commit is captured against its first parent
+ok 135 - G19: a merge commit is captured against its first parent
+  ---
+  duration_ms: 4811.9599
+  type: 'test'
+  ...
+# Subtest: G19: a diff that cannot be computed is reported instead of passed off as empty
+ok 136 - G19: a diff that cannot be computed is reported instead of passed off as empty
+  ---
+  duration_ms: 3057.8898
+  type: 'test'
+  ...
+# Subtest: G12: a durable event completes after the service returns, without a new commit
+ok 137 - G12: a durable event completes after the service returns, without a new commit
+  ---
+  duration_ms: 3220.0916
+  type: 'test'
+  ...
+# Subtest: G12: watch stops with an honest status instead of retrying forever
+ok 138 - G12: watch stops with an honest status instead of retrying forever
+  ---
+  duration_ms: 2372.0747
+  type: 'test'
+  ...
+# Subtest: G12: only one worker owns the queue at a time
+ok 139 - G12: only one worker owns the queue at a time
+  ---
+  duration_ms: 623.4751
+  type: 'test'
+  ...
+# Subtest: W1: an automatically revived failed event finishes before watch returns
+ok 140 - W1: an automatically revived failed event finishes before watch returns
+  ---
+  duration_ms: 4343.6108
+  type: 'test'
+  ...
+# Subtest: W1: a failing revival reaches the caller and releases the worker lock
+ok 141 - W1: a failing revival reaches the caller and releases the worker lock
+  ---
+  duration_ms: 1307.8875
+  type: 'test'
+  ...
+# Subtest: G17: sync --push publishes the upstream destination, not the local branch name
+ok 142 - G17: sync --push publishes the upstream destination, not the local branch name
+  ---
+  duration_ms: 3053.2405
+  type: 'test'
+  ...
+# Subtest: G17: an explicit --branch names the destination, and no upstream means no push
+ok 143 - G17: an explicit --branch names the destination, and no upstream means no push
+  ---
+  duration_ms: 2266.9463
+  type: 'test'
+  ...
+# Subtest: B03: explicit root cannot be redirected by another checkout in local config
+ok 144 - B03: explicit root cannot be redirected by another checkout in local config
+  ---
+  duration_ms: 19.5942
+  type: 'test'
+  ...
+# Subtest: B04 config merge is recursive and preserves explicit false and zero
+ok 145 - B04 config merge is recursive and preserves explicit false and zero
+  ---
+  duration_ms: 13.1086
+  type: 'test'
+  ...
+# Subtest: B06: repeated init-project preserves an existing managed HANDOFF state
+ok 146 - B06: repeated init-project preserves an existing managed HANDOFF state
+  ---
+  duration_ms: 21.8303
+  type: 'test'
+  ...
+# Subtest: B06: damaged or duplicated managed markers fail closed
+ok 147 - B06: damaged or duplicated managed markers fail closed
+  ---
+  duration_ms: 11.8879
+  type: 'test'
+  ...
+# Subtest: B13: project-id uses the merged local registry remote mapping
+ok 148 - B13: project-id uses the merged local registry remote mapping
+  ---
+  duration_ms: 185.7375
+  type: 'test'
+  ...
+# Subtest: B13: unknown connected project is not attributed to systemqwen
+ok 149 - B13: unknown connected project is not attributed to systemqwen
+  ---
+  duration_ms: 133.9755
+  type: 'test'
+  ...
+# Subtest: B12: hook installer leaves an active custom hooksPath and its behavior intact
+ok 150 - B12: hook installer leaves an active custom hooksPath and its behavior intact
+  ---
+  duration_ms: 1069.2032
+  type: 'test'
+  ...
+# Subtest: B18: Figma extractor limits node tokens to the requested subtree
+ok 151 - B18: Figma extractor limits node tokens to the requested subtree
+  ---
+  duration_ms: 5.9765
+  type: 'test'
+  ...
+# Subtest: G10: reversed managed markers are rejected and the document is left untouched
+ok 152 - G10: reversed managed markers are rejected and the document is left untouched
+  ---
+  duration_ms: 14.1541
+  type: 'test'
+  ...
+# Subtest: G10: a corrupted HANDOFF blocks registration and leaves the registry unwritten
+ok 153 - G10: a corrupted HANDOFF blocks registration and leaves the registry unwritten
+  ---
+  duration_ms: 13.1232
+  type: 'test'
+  ...
+# Subtest: G14: --register links the project directory so project_id resolves without an environment override
+ok 154 - G14: --register links the project directory so project_id resolves without an environment override
+  ---
+  duration_ms: 70.646
+  type: 'test'
+  ...
+# Subtest: G14: registration refuses a second project for the same directory or a remapped project
+ok 155 - G14: registration refuses a second project for the same directory or a remapped project
+  ---
+  duration_ms: 90.2566
+  type: 'test'
+  ...
+# Subtest: G11: installer in a linked worktree does not silently disable the shared user hook
+ok 156 - G11: installer in a linked worktree does not silently disable the shared user hook
+  ---
+  duration_ms: 3542.3202
+  type: 'test'
+  ...
+# Subtest: G11: a missing hook template is reported instead of configuring a dead hooks path
+ok 157 - G11: a missing hook template is reported instead of configuring a dead hooks path
+  ---
+  duration_ms: 994.5423
+  type: 'test'
+  ...
+# Subtest: FIX-11: init --register then an ordinary commit produces the right project_id
+ok 158 - FIX-11: init --register then an ordinary commit produces the right project_id
+  ---
+  duration_ms: 2805.8038
+  type: 'test'
+  ...
+# Subtest: L04-00: HTTP 408 from the synchronous webhook is retryable, not terminal
+ok 159 - L04-00: HTTP 408 from the synchronous webhook is retryable, not terminal
+  ---
+  duration_ms: 191.712
+  type: 'test'
+  ...
+# Subtest: L04-00: a 408 keeps the event retryable in the durable queue instead of failing it
+ok 160 - L04-00: a 408 keeps the event retryable in the durable queue instead of failing it
+  ---
+  duration_ms: 1048.8156
+  type: 'test'
+  ...
+# Subtest: transport failure preserves its cause in the durable queue and does not retry inside deliver
+ok 161 - transport failure preserves its cause in the durable queue and does not retry inside deliver
+  ---
+  duration_ms: 993.6115
+  type: 'test'
+  ...
+# Subtest: L04-00: a 408 is retried until the flow answers with a correlated terminal status
+ok 162 - L04-00: a 408 is retried until the flow answers with a correlated terminal status
+  ---
+  duration_ms: 1823.7855
+  type: 'test'
+  ...
+# Subtest: L04-00: a non-timeout 4xx stays terminal
+ok 163 - L04-00: a non-timeout 4xx stays terminal
+  ---
+  duration_ms: 21.8289
+  type: 'test'
+  ...
+# Subtest: L04-00: the sender waits the configured delivery timeout instead of a fixed short one
+ok 164 - L04-00: the sender waits the configured delivery timeout instead of a fixed short one
+  ---
+  duration_ms: 566.9644
+  type: 'test'
+  ...
+# Subtest: L04-00: the shipped default sender timeout outlasts the platform sync timeout
+ok 165 - L04-00: the shipped default sender timeout outlasts the platform sync timeout
+  ---
+  duration_ms: 0.3868
+  type: 'test'
+  ...
+# Subtest: L04-04: a correlated conflict is terminal, not another retry
+ok 166 - L04-04: a correlated conflict is terminal, not another retry
+  ---
+  duration_ms: 117.2338
+  type: 'test'
+  ...
+# Subtest: L04-04: an unknown correlated status stays retryable
+ok 167 - L04-04: an unknown correlated status stays retryable
+  ---
+  duration_ms: 31.4244
+  type: 'test'
+  ...
+# Subtest: L04-04: the queue records the conflict outcome and stops retrying
+ok 168 - L04-04: the queue records the conflict outcome and stops retrying
+  ---
+  duration_ms: 1763.5776
+  type: 'test'
+  ...
+# Subtest: L04-04: watch --no-revive reaches idle with a terminal failed record
+ok 169 - L04-04: watch --no-revive reaches idle with a terminal failed record
+  ---
+  duration_ms: 1835.3952
+  type: 'test'
+  ...
+# Subtest: L04-04: with revive enabled the same terminal record still holds the watch
+ok 170 - L04-04: with revive enabled the same terminal record still holds the watch
+  ---
+  duration_ms: 3045.7304
+  type: 'test'
+  ...
+# Subtest: L04-04: --no-revive still waits for a record that is merely not due yet
+ok 171 - L04-04: --no-revive still waits for a record that is merely not due yet
+  ---
+  duration_ms: 1548.5604
+  type: 'test'
+  ...
+# Subtest: L06-04: profile defaults to core when the field is absent from example and local config
+ok 172 - L06-04: profile defaults to core when the field is absent from example and local config
+  ---
+  duration_ms: 14.5059
+  type: 'test'
+  ...
+# Subtest: L06-04: an old local config without a profile key migrates to core, not activepieces
+ok 173 - L06-04: an old local config without a profile key migrates to core, not activepieces
+  ---
+  duration_ms: 17.6118
+  type: 'test'
+  ...
+# Subtest: L06-04: explicit activepieces profile is respected
+ok 174 - L06-04: explicit activepieces profile is respected
+  ---
+  duration_ms: 12.0459
+  type: 'test'
+  ...
+# Subtest: L06-04: deepMerge migration of a real old-style local config keeps core as the default profile
+ok 175 - L06-04: deepMerge migration of a real old-style local config keeps core as the default profile
+  ---
+  duration_ms: 0.4032
+  type: 'test'
+  ...
+# Subtest: L06-04: uninstall-hooks.sh removes our own hooksPath and is idempotent
+ok 176 - L06-04: uninstall-hooks.sh removes our own hooksPath and is idempotent
+  ---
+  duration_ms: 2032.0425
+  type: 'test'
+  ...
+# Subtest: L06-04: uninstall-hooks.sh never touches a foreign hooksPath
+ok 177 - L06-04: uninstall-hooks.sh never touches a foreign hooksPath
+  ---
+  duration_ms: 729.2047
+  type: 'test'
+  ...
+# Subtest: L06-04: bootstrap in core profile does not install hooks and removes its own if present, without touching Docker
+ok 178 - L06-04: bootstrap in core profile does not install hooks and removes its own if present, without touching Docker
+  ---
+  duration_ms: 2916.6574
+  type: 'test'
+  ...
+# Subtest: L06-04: bootstrap CLI exit code 0 in core profile when disabled integrations present
+ok 179 - L06-04: bootstrap CLI exit code 0 in core profile when disabled integrations present
+  ---
+  duration_ms: 1292.4953
+  type: 'test'
+  ...
+# Subtest: L06-04: doctor reports disabled (not PROBLEM) for an integration turned off in core profile
+ok 180 - L06-04: doctor reports disabled (not PROBLEM) for an integration turned off in core profile
+  ---
+  duration_ms: 603.3506
+  type: 'test'
+  ...
+# Subtest: L06-04: doctor flags an active legacy hooksPath as PROBLEM in core profile
+ok 181 - L06-04: doctor flags an active legacy hooksPath as PROBLEM in core profile
+  ---
+  duration_ms: 1653.4342
+  type: 'test'
+  ...
+# Subtest: L06-04: doctor detects global hooksPath pointing to System2 in core profile
+ok 182 - L06-04: doctor detects global hooksPath pointing to System2 in core profile
+  ---
+  duration_ms: 694.3497
+  type: 'test'
+  ...
+# Subtest: L06-04: doctor detects direct .git/hooks/post-commit with System2 marker in core profile
+ok 183 - L06-04: doctor detects direct .git/hooks/post-commit with System2 marker in core profile
+  ---
+  duration_ms: 521.647
+  type: 'test'
+  ...
+# Subtest: L06-04: doctor shows unchecked status for foreign direct .git/hooks/post-commit
+ok 184 - L06-04: doctor shows unchecked status for foreign direct .git/hooks/post-commit
+  ---
+  duration_ms: 484.9212
+  type: 'test'
+  ...
+# Subtest: L06-04: uninstall-all-hooks.sh removes System2 hooks from all sources
+ok 185 - L06-04: uninstall-all-hooks.sh removes System2 hooks from all sources
+  ---
+  duration_ms: 2561.8191
+  type: 'test'
+  ...
+# Subtest: L06-04: uninstall-all-hooks.sh preserves foreign direct hook
+ok 186 - L06-04: uninstall-all-hooks.sh preserves foreign direct hook
+  ---
+  duration_ms: 648.347
+  type: 'test'
+  ...
+# Subtest: L06-04: uninstall-all-hooks.sh preserves mixed hook (System2 + user code)
+ok 187 - L06-04: uninstall-all-hooks.sh preserves mixed hook (System2 + user code)
+  ---
+  duration_ms: 644.8909
+  type: 'test'
+  ...
+# Subtest: L06-04: doctor detects System2 hook at arbitrary effective hooksPath in core profile
+ok 188 - L06-04: doctor detects System2 hook at arbitrary effective hooksPath in core profile
+  ---
+  duration_ms: 555.7033
+  type: 'test'
+  ...
+# Subtest: L06-04: uninstall-hooks.sh works in connected local project
+ok 189 - L06-04: uninstall-hooks.sh works in connected local project
+  ---
+  duration_ms: 1595.2284
+  type: 'test'
+  ...
+# Subtest: a writer memory fixation is skipped, and its paths carry no diff prefix
+ok 190 - a writer memory fixation is skipped, and its paths carry no diff prefix
+  ---
+  duration_ms: 15.7746
+  type: 'test'
+  ...
+# Subtest: an ordinary commit is not mistaken for a memory fixation
+ok 191 - an ordinary commit is not mistaken for a memory fixation
+  ---
+  duration_ms: 9.2
+  type: 'test'
+  ...
+# Subtest: a mixed commit that also changes code is not excluded
+ok 192 - a mixed commit that also changes code is not excluded
+  ---
+  duration_ms: 6.2714
+  type: 'test'
+  ...
+# Subtest: a memory-only commit that is not a writer file is captured as usual
+ok 193 - a memory-only commit that is not a writer file is captured as usual
+  ---
+  duration_ms: 8.2219
+  type: 'test'
+  ...
+# Subtest: a record whose event is not persisted yet is captured rather than skipped
+ok 194 - a record whose event is not persisted yet is captured rather than skipped
+  ---
+  duration_ms: 6.0348
+  type: 'test'
+  ...
+# Subtest: a memory commit that removes content is captured rather than skipped
+ok 195 - a memory commit that removes content is captured rather than skipped
+  ---
+  duration_ms: 6.0681
+  type: 'test'
+  ...
+# Subtest: a memory commit that deletes a file is captured rather than skipped
+ok 196 - a memory commit that deletes a file is captured rather than skipped
+  ---
+  duration_ms: 5.6572
+  type: 'test'
+  ...
+# Subtest: a memory commit that renames a file is captured rather than skipped
+ok 197 - a memory commit that renames a file is captured rather than skipped
+  ---
+  duration_ms: 5.4981
+  type: 'test'
+  ...
+# Subtest: a quoted path is treated as insufficient data, not as memory
+ok 198 - a quoted path is treated as insufficient data, not as memory
+  ---
+  duration_ms: 7.3217
+  type: 'test'
+  ...
+# Subtest: an empty diff and an empty added set are captured, not skipped
+ok 199 - an empty diff and an empty added set are captured, not skipped
+  ---
+  duration_ms: 5.4533
+  type: 'test'
+  ...
+# Subtest: a failure of the check itself is reported instead of read as a fixation
+ok 200 - a failure of the check itself is reported instead of read as a fixation
+  ---
+  duration_ms: 0.8195
+  type: 'test'
+  ...
+# Subtest: an ordinary commit is still captured through the hook
+ok 201 - an ordinary commit is still captured through the hook
+  ---
+  duration_ms: 2516.5991
+  type: 'test'
+  ...
+# Subtest: a mixed commit with code changes is still captured through the hook
+ok 202 - a mixed commit with code changes is still captured through the hook
+  ---
+  duration_ms: 2268.2104
+  type: 'test'
+  ...
+# Subtest: a writer memory fixation produces no event and does not continue the cycle
+ok 203 - a writer memory fixation produces no event and does not continue the cycle
+  ---
+  duration_ms: 5530.1928
+  type: 'test'
+  ...
+# Subtest: SW-01: known ID with placeholder gets one local binding and minimal Claude start adapter
+ok 204 - SW-01: known ID with placeholder gets one local binding and minimal Claude start adapter
+  ---
+  duration_ms: 68.8995
+  type: 'test'
+  ...
+# Subtest: SW-01: wrong path, conflicting adapter, and absent System fail without changing project files
+ok 205 - SW-01: wrong path, conflicting adapter, and absent System fail without changing project files
+  ---
+  duration_ms: 22.0909
+  type: 'test'
+  ...
+# Subtest: SW-01: unknown ID remains local until registry is explicitly published
+ok 206 - SW-01: unknown ID remains local until registry is explicitly published
+  ---
+  duration_ms: 74.4802
+  type: 'test'
+  ...
+# Subtest: site-build adapter conflicts fail before any bootstrap or registry mutation
+ok 207 - site-build adapter conflicts fail before any bootstrap or registry mutation
+  ---
+  duration_ms: 19.4284
+  type: 'test'
+  ...
+# Subtest: SW-03: shared lesson is attributed, project secret stays isolated, and missing date stays missing
+ok 208 - SW-03: shared lesson is attributed, project secret stays isolated, and missing date stays missing
+  ---
+  duration_ms: 36.717
+  type: 'test'
+  ...
+# Subtest: SW-04: isolated Cyrillic checkpoint persists, is searchable, retries once, and rejects a changed claim
+ok 209 - SW-04: isolated Cyrillic checkpoint persists, is searchable, retries once, and rejects a changed claim
+  ---
+  duration_ms: 2618.0758
+  type: 'test'
+  ...
+# Subtest: SW-04: failed publication leaves a local commit and reports the failure
+ok 210 - SW-04: failed publication leaves a local commit and reports the failure
+  ---
+  duration_ms: 1238.7533
+  type: 'test'
+  ...
+1..210
+# tests 210
+# suites 0
+# pass 210
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 257886.4642

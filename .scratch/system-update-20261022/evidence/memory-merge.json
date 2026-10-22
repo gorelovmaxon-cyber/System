@@ -1,0 +1,45 @@
+[
+  {
+    "path": ".claude/memory/decisions/writer-entries.md",
+    "mergedEvents": 51,
+    "committedBothSidesPreserved": true,
+    "localUnique": [
+      "journal_system-of-site_9255bc76605f61fa995a164a",
+      "journal_system-of-site_36ce3e3bec4831428f2da086",
+      "journal_system-of-site_bdfc539b0f2511b4be28b227",
+      "journal_system-of-site_b42bf82c6a0626c82effd6fc",
+      "journal_system-of-site_0b4adc9f2632b88852a08031",
+      "journal_system-of-site_e7e453dda8d22429d667ab6f",
+      "journal_system-of-site_60cdb36fe52f47f69cf41c3c",
+      "journal_system-of-site_e58410a5c97d23f1c83bbcf6",
+      "journal_system-of-site_987e706a33c2bec0db79b04c",
+      "journal_system-of-site_e4176fcc6a0779e71b10c699",
+      "journal_system-of-site_d77b0e57b5b41dc021e8e17e",
+      "journal_system-of-site_c91d870b35c08f7cd8645e2d",
+      "journal_system-of-site_3f8a4c21718b877d449f1368"
+    ],
+    "localAlreadyPublished": [],
+    "originalDirtyEvents": 13
+  },
+  {
+    "path": ".claude/memory/facts/writer-entries.md",
+    "mergedEvents": 37,
+    "committedBothSidesPreserved": true,
+    "localUnique": [
+      "journal_system-of-site_2d2f515c3cdd2e9428a314bd",
+      "journal_system-of-site_7c59df4012581b373b3694f2",
+      "journal_system-of-site_561f63d6bdd373ea6aab0f0d",
+      "journal_system-of-site_b3f3ccf4b3c19147074de1b8",
+      "journal_system-of-site_79373dbcf55c0e43d5817313"
+    ],
+    "localAlreadyPublished": [],
+    "originalDirtyEvents": 5
+  },
+  {
+    "path": ".claude/memory/user-profile/writer-entries.md",
+    "mergedEvents": 4,
+    "committedBothSidesPreserved": true,
+    "localUnique": [],
+    "localAlreadyPublished": []
+  }
+]
