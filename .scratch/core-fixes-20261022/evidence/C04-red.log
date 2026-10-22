@@ -1,0 +1,49 @@
+✖ C04: metadata-only queries find local records and exact event id outranks body coincidences (19.0916ms)
+✔ C04: metadata never bypasses scope, duplicate critical keys or unknown projects (32.9863ms)
+✖ C04: Khoj attribution uses local metadata and body, with exact-event priority (15.6792ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 1
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 299.6835
+
+✖ failing tests:
+
+test at scripts\memory\tests\core-search.test.js:15:1
+✖ C04: metadata-only queries find local records and exact event id outranks body coincidences (19.0916ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /z.md$/. Input:
+  
+  '.claude/memory/facts/a.md'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-caTiIB\source\scripts\memory\tests\core-search.test.js:21:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '.claude/memory/facts/a.md',
+    expected: /z.md$/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\core-search.test.js:41:1
+✖ C04: Khoj attribution uses local metadata and body, with exact-event priority (15.6792ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /LOCAL_TRUSTED_BODY/. Input:
+  
+  '## TARGET_META body coincidence'
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-caTiIB\source\scripts\memory\tests\core-search.test.js:56:43)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '## TARGET_META body coincidence',
+    expected: /LOCAL_TRUSTED_BODY/,
+    operator: 'match',
+    diff: 'simple'
+  }

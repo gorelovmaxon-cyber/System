@@ -1,0 +1,76 @@
+{
+  "status": "awaiting-review",
+  "initialHead": "52a9716ad020e450714d31698f4e22327bbb81d3",
+  "finalHead": "34693496cbca89fbe65a3917991c8f326cb4d4a8",
+  "backup": "D:/SystemTheBest/System-update-backups/PROFILE-01-20261022-2026-10-22T08-22-57-522Z",
+  "verifiedBackupFiles": 32,
+  "changedBaselinePaths": [
+    "HANDOFF.md",
+    ".claude/memory/MEMORY.md",
+    ".claude/memory/user-profile/architecture-prefs.md",
+    ".claude/memory/user-profile/coding-style.md",
+    ".claude/memory/user-profile/common-mistakes.md",
+    ".claude/memory/user-profile/work-patterns.md"
+  ],
+  "priorDirtyAndUntrackedFilesUnchangedExceptHandoff": true,
+  "entirePriorHandoffPreservedAfterOwnSection": true,
+  "rawPatchEqualityNotUsed": "The committed HANDOFF prefix shifts hunk line numbers, context and blob hashes; preservation verified by prior complete text and other-file SHA-256",
+  "confirmedWriterFileSha256": "48b244c35cf3a6cd526a290a6744bb1197f8e3623e3ea36903fe500389b719ed",
+  "confirmedWriterPayloadsUnchanged": true,
+  "writerRecordsCreated": 0,
+  "newConfirmedPreferences": 0,
+  "otherProjectsModified": false,
+  "memoryCodeChanged": false,
+  "integrationsChanged": false,
+  "pushPerformed": false,
+  "checkExit": 0,
+  "searchCount": 4,
+  "khoj": "unavailable; local fallback verified; indexed not confirmed",
+  "measuredStartUTC": "2026-10-22T08:22:57.522Z",
+  "measuredEndUTC": "2026-10-22T08:31:17.545Z",
+  "measuredSeconds": 500,
+  "calls": [
+    {
+      "command": "git rev-parse HEAD",
+      "exit": 0,
+      "stdout": "34693496cbca89fbe65a3917991c8f326cb4d4a8",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.claude/memory/decisions/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.claude/memory/facts/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.scratch/system-update-20261022/RESULT.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'HANDOFF.md', LF will be replaced by CRLF the next time Git touches it"
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --cached --name-only",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --name-only 52a9716ad020e450714d31698f4e22327bbb81d3 HEAD",
+      "exit": 0,
+      "stdout": ".claude/memory/MEMORY.md\n.claude/memory/user-profile/architecture-prefs.md\n.claude/memory/user-profile/coding-style.md\n.claude/memory/user-profile/common-mistakes.md\n.claude/memory/user-profile/work-patterns.md\n.scratch/profile-refresh-20261022/RESULT.md\n.scratch/profile-refresh-20261022/evidence/check-meta.json\n.scratch/profile-refresh-20261022/evidence/check.log\n.scratch/profile-refresh-20261022/evidence/preservation.json\n.scratch/profile-refresh-20261022/evidence/search-refined.json\n.scratch/profile-refresh-20261022/evidence/search.json\nHANDOFF.md",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --stat",
+      "exit": 0,
+      "stdout": ".claude/memory/decisions/writer-entries.md | 130 +++++++++++++++++++++++++++++\n .claude/memory/facts/writer-entries.md     |  50 +++++++++++\n .scratch/system-update-20261022/RESULT.md  |  30 ++++++-\n HANDOFF.md                                 |  57 ++++++++++++-\n 4 files changed, 263 insertions(+), 4 deletions(-)",
+      "stderr": "warning: in the working copy of '.claude/memory/decisions/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.claude/memory/facts/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.scratch/system-update-20261022/RESULT.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'HANDOFF.md', LF will be replaced by CRLF the next time Git touches it"
+    },
+    {
+      "command": "git status --short --branch",
+      "exit": 0,
+      "stdout": "## master...origin/master [ahead 10]\n M .claude/memory/decisions/writer-entries.md\n M .claude/memory/facts/writer-entries.md\n M .scratch/system-update-20261022/RESULT.md\n M HANDOFF.md\n?? .scratch/autopilot-evaluation/\n?? .scratch/profile-refresh-20261022/TASK.md\n?? .scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md\n?? .scratch/system-remediation/evidence/status-check-current-tests.txt\n?? .scratch/system-update-20261013/TASK.md\n?? .scratch/system-update-20261013/evidence/final-state.json\n?? .scratch/system-update-20261022/TASK.md\n?? .scratch/system-update-20261022/evidence/final-state.json\n?? .system2/decision-journal/2ff3941ee9de7e974ff8b0f6.json",
+      "stderr": ""
+    }
+  ]
+}

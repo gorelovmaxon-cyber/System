@@ -1,0 +1,28 @@
+{
+  "missingCommittedTargets": [
+    {
+      "from": ".scratch/profile-refresh-20261022/RESULT.md",
+      "target": ".scratch/profile-refresh-20261022/TASK.md",
+      "existsOnlyLocally": true
+    },
+    {
+      "from": ".scratch/system-update-20261013/RESULT.md",
+      "target": ".scratch/system-update-20261013/TASK.md",
+      "existsOnlyLocally": true
+    },
+    {
+      "from": ".scratch/system-update-20261022/RESULT.md",
+      "target": ".scratch/system-update-20261022/TASK.md",
+      "existsOnlyLocally": true
+    }
+  ],
+  "necessaryLocalTasksAndReceipts": [
+    ".scratch/system-update-20261013/TASK.md",
+    ".scratch/system-update-20261013/evidence/final-state.json",
+    ".scratch/system-update-20261022/TASK.md",
+    ".scratch/system-update-20261022/evidence/final-state.json",
+    ".scratch/profile-refresh-20261022/TASK.md",
+    ".scratch/profile-refresh-20261022/evidence/final-state.json"
+  ],
+  "credentialCandidates": 0
+}

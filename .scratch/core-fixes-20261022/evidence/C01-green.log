@@ -1,0 +1,27 @@
+✔ C01: recovered enqueue and index success survive an identical writer retry (7144.5487ms)
+✔ C01: an already matching true aggregate still clears a stale index_error (4930.5858ms)
+✔ C01: refresh append failure remains visible on writer retry and never confirms success (6536.3652ms)
+✔ C01: a pending or missing task keeps persisted without erasing active diagnostics (5767.0165ms)
+✔ B16: one batch creates one raw pending index record per unique file revision (1978.598ms)
+✔ B19: indexer rejects dot-dot and junction escapes (19.8494ms)
+✔ B07: changed file creates a new manual index revision (3112.8407ms)
+✔ B08: failed index task observes backoff before retry (3143.3324ms)
+✔ F06: legacy in-flight task without a lease is recovered by run (1641.4518ms)
+✔ F07: writer event is indexed only after every file succeeds (4119.5683ms)
+✔ L02-03: a 2xx that does not confirm completion is not accepted as indexed (1560.8933ms)
+✔ F05: idempotent writer retry recreates a lost index task (2713.3065ms)
+✔ G06: run refuses a journal path that escapes memory root and never reaches the adapter (1804.4972ms)
+✔ G13: a directory replaced by a junction between enqueue and run is not indexed (2403.3634ms)
+✔ G01: a new file revision withdraws indexed at once, and a completed task restores it (11201.9136ms)
+✔ G01: a file changed outside the queue invalidates the confirmation (8773.3178ms)
+✔ G02: a failed aggregate write is visible and repaired, never reported as a task outcome (4851.5845ms)
+✔ G18: reconcile restores a lost task set and its aggregate, and is idempotent (11929.6868ms)
+✔ G18: an in-flight task left by a dead pass does not confirm the aggregate (4729.1292ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 89326.8214

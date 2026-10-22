@@ -1,0 +1,10 @@
+{
+  "tests": [
+    "core-index.test.js",
+    "fix-07.test.js",
+    "fix-08.test.js"
+  ],
+  "exit": 0,
+  "seconds": 89.434,
+  "workspace": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-core-target-PXdK7E"
+}

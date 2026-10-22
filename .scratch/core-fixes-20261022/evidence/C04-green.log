@@ -1,0 +1,33 @@
+✔ C04: metadata-only queries find local records and exact event id outranks body coincidences (59.5727ms)
+✔ C04: metadata never bypasses scope, duplicate critical keys or unknown projects (32.6134ms)
+✔ C04: Khoj attribution uses local metadata and body, with exact-event priority (25.8171ms)
+✔ F04: entry of project B in a shared file is not visible from project A (25.9002ms)
+✔ F04: isolation holds with reversed order (project entry written first) (19.3319ms)
+✔ R3: hand-written single-entry file without frontmatter is visible only at user level (13.2492ms)
+✔ F04: status_hint and scope come from the matching entry, not the file first entry (8.8501ms)
+✔ F04: one file with several entries can yield several results; limit applies (26.9283ms)
+✔ F04: searchKhoj local fallback is isolated per project (16.5495ms)
+✔ R2: Khoj positive path attributes each hit to the local entry and keeps project isolation (20.9172ms)
+✔ R2: all allowed source forms resolve to the same local file (24.0062ms)
+✔ R2: hit whose local file is missing is dropped; service text is not trusted (14.4833ms)
+✔ R2: hit not confirmed by any local entry is dropped (12.8977ms)
+✔ R2: hit with unknown scope is hidden from projects, visible at user level (20.2992ms)
+✔ R3: CRLF file does not break entry splitting nor project isolation (14.5762ms)
+✔ R3: relativeSource normalizes all allowed forms (4.3079ms)
+✔ S2: duplicate scope in a record is fail-closed (hidden from every project; user level sees unknown) (14.5745ms)
+✔ S2: duplicate status in a record is fail-closed (status_hint unknown) (9.4892ms)
+✔ B04: minimal local config preserves nested search and Khoj defaults (11.3917ms)
+✔ B05: Khoj hit resolves against a configured custom memory root (16.3806ms)
+✔ B14: an allowed record is selected before a better forbidden record (13.569ms)
+✔ G05: a Khoj hit through a junction inside memory root is not read outside it (12.7948ms)
+✔ G05: the local walk does not descend into a junction inside memory root (8.8988ms)
+✔ G09: an unregistered project_id is rejected on the positive Khoj path, before HTTP (9.1443ms)
+✔ G09: the verdict for an unknown project does not depend on Khoj availability (14.9429ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 798.0746

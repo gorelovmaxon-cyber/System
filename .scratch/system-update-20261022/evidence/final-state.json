@@ -1,0 +1,106 @@
+{
+  "status": "awaiting-validation",
+  "reason": "Final live remote verification unavailable: Git TLS handshake error; bounded Git/API timeouts",
+  "initialHead": "b296af92266a36f501e131098ac230c81cee34a7",
+  "pinnedRemote": "5f631d917a8a2880c667f8a2990fa9b7ff9bca4f",
+  "mergeHead": "2b91c6260aa640d95b1d66e7b99f89d206a28564",
+  "finalHead": "52a9716ad020e450714d31698f4e22327bbb81d3",
+  "remoteHeadAtFinish": "unknown",
+  "backup": "D:/SystemTheBest/System-update-backups/20261022-UPDATE-2026-10-22T07-45-07-122Z",
+  "verifiedBaselineFiles": 65,
+  "changedBaselinePaths": [
+    ".claude/memory/decisions/writer-entries.md",
+    ".claude/memory/facts/writer-entries.md",
+    "HANDOFF.md",
+    ".scratch/system-update-20261022/TASK.md",
+    "CLAUDE.md",
+    ".claude/skills/start/SKILL.md"
+  ],
+  "oldDirtyLinesPreserved": 220,
+  "oldLocalMemoryEventsPreserved": 18,
+  "oldDirtyHandoffSectionsPreserved": 4,
+  "configHooksWriterOkAndAdapterByteIdentical": true,
+  "otherProjectsModified": false,
+  "transferScriptsExecuted": false,
+  "transferFilesEqualPublished": true,
+  "workingOriginPushPerformed": false,
+  "testOnlyPushTargets": "local temporary bare repositories",
+  "checks": {
+    "check": 0,
+    "memory": 0,
+    "memoryTests": 210,
+    "bootstrap": 1,
+    "doctor": 1,
+    "search": 0
+  },
+  "measuredStartUTC": "2026-10-22T07:45:07.122Z",
+  "measuredEndUTC": "2026-10-22T07:56:05.685Z",
+  "measuredSeconds": 659,
+  "calls": [
+    {
+      "command": "git rev-parse HEAD",
+      "exit": 0,
+      "stdout": "52a9716ad020e450714d31698f4e22327bbb81d3",
+      "stderr": ""
+    },
+    {
+      "command": "git merge-base --is-ancestor b296af92266a36f501e131098ac230c81cee34a7 HEAD",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git merge-base --is-ancestor 5f631d917a8a2880c667f8a2990fa9b7ff9bca4f HEAD",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.claude/memory/decisions/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.claude/memory/facts/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'HANDOFF.md', LF will be replaced by CRLF the next time Git touches it"
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --cached --name-only",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --numstat",
+      "exit": 0,
+      "stdout": "130\t0\t.claude/memory/decisions/writer-entries.md\n50\t0\t.claude/memory/facts/writer-entries.md\n40\t0\tHANDOFF.md",
+      "stderr": "warning: in the working copy of '.claude/memory/decisions/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.claude/memory/facts/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'HANDOFF.md', LF will be replaced by CRLF the next time Git touches it"
+    },
+    {
+      "command": "git diff --name-only 5f631d917a8a2880c667f8a2990fa9b7ff9bca4f HEAD",
+      "exit": 0,
+      "stdout": ".claude/memory/user-profile/writer-entries.md\n.claude/skills/ok/SKILL.md\n.claude/skills/operational-cards/SKILL.md\n.claude/skills/start/SKILL.md\n.scratch/system-update-20261013/RESULT.md\n.scratch/system-update-20261013/evidence/adapter-test.json\n.scratch/system-update-20261013/evidence/bootstrap.json\n.scratch/system-update-20261013/evidence/doctor.json\n.scratch/system-update-20261013/evidence/preservation.json\n.scratch/system-update-20261013/evidence/search.json\n.scratch/system-update-20261022/RESULT.md\n.scratch/system-update-20261022/evidence/bootstrap.json\n.scratch/system-update-20261022/evidence/check-meta.json\n.scratch/system-update-20261022/evidence/check.log\n.scratch/system-update-20261022/evidence/doctor.json\n.scratch/system-update-20261022/evidence/git-before-report.json\n.scratch/system-update-20261022/evidence/isolated-memory.tap\n.scratch/system-update-20261022/evidence/isolated-result.json\n.scratch/system-update-20261022/evidence/isolated-stderr.log\n.scratch/system-update-20261022/evidence/memory-merge.json\n.scratch/system-update-20261022/evidence/memory-meta.json\n.scratch/system-update-20261022/evidence/memory.log\n.scratch/system-update-20261022/evidence/preservation.json\n.scratch/system-update-20261022/evidence/remote-api.json\n.scratch/system-update-20261022/evidence/remote-final.json\n.scratch/system-update-20261022/evidence/search.json\n.system2/decision-journal/25eff9774bcca1443accad98.json\n.system2/decision-journal/4c8ed70fc922b2be12b3176b.json\nCLAUDE.md\nHANDOFF.md\ndocs/standards/operational-cards-evidence.md\ndocs/standards/operational-cards-okconstructor.md\ndocs/standards/operational-cards.md\ndocs/task-map.md",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --exit-code 5f631d917a8a2880c667f8a2990fa9b7ff9bca4f HEAD -- docs/transfers",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git rev-list --left-right --count HEAD...origin/master",
+      "exit": 0,
+      "stdout": "9\t0",
+      "stderr": ""
+    },
+    {
+      "command": "git status --short --branch",
+      "exit": 0,
+      "stdout": "## master...origin/master [ahead 9]\n M .claude/memory/decisions/writer-entries.md\n M .claude/memory/facts/writer-entries.md\n M HANDOFF.md\n?? .scratch/autopilot-evaluation/\n?? .scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md\n?? .scratch/system-remediation/evidence/status-check-current-tests.txt\n?? .scratch/system-update-20261013/TASK.md\n?? .scratch/system-update-20261013/evidence/final-state.json\n?? .scratch/system-update-20261022/TASK.md\n?? .scratch/system-update-20261022/evidence/final-state.json\n?? .system2/decision-journal/2ff3941ee9de7e974ff8b0f6.json"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+✖ C03: case-sensitive capture retains legacy ids, exact repeats and payload conflicts (10.6656ms)
+✖ C03: close preserves verification, validates correction/scope and is idempotent (6.0206ms)
+✖ C03: concurrent close/mark and interrupted replacement preserve one terminal transition (234.7337ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 490.421
+
+✖ failing tests:
+
+test at scripts\memory\tests\core-journal.test.js:27:1
+✖ C03: case-sensitive capture retains legacy ids, exact repeats and payload conflicts (10.6656ms)
+  Error: journal id conflict; inspect the existing entry
+      at Object.capture (C:\Users\1663646\AppData\Local\Temp\system2-core-target-8aaO2G\source\scripts\memory\decision-journal.js:82:13)
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-8aaO2G\source\scripts\memory\tests\core-journal.test.js:30:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+
+test at scripts\memory\tests\core-journal.test.js:43:1
+✖ C03: close preserves verification, validates correction/scope and is idempotent (6.0206ms)
+  TypeError: journal.close is not a function
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-8aaO2G\source\scripts\memory\tests\core-journal.test.js:46:26)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3)
+
+test at scripts\memory\tests\core-journal.test.js:70:1
+✖ C03: concurrent close/mark and interrupted replacement preserve one terminal transition (234.7337ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 23
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-8aaO2G\source\scripts\memory\tests\core-journal.test.js:85:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 23,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

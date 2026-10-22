@@ -1,0 +1,9 @@
+{
+  "tests": [
+    "core-journal.test.js",
+    "decision-journal.test.js"
+  ],
+  "exit": 0,
+  "seconds": 7.373,
+  "workspace": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-core-target-U72dkc"
+}

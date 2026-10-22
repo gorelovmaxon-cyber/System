@@ -1,0 +1,72 @@
+index aggregate refresh failed for core-fail: synthetic aggregate append failure
+✖ C01: recovered enqueue and index success survive an identical writer retry (6580.2455ms)
+✖ C01: an already matching true aggregate still clears a stale index_error (4902.0186ms)
+✖ C01: refresh append failure remains visible on writer retry and never confirms success (3327.8255ms)
+✔ C01: a pending or missing task keeps persisted without erasing active diagnostics (5447.8474ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20933.7329
+
+✖ failing tests:
+
+test at scripts\memory\tests\core-index.test.js:19:1
+✖ C01: recovered enqueue and index success survive an identical writer retry (6580.2455ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-qCjlsK\source\scripts\memory\tests\core-index.test.js:33:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\core-index.test.js:39:1
+✖ C01: an already matching true aggregate still clears a stale index_error (4902.0186ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'old enqueue failure'
+  - null
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-qCjlsK\source\scripts\memory\tests\core-index.test.js:46:10)
+      at async Test.run (node:internal/test_runner/test:1332:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'old enqueue failure',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at scripts\memory\tests\core-index.test.js:49:1
+✖ C01: refresh append failure remains visible on writer retry and never confirms success (3327.8255ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /synthetic aggregate append failure/. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (C:\Users\1663646\AppData\Local\Temp\system2-core-target-qCjlsK\source\scripts\memory\tests\core-index.test.js:62:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /synthetic aggregate append failure/,
+    operator: 'match',
+    diff: 'simple'
+  }

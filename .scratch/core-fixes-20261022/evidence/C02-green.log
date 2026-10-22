@@ -1,0 +1,13 @@
+✔ link checker rejects a missing target/anchor but ignores example code (9.6773ms)
+✔ check execution fails on syntax errors and nonzero child exit (192.3794ms)
+✔ YAML validation accepts invocation policy and rejects malformed/duplicate metadata (502.71ms)
+✔ C02: URL-encoded HTML ids and invalid escapes have consistent diagnostics (9.1335ms)
+✔ C02: main checks the explicit canonical entry points without walking historical memory (2582.2089ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3410.7459

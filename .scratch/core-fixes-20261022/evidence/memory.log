@@ -1,0 +1,11 @@
+
+> system2-checks@1.0.0 test:memory
+> node scripts/run-memory-tests.js
+
+Memory tests: isolated source and fixtures at C:\Users\1663646\AppData\Local\Temp\system2-tests-ZmUtSO
+# tests 220
+# pass 220
+# fail 0
+# skipped 0
+# duration_ms 249644.318
+{"code":0,"signal":null,"seconds":249.739,"log":"C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-tests-ZmUtSO\\memory.tap"}

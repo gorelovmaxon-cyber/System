@@ -1,0 +1,111 @@
+{
+  "status": "awaiting-review",
+  "dateMoscow": "2026-10-13 09:49:25",
+  "initialHead": "25ef3f8ac731f831abc112cdeab4fc9dfaf91ecf",
+  "publishedHead": "4822f5d9298e8a177307903cbc87bebbb1170e2f",
+  "mergeHead": "0432a1abc5b409851ad499437cd1d0475ef719ad",
+  "finalHead": "fe948002c309a1466683fdfc3f822df0436f30f5",
+  "remoteUnchanged": true,
+  "backup": "D:/SystemTheBest/System-update-backups/20261013-UPDATE-2026-10-13T06-36-35-060Z",
+  "baselineUniqueFiles": 49,
+  "changedBaselinePaths": [
+    ".claude/memory/facts/writer-entries.md",
+    "HANDOFF.md",
+    ".scratch/system-update-20261013/TASK.md",
+    ".claude/memory/user-profile/writer-entries.md"
+  ],
+  "oldLocalChangesRemainUncommitted": true,
+  "configHooksWriterAndOtherUntrackedByteIdentical": true,
+  "publishedAndLocalMemoryPayloadPreserved": true,
+  "writerRecordsCreated": 0,
+  "pushPerformed": false,
+  "measuredStartUTC": "2026-10-13T06:36:35.060Z",
+  "measuredEndUTC": "2026-10-13T06:49:25.503Z",
+  "measuredSeconds": 770,
+  "commands": [
+    {
+      "command": "git rev-parse HEAD",
+      "exit": 0,
+      "stdout": "fe948002c309a1466683fdfc3f822df0436f30f5",
+      "stderr": ""
+    },
+    {
+      "command": "git merge-base --is-ancestor 4822f5d9298e8a177307903cbc87bebbb1170e2f HEAD",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git merge-base --is-ancestor 25ef3f8ac731f831abc112cdeab4fc9dfaf91ecf HEAD",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --exit-code 4822f5d9298e8a177307903cbc87bebbb1170e2f 0432a1abc5b409851ad499437cd1d0475ef719ad",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --name-status 4822f5d9298e8a177307903cbc87bebbb1170e2f HEAD",
+      "exit": 0,
+      "stdout": "A\t.scratch/system-update-20261013/RESULT.md\nA\t.scratch/system-update-20261013/evidence/adapter-test.json\nA\t.scratch/system-update-20261013/evidence/bootstrap.json\nA\t.scratch/system-update-20261013/evidence/doctor.json\nA\t.scratch/system-update-20261013/evidence/preservation.json\nA\t.scratch/system-update-20261013/evidence/search.json\nM\tHANDOFF.md",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.claude/memory/facts/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'HANDOFF.md', LF will be replaced by CRLF the next time Git touches it"
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --cached --name-only",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git diff --numstat",
+      "exit": 0,
+      "stdout": "20\t0\t.claude/memory/facts/writer-entries.md\n24\t0\tHANDOFF.md",
+      "stderr": "warning: in the working copy of '.claude/memory/facts/writer-entries.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'HANDOFF.md', LF will be replaced by CRLF the next time Git touches it"
+    },
+    {
+      "command": "git rev-list --left-right --count HEAD...origin/master",
+      "exit": 0,
+      "stdout": "5\t0",
+      "stderr": ""
+    },
+    {
+      "command": "git ls-remote origin refs/heads/master",
+      "exit": 0,
+      "stdout": "4822f5d9298e8a177307903cbc87bebbb1170e2f\trefs/heads/master",
+      "stderr": ""
+    },
+    {
+      "command": "git config --show-origin --get-all core.hooksPath",
+      "exit": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": "git rev-parse --git-path hooks",
+      "exit": 0,
+      "stdout": ".git/hooks",
+      "stderr": ""
+    },
+    {
+      "command": "git status --short --branch",
+      "exit": 0,
+      "stdout": "## master...origin/master [ahead 5]\n M .claude/memory/facts/writer-entries.md\n M HANDOFF.md\n?? .scratch/autopilot-evaluation/\n?? .scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md\n?? .scratch/system-remediation/evidence/status-check-current-tests.txt\n?? .scratch/system-update-20261013/TASK.md\n?? .scratch/system-update-20261013/evidence/final-state.json\n?? .system2/decision-journal/2ff3941ee9de7e974ff8b0f6.json",
+      "stderr": ""
+    }
+  ]
+}

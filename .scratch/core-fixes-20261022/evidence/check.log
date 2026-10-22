@@ -1,0 +1,21 @@
+
+> system2-checks@1.0.0 check
+> node scripts/check.js
+
+JS syntax: 69 passed
+Skill YAML: 52 passed
+Markdown links: 112 documents passed
+✔ link checker rejects a missing target/anchor but ignores example code (11.3453ms)
+✔ check execution fails on syntax errors and nonzero child exit (209.3135ms)
+✔ YAML validation accepts invocation policy and rejects malformed/duplicate metadata (562.8523ms)
+✔ C02: URL-encoded HTML ids and invalid escapes have consistent diagnostics (9.1423ms)
+✔ C02: main checks the explicit canonical entry points without walking historical memory (2740.3089ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3660.088
+Fast check passed in 11.18s (no services or model calls)

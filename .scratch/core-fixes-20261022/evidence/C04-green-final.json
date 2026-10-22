@@ -1,0 +1,9 @@
+{
+  "tests": [
+    "core-search.test.js",
+    "fix-03.test.js"
+  ],
+  "exit": 0,
+  "seconds": 0.901,
+  "workspace": "C:\\Users\\1663646\\AppData\\Local\\Temp\\system2-core-target-tnpuUa"
+}

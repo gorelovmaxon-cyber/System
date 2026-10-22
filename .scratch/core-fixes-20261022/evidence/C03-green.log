@@ -1,0 +1,16 @@
+✔ C03: case-sensitive capture retains legacy ids, exact repeats and payload conflicts (1694.5511ms)
+✔ C03: close preserves verification, validates correction/scope and is idempotent (1934.257ms)
+✔ C03: concurrent close/mark and interrupted replacement preserve one terminal transition (1417.3283ms)
+✔ capture, exact repeat, correction and no-op (446.3049ms)
+✔ promotion requires writer proof and repeat after crash stays one entry (554.5213ms)
+✔ open question and unverified observation cannot become confirmed by journal (407.305ms)
+✔ project journal filters scope and rejects credential marker (417.6341ms)
+✔ CLI uses its System checkout when called from a connected project (91.6947ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7297.8848
