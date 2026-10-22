@@ -61,6 +61,12 @@ YAML-проверка поддерживает существующие `disable
 
 ## CI и живая приёмка
 
+Checker явно проверяет также OPUS.md, QWEN.md, TICKET_TEMPLATE.md,
+`.claude/memory/MEMORY.md` и `.claude/memory/README.md`, если они существуют.
+Историческая память рекурсивно не проверяется. Примеры ссылок отмечаются inline/fenced
+кодом; реальные ссылки сохраняют проверку. URL-fragment декодируется одинаково для
+Markdown и HTML id; ошибочный percent-escape даёт диагностическую ошибку проверки.
+
 [GitHub workflow](../.github/workflows/check.yml) запускает `test:all` для push и
 pull_request в Windows с закреплёнными Node/Python. Файл workflow сам по себе не
 доказывает успешный удалённый run; до push/прогона он остаётся непроверенным в GitHub.

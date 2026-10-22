@@ -39,9 +39,13 @@ function linkErrors(file, text) {
     const destination = relative ? path.resolve(path.dirname(file), relative) : file;
     if (!fs.existsSync(destination)) { errors.push(`missing target ${target}`); continue; }
     if (fragment && fs.statSync(destination).isFile()) {
+      let decoded;
+      try { decoded = decodeURIComponent(fragment); }
+      catch { errors.push(`invalid fragment encoding ${target}`); continue; }
       const content = fs.readFileSync(destination, 'utf8');
       const headings = content.split(/\r?\n/).filter(line => /^#{1,6} /.test(line)).map(line => slug(line.replace(/^#{1,6} /, '')));
-      if (!content.includes(`id="${fragment}"`) && !headings.includes(decodeURIComponent(fragment))) errors.push(`missing anchor ${target}`);
+      const ids = [...content.matchAll(/\bid\s*=\s*(["'])(.*?)\1/g)].map(match => match[2]);
+      if (!ids.includes(decoded) && !headings.includes(decoded)) errors.push(`missing anchor ${target}`);
     }
   }
   return errors;
@@ -65,7 +69,8 @@ function main() {
   console.log(`JS syntax: ${code.length} passed`);
   process.stdout.write(run(python(), ['-B', 'scripts/check-skills.py'], { env: { ...process.env, PYTHONUTF8: '1', PYTHONDONTWRITEBYTECODE: '1' } }));
   const docs = [...walk(path.join(ROOT, '.claude/skills')), ...walk(path.join(ROOT, 'docs')), ...walk(path.join(ROOT, 'templates')),
-    ...['CLAUDE.md', 'README.md', 'QUICKSTART.md'].map(f => path.join(ROOT, f))].filter(f => f.endsWith('.md'));
+    ...['CLAUDE.md', 'README.md', 'QUICKSTART.md', 'OPUS.md', 'QWEN.md', 'TICKET_TEMPLATE.md',
+      '.claude/memory/MEMORY.md', '.claude/memory/README.md'].map(f => path.join(ROOT, f)).filter(f => fs.existsSync(f))].filter(f => f.endsWith('.md'));
   const errors = docs.flatMap(file => linkErrors(file, fs.readFileSync(file, 'utf8')).map(error => `${path.relative(ROOT, file)}: ${error}`));
   if (errors.length) throw new Error(errors.join('\n'));
   console.log(`Markdown links: ${docs.length} documents passed`);
