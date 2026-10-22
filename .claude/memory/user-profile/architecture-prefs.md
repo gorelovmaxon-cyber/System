@@ -9,9 +9,17 @@ confidence: 0.6
 
 # Architecture Preferences
 
+> PROFILE-01, сверка 2026-10-22: ниже сохранён исторический анализ 2026-09-08,
+> status observation. Он не устанавливает предпочтения или команды на сегодня.
+> Подтверждённые темы и порядок чтения — [MEMORY](../MEMORY.md#user-profile).
+> Пометки уточняют отдельные советы; весь смешанный файл не объявлен superseded.
+
 ## Core Philosophy
 
 ### Quality in Artifacts, Not Parallelism
+
+> Числа 7×/15× ниже — unverified на 2026-10-22: применимого первичного измерения нет.
+> Выбор способа работы — по [ролям и контексту](../../../docs/system-workflow.md#роли), не по этим оценкам.
 
 - **Качество в артефактах, не в параллелизме**
 - Agent Teams стоят ~7× дороже обычных агентов
@@ -20,6 +28,9 @@ confidence: 0.6
 - **Единый домен-агностик поток для ЛЮБЫХ задач**
 
 ### Flow Principle
+
+> «Для любой задачи» не действует: готовый тикет/мелкая правка продолжают свой этап,
+> start только рекомендует маршрут. См. [маршруты](../../../docs/system-workflow.md#маршруты-задач).
 
 **Порядок всегда одинаковый:**
 ```
@@ -64,6 +75,10 @@ Core principle: **specialized agents for specific tasks** rather than monolithic
 Each agent has specialized system prompt and tools.
 
 ## Orchestration Model
+
+> Привязка Opus/Qwen/Sonnet ниже заменена [решением 2026-10-08](../../../.system2/decision-journal/abda2410f436b8bc1170e2d7.json).
+> Схемы остановки после каждого тикета — история; текущие [фазы/гейты](../../../docs/system-workflow.md#фазы-и-гейты)
+> предусматривают последовательное исполнение разрешённого блока и независимую проверку на его границе.
 
 ### Model Separation by Cognitive Load
 
@@ -122,6 +137,9 @@ Opus (review T1) → 🛑 STOP → Qwen (implement T2) → 🛑 STOP
 
 ## Explicit Stop Gates
 
+> Обязательная остановка на каждом шаге ниже не текущий договор. Применять
+> [полномочия](../../../docs/system-workflow.md#полномочия) и гейты разрешённой задачи.
+
 **КРИТИЧЕСКИЙ ПАТТЕРН из SystemQwen:**
 
 ### 🛑 STOP после каждой фазы
@@ -144,6 +162,10 @@ Opus (review T1) → 🛑 STOP → Qwen (implement T2) → 🛑 STOP
 4. **Clear handoff** — понятно где Opus, где Qwen
 
 ## Three-Phase Workflow (SystemQwen)
+
+> Исторические роли моделей, расход токенов и цикл review каждого тикета ниже не подтверждают
+> текущую настройку. [Start](../../skills/start/SKILL.md) завершает маршрутизацию рекомендацией;
+> прямой исполнитель продолжает уже разрешённый блок без нового интервью.
 
 ### Phase 1: Planning (Opus in Claude Code)
 
@@ -203,6 +225,10 @@ Opus checks: git diff, tests, matches ticket
 
 ### Core Rules
 
+> Обязательный `/clear` и свежий агент на каждый тикет ниже не применяются:
+> [workflow](../../../docs/system-workflow.md#роли) предпочитает сохранять контекст.
+> Новая сессия допустима по необходимости с HANDOFF; проценты экономии не измерены.
+
 - **1 тикет = 1 свежий контекст = 1 агент = 1 коммит**
 - `/clear` между тикетами обязателен
 - **Parallel только для READ-only задач**
@@ -240,6 +266,10 @@ T3 (fresh context) → implement → commit → /clear
 - Implementation tasks
 
 ## Token Economics
+
+> Все числа стоимости/токенов/60× и 40% в этом разделе — unverified на 2026-10-22.
+> Сопоставимого первичного замера для текущей работы нет; слова «реальные замеры»
+> ниже не заменяют evidence. [Правила доказательств](../../../docs/planner-brief.md) важнее этих оценок.
 
 ### Cost Comparison
 
@@ -286,6 +316,9 @@ T3 (fresh context) → implement → commit → /clear
 
 ## Skills-First Philosophy
 
+> Исторические «preferred»/«autonomous» и имена команд не назначают роль и не доказывают
+> доступность slash-команды: применять текущие [CLAUDE](../../../CLAUDE.md) и канонический навык.
+
 ### Skill Structure
 
 ```
@@ -328,11 +361,17 @@ User types `/<skill-name>` → Opus loads SKILL.md → follows instructions.
 
 ### Three-File System
 
+> Таблица — архивный пример прежнего проекта, относительные пути в ней не адреса
+> текущей System2. Действующие [инструкции](../../../CLAUDE.md),
+> [формат памяти](../README.md) и [решения](../../../docs/decision-journal.md) доступны отдельно.
+
+```markdown
 | File | Purpose | When to Use |
 |------|---------|-------------|
 | [FACTS.md](../../FACTS.md) | Single source of truth: data, numbers, test results | Read FIRST before planning |
 | [DECISIONS.md](../../DECISIONS.md) | What was decided and WHY | Read before asking repeated questions |
 | [CLAUDE.md](../../CLAUDE.md) | Instructions for AI agents | Read at session start |
+```
 
 **Pattern from Bot Stacy:**
 ```markdown
@@ -372,6 +411,9 @@ D:\System2 (SystemQwen + explicit stops + model separation)
 **Тренд:** от автономности к контролю, от параллелизма к качеству, от сложности к простоте.
 
 ## Architectural Principles (from Bot Stacy)
+
+> Итоговые пункты 4/6/9/10 ниже описывают прежнюю схему, а не новый выбор пользователя:
+> роли, остановки и сохранение контекста сверять с [workflow](../../../docs/system-workflow.md).
 
 1. **Think before code** — voice assumptions, ask when unclear
 2. **Single source of truth** — FACTS.md for data, read it first

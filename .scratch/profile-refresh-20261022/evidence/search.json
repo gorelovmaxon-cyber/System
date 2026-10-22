@@ -1,0 +1,111 @@
+[
+  {
+    "query": "планировщик исполнитель приёмщик",
+    "command": "node scripts/memory/search.js --query \"планировщик исполнитель приёмщик\" --project systemqwen --limit 3",
+    "exit": 0,
+    "ok": false,
+    "error": "khoj-unavailable",
+    "fallback": "local",
+    "results": [
+      {
+        "source": ".claude/memory/user-profile/writer-entries.md",
+        "scope": "user",
+        "status_hint": "confirmed",
+        "record_source": "Беседа 2026-10-08, приложенное задание ROLES-02/03: прямое согласованное решение пользователя; исторические документы docs/system-workflow.md, .scratch/system-launch/README.md.",
+        "relevance": 0.99,
+        "confirmedPayloadAndMetadataMatch": true,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "## Пользователь выбирает планировщика, исполнителя и независимого приёмщика по ответственности, без обязательной привязки к модели. Сохраняется процесс: идея → изучение проекта и памяти → рекомендации → grill → согласованная спецификация → тикеты → реализация → независимая приёмка → сохранение опыта. Планировщик уточняет и принимает архитектурные решения, не реализует код в этой роли; исполнитель выполняет разрешённый блок и проверяет результат; приёмщик не принимает собственную реализацию. Модель приёмщика может совпадать с моделью исполнителя при независимой проверке. Правила и переносимая память остаются в System2; передача ручная, автоматический runner не подтверждён. Усилие выбирается по сложности, неопределённости и риску среди доступных настроек клиента; слово high в задании не переключает настройку. Заменяет историческое распределение Astra → Sonnet/Sol от 2026-09-12."
+      },
+      {
+        "source": ".claude/memory/comparative-analysis-opus-gpt-qwen.md",
+        "scope": "user",
+        "status_hint": "observation",
+        "relevance": 0.3333333333333333,
+        "confirmedPayloadAndMetadataMatch": false,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "е задачи)\n- GPT-5.x (средние задачи)\n- Sonnet 5 (критичные задачи)\n\n**Ожидаемая экономия:** 30-40% (1,500-2,000 ₽/мес)  \n**Риск:** Средний (нужен benchmark)\n\n### Вариант C: ChatGPT Plus (НЕ рекомендую)\n\n**Проблемы:**\n- Нет API для автоматизации\n- Лимиты неизвестны\n- ToS может запрещать\n- Если нужны 2-3 подписки → дороже текущего\n\n**Можно пробовать только:**\n- Для ручного использования\n- Как дополнение, не замена\n\n### Вариант D: Максимум качества\n\n**Plan/Review:** Opus  \n**Code:** Sonnet 5 (всё)\n"
+      },
+      {
+        "source": ".claude/memory/decisions/writer-entries.md",
+        "scope": "systemqwen",
+        "status_hint": "confirmed",
+        "record_source": "Беседа 2026-10-18; .scratch/start-routing-2026-10-18/TASK.md",
+        "relevance": 0.3333333333333333,
+        "confirmedPayloadAndMetadataMatch": false,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "## 2026-10-18: start должен завершаться рекомендацией команды без автоматического перехода к фазам; site-build следует autopilot с правилами сайта; планировщик готовит передачу отдельному исполнителю, включая задачи визуальных макетов. Подготовлен START-ROUTING-01, действующие навыки пока не изменены."
+      }
+    ]
+  },
+  {
+    "query": "операционных карт",
+    "command": "node scripts/memory/search.js --query \"операционных карт\" --project systemqwen --limit 3",
+    "exit": 0,
+    "ok": false,
+    "error": "khoj-unavailable",
+    "fallback": "local",
+    "results": [
+      {
+        "source": ".claude/memory/user-profile/writer-entries.md",
+        "scope": "user",
+        "status_hint": "confirmed",
+        "record_source": "Беседа об ОК 2026-10-07–09; поручение сохранить общий стандарт в System2 2026-10-13",
+        "relevance": 0.99,
+        "confirmedPayloadAndMetadataMatch": true,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "## Для производственных операционных карт пользователь поручил сохранять и применять общий стандарт System2 docs/standards/operational-cards.md через навык operational-cards. Источником может быть любой документ, не только РИ. Различать создание ОК, минимальную подготовку обычного документа к штатному считыванию и доработку готовой карты. Подготовленный многооперационный документ должен иметь оглавление со ссылками на все заголовки. Соблюдать последние уточнения инструмента и вида изображений; конкретные параметры примеров не переносить на другие операции без основания. Полноту содержания и внешний вид проверять отдельно от совместимости и замечаний программы."
+      },
+      {
+        "source": ".claude/memory/user-profile/writer-entries.md",
+        "scope": "user",
+        "status_hint": "confirmed",
+        "record_source": "Поручение 2026-10-13; продолжение 2026-10-14",
+        "relevance": 0.99,
+        "confirmedPayloadAndMetadataMatch": true,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "## Для задач создания и доработки производственных операционных карт пользователь запросил явную команду ОК: задача. Её канонический вход .claude/skills/ok/SKILL.md в общей System2 обязан непосредственно читать docs/standards/operational-cards.md и основной навык перед выполнением. Поиск по памяти не заменяет чтение. Установленный локальный адаптер является ссылкой на общий стандарт; наличие файлов не доказывает обнаружение навыка в уже открытой сессии или доступ из чата без файловых инструментов."
+      }
+    ]
+  },
+  {
+    "query": "full test suite after every change",
+    "command": "node scripts/memory/search.js --query \"full test suite after every change\" --project systemqwen --limit 3",
+    "exit": 0,
+    "ok": false,
+    "error": "khoj-unavailable",
+    "fallback": "local",
+    "results": [
+      {
+        "source": ".claude/memory/user-profile/common-mistakes.md",
+        "scope": "user",
+        "status_hint": "observation",
+        "record_source": "исторический профиль пользователя, проверено 2026-09-08",
+        "relevance": 0.99,
+        "confirmedPayloadAndMetadataMatch": false,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "ена не означает автоматическое удаление.\n\n**Проблема:** Fallback срабатывает случайно\n\n**Почему плохо:**\n- Autopilot читает стаую память\n- Непонятно какая система активна\n- Inconsistent behavior\n\n**✅ Вместо этого:**\n- Регулярно проверять память\n- Удалять устаревшие записи\n- Один источник истины: E:\\System2\\memory/ или D:\\System\\memory/\n\n### 9. ❌ Генерация на лету\n\n**Проблема:** Генерируем контент в ответе, не сохраняем в файлы\n\n**Почему плохо:**\n- Нет статики для review\n- Теряется при /clear\n- Н"
+      },
+      {
+        "source": ".claude/memory/user-profile/work-patterns.md",
+        "scope": "user",
+        "status_hint": "observation",
+        "record_source": "исторический профиль workflow, проверено 2026-09-08",
+        "relevance": 0.8333333333333334,
+        "confirmedPayloadAndMetadataMatch": false,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "оработать\n[Repeat for T2, T3, T4]\n```\n\n**Critical rule**: \"Один тикет = один коммит = одна остановка\"\n\n---\n\n## File Reference Pattern (Markdown Links)\n\n### Why Markdown Links\n\nVS Code extension makes markdown links **clickable**:\n- `[src/file.js](src/file.js)` — ✅ click to open\n- `` `src/file.js` `` — ❌ not clickable\n\n### Syntax\n\n**Basic file**:\n```markdown\n[path/to/file.js](path/to/file.js)\n```\n\n**Specific line**:\n```markdown\n[file.js:42](file.js#L42)\n```\n\n**Line range**:\n```markdown\n[file.js:4"
+      },
+      {
+        "source": ".claude/memory/user-profile/architecture-prefs.md",
+        "scope": "user",
+        "status_hint": "observation",
+        "record_source": "исторический профиль пользователя, проверено 2026-09-08",
+        "relevance": 0.5,
+        "confirmedPayloadAndMetadataMatch": false,
+        "oldAdvicePhraseInSnippet": false,
+        "snippetExcerpt": "еделю):**\n\n### Core Rules\n\n> Обязательный `/clear` и свежий агент на каждый тикет ниже не применяются:\n> [workflow](../../../docs/system-workflow.md#роли) предпочитает сохранять контекст.\n> Новая сессия допустима по необходимости с HANDOFF; проценты экономии не измерены.\n\n- **1 тикет = 1 свежий контекст = 1 агент = 1 коммит**\n- `/clear` между тикетами обязателен\n- **Parallel только для READ-only задач**\n- Write/Edit операции строго sequential\n\n### Why Sequential\n\n**Problem with Parallel:**\n- Age"
+      }
+    ]
+  }
+]

@@ -1,0 +1,219 @@
+{
+  "backup": "D:/SystemTheBest/System-update-backups/PROFILE-01-20261022-2026-10-22T08-22-57-522Z",
+  "verifiedBackupFiles": 32,
+  "identicalFiles": 27,
+  "unchangedWriterProfileSha256": "48b244c35cf3a6cd526a290a6744bb1197f8e3623e3ea36903fe500389b719ed",
+  "confirmedRecords": [
+    {
+      "event_id": "journal_systemqwen_abda2410f436b8bc1170e2d7",
+      "status": "confirmed",
+      "scope": "user"
+    },
+    {
+      "event_id": "journal_systemqwen_423e1896fad3a5d8629740d0",
+      "status": "confirmed",
+      "scope": "user"
+    },
+    {
+      "event_id": "journal_systemqwen_4c8ed70fc922b2be12b3176b",
+      "status": "confirmed",
+      "scope": "user"
+    },
+    {
+      "event_id": "journal_systemqwen_25eff9774bcca1443accad98",
+      "status": "confirmed",
+      "scope": "user"
+    }
+  ],
+  "newWriterRecords": 0,
+  "newProfilePreferences": 0,
+  "indexLinkErrors": [],
+  "historicalProfiles": [
+    {
+      "path": ".claude/memory/user-profile/architecture-prefs.md",
+      "allOriginalLinesPreservedInOrder": true,
+      "metadataUnchanged": true,
+      "linkErrors": []
+    },
+    {
+      "path": ".claude/memory/user-profile/coding-style.md",
+      "allOriginalLinesPreservedInOrder": true,
+      "metadataUnchanged": true,
+      "linkErrors": []
+    },
+    {
+      "path": ".claude/memory/user-profile/common-mistakes.md",
+      "allOriginalLinesPreservedInOrder": true,
+      "metadataUnchanged": true,
+      "linkErrors": []
+    },
+    {
+      "path": ".claude/memory/user-profile/work-patterns.md",
+      "allOriginalLinesPreservedInOrder": true,
+      "metadataUnchanged": true,
+      "linkErrors": []
+    }
+  ],
+  "baselineFiles": [
+    {
+      "path": ".claude/memory/decisions/writer-entries.md",
+      "sha256": "ab88481acbd8c2579ce9b714321724451afd4446726abc559e8c0c4358adc771",
+      "identical": true
+    },
+    {
+      "path": ".claude/memory/facts/writer-entries.md",
+      "sha256": "130ded93aac9cd10c5550db4f68b5559da269cfa0c776de676c2df377f678723",
+      "identical": true
+    },
+    {
+      "path": ".scratch/system-update-20261022/RESULT.md",
+      "sha256": "b033b640bea60e910cbfc8b19e11c292eaec018b94fdfeade0b100b60cfb8e1c",
+      "identical": true
+    },
+    {
+      "path": "HANDOFF.md",
+      "sha256": "cb916c0d78d0f5e617fd31d9366066a422db0f0e692acdd242d4ecc01f7938c4",
+      "identical": true
+    },
+    {
+      "path": ".scratch/autopilot-evaluation/TASK.md",
+      "sha256": "6a5f1b9e239eae40a9bf7e77c34a46085fcc38c65b4403e87361b5614e4dcc02",
+      "identical": true
+    },
+    {
+      "path": ".scratch/profile-refresh-20261022/TASK.md",
+      "sha256": "c784bda96a2850a0798f18e625d5c13a5757bf7dd562f889f2a453598ee749fe",
+      "identical": true
+    },
+    {
+      "path": ".scratch/system-remediation/ASTRA-ORCHESTRATION-IDEAS-2026-09-12.md",
+      "sha256": "67789039e43e1089bc6b76f39297831652eed089ff2d5d49d5acce337a01c485",
+      "identical": true
+    },
+    {
+      "path": ".scratch/system-remediation/evidence/status-check-current-tests.txt",
+      "sha256": "8e4b08409a37d1ae4f4fd287ac11726025f5d3cbc60a0b0911acf78630a96a39",
+      "identical": true
+    },
+    {
+      "path": ".scratch/system-update-20261013/TASK.md",
+      "sha256": "61feced98fcbc6bd2704edfe53622d075002228521790a2d7d6e16a114770701",
+      "identical": true
+    },
+    {
+      "path": ".scratch/system-update-20261013/evidence/final-state.json",
+      "sha256": "311999576ed2d45a650102efbff73c3ee53ad00b6fb41a7d0f3cd16791a5428c",
+      "identical": true
+    },
+    {
+      "path": ".scratch/system-update-20261022/TASK.md",
+      "sha256": "a25e59bf7633f4c68574bb9933bd3eece2842c7a65f75ff0119c7ea545e393ef",
+      "identical": true
+    },
+    {
+      "path": ".scratch/system-update-20261022/evidence/final-state.json",
+      "sha256": "ec89ce08f3cb1739d4d47e43d9bca1bcb4bc69d5cec807cd675ac0ea1919c64d",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/2ff3941ee9de7e974ff8b0f6.json",
+      "sha256": "3bd5e4e8bd342f01c38fefcb3fd35508c23766da47200c106748800ccee27a35",
+      "identical": true
+    },
+    {
+      "path": ".claude/memory/MEMORY.md",
+      "sha256": "0788d2d67cf09c186430182a5fdd0c8eaf164f48ce3a2f53dc9e16e0e43111b9",
+      "identical": false
+    },
+    {
+      "path": ".claude/memory/user-profile/architecture-prefs.md",
+      "sha256": "42a2691d625ffedc9aebdc6ae2a4984813b862c3d5ee4efe1bff344c56570d2b",
+      "identical": false
+    },
+    {
+      "path": ".claude/memory/user-profile/coding-style.md",
+      "sha256": "6ae79d5113fccc61fca5b011ae82ae6c0e486a4f0139ae2fc0ef7c582aabe0bf",
+      "identical": false
+    },
+    {
+      "path": ".claude/memory/user-profile/common-mistakes.md",
+      "sha256": "aae6c3e8779f732d22cc82fb1f23bc9e4c535e65e18ee3c8ae47d07b1af885a9",
+      "identical": false
+    },
+    {
+      "path": ".claude/memory/user-profile/work-patterns.md",
+      "sha256": "4fd5e076991c47e7982878341d19dd99321fa9e1843caa8690193d3edf68d258",
+      "identical": false
+    },
+    {
+      "path": ".claude/memory/user-profile/writer-entries.md",
+      "sha256": "48b244c35cf3a6cd526a290a6744bb1197f8e3623e3ea36903fe500389b719ed",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/13947f838aee699cb456fe54.json",
+      "sha256": "0a8cc356fff9ceb6f08dce21ff77fb3bc744cf4b81471710b9ca4b7d49d13ee1",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/25eff9774bcca1443accad98.json",
+      "sha256": "e1083c227c0362b484f4377470213d9fe4147052752f24c19418f4dd96112e97",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/26f61512a56c539e5e04b97c.json",
+      "sha256": "1f87132c6871387dd44bb03af3a6f8d948c2a3380e15975f3751f07768312634",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/3f320293e3e479ececbbd01c.json",
+      "sha256": "3701f4348fd9d56b6c9855b56c2e9f1931c7a5f6d2f850809d69264771888318",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/423e1896fad3a5d8629740d0.json",
+      "sha256": "c997fb0609c3076dcb1dc49d52df8418003913295fb44e0443471513867eaeb7",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/431339da088fd46aff273e39.json",
+      "sha256": "e71f695271188c6a2cd4ecafd8c734160be630466021a907b6af1409864d5db9",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/4c8ed70fc922b2be12b3176b.json",
+      "sha256": "ca91954f51ed4d44eb29a8f2af8624996cbcdf4590d34916310001834832d78f",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/75fc99eabace498d68c70a7a.json",
+      "sha256": "d4219e1e0a74c55166d1ba1cf3477b17ca52e3fe731b17fb04d67811f06f9bcd",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/abda2410f436b8bc1170e2d7.json",
+      "sha256": "d6673c2761105f1cbd479eb4b854eba5a1dd55eb34360e8799c6ad9ab99f7eb1",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/bac8c4e15db5b963499fa9f6.json",
+      "sha256": "33262f75de7598aba71e0e2aeb39b1ccded1cbed5072ca64d39d415bcb60c84e",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/eb40d0662dcec19655fbe396.json",
+      "sha256": "c7f29111b3cc29ed4ab2cb46993a4d9aa4b08cf1d900a8dffac3bd0eb04c1bff",
+      "identical": true
+    },
+    {
+      "path": ".system2/decision-journal/f81ce7e1939761e3d064264f.json",
+      "sha256": "3615925d440333221c8a5253e8549845e0ce524becb09312518e1ef6f9267bd8",
+      "identical": true
+    },
+    {
+      "path": ".local/writer/processed.jsonl",
+      "sha256": "e28d72d5e66b4acaf2067b8b807b8d3ff3130a8192cfc300f3c186870d6edaae",
+      "identical": true
+    }
+  ]
+}

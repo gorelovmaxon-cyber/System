@@ -1,0 +1,20 @@
+{
+  "query": "Testing Verification",
+  "command": "node scripts/memory/search.js --query Testing Verification --project systemqwen --limit 1",
+  "exit": 0,
+  "ok": false,
+  "error": "khoj-unavailable",
+  "fallback": "local",
+  "results": [
+    {
+      "source": ".claude/memory/user-profile/common-mistakes.md",
+      "scope": "user",
+      "status_hint": "observation",
+      "record_source": "исторический профиль пользователя, проверено 2026-09-08",
+      "relevance": 0.99,
+      "confirmedPayloadAndMetadataMatch": false,
+      "oldAdvicePhraseInSnippet": true,
+      "snippetExcerpt": "ll\n- Update docs when code changes, or remove outdated docs\n\n---\n\n## Testing & Verification\n\n> «Run full test suite after every change» ниже больше не текущая рекомендация:\n> применять [достаточную проверку](../../../docs/system-workflow.md#достаточная-проверка)\n> и [соразмерность](../../../docs/planner-brief.md#правила). Успешный suite повторяется по новому основанию.\n\n### ❌ Don't Do\n\n- **Skip running tests after changes** — merge broken code\n- **Mock everything in tests** — tests pass but prod fails\n- **Test only happy path** — miss edge cases\n- **Claim success without verification** — \"should work\" without running\n- **Ignore failing tests** — \"tests are flaky\" without investigation\n\n### ✅ Do Instead\n\n- Run full test suite after every change\n- Use real database/services in integration te"
+    }
+  ]
+}

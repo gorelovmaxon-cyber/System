@@ -9,6 +9,10 @@ confidence: 0.6
 
 # Work Patterns
 
+> PROFILE-01, сверка 2026-10-22: ниже observation из анализа 2026-09-08, не анкета
+> подтверждённых предпочтений. Проектные примеры/числа не являются текущими фактами
+> пользователя. Подтверждения и канон — [MEMORY](../MEMORY.md#user-profile).
+
 ## Project Memory System (FACTS/DECISIONS/CLAUDE)
 
 ### Three-File Pattern
@@ -137,6 +141,9 @@ Brief project description
 
 ## Ticket Workflow (GRILL → SPEC → TICKETS)
 
+> Старый полный цикл не применяется к каждому запросу: готовый тикет и продолжение
+> сохраняют этап, start только рекомендует маршрут. См. [workflow](../../../docs/system-workflow.md#маршруты-задач).
+
 ### Phase 1: GRILL (Requirements Elicitation)
 
 **Goal**: Understand what to build
@@ -192,7 +199,11 @@ Brief project description
 
 **Goal**: Create step-by-step algorithms for executor (Qwen)
 
+> Следующая ссылка сохранена как историческое имя; текущий [шаблон задания](../../../TICKET_TEMPLATE.md).
+
+```markdown
 **Ticket Template** (from [TICKET_TEMPLATE.md](../../TICKET_TEMPLATE.md)):
+```
 ```markdown
 # T[N] — [Task Title]
 
@@ -247,6 +258,9 @@ git commit -m "fix(core): filter negative values in processData
 ```
 
 **Key principles**:
+
+> «One ticket = one file» ниже не ограничение текущего задания; набор файлов определяется
+> результатом по [шаблону](../../../TICKET_TEMPLATE.md). Подробность не требует готового кода в тикете.
 - **Exact file paths** with markdown links `[path](path)`
 - **Exact line numbers** where possible
 - **Step-by-step algorithm** (no exploration needed)
@@ -255,11 +269,16 @@ git commit -m "fix(core): filter negative values in processData
 - **One ticket = one file = one commit**
 
 **Token economics**:
+
+> 40,000/650 и 60× ниже — unverified на 2026-10-22: применимого подтверждённого замера нет.
 - Vague ticket: "Fix data processing" → Qwen reads entire project → 40,000 tokens
 - Precise ticket: "In `file.js:48` add `.filter(x => x > 0)`" → Qwen reads one file → 650 tokens
 - **60× difference**
 
 ### Workflow Cycle
+
+> Обязательные модели и «одна остановка» ниже заменены [выбором ролей](../../../.system2/decision-journal/abda2410f436b8bc1170e2d7.json)
+> и [гейтами блока](../../../docs/system-workflow.md#фазы-и-гейты), не новой схемой трёх проверяющих.
 
 ```
 Opus: GRILL → SPEC → T1, T2, T3, T4
@@ -332,6 +351,9 @@ VS Code extension makes markdown links **clickable**:
 
 ## Skills Usage Pattern
 
+> Таблица — исторические примеры, не подтверждение slash-discovery или полной автономии.
+> Применять канонические [start](../../skills/start/SKILL.md) и [workflow](../../../docs/system-workflow.md).
+
 ### When to Use Skills
 
 User types `/<skill-name>` to invoke:
@@ -386,16 +408,26 @@ disable-model-invocation: false
 
 When starting work in a project:
 
+> Список — архивный пример, пути внутри не адреса текущей System2.
+> Сегодня читать [CLAUDE](../../../CLAUDE.md), HANDOFF выбранного проекта и
+> источники по [workflow](../../../docs/system-workflow.md#контекст-и-retrieval).
+
+```markdown
 1. ✅ Read [CLAUDE.md](../../CLAUDE.md) — project instructions
 2. ✅ Read [FACTS.md](../../FACTS.md) — current state data (if exists)
 3. ✅ Read [DECISIONS.md](../../DECISIONS.md) — past decisions (if exists)
 4. ✅ Check `.claude/` structure — available agents/skills
 5. ✅ Run `git status` — understand current state
 6. ✅ Identify task type → use `/start` if unclear
+```
 
 ---
 
 ## Review Workflow
+
+> Приёмщик независим от автора. Проверяется разрешённый блок и достаточные evidence;
+> прежнее требование заново гонять проверки каждого тикета не универсально:
+> [приёмка и доказательства](../../../docs/system-workflow.md#приёмка-и-доказательства).
 
 ### When Reviewing Tickets (Opus Role)
 
@@ -418,6 +450,9 @@ When starting work in a project:
 ---
 
 ## Token Budget Awareness
+
+> Все цены, токены, 60× и 5–7× ниже — unverified на 2026-10-22. Без сопоставимого
+> первичного измерения их нельзя использовать как обещание выгоды или основание выбора модели.
 
 ### Cost of Operations
 
@@ -450,6 +485,9 @@ When starting work in a project:
 ---
 
 ## Multi-PC Workflow
+
+> Число проектов/ПК, структура и пути ниже — история примеров, не актуальный профиль.
+> Канонический корень берётся из локальной привязки; см. [контракт](../../../docs/memory-contract.md).
 
 ### Context
 
@@ -521,6 +559,9 @@ tar -czf _transfer/project-2026-08-17.tar.gz \
 
 ### SystemQwen Mode (preferred)
 
+> «Preferred» и старый цикл Opus/Qwen ниже не новый выбор пользователя. Модели/роли
+> назначает пользователь по [подтверждённому решению](../../../.system2/decision-journal/abda2410f436b8bc1170e2d7.json).
+
 **Standard workflow:**
 1. `/start [задача]`
 2. Opus: grill → spec → tickets → 🛑 СТОП
@@ -535,6 +576,9 @@ tar -czf _transfer/project-2026-08-17.tar.gz \
 - Implementation can be algorithmic
 
 ### Auto-learn Обязателен
+
+> Не обязанность добавлять память/skill после каждой задачи: новое знание отделяется
+> от повторов, без нового — no-op по [журналу](../../../docs/decision-journal.md).
 
 **After ЛЮБОЙ task:**
 - "Что запомнить навсегда?"
@@ -551,6 +595,9 @@ tar -czf _transfer/project-2026-08-17.tar.gz \
 ---
 
 ## Project Evolution
+
+> Выводы о тренде пользователя и 7×/15×/40% ниже остаются observation/unverified,
+> не подтверждёнными предпочтениями или применимыми измерениями.
 
 **Traced through projects:**
 

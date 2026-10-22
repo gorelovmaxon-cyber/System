@@ -10,7 +10,15 @@ supersedes: memory/user-profile/coding-style.md
 
 # Coding Style
 
+> PROFILE-01, сверка 2026-10-22: исходный текст сохранён как observation 2026-09-08.
+> Примеры и советы не стали подтверждёнными предпочтениями по факту хранения.
+> Текущие источники — [MEMORY](../MEMORY.md#user-profile) и [CLAUDE](../../../CLAUDE.md).
+
 ## Languages & Stack
+
+> Общий стек/версии пользователя не подтверждены: ниже примеры старых проектов.
+> Стек, strict mode, структура, инструменты и deployment выбираются по действующим
+> требованиям конкретного проекта; не переносить их автоматически в новую задачу.
 
 **Primary Languages:**
 - **TypeScript** (strict mode) — фронтенд, основной язык для веб
@@ -44,11 +52,17 @@ supersedes: memory/user-profile/coding-style.md
 - PowerShell для аналитики
 
 *AI Stack:*
+
+> Распределение по моделям заменено [решением о ролях](../../../.system2/decision-journal/abda2410f436b8bc1170e2d7.json).
+> Проценты токенов и 5–7× экономии — unverified на 2026-10-22, применимого замера нет.
 - Opus (~20-40% токенов): planning, grill, spec, tickets, review
 - Sonnet/Qwen (~60-80% токенов): implementation, bulk I/O, testing
 - Economics: 5-7× savings vs pure Opus
 
 ## Code Style Preferences
+
+> Именование, комментарии и структура ниже — неподтверждённые рекомендации старого
+> анализа; сначала действующие соглашения проекта, неизвестный общий стиль не додумывать.
 
 ### Naming Conventions
 
@@ -124,6 +138,9 @@ def calc(b, r, s):
   ```
 
 ## .claude/ Directory Structure
+
+> Универсальность этой структуры для всех проектов не подтверждена; сверять реальный
+> checkout и правила проекта, не создавать каталоги ради соответствия старому примеру.
 
 Standard structure across all projects:
 
@@ -212,6 +229,11 @@ refactor(parser): simplify regex pattern matching
 
 ### Commit Practices
 
+> «One ticket … one stop» и «Always git stash» ниже не действующие обязательные правила.
+> Сохранность чужих правок и состав коммита определяет [workflow](../../../docs/system-workflow.md#коммиты-и-синхронизация),
+> остановки — [фазы/гейты](../../../docs/system-workflow.md#фазы-и-гейты). Stash не является универсальной
+> подготовкой к checkout/reset и не разрешает разрушительную операцию.
+
 - **Atomic commits**: each commit = one logical change
 - **One ticket = one commit = one stop**
 - No WIP commits in PR
@@ -292,6 +314,9 @@ created: 17.08.2026
 ```
 
 ## Multi-Project Workflow
+
+> Старые количество проектов/ПК, архивы и обязательный набор файлов ниже не текущие
+> факты профиля. Привязки проверяются по локальному конфигу, состав документов — по проекту.
 
 **Context:**
 - Work across 4+ active projects simultaneously
