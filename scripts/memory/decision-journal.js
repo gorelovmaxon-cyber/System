@@ -7,6 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { projectId } = require('./project-id');
 const writerLog = require('./writer-log');
+const { acquireProcessLock } = require('./ipc-lock');
 
 const TYPES = new Set(['decision', 'correction', 'question', 'fact', 'observation']);
 const VERIFICATIONS = new Set(['confirmed', 'observation', 'open']);
@@ -50,7 +51,32 @@ function list(ctx) {
     .map(name => read(ctx, name.slice(0, -5))).filter(item => item.project_id === ctx.project_id);
 }
 
+function locked(ctx, action) {
+  const release = acquireProcessLock(ctx.dir, { attempts: 40, timeoutMessage: 'project journal lock timeout' });
+  try { release.assertHeld(); return action(release); }
+  finally { release(); }
+}
+
+function replaceEntry(ctx, entry, release) {
+  fs.mkdirSync(ctx.dir, { recursive: true });
+  const target = fileFor(ctx, entry.id);
+  const temp = `${target}.${process.pid}.${crypto.randomBytes(8).toString('hex')}.tmp`;
+  try {
+    const fd = fs.openSync(temp, 'wx');
+    try { fs.writeFileSync(fd, JSON.stringify(entry, null, 2) + '\n'); fs.fsyncSync(fd); }
+    finally { fs.closeSync(fd); }
+    if (process.env.SYSTEM2_CRASH_AT === 'journal-before-rename') process.exit(23);
+    release.assertHeld();
+    fs.renameSync(temp, target);
+    if (process.env.SYSTEM2_CRASH_AT === 'journal-after-rename') process.exit(23);
+  } finally { if (fs.existsSync(temp)) fs.unlinkSync(temp); }
+}
+
 function capture(ctx, opts) {
+  return locked(ctx, release => captureLocked(ctx, opts, release));
+}
+
+function captureLocked(ctx, opts, release) {
   const type = line(opts.type, 'type');
   if (!TYPES.has(type)) throw new Error('invalid type');
   const summary = line(opts.summary, 'summary');
@@ -65,29 +91,39 @@ function capture(ctx, opts) {
     const previous = read(ctx, supersedes);
     if (previous.project_id !== ctx.project_id || type !== 'correction') throw new Error('invalid supersedes');
   }
-  const id = crypto.createHash('sha256').update(JSON.stringify([ctx.project_id, type, summary.toLowerCase(), supersedes])).digest('hex').slice(0, 24);
+  const digest = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 24);
+  let id = digest([ctx.project_id, type, summary.toLowerCase(), supersedes]);
+  if (fs.existsSync(fileFor(ctx, id))) {
+    const legacy = read(ctx, id);
+    if (legacy.project_id === ctx.project_id && legacy.type === type && legacy.supersedes === supersedes &&
+        legacy.summary !== summary && legacy.summary.toLowerCase() === summary.toLowerCase()) {
+      id = digest(['journal-case-v1', ctx.project_id, type, summary, supersedes]);
+    }
+  }
   const entry = {
     id, date: new Date().toISOString().slice(0, 10), project_id: ctx.project_id,
     type, summary, source, verification, state: 'pending', supersedes,
     memory_event_id: null, memory_files: [],
   };
-  fs.mkdirSync(ctx.dir, { recursive: true });
-  try {
-    fs.writeFileSync(fileFor(ctx, id), JSON.stringify(entry, null, 2) + '\n', { flag: 'wx' });
-    return { created: true, entry };
-  } catch (error) {
-    if (error.code !== 'EEXIST') throw error;
+  if (fs.existsSync(fileFor(ctx, id))) {
     const prior = read(ctx, id);
     if (prior.project_id !== ctx.project_id || prior.type !== type || prior.summary !== summary || prior.source !== source || prior.verification !== verification || prior.supersedes !== supersedes) {
       throw new Error('journal id conflict; inspect the existing entry');
     }
     return { created: false, entry: prior };
   }
+  replaceEntry(ctx, entry, release);
+  return { created: true, entry };
 }
 
 function mark(ctx, id, getRecord = writerLog.get) {
+  return locked(ctx, release => markLocked(ctx, id, getRecord, release));
+}
+
+function markLocked(ctx, id, getRecord, release) {
   const entry = read(ctx, id);
   if (entry.project_id !== ctx.project_id) throw new Error('project scope mismatch');
+  if (entry.state === 'closed') throw new Error('closed journal entry cannot be promoted');
   if (entry.type === 'question' || entry.verification === 'open') throw new Error('open question cannot be promoted');
   const eventId = `journal_${ctx.project_id}_${id}`;
   const result = getRecord(eventId);
@@ -98,14 +134,37 @@ function mark(ctx, id, getRecord = writerLog.get) {
     if (entry.memory_event_id !== eventId) throw new Error('memory event mismatch');
     return entry;
   }
+  if (entry.state !== 'pending') throw new Error('invalid journal state for mark');
   const updated = { ...entry, state: 'persisted', memory_event_id: eventId, memory_files: result.written_files };
-  const target = fileFor(ctx, id);
-  const temp = `${target}.${process.pid}.tmp`;
-  try {
-    fs.writeFileSync(temp, JSON.stringify(updated, null, 2) + '\n', { flag: 'wx' });
-    fs.renameSync(temp, target);
-  } finally { if (fs.existsSync(temp)) fs.unlinkSync(temp); }
+  replaceEntry(ctx, updated, release);
   return updated;
+}
+
+function close(ctx, id, opts) {
+  const disposition = line(opts.disposition, 'disposition');
+  if (!['resolved', 'dismissed', 'superseded'].includes(disposition)) throw new Error('invalid disposition');
+  const closure = { disposition, reason: line(opts.reason, 'reason'), evidence: line(opts.evidence, 'evidence') };
+  if (disposition === 'superseded') closure.correction_id = line(opts.correction_id, 'correction_id');
+  else if (opts.correction_id !== undefined) throw new Error('correction_id requires superseded disposition');
+  return locked(ctx, release => {
+    const entry = read(ctx, id);
+    if (entry.project_id !== ctx.project_id) throw new Error('project scope mismatch');
+    if (entry.state === 'persisted') throw new Error('persisted entry cannot be closed');
+    if (closure.correction_id) {
+      const correction = read(ctx, closure.correction_id);
+      if (correction.project_id !== ctx.project_id || correction.type !== 'correction' || correction.supersedes !== id) {
+        throw new Error('superseded requires a same-project correction referencing this id');
+      }
+    }
+    if (entry.state === 'closed') {
+      if (JSON.stringify(entry.closure) !== JSON.stringify(closure)) throw new Error('journal closure conflict');
+      return entry;
+    }
+    if (entry.state !== 'pending') throw new Error('only pending entries may be closed');
+    const updated = { ...entry, state: 'closed', closure, closed_at: new Date().toISOString() };
+    replaceEntry(ctx, updated, release);
+    return updated;
+  });
 }
 
 function main() {
@@ -120,7 +179,8 @@ function main() {
   if (opts.command === 'capture') result = capture(ctx, opts);
   else if (opts.command === 'pending') result = list(ctx).filter(item => item.state === 'pending');
   else if (opts.command === 'mark') result = mark(ctx, opts.id);
-  else throw new Error('usage: decision-journal.js capture|pending|mark --project-root <root> ...');
+  else if (opts.command === 'close') result = close(ctx, opts.id, opts);
+  else throw new Error('usage: decision-journal.js capture|pending|mark|close --project-root <root> ...');
   process.stdout.write(JSON.stringify(result, null, 2) + '\n');
 }
 
@@ -128,4 +188,4 @@ if (require.main === module) {
   try { main(); } catch (error) { process.stderr.write(`ERROR: ${error.message}\n`); process.exitCode = 1; }
 }
 
-module.exports = { context, capture, list, mark };
+module.exports = { context, capture, list, mark, close };
