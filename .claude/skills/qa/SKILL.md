@@ -5,7 +5,7 @@ description: Interactive QA session where user reports bugs or issues conversati
 
 # QA Session
 
-При проверке задачи используй [evidence report](../../templates/evidence-report.md):
+При проверке задачи используй [evidence report](../../../templates/evidence-report.md):
 сверяй поведение с исходным брифом с первого тикета, фиксируй позитивный,
 негативный и регрессионный сценарии и не принимай наличие файла/синтаксис за
 функциональное доказательство.

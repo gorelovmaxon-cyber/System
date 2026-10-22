@@ -1,0 +1,15 @@
+{
+  "id": "f81ce7e1939761e3d064264f",
+  "date": "2026-10-20",
+  "project_id": "systemqwen",
+  "type": "fact",
+  "summary": "2026-10-20: по прямому поручению пользователя System2 опубликована обычным push в origin/master. Merge ea05557f3e4d09aa1ce9398c348143857539ef8e сохранил 18 локальных и 8 удалённых коммитов; полные новые записи памяти обеих сторон проверены, потерь и новых дублей нет. HEAD и живой remote совпали на этом SHA. START-ROUTING-01 остаётся awaiting-review, ROLES-04 awaiting-validation; публикация не является независимой приёмкой и не гарантирует автосохранение.",
+  "source": "Беседа 2026-10-20, поручение пользователя «Выложи в гит наш по системе»; .scratch/start-routing-2026-10-18/RESULT.md#публикация-2026-10-20; фактические git push и ls-remote.",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_f81ce7e1939761e3d064264f",
+  "memory_files": [
+    ".claude/memory/facts/writer-entries.md"
+  ]
+}

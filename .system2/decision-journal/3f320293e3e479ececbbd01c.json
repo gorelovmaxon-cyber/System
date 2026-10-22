@@ -1,0 +1,15 @@
+{
+  "id": "3f320293e3e479ececbbd01c",
+  "date": "2026-10-18",
+  "project_id": "systemqwen",
+  "type": "fact",
+  "summary": "START-ROUTING-01: действующие инструкции start/site-build/autopilot и связанные документы изменены по решению пользователя от 2026-10-18. Start ограничен рекомендацией и остановкой, запуск site-build явный, реализацию включая визуальные макеты передают отдельному исполнителю. Структура шести навыков, локальные ссылки и документальные сценарии проверены; живой прогон не проведён. Штатный quick_validate недоступен из-за отсутствующего PyYAML. Пакет awaiting-review; публикация не входит в разрешённый блок.",
+  "source": ".scratch/start-routing-2026-10-18/TASK.md; .scratch/start-routing-2026-10-18/RESULT.md; беседа 2026-10-18, пользователь назначил исполнителя и поручил «делай».",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_3f320293e3e479ececbbd01c",
+  "memory_files": [
+    ".claude/memory/facts/writer-entries.md"
+  ]
+}

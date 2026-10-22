@@ -1,13 +1,23 @@
 ---
 name: claude-handoff
-description: Hand the current conversation off to a fresh background agent that picks up the work immediately.
+description: Save a compact handoff for a fresh conversation; launch a background agent only when the user explicitly authorizes that launch.
 argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---
 
-Write a handoff summary of the current conversation so a fresh agent can continue the work. Instead of saving it, launch a background agent seeded with the summary as its prompt: `claude --bg --name "<descriptive name>" "<handoff summary>"`. It starts in the current working directory and returns immediately; the user manages it with `claude agents`.
+Save a compact handoff for the explicitly selected project using the canonical
+[handoff skill](../handoff/SKILL.md). Preserve the assigned role, stage, permitted
+block, evidence and next step. Default completion is a saved HANDOFF and a short
+message the user can pass to their chosen agent; it does not launch a process.
 
-Always pass `-n`/`--name` with a descriptive name (e.g. `--name "Fix login bug"`) — it sets the display name shown in the job list, session picker, and terminal title.
+Only if the user explicitly authorizes a background-agent launch for this handoff
+and the current client supports it, use the client's verified launch interface.
+Do not infer launch permission from the word handoff, the availability of a CLI,
+or permission to write a summary. Do not claim a launch succeeded without its
+actual result. If unavailable, finish with the saved artifact and manual transfer.
+
+For an authorized launch, use a descriptive job name through the naming interface
+supported by that client. Do not assume another client's flags are available.
 
 Include a "suggested skills" section in the summary, which suggests skills that the agent should invoke.
 

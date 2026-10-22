@@ -4,10 +4,11 @@ description: Turn confirmed brief and conversation into a proportionate local sp
 disable-model-invocation: true
 ---
 
-This skill synthesizes the confirmed brief and project evidence into a spec. From
-System2 `/start`, use the local spec and handoff contract in
-`docs/system-workflow.md`; do not require an external issue tracker or setup
-skill. If a material decision is still unknown, ask for that decision before
+This skill synthesizes the confirmed brief and project evidence into a spec. After
+the user explicitly chooses a planning route recommended by System2 `/start`, use
+the local spec and handoff contract in `docs/system-workflow.md`; start itself
+ends with a recommendation and does not run this phase. Do not require an external
+issue tracker or setup skill. If a material decision is still unknown, ask for that decision before
 declaring the spec agreed. A short site task gets a short spec; the long template
 below is reference material for complex work, not a minimum length.
 
