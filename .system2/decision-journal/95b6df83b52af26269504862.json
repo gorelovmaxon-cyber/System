@@ -1,0 +1,15 @@
+{
+  "id": "95b6df83b52af26269504862",
+  "date": "2026-11-01",
+  "project_id": "systemqwen",
+  "type": "correction",
+  "summary": "По поручению пользователя 2026-11-01 разрешена актуализация GitHub System по локальному пакету памяти и документов. Исторические предложения и передачи сохраняются с пометками; публикация не внедряет Autopilot/Astra и не принимает незавершённые CORE-FIX/PROFILE. Эта поправка заменяет новую запись b725dc442c77d9b4e0d10262, повреждённую кодировкой PowerShell при передаче текста в Python; новых предпочтений не добавляет.",
+  "source": "Беседа 2026-11-01: после сравнения локальной System2 и GitHub пользователь поручил «актуализируй»; .scratch/system-sync-20261101/TASK.md",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": "b725dc442c77d9b4e0d10262",
+  "memory_event_id": "journal_systemqwen_95b6df83b52af26269504862",
+  "memory_files": [
+    ".claude/memory/decisions/writer-entries.md"
+  ]
+}

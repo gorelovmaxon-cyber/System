@@ -511,6 +511,136 @@ event_id: journal_systemqwen_26f61512a56c539e5e04b97c
 ---
 status: confirmed
 category: decisions
+scope: system-of-site
+source: Беседа 2026-10-15, прямое поручение завершить самостоятельно до утра
+evidence: Прямое поручение завершить самостоятельно до утра; отдельный журнал вызовов, синтетические данные и отсутствие реальных отправок обязательны.
+event_id: journal_system-of-site_9255bc76605f61fa995a164a
+---
+
+## Пользователь разрешил необходимые платные AI-вызовы для завершения текущей доводки короткого брифа без дополнительных вопросов; реальные отправки, commit и публикация не разрешены.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Беседа 2026-10-16, задание об исправлении преждевременного завершения AI-брифа; journal36ce3e3bec4831428f2da086
+evidence: Прямое задание пользователя; подтверждено содержимым приложения к беседе, без вывода технических предпочтений за его пределы.
+event_id: journal_system-of-site_36ce3e3bec4831428f2da086
+---
+
+## Короткий AI-бриф должен рассмотреть основные направления бизнеса, доверия, цифр, покупателей, материалов, оформления и условий. Сокращаются лишние реплики, а не направления; ответы, отсутствие, неизвестность, отказ и не обсуждавшееся различаются. После готовности консультант продолжает отвечать, принимает поправки и не заменяет ответ приглашением к сборке. Сайт, формы, опрос, оформление, расчёты и рабочие подключения не менять; коммиты и публикация запрещены.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Беседа 2026-10-18; .system2/decision-journal/bdfc539b0f2511b4be28b227.json
+evidence: Прямые семь требований пользователя по результатам ручного AI-брифа; журнал bdfc539b0f2511b4be28b227.
+event_id: journal_system-of-site_bdfc539b0f2511b4be28b227
+---
+
+## AI-разговор System of Site: дизайн решает Максим; спрашивать только наличие референсов, без помощи и повторов при их отсутствии. Структуру и страницы не спрашивать и не предлагать; выяснять функции. После бизнеса идут брендбук/логотип, отдельно ТЗ с возможностью вложений, затем тип сайта. Вопросы о бюджете запрещены. После первого ответа доступно досрочное завершение неполного брифа с открытыми пробелами, просмотром и подтверждением. Сайт и тестовый опрос не меняются; коммиты и публикация запрещены.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Беседа 2026-10-19; docs/AI-CHAT-DESIGN-SCOPE.md приложения
+evidence: Прямое поручение пользователя 2026-10-19 и ответ: новый отдельный репозиторий GitHub; journal b42bf82c6a0626c82effd6fc.
+event_id: journal_system-of-site_b42bf82c6a0626c82effd6fc
+---
+
+## Для System of Site после успешного ручного прохождения AI-брифа дальнейшие изменения ограничены дизайном окна AI-чата; логику, сайт MAXMADE, формы, тестовый опрос, ставки, PDF и CRM сохранять. AI-приложение публикуется отдельным снимком в новом репозитории GitHub с собственной историей; существующие репозитории не менять.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Беседа 2026-10-19; журнал 0b4adc9f2632b88852a08031, system-of-site
+evidence: Прямое уточнение владельца с PDF-образцом в беседе 2026-10-19; локальная реализация и адресные проверки описаны в docs/CRM-TABLE-20261019.md.
+event_id: journal_system-of-site_0b4adc9f2632b88852a08031
+---
+
+## Для system-of-site владелец выбрал простую CRM-таблицу MAXMADE вместо интерфейса EspoCRM: 12 столбцов, фильтр услуги заменяет фильтр кнопки и наоборот, дата комбинируется. Отметка брифа требует явного подтверждения клиента; отметки ТЗ, лого и брендбука требуют настоящих вложений.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Owner clarification2026-10-19; docs/CRM-SHARED-20261019.md; shared CRM live-browser proof and23 addressable tests
+evidence: Owner correction;23 addressed tests; browser CRM1440/768/390 and actual live login confirmed shared applications and file access. User tables preserved across migration; earlier12-column standalone CRM is historical.
+event_id: journal_system-of-site_e7e453dda8d22429d667ab6f
+---
+
+## Owner simplified CRM: service column and filter must use only initial-form services, not landing/shop page types; remove type-unspecified wording and the button column. Missing live applications were caused by CRM18192 reading an earlier database copy while form/chat18186 stored current submissions. Existing CRM table integrated into live combined app using the same Store and files; real operator browser verified9 enquiries including2 submitted forms and1 existing attachment. Prior login retained, no new live test applications, external deliveries, paid AI calls or publication.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: Самопроверка исполнителя 2026-10-20, HANDOFF и FULL-LOCAL-INTEGRATION-20261020.md; не независимая приёмка
+evidence: 963 tests in 498.290s OK; desktop/mobile connected browser PASS; restored package hashes/routes PASS
+event_id: journal_system-of-site_60cdb36fe52f47f69cf41c3c
+---
+
+## Полная локальная связка MAXMADE с общей формой, неизменяемыми режимами опроса и AI, табличной CRM и операторским расчётом проверена. Подтверждённый опрос теперь допускается к расчёту без подмены ответов AI-фактами; источник и коммерческое одобрение проверяются. 963 теста, lint/types и сквозные браузерные сценарии обоих режимов на компьютере и телефоне прошли. Данные и исходный сайт сохранены. Полноценного AI-анализа максимального состава блоков пока нет; ставки прежние, внешние отправки отключены, новых платных вызовов и публикаций нет.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: Самопроверка исполнителя 2026-10-20, HANDOFF и FULL-LOCAL-INTEGRATION-20261020.md; не независимая приёмка
+evidence: {'tests': 963, 'seconds': 474.949, 'lint': 'OK', 'types': 'OK'}; desktop/mobile connected browser PASS; restored package hashes/routes PASS
+event_id: journal_system-of-site_e58410a5c97d23f1c83bbcf6
+---
+
+## Полная локальная связка MAXMADE с общей формой, неизменяемыми режимами опроса и AI, табличной CRM и операторским расчётом проверена. Подтверждённый опрос теперь допускается к расчёту без подмены ответов AI-фактами; источник и коммерческое одобрение проверяются. 963 теста, lint/types и сквозные браузерные сценарии обоих режимов на компьютере и телефоне прошли. Данные и исходный сайт сохранены. Полноценного AI-анализа максимального состава блоков пока нет; ставки прежние, внешние отправки отключены, новых платных вызовов и публикаций нет. Финальная версия включает исправление адреса иконки сайта после обнаруженного 404 и повторный общий набор.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: Перепроверка по запросу пользователя 2026-10-20, квитанция recheck-full-local-20261020/RESULT.json
+evidence: 73 tests in 36.431s OK; hash checks/routes/browser/npm audits recorded
+event_id: journal_system-of-site_987e706a33c2bec0db79b04c
+---
+
+## Повторная проверка неизменённой полной локальной версии d96ac759: 73 адресных теста и браузер компьютера/телефона прошли; код, сборки и пакет совпали по хешам; SQLite цела, CRM закрыта без входа, процесс слушает только loopback, приватный AI-ключ в пакете отсутствует. Production npm audit: 0 для сайта и интерфейса брифа; в инструментах сборки сайта остаются 14 замечаний. Автоматический состав блоков по правилам и демонстрационный PDF остаются ограничениями. Код, GitHub и VPS не изменялись; платных вызовов нет; это самопроверка, не независимая приёмка.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: Уточнение пользователя и завершение проверки кнопки 2026-10-20; HANDOFF и opening-button-20261020/VERIFIED.json
+evidence: {"tests": 963, "seconds": 619.926, "lint_types": "OK"}; browser1440/390 PASS; code diff exactly2 files
+event_id: journal_system-of-site_e4176fcc6a0779e71b10c699
+---
+
+## Пользователь уточнил, что отказ начала AI-разговора вызван пропавшим интернетом, и попросил изменить только кнопку повтора. Исправлены только атрибут CSS-класса и стиль: ширина по тексту, выравнивание слева, боковые отступы 18px вместо растяжения flex. Подключение, модель, логика повтора и данные не менялись. Браузер 1440/390 подтвердил компактную кнопку и сохранение ввода при явном повторе; прежние AI/опрос/режимы прошли. 963 теста, линтер и TypeScript прошли. Платных вызовов и публикаций нет; самопроверка исполнителя.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: Запрос пользователя и самопроверка 2026-10-20; HANDOFF приложения и brief-review-20261020/VERIFIED.json
+evidence: {"tests": 963, "seconds": 530.158, "lint_types": "OK"}; shared card styles and submit failure gates desktop/mobile PASS
+event_id: journal_system-of-site_d77b0e57b5b41dc021e8e17e
+---
+
+## По просьбе пользователя изменён только итоговый клиентский экран брифа: AI и тестовый опрос используют общие нумерованные карточки вопрос/ответ с карандашом. В обоих режимах после явной отправки и успешного ответа сервера показывается благодарность; зелёный служебный блок и надпись о сохранённом черновике убраны. AI использует прежние подтверждение текущей версии и отправку; при ошибке подтверждения или сохранения благодарности нет. Начальная форма, разговор, серверные защиты, расчёт, CRM, данные и доступы не менялись. 963 теста, lint/types и управляемые браузерные сценарии1440/390 прошли, включая исправление ответа, восстановление, повтор без дубля, блокировку устаревшей версии, CRM и PDF. Платных вызовов, внешних отправок и публикаций нет. Самопроверка исполнителя.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: Запрос пользователя и самопроверка 2026-10-20; intake-autosave-20261020/VERIFIED.json, RESTORED.json; ai-brief-example-20261020-corrected/AUDIT.json
+evidence: {"tests": 963, "seconds": 548.915, "lint_types": "OK"}; desktop/mobile autosave regression PASS; live first assembly exact sources PASS
+event_id: journal_system-of-site_c91d870b35c08f7cd8645e2d
+---
+
+## Устранён цикл автосохранения начальной формы в общей локальной системе брифа и AI. Причина — зависимое от порядка ключей JSON.stringify-сравнение с серверным каноническим JSON. Только IntakeApp.tsx: стабильное сравнение значений в autosave/dirty/beforeunload. RED: четыре лишних запроса за2.5с. GREEN1440/390: нет повторов, reload, реальная правка, отзыв согласия. 963 tests in548.915s OK; lint/types, AI/опрос/неизменяемость режима browser PASS. Настоящий пример OneProvider: семь естественных ответов, девять вызовов с началом и сборкой, 26 полей первой сборки, цитаты сверены с клиентскими сообщениями, редактор не применялся. Открыт в отдельном профиле Edge; создан снимок HTML. Документ не подтверждён и не отправлен. Первый ошибочный сценарий проверки сохранён: отвечал по служебной теме вместо видимого вопроса; восемь попыток, последняя остановлена локально. Итого17 платных попыток, ошибок провайдера0. Backend/CRM/расчёт/исходные системы/ключи не менялись. Только локально, внешних отправок и публикаций0. Полный пакет847 файлов восстановлен отдельно; хеши и HTTP-маршруты совпали. Самопроверка исполнителя.
+---
+status: observation
+category: decisions
+scope: system-of-site
+source: Поручение пользователя20.10.2026; GitHub https://github.com/gorelovmaxon-cyber/gotovaya-sistema-brifa/commit/e9c4868b0f55d5e4abb4be167e67cc76007942a2; PUBLICATION-MANIFEST и FRESH-CLONE.json
+evidence: {"tests": 963, "seconds": 818.692, "lint_types": "OK", "result": "ALL CHECKS PASSED"}; fresh GitHub clone hash/routes PASS
+event_id: journal_system-of-site_3f8a4c21718b877d449f1368
+---
+
+## По прямому поручению пользователя в отдельную папку «готовая система» существующего приватного GitHub-репозитория gotovaya-sistema-brifa опубликован полный локальный цикл: кнопки MAXMADE, общая форма, опрос/AI, общий итог с правками и подтверждением, спасибо, CRM, внутренний расчёт, цена/одобрение Максима и демо PDF. Старые348 файлов сохранены. Новая папка имеет переносимые live/browser launcher и отдельный workflow. Commit e9c4868b0f55d5e4abb4be167e67cc76007942a2; 963 tests in818.692s OK, lint/types и сквозной browser обоих режимов1440/390 до PDF PASS. Обе сборки совпали с исходником. Свежий GitHub clone: все файлы/хеши и HTTP-маршруты/права проверены. Другие репозитории и VPS не менялись, ключи/клиентские БД не публиковались; новых платных вызовов/рассылок0. Остаток: VPS, свежие исходники сайта5d58c4f (архив в полученной передаче отсутствует), перенос CTA-подсказок в форму, полноценное AI-планирование блоков, демо PDF и независимая приёмка.
+---
+status: confirmed
+category: decisions
 scope: systemqwen
 source: Беседа 31.10–01.11.2026; прямое поручение пользователя перенести согласованный навык в System2 как ОбращениеСайты; journal 5f01efbd51050881b65db926.
 evidence: .claude/skills/obrashchenie-saity/SKILL.md; .claude/skills/obrashchenie-saity/references/examples.md; CLAUDE.md: Обращения по сайтам; docs/task-map.md
@@ -518,3 +648,23 @@ event_id: journal_systemqwen_5f01efbd51050881b65db926
 ---
 
 ## В System2 создан отдельный канонический навык ОбращениеСайты (obrashchenie-saity): персональные предложения Максима по сайтам и UX/UI строятся от задачи адресата с одним конкретным похожим кейсом, без цен в откликах и без рассказов о внутренних ИИ-системах; бесплатный главный экран до предоплаты выделяется, формат разработки и финальный вопрос выбираются по задаче и каналу.
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: ?????? 2026-11-01: ????? ????????? ????????? System2 ? GitHub ???????????? ??????? ??????????????; .scratch/system-sync-20261101/TASK.md
+evidence: ?????? ????????? ????????????; SYSTEM-SYNC-01, .scratch/system-sync-20261101/RESULT.md; ???????? HEAD ? live master a18fa6e, ?????? modified ? ???? untracked ??????.
+event_id: journal_systemqwen_b725dc442c77d9b4e0d10262
+---
+
+## ?? ????????? ???????????? 2026-11-01 ????????? ???????????? GitHub System ?? ?????????? ?????? ?????? ? ??????????. ???????????? ??????????? ? ???????? ??????????? ? ?????????; ?????????? ?? ???????? Autopilot/Astra ? ?? ????????? ????????????? CORE-FIX/PROFILE.
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: Беседа 2026-11-01: после сравнения локальной System2 и GitHub пользователь поручил «актуализируй»; .scratch/system-sync-20261101/TASK.md
+evidence: Прямое поручение пользователя; SYSTEM-SYNC-01. Проверка обнаружила отсутствие кириллицы и 177 знаков вопроса в новой записи b725dc442c77d9b4e0d10262. Поправка прочитана из UTF-8 JSON, исходные 18 событий памяти сохранены без изменений.
+event_id: journal_systemqwen_95b6df83b52af26269504862
+---
+
+## По поручению пользователя 2026-11-01 разрешена актуализация GitHub System по локальному пакету памяти и документов. Исторические предложения и передачи сохраняются с пометками; публикация не внедряет Autopilot/Astra и не принимает незавершённые CORE-FIX/PROFILE. Эта поправка заменяет новую запись b725dc442c77d9b4e0d10262, повреждённую кодировкой PowerShell при передаче текста в Python; новых предпочтений не добавляет.

@@ -1,0 +1,47 @@
+{
+  "task": "SYSTEM-SYNC-01",
+  "date": "2026-11-01",
+  "initialHead": "a18fa6e2fe25f6c6229ca912c26205ff2ac901db",
+  "initialRemoteHead": "a18fa6e2fe25f6c6229ca912c26205ff2ac901db",
+  "originalModifiedFiles": 4,
+  "originalUntrackedFiles": 5,
+  "backup": ".local/system-sync-20261101",
+  "preservation": {
+    "originalMemoryFilesRetainedAsExactTextPrefix": true,
+    "originalEvents": 18,
+    "protectedFilesSha256Matches": 4,
+    "originalHistoricalJournalPayloadPreserved": true,
+    "historicalLogMessagesAndOutcomesPreserved": true,
+    "historicalLogEncoding": "UTF-16 to UTF-8; trailing whitespace removed"
+  },
+  "checks": {
+    "command": "npm.cmd run check",
+    "exitCode": 0,
+    "js": 69,
+    "skillYaml": 53,
+    "markdownDocuments": 115,
+    "checkerTestsPassed": 5,
+    "seconds": 19.0,
+    "fullSuiteRun": false,
+    "fullSuiteReason": "Documentation and memory only; executable code unchanged"
+  },
+  "memory": {
+    "state": "persisted",
+    "pendingCount": 0,
+    "search": "local fallback; Khoj unavailable",
+    "indexedConfirmed": false,
+    "historicalObservationClosed": "2ff3941ee9de7e974ff8b0f6",
+    "encodingDamagedNewEntry": "b725dc442c77d9b4e0d10262",
+    "encodingCorrection": "95b6df83b52af26269504862",
+    "correctionCyrillicCharacters": 275
+  },
+  "publicationGate": {
+    "reviewedContentFilesBeforeThisReceipt": 13,
+    "credentialCandidatesFound": 0,
+    "diffCheckExitCode": 0,
+    "method": "Review explicit staged file list, scan full staged blobs, fetch, normal push, compare live remote SHA",
+    "finalSha": "Recorded in Git history and ignored local publication receipt after push"
+  },
+  "independentAcceptance": false,
+  "sitesVpsConfigOkAndAdaptersUnchanged": true
+}

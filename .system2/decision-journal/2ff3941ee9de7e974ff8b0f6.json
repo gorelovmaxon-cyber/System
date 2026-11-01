@@ -1,0 +1,19 @@
+{
+  "id": "2ff3941ee9de7e974ff8b0f6",
+  "date": "2026-10-07",
+  "project_id": "systemqwen",
+  "type": "observation",
+  "summary": "Read-only health check 2026-10-07: System2 root resolution, Git, Node and shared memory directory pass; system-of-site project ID resolves; local memory search returns results. Doctor reports Khoj and memory bridge unavailable, Activepieces disabled. Core file-based planner/executor workflow remains usable; writer and full cross-chat automation were not tested in this check. Project CLAUDE still contains machine-specific E-drive guidance conflicting with the current local binding.",
+  "source": "Conversation 2026-10-07; doctor.js --json; search.js --project systemqwen; project-id.js; direct instruction and local path inspection",
+  "verification": "observation",
+  "state": "closed",
+  "supersedes": null,
+  "memory_event_id": null,
+  "memory_files": [],
+  "closure": {
+    "disposition": "dismissed",
+    "reason": "Исторический снимок диагностики 2026-10-07, а не открытая задача; сохраняется в истории без переноса в текущие факты.",
+    "evidence": "SYSTEM-SYNC-01, .scratch/system-sync-20261101/RESULT.md: актуализация документов 2026-11-01; исходные summary, source и verification сохранены, доступность интеграций повторно не подтверждалась."
+  },
+  "closed_at": "2026-11-01T08:15:05.724Z"
+}

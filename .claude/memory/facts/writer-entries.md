@@ -372,3 +372,53 @@ event_id: journal_systemqwen_75fc99eabace498d68c70a7a
 ---
 
 ## CHECKS-20261021: по поручению пользователя устранены противоречия autopilot/handoff/claude-handoff/skill-forge, исправлены YAML systemqwen и ссылка qa. Добавлены воспроизводимые npm run check и test:all, локальный pinned PyYAML, Figma-тесты без рабочего env и CI workflow без публикации. Git-фикстуры не зависят от пользовательского pull/templates/PATH; transport cause сохраняется в очереди без скрытого retry. Итог: 210 memory, 7 Figma, 3 Python и 3 checker теста прошли, YAML 50 навыков валиден. Пакет awaiting-review; живые сценарии и GitHub CI awaiting-validation, push не выполнялся. Причина исходного редкого fetch failed не доказана; улучшена диагностика, HTTP408-проверка сохранена.
+---
+status: confirmed
+category: facts
+scope: system-of-site
+source: User task 2026-09-27; reports/B03-RESULT.md live validation; reports/B03-EVIDENCE/LAPTOP-2026-09-27/live-results.json
+evidence: Real Edge UI, CLI delivery and filtered EspoCRM GET; two snapshots revision 6/7 and two Leads; file SHA-256 preserved; sanitized records in B03-RESULT and LAPTOP-2026-09-27 evidence.
+event_id: journal_system-of-site_2d2f515c3cdd2e9428a314bd
+---
+
+## B03 corrected app 2519e88 live laptop CRM validation passed: complete JSON snapshots and attachment metadata, same-revision retry without duplicate, new revision with independent Lead, CRM outage pending, recovery and two app restarts preserve source and owned file. B03 handed for independent review; B04 not started.
+---
+status: confirmed
+category: facts
+scope: system-of-site
+source: User CRM task 2026-09-27; docs/site-project/reports/B04-LIVE-CRM-RESULT.md; B04-LIVE-CRM-EVIDENCE/live-results.json
+evidence: Two real CRM Lead GETs match exact snapshot UTF-8; confirmation hashes recomputed; preserved file and isolated outbox across outage/restarts. Sanitized JSON and screenshots in B04-LIVE-CRM-RESULT and B04-LIVE-CRM-EVIDENCE.
+event_id: journal_system-of-site_7c59df4012581b373b3694f2
+---
+
+## B04 live CRM proof on accepted aed7285 uses local test-only AI transport, not AI quality evidence. Confirmed revisions 9 and 10 delivered through normal queue to real EspoCRM exactly once each; snapshot bytes, provenance, sources, structure, turns and attachment metadata match. Edit clears confirmation and pre-confirm submit returns 409. CRM outage and two app restarts preserve old/new snapshots and file. Code unchanged; separate b04-live-crm report for planner merge, no B04 closure or B05.
+---
+status: observation
+category: facts
+scope: system-of-site
+source: AI app HANDOFF and docs/AI-BRIEF-ACCEPTANCE.md, local self-check 2026-10-15
+evidence: AI app tests/test_ai_manual_followup.py: 16 offline regressions OK; saved-data copy replay and managed desktop/mobile UI pass. Original failed first assembly preserved; new live quality and provider latency remain open. No paid agent calls, sends, commits or publication.
+event_id: journal_system-of-site_561f63d6bdd373ea6aab0f0d
+---
+
+## AI manual followup local fixes preserve source-checked proof and explicit assembly reuse without another AI call; repeated navigation and touched-topic readiness overwrite are guarded; portfolio is grounded in current AI scope without rate changes.
+---
+status: confirmed
+category: facts
+scope: system-of-site
+source: User-reported final-turn incident2026-10-19; combined application docs/RECHECK-LIVE-20261019.md final section; local diagnostic evidence and actual launcher regression39 tests
+evidence: Recorded three failed attempts, one real probe on an isolated conversation copy,39 offline regressions including actual launcher and refusal accounting; no source or adequacy checks weakened.
+event_id: journal_system-of-site_b3f3ccf4b3c19147074de1b8
+---
+
+## Combined live chat final-turn refusal: three terminal OneProvider responses exceeded max_tokens1200 (4020,2144,1803). One copied-dialogue request with explicit thinking disabled completed in6.751s with207 output tokens. Chat launcher now sends disabled thinking while retaining model, ceiling, completion and accounting guards. Original user conversation is preserved and no paid retry was performed on it. Single probe is not proof of provider stability or internal reasoning mode.
+---
+status: confirmed
+category: facts
+scope: system-of-site
+source: Owner screenshots2026-10-20; docs/CRM-SHARED-20261019.md visual polish section; CRM polish verification receipt
+evidence: Two regressions reproduced before edits, both green afterwards;956 tests in480.657s OK; same footer hit-test passes at horizontal0,350 and maximum while vertical scroll420.
+event_id: journal_system-of-site_79373dbcf55c0e43d5817313
+---
+
+## CRM visual polish2026-10-20: remove footer slogan, count beside All enquiries and filter explanation; keep totals. Sticky number cells z3 previously overpainted totals z2; totals now z4 with pinned bottom-left corner z5. Only CRM TSX/CSS changed; isolated real-browser vertical/horizontal scrolling1440/390 and live read-only check passed; full956 tests passed. No backend/data changes, restart, paid AI calls, delivery or publication.
