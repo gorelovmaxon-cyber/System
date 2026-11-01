@@ -1,5 +1,20 @@
 # HANDOFF — systemqwen
 
+<!-- outreach-sites-20261101:start -->
+## OUTREACH-SITES-01 — ОбращениеСайты, 2026-11-01
+
+Добавлен канонический навык [ОбращениеСайты](.claude/skills/obrashchenie-saity/SKILL.md)
+с примерами и банком кейсов; маршрут — в CLAUDE и docs/task-map.
+Вызов: «ОбращениеСайты: задача», техническое имя `obrashchenie-saity`.
+Основание и проверки — [OUTREACH-SITES-01](.scratch/obrashchenie-saity-20261101/TASK.md).
+quick_validate (канон/адаптер) и npm.cmd run check PASS; самостоятельная проверка,
+независимый review и живая новая сессия не заявляются.
+Память: `journal_systemqwen_5f01efbd51050881b65db926` persisted, local fallback
+найден, Khoj недоступен. Чужие dirty и старые pending сохранены.
+Следующее: применять навык к клиентским предложениям по сайтам; отправка
+сообщений и авторизация аккаунтов этим заданием не выполняются.
+<!-- outreach-sites-20261101:end -->
+
 ## CORE-FIX-20261022 — awaiting-review, synced
 
 [Единый отчёт](.scratch/core-fixes-20261022/RESULT.md): C01 `56ced72`, C02 `c29be37`,

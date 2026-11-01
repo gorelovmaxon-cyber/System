@@ -1,0 +1,15 @@
+{
+  "id": "5f01efbd51050881b65db926",
+  "date": "2026-11-01",
+  "project_id": "systemqwen",
+  "type": "decision",
+  "summary": "В System2 добавить отдельный навык ОбращениеСайты для клиентских предложений по сайтам: задача адресата, конкретный похожий кейс, подходящие форматы разработки, выделенный бесплатный главный экран до предоплаты, без цен и без рассказов о внутренних ИИ-системах.",
+  "source": "Беседа 31.10–01.11.2026: пользователь согласовал образец по CarExport, правки и поручил перенести навык в System2 под именем ОбращениеСайты.",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_5f01efbd51050881b65db926",
+  "memory_files": [
+    ".claude/memory/decisions/writer-entries.md"
+  ]
+}
