@@ -1,0 +1,15 @@
+{
+  "id": "b820e0e54a7095f7f4464d91",
+  "date": "2026-11-01",
+  "project_id": "systemqwen",
+  "type": "fact",
+  "summary": "SKILLS-DISCOVERY-20261101: получение System2 из Git не подключает её .claude/skills к каталогу Codex. На текущем ПК добавлены три пользовательские точки входа ok, operational-cards и obrashchenie-saity, читающие канонические навыки System2. Все три прошли quick_validate, цели доступны; продуктовые навыки не изменены. Отображение в меню клиента ещё не наблюдалось; при отсутствии обновления списка требуется перезапуск клиента.",
+  "source": "Беседа 2026-11-01: пользователь не видит новые навыки в чате; .scratch/system-sync-20261101/RESULT.md#skills-discovery-20261101; https://learn.chatgpt.com/docs/build-skills.",
+  "verification": "confirmed",
+  "state": "persisted",
+  "supersedes": null,
+  "memory_event_id": "journal_systemqwen_b820e0e54a7095f7f4464d91",
+  "memory_files": [
+    ".claude/memory/facts/writer-entries.md"
+  ]
+}

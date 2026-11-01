@@ -432,3 +432,13 @@ event_id: journal_systemqwen_c9c99e2263f086d5b85c67b4
 ---
 
 ## UPDATE-E-20261101: локальная System2 обновлена fast-forward с 5f631d9 до ca2f32a из origin/master, получены 20 коммитов. Проверены npm run check (69 JS, 53 YAML, 115 документов, 5 checker) и 10 целевых изолированных тестов core-index/core-journal/core-search: PASS. Чужой L06-04-FIXES сохранён без изменения. Независимая приёмка CORE-FIX/PROFILE, живые сценарии и ROLES-04 этим обновлением не подтверждены.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: Беседа 2026-11-01: пользователь не видит новые навыки в чате; .scratch/system-sync-20261101/RESULT.md#skills-discovery-20261101; https://learn.chatgpt.com/docs/build-skills.
+evidence: Three local skill adapters created without overwriting existing files; quick_validate PASS 3/3; canonical targets readable. UI visibility unconfirmed.
+event_id: journal_systemqwen_b820e0e54a7095f7f4464d91
+---
+
+## SKILLS-DISCOVERY-20261101: получение System2 из Git не подключает её .claude/skills к каталогу Codex. На текущем ПК добавлены три пользовательские точки входа ok, operational-cards и obrashchenie-saity, читающие канонические навыки System2. Все три прошли quick_validate, цели доступны; продуктовые навыки не изменены. Отображение в меню клиента ещё не наблюдалось; при отсутствии обновления списка требуется перезапуск клиента.
