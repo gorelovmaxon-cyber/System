@@ -422,3 +422,13 @@ event_id: journal_system-of-site_79373dbcf55c0e43d5817313
 ---
 
 ## CRM visual polish2026-10-20: remove footer slogan, count beside All enquiries and filter explanation; keep totals. Sticky number cells z3 previously overpainted totals z2; totals now z4 with pinned bottom-left corner z5. Only CRM TSX/CSS changed; isolated real-browser vertical/horizontal scrolling1440/390 and live read-only check passed; full956 tests passed. No backend/data changes, restart, paid AI calls, delivery or publication.
+---
+status: confirmed
+category: facts
+scope: systemqwen
+source: Беседа 2026-11-01: проверить изменения GitHub и обновить System2; .scratch/system-sync-20261101/RESULT.md#update-e-20261101.
+evidence: git merge --ff-only origin/master; npm run check exit 0; isolated core tests 10/10; foreign SHA256 unchanged; HEAD/live origin/master matched ca2f32a.
+event_id: journal_systemqwen_c9c99e2263f086d5b85c67b4
+---
+
+## UPDATE-E-20261101: локальная System2 обновлена fast-forward с 5f631d9 до ca2f32a из origin/master, получены 20 коммитов. Проверены npm run check (69 JS, 53 YAML, 115 документов, 5 checker) и 10 целевых изолированных тестов core-index/core-journal/core-search: PASS. Чужой L06-04-FIXES сохранён без изменения. Независимая приёмка CORE-FIX/PROFILE, живые сценарии и ROLES-04 этим обновлением не подтверждены.

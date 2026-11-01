@@ -53,3 +53,54 @@ Credential scan всего staged-пакета и diff --check фиксирую�
 indexed без отдельного подтверждения не заявляется.
 Самостоятельная проверка не является независимой приёмкой.
 Код, сайты, VPS, локальные конфиги, секреты, ОК и адаптеры не менялись.
+
+<a id="update-e-20261101"></a>
+## UPDATE-E-20261101 — получение обновлений на локальном ПК
+
+Последующее поручение пользователя 2026-11-01: проверить изменения GitHub и
+обновить нашу систему. Корень проверен: `E:\SystemTheBest\System`, master,
+origin `https://github.com/gorelovmaxon-cyber/System.git`.
+До обновления HEAD `5f631d917a8a2880c667f8a2990fa9b7ff9bca4f`, tracked-правок нет,
+есть только чужой untracked `.scratch/system-launch/issues/L06-04-FIXES.md`.
+Резерв этого файла, исходных HEAD/status и результатов памяти сохранён вне Git:
+`E:\SystemTheBest\system2-update-backup-20261101`.
+
+Fetch выявил отставание на 20 коммитов без местных коммитов и расхождения веток.
+Проверены состав диапазона, актуальные CLAUDE/HANDOFF и изменения механизмов памяти.
+`git merge --ff-only origin/master` успешно получил
+`ca2f32a0eb0a07d805655db3507731797c700a7c`: CORE-FIX C01–C04 (retry indexed,
+канонические входы checker, lifecycle/case IDs журнала, metadata-поиск), профиль,
+навыки ОК/операционных карт/ОбращениеСайты, стандарты и исторические передачи.
+HEAD и живой `git ls-remote origin refs/heads/master` совпали на этом SHA.
+Transfer-скрипты и исторические задания только получены, не исполнялись.
+
+Фактические проверки после получения:
+
+- `npm run check` PASS, 8.63 s: синтаксис 69 JS/CJS, настоящий YAML 53 навыков,
+  ссылки 115 документов, 5/5 checker tests.
+- `node --test --test-concurrency=1 --test-reporter=tap` для
+  `core-index.test.js`, `core-journal.test.js`, `core-search.test.js`: 10/10 PASS,
+  0 skipped, 14.639 s. Код и публичные конфиги скопированы в Temp; среда очищена
+  от интеграционных переменных, фикстуры и locks изолированы, production-память и
+  локальный конфиг не копировались. Лог:
+  `C:\Users\gorel\AppData\Local\Temp\system2-update-core-IAivmi\core.tap`.
+- `git diff --check` входящего диапазона PASS; полный suite не повторялся.
+- SHA256 черновика до/после совпал:
+  `16b26b2ac88d1dba8d7a73642cb57e76c506551e5ebd37f1b0fcc5e3c152c08e`.
+
+Штатный auto-learn: capture created true, journal_id `c9c99e2263f086d5b85c67b4`,
+event_id `journal_systemqwen_c9c99e2263f086d5b85c67b4`, facts/systemqwen,
+confirmed. Writer **persisted**, revision `0dd78a7af21f`; поиск по event_id вернул
+точную запись с source/scope через **local fallback**, `khoj-unavailable`;
+mark подтвердил persisted. **Indexed не подтверждён**, fallback не считается Khoj.
+Прежние записи не переписаны. Этот контролируемый эпизод не закрывает ROLES-04.
+
+Receipt/HANDOFF и один новый факт публикуются отдельным scoped-коммитом по ранее
+разрешённым границам System2; перед обычным push повторно проверяются remote,
+состав и diff. Итоговый SHA receipt — в Git history и финальном ответе после
+сверки HEAD с живым remote. Только эта сверка подтверждает **synced** receipt.
+Обновление — **awaiting-review**, не независимая приёмка CORE-FIX/PROFILE.
+Живые диалоги, CI и интеграции здесь не перепроверялись. Продуктовые репозитории,
+`.ssh`, глобальные настройки, сервисы и локальные адаптеры не изменялись.
+Skill-forge: нового повторяемого процесса нет, no-op. Следующее — обычная работа
+по актуальному заданию; старые передачи автоматически не запускаются.
