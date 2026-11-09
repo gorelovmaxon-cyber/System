@@ -668,3 +668,93 @@ event_id: journal_systemqwen_95b6df83b52af26269504862
 ---
 
 ## По поручению пользователя 2026-11-01 разрешена актуализация GitHub System по локальному пакету памяти и документов. Исторические предложения и передачи сохраняются с пометками; публикация не внедряет Autopilot/Astra и не принимает незавершённые CORE-FIX/PROFILE. Эта поправка заменяет новую запись b725dc442c77d9b4e0d10262, повреждённую кодировкой PowerShell при передаче текста в Python; новых предпочтений не добавляет.
+---
+status: confirmed
+category: decisions
+scope: geo-tracker
+source: беседа 2026-11-08, пересказ
+evidence: указание владельца в аргументах /start
+event_id: journal_geo-tracker_a840718085774174ae7282aa
+---
+
+## GEO: все тикеты выполняет один исполнитель сам; субагенты только если ускоряют; скорость и качество важнее экономии лимитов
+---
+status: confirmed
+category: decisions
+scope: geo-tracker
+source: беседа 2026-11-08, пересказ
+evidence: прямое указание владельца
+event_id: journal_geo-tracker_89311b66da255dec6eaa8682
+---
+
+## GEO: работа ведётся в E:/GEO-рассылка; HANDOFF проекта system-of-site для GEO не использовать
+---
+status: confirmed
+category: decisions
+scope: geo-tracker
+source: беседа 2026-11-08, пересказ
+evidence: прямое указание владельца
+event_id: journal_geo-tracker_61bc28f7934f2731347ae631
+---
+
+## GEO: собрать продукт целиком, без ошибок, перепроверяя каждый тикет; предпочитать готовые сервисы
+---
+status: confirmed
+category: decisions
+scope: geo-tracker
+source: ЗАДАНИЕ-ПОЛНЫЙ-ПРОДУКТ.md
+evidence: таблица решений ЗАДАНИЕ-ПОЛНЫЙ-ПРОДУКТ.md, решение владельца 08.11.2026
+event_id: journal_geo-tracker_074ed4c50742315f8c1b9b83
+---
+
+## GEO: месячный лимит расходов на API не задан — расходы фиксируются, но не блокируют прогон
+---
+status: confirmed
+category: decisions
+scope: geo-tracker
+source: research/b0/RESULT.md
+evidence: research/b0/RESULT.md, коммит 191c9b2
+event_id: journal_geo-tracker_3ba15bc06d290aa0c9dbe753
+---
+
+## GEO: выход — аудит одной командой первым, SaaS вторым; отличие — честность замера (режим поиска, устойчивость, журнал вмешательств, готовность к AI)
+---
+status: confirmed
+category: decisions
+scope: geo-tracker
+source: коммит afdc4d6
+evidence: коммит afdc4d6, 269 тестов SQLite и Postgres 16 OK 2026-11-09
+event_id: journal_geo-tracker_44aa3c1faff69aeaf8e637e4
+---
+
+## GEO: Postgres через адаптер geo/pg.py поверх чистого SQL, не ORM; SQLite для запуска из чистого клона; совместимость доказана прогоном всего набора на обеих базах
+---
+status: confirmed
+category: decisions
+scope: geo-tracker
+source: приёмка §8, 2026-11-09
+evidence: research/final/REPORT-S8.md, коммит f8ce960; python -m unittest discover -s tests → 295 OK; scripts/test_postgres.py → 295 OK
+event_id: evt_26708b90e0ed
+---
+
+## GEO-трекер: отчёт §8 закрыт — приёмка по блокам (B0/B2/B3 PASS; B1/B4/B5/B6 PARTIAL), 295 тестов на SQLite и Postgres, оценка стоимости ~$94/мес при 10 вопросах × 3 повтора × 31 день; продукт целиком §6 не принят без двух недель истории, боевой оплаты и домена
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: беседа 2026-11-09, System2/System of Site
+evidence: Прямое сообщение пользователя в сессии 2026-11-09: «теперь всегда 1 исполнитель это opus 5.5… скорее всего это автопилот, вся такая система из грилл все дела»
+event_id: journal_systemqwen_opus-executor-policy-20261109
+---
+
+## Пользователь выбирает исполнителем Opus 5.5 постоянно; экономия токенов больше не ограничение при выборе маршрута. Предпочтителен autopilot-цикл (grill → spec → тикеты → исполнитель).
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: беседа 2026-11-09, пересланные материалы
+evidence: Сообщение пользователя 2026-11-09 с подборкой 9 модов и карточкой Hindsight; прямая формулировка «мб как альтернатива khoj»
+event_id: journal_systemqwen_tooling-candidates-20261109
+---
+
+## Слой исполнения: Hindsight как кандидат на замену Khoj для памяти; 9 модов Claude Code приняты как направление, ставить только официальные (blast-radius, you-should-know, replay-theater) и Reflect.

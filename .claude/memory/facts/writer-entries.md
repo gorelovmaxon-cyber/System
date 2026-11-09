@@ -442,3 +442,23 @@ event_id: journal_systemqwen_b820e0e54a7095f7f4464d91
 ---
 
 ## SKILLS-DISCOVERY-20261101: получение System2 из Git не подключает её .claude/skills к каталогу Codex. На текущем ПК добавлены три пользовательские точки входа ok, operational-cards и obrashchenie-saity, читающие канонические навыки System2. Все три прошли quick_validate, цели доступны; продуктовые навыки не изменены. Отображение в меню клиента ещё не наблюдалось; при отсутствии обновления списка требуется перезапуск клиента.
+---
+status: confirmed
+category: facts
+scope: geo-tracker
+source: research/b0/00b-services.md
+evidence: разбор 10 сервисов 08.11.2026
+event_id: journal_geo-tracker_606b9c05c6298159d89c7315
+---
+
+## GEO B0: гипотеза «российские модели — ниша» опровергнута — GigaChat опрашивают 3 из 5 российских сервисов, DeepSeek все 5
+---
+status: confirmed
+category: facts
+scope: geo-tracker
+source: коммит afdc4d6
+evidence: geo/backup.py _pg_verify; ручной backup/restore 2026-11-09 вернул 59 прогонов
+event_id: journal_geo-tracker_b22919f6ed782127683d7285
+---
+
+## GEO: проверка pg-копии разворачивает дамп во временную базу, поэтому роли Postgres нужно CREATEDB; install.sh его выдаёт
