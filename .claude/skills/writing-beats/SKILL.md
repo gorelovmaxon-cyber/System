@@ -1,6 +1,6 @@
 ---
 name: writing-beats
-description: Writing, exploit — assemble raw material into a journey of beats, grounding each term before a beat leans on it.
+description: 'Писать текст битами — короткими смысловыми единицами. Использовать при редактуре статей и заметок.'
 disable-model-invocation: true
 ---
 

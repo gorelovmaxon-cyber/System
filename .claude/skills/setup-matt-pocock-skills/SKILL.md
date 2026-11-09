@@ -1,6 +1,6 @@
 ---
 name: setup-matt-pocock-skills
-description: Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.
+description: 'Установить набор навыков Matt Pocock. Использовать один раз при первоначальной настройке окружения.'
 disable-model-invocation: true
 ---
 
@@ -13,6 +13,14 @@ Scaffold the per-repo configuration that the engineering skills assume:
 - **Domain docs** — where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 
 This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
+
+<!-- toc:start -->
+## Содержание
+
+- [Process](#process)
+- [Agent skills](#agent-skills)
+
+<!-- toc:end -->
 
 ## Process
 

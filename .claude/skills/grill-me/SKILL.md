@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: A relentless interview to sharpen a plan or design.
+description: 'Допросить пользователя по плану, решению или идее до выявления пробелов. Использовать по любым «grill»-триггерам и когда план нужно проверить на прочность.'
 disable-model-invocation: true
 ---
 

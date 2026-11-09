@@ -1,6 +1,6 @@
 ---
 name: implement
-description: "Implement a piece of work based on a spec or set of tickets."
+description: 'Реализовать один согласованный тикет по спецификации. Использовать, когда тикет готов и разрешён к исполнению; не запускать для планирования или разбивки.'
 disable-model-invocation: true
 ---
 
@@ -15,3 +15,10 @@ Review the scoped diff and evidence before handoff. Independent acceptance remai
 with the appointed reviewer; do not mark your own work done/READY.
 
 Commit your work to the current branch.
+
+## Gotchas
+
+- Реализуй один согласованный тикет, не расширяй объём «по ходу». Новое требование —
+  остановка и возврат планировщику.
+- Не ставь себе `done`/READY: независимая приёмка остаётся у отдельного приёмщика.
+- Прогоняй проверки по затронутому поведению, а не повторяй успешный suite ради отчёта.

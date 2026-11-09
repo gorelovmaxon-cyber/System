@@ -1,6 +1,6 @@
 ---
 name: writing-great-skills
-description: Reference for writing and editing skills well — the vocabulary and principles that make a skill predictable.
+description: 'Писать и проверять навыки по правилам Anthropic. Использовать при создании или переработке скилла.'
 disable-model-invocation: true
 ---
 

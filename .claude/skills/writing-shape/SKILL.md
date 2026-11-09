@@ -1,6 +1,6 @@
 ---
 name: writing-shape
-description: Writing, exploit — shape raw material into an article, paragraph by paragraph.
+description: 'Задавать форму и структуру текста. Использовать при планировании структуры статьи.'
 disable-model-invocation: true
 ---
 

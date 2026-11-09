@@ -1,11 +1,28 @@
 ---
 name: teach
-description: Teach the user a new skill or concept, within this workspace.
+description: 'Учить пользователя навыку или понятию в этом рабочем каталоге. Использовать, когда пользователь просит «объясни», «научи», «разбери тему» и собирается заниматься этим в несколько сессий.'
 disable-model-invocation: true
 argument-hint: "What would you like to learn about?"
 ---
 
 The user has asked you to teach them something. This is a stateful request - they intend to learn the topic over multiple sessions.
+
+<!-- toc:start -->
+## Содержание
+
+- [Teaching Workspace](#teaching-workspace)
+- [Philosophy](#philosophy)
+- [Lessons](#lessons)
+- [Assets](#assets)
+- [The Mission](#the-mission)
+- [Zone Of Proximal Development](#zone-of-proximal-development)
+- [Knowledge](#knowledge)
+- [Skills](#skills)
+- [Acquiring Wisdom](#acquiring-wisdom)
+- [Reference Documents](#reference-documents)
+- [`NOTES.md`](#notesmd)
+
+<!-- toc:end -->
 
 ## Teaching Workspace
 

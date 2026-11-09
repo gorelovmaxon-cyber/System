@@ -1,6 +1,6 @@
 ---
 name: writing-fragments
-description: Writing, explore — mine raw fragments, no structure yet.
+description: 'Работать с фрагментами текста и черновиками. Использовать, когда текст собирается из кусков.'
 disable-model-invocation: true
 ---
 

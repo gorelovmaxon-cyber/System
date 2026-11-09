@@ -28,8 +28,9 @@ System2 — переносимая рабочая система для прое
 
 См. [QUICKSTART.md](QUICKSTART.md) и [docs/usage-guide.md](docs/usage-guide.md).
 
-Для нового сайта: `start → site-build → autopilot`. Навык
-[site-build](.claude/skills/site-build/SKILL.md) применяет
+Для нового сайта: `start → maxmade-autopilot` (внутри — фазы autopilot и правила
+[site-build](.claude/skills/site-build/SKILL.md)). Навык
+[maxmade-autopilot](.claude/skills/maxmade-autopilot/SKILL.md) применяет
 [стандарт сайтов](docs/standards/site-creation.md), включая дизайн-систему,
 адаптивную сетку и проверку правил. Работа продолжается в выбранной роли/режиме.
 

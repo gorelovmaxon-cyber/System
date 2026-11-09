@@ -1,6 +1,6 @@
 ---
 name: loop-me
-description: Grill me about specs for the workflows I want to build, within this workspace.
+description: 'Цикл повторяющейся работы с собственным темпом. Использовать по /loop и при регулярных повторяющихся задачах.'
 disable-model-invocation: true
 argument-hint: "A workflow to design, or nothing to go find one"
 ---

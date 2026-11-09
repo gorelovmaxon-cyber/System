@@ -1,10 +1,19 @@
 ---
 name: setup-ts-deep-modules
-description: Wire dependency-cruiser into a TypeScript repo so each package is a deep module — implementation hidden in subfolders, reachable only through its entry-point files. User-invoked.
+description: 'Настроить структуру модулей TypeScript по правилу deep modules. Использовать при настройке проекта TypeScript.'
 disable-model-invocation: true
 ---
 
 # Setup TS Deep Modules
+
+<!-- toc:start -->
+## Содержание
+
+- [The shape this enforces](#the-shape-this-enforces)
+- [Steps](#steps)
+- [Notes](#notes)
+
+<!-- toc:end -->
 
 Make every package in this repo a **deep module**: a lot of behaviour behind a small interface. A package's public surface is its **entry points** — the files at the package root — and everything in its subfolders is hidden. This skill installs [dependency-cruiser](https://github.com/sverweij/dependency-cruiser) and the rules that make the entry points the only way in, then proves the rules bite.
 

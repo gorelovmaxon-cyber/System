@@ -1,8 +1,9 @@
 # Стандарт создания сайтов
 
 Версия 1, 2026-10-12. Канонический стандарт System2 для планирования, реализации
-и проверки сайтов. Вход — [site-build](../../.claude/skills/site-build/SKILL.md),
-процесс — [sites-workflow](../routes/sites-workflow.md) и
+и проверки сайтов. Вход — [maxmade-autopilot](../../.claude/skills/maxmade-autopilot/SKILL.md);
+правила сайтов внутри цикла — [site-build](../../.claude/skills/site-build/SKILL.md).
+Процесс — [sites-workflow](../routes/sites-workflow.md) и
 [system-workflow](../system-workflow.md#один-start-для-новой-задачи-сайта).
 
 ## Источник и применение

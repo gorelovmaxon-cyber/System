@@ -1,9 +1,23 @@
 ---
 name: qa
-description: Interactive QA session where user reports bugs or issues conversationally, and the agent files GitHub issues. Explores the codebase in the background for context and domain language. Use when user wants to report bugs, do QA, file issues conversationally, or mentions "QA session".
+description: 'Interactive QA session where user reports bugs or issues conversationally, and the agent files GitHub issues. Explores the codebase in the background for context and domain language. Use when user wants to report bugs, do QA, file issues conversationally, or mentions "QA session".'
 ---
 
 # QA Session
+
+<!-- toc:start -->
+## Содержание
+
+- [For each issue the user raises](#for-each-issue-the-user-raises)
+- [What happened](#what-happened)
+- [What I expected](#what-i-expected)
+- [Steps to reproduce](#steps-to-reproduce)
+- [Additional context](#additional-context)
+- [Parent issue](#parent-issue)
+- [What's wrong](#whats-wrong)
+- [Blocked by](#blocked-by)
+
+<!-- toc:end -->
 
 При проверке задачи используй [evidence report](../../../templates/evidence-report.md):
 сверяй поведение с исходным брифом с первого тикета, фиксируй позитивный,

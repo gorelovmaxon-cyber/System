@@ -1,6 +1,6 @@
 ---
 name: project-memory-init
-description: Подключает явно выбранный проект к общей памяти System2 и создаёт точечный HANDOFF.
+description: 'Инициализировать память проекта. Использовать при первом подключении нового проекта к System2.'
 disable-model-invocation: true
 ---
 

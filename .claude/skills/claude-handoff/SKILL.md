@@ -1,6 +1,6 @@
 ---
 name: claude-handoff
-description: Save a compact handoff for a fresh conversation; launch a background agent only when the user explicitly authorizes that launch.
+description: 'Сохранить компактную передачу для нового разговора. Использовать при смене чата или приближении к пределу контекста; фоновый агент запускать только при явном разрешении пользователя.'
 argument-hint: "What will the next session be used for?"
 disable-model-invocation: true
 ---

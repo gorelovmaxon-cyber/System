@@ -1,10 +1,25 @@
 ---
 name: triage
-description: Move issues and external PRs through a state machine of triage roles — categorise, verify, grill if needed, and write agent-ready briefs.
+description: 'Провести issue и внешние PR через состояния триажа: категоризировать, проверить, допросить при необходимости и написать готовый для агента бриф. Использовать, когда очередь задач и PR требует разбора.'
 disable-model-invocation: true
 ---
 
 # Triage
+
+<!-- toc:start -->
+## Содержание
+
+- [Reference docs](#reference-docs)
+- [Roles](#roles)
+- [Invocation](#invocation)
+- [Show what needs attention](#show-what-needs-attention)
+- [Triage a specific issue or PR](#triage-a-specific-issue-or-pr)
+- [Quick state override](#quick-state-override)
+- [Needs-info template](#needs-info-template)
+- [Triage Notes](#triage-notes)
+- [Resuming a previous session](#resuming-a-previous-session)
+
+<!-- toc:end -->
 
 Move issues on the project issue tracker through a small state machine of triage roles.
 

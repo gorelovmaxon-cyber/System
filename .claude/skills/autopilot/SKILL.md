@@ -1,9 +1,23 @@
 ---
 name: autopilot
-description: Use when the user dictates an app, site, bot, or feature to build end-to-end and expects a finished result without reviewing specs, tickets, or code — vibecoding sessions, non-technical users, "собери под ключ", "build it for me", "не задавай лишних вопросов" requests. Also use when the user explicitly invokes /autopilot.
+description: 'Use when the user dictates an app, site, bot, or feature to build end-to-end and expects a finished result without reviewing specs, tickets, or code — vibecoding sessions, non-technical users, "собери под ключ", "build it for me", "не задавай лишних вопросов" requests. Also use when the user explicitly invokes /autopilot.'
 ---
 
 # Autopilot
+
+<!-- toc:start -->
+## Содержание
+
+- [Overview](#overview)
+- [Контракт запуска — до любой фазы](#контракт-запуска--до-любой-фазы)
+- [Параметры (опционально)](#параметры-опционально)
+- [When to Use](#when-to-use)
+- [The Pipeline](#the-pipeline)
+- [Rationalizations — STOP](#rationalizations--stop)
+- [Gotchas](#gotchas)
+- [Red Flags — start the phase over](#red-flags--start-the-phase-over)
+
+<!-- toc:end -->
 
 ## Overview
 
@@ -28,7 +42,7 @@ runner, assign models, or transfer implementation to a planning agent.
 известные решения не требуют повторного подтверждения. Восстановление этапа
 не начинает весь цикл заново.
 
-Рекомендация start ещё не запускает autopilot/site-build: нужен явный выбор
+Рекомендация start ещё не запускает autopilot/maxmade-autopilot: нужен явный выбор
 пользователем команды или её текстового эквивалента. Прямое поручение исполнителю
 по согласованным тикетам допускает продолжение без дополнительного start.
 Роль наследуется из явного поручения/передачи; команда и формат результата её
@@ -81,7 +95,7 @@ ImageGen, Figma и конечные ассеты. Название «эскиз�
 ### Специализация для сайтов
 
 Для нового сайта или существенной переработки вход —
-[site-build](../site-build/SKILL.md). Если пользователь вызвал autopilot напрямую
+[maxmade-autopilot](../maxmade-autopilot/SKILL.md). Если пользователь вызвал autopilot напрямую
 для сайта, прочитай стандарт и требования site-build как дополнение фаз;
 не вызывай его обратно как новый маршрут и не запускай start заново.
 Нумерация фаз и общий процесс остаются здесь. Для сайтов применяются
@@ -345,7 +359,7 @@ Final report in the user's language: what was built and the exact command to run
 
 - «Эскиз», «прототип» и ответ о формате не меняют роль планировщика: визуальный
   результат и ассеты создаёт отдельно выбранный исполнитель после передачи.
-- Start заканчивается рекомендацией; выбранный затем site-build добавляет
+- Start заканчивается рекомендацией; выбранный затем maxmade-autopilot добавляет
   требования к этим фазам, не запускает второй процесс или повторный grill.
 
 ## Red Flags — start the phase over

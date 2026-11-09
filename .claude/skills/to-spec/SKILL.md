@@ -1,6 +1,6 @@
 ---
 name: to-spec
-description: Turn confirmed brief and conversation into a proportionate local spec; external publication is optional.
+description: 'Turn confirmed brief and conversation into a proportionate local spec; external publication is optional.'
 disable-model-invocation: true
 ---
 
@@ -79,3 +79,10 @@ A description of the things that are out of scope for this spec.
 Any further notes about the feature.
 
 </spec-template>
+
+## Gotchas
+
+- Спецификация сверяется с манифестом требований: каждое требование R0x должно иметь
+  закрывающий раздел, иначе пробел останется пробелом до реализации.
+- Не пересказывай бриф своими словами без манифеста: пересказ теряет пункты, и приёмка
+  по спецификации воспроизводит эту потерю.

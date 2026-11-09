@@ -1,9 +1,22 @@
 ---
 name: scaffold-exercises
-description: Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.
+description: 'Create exercise directory structures with sections, problems, solutions, and explainers that pass linting. Use when user wants to scaffold exercises, create exercise stubs, or set up a new course section.'
 ---
 
 # Scaffold Exercises
+
+<!-- toc:start -->
+## Содержание
+
+- [Directory naming](#directory-naming)
+- [Exercise variants](#exercise-variants)
+- [Required files](#required-files)
+- [Workflow](#workflow)
+- [Lint rules summary](#lint-rules-summary)
+- [Moving/renaming exercises](#movingrenaming-exercises)
+- [Example: stubbing from a plan](#example-stubbing-from-a-plan)
+
+<!-- toc:end -->
 
 Create exercise directory structures that pass `pnpm ai-hero-cli internal lint`, then commit with `git commit`.
 
