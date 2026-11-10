@@ -758,3 +758,13 @@ event_id: journal_systemqwen_tooling-candidates-20261109
 ---
 
 ## Слой исполнения: Hindsight как кандидат на замену Khoj для памяти; 9 модов Claude Code приняты как направление, ставить только официальные (blast-radius, you-should-know, replay-theater) и Reflect.
+---
+status: confirmed
+category: decisions
+scope: systemqwen
+source: Сессия 2026-11-10, System2 HANDOFF раздел 2026-11-10
+evidence: Пользователь 2026-11-10: «да, все 3 пункта выполняй и коммитим систему в гитхаб» (обновить HANDOFF, подключить /ap2 в start, опубликовать); docs/ap2-integration.md; smoke ap.py init/stage/finish rc=0
+event_id: journal_systemqwen_ap2-start-route-20261110
+---
+
+## Autopilot 2 внедряется не заменой System2, а отдельным движком /ap2 (nick-vels/skills@v2.1.0): роли, журнал решений и HANDOFF остаются снаружи; /ap2 добавлен в таблицу рекомендаций start для одного проекта под ключ с дашбордом и слепой приёмкой, сайты остаются на /maxmade-autopilot. Первый реальный прогон /ap2 считается пробным.

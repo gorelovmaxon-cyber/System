@@ -110,7 +110,7 @@
 3. Моды Claude Code — направление принято, но ставить только официальные
    (`blast-radius`, `you-should-know`, `replay-theater`) и `Reflect`.
 4. **Hindsight** рассматривается как альтернатива Khoj.
-5. Autopilot 2 — обсуждается как замена нашего движка; решение не принято.
+5. Autopilot 2 — обсуждается как замена нашего движка; решение не принято. *Обновление 2026-11-10: установлен как `/ap2` (коммит 3b170b3) и подключён в start, см. HANDOFF.*
 
 Записи в памяти: `journal_systemqwen_opus-executor-policy-20261109`,
 `journal_systemqwen_tooling-candidates-20261109` (persisted).
