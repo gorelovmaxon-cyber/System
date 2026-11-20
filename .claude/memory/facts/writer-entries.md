@@ -462,3 +462,24 @@ event_id: journal_geo-tracker_b22919f6ed782127683d7285
 ---
 
 ## GEO: проверка pg-копии разворачивает дамп во временную базу, поэтому роли Postgres нужно CREATEDB; install.sh его выдаёт
+---
+status: observation
+category: facts
+scope: geo-tracker
+source: GEO local implementation and browser checks, 2026-11-11
+evidence: HANDOFF.md; geo/web_assets/app.css; geo/web_assets/landing.html; geo/web.py; tests/test_onboarding.py; tests/test_landing.py; research/design/NUNITO-BODY-1299-2026-11-11.png
+event_id: journal_geo-tracker_
+---
+
+## GEO: основной текст сайта и форм переведён на локальный Nunito с кириллицей; стили заголовков лендинга сохранены. Первый экран: плашка 16/14 px, описание 7 колонок, зазор стрелки 8 px, подпись 7 дней под кнопкой. Новые триалы 7 календарных дней, старые не меняются. В кабинете/входе есть шапка и возврат через /home. 311 тестов OK (3 skip), после шрифта 9 тестов лендинга OK; Edge 320–1440 px без переполнения.
+---
+status: observation
+category: facts
+scope: geo-tracker
+source: GEO user design corrections and local checks, 2026-11-11
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/web_assets/app.css; geo/web_assets/landing.html; geo/web.py; tests/test_onboarding.py; research/design/TYPOGRAPHY-UNIFIED-1366-2026-11-11.png
+event_id: journal_geo-tracker_99d76bc37e5a2d3e437615b2
+supersedes: journal_geo-tracker_
+---
+
+## GEO, 11.11.2026: последнее уточнение владельца — все заголовки разделов и карточек Arial 600, как главный h1; основной текст, меню, кнопки и формы Nunito с кириллицей. Все надзаголовочные плашки одинаковы: 16 px на компьютере, 14 px на телефоне, отступы 7x17 px. Описание первого экрана 7 колонок, стрелка кнопки с зазором 8 px, подпись 7 дней под кнопкой. Новые триалы 7 дней, прежние сохранены. Кабинет и вход с шапкой и возвратом /home. 311 тестов OK, 3 skip; 9 тестов лендинга после смены шрифта OK; браузер 320–1440 px без переполнения.

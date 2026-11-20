@@ -768,3 +768,403 @@ event_id: journal_systemqwen_ap2-start-route-20261110
 ---
 
 ## Autopilot 2 внедряется не заменой System2, а отдельным движком /ap2 (nick-vels/skills@v2.1.0): роли, журнал решений и HANDOFF остаются снаружи; /ap2 добавлен в таблицу рекомендаций start для одного проекта под ключ с дашбордом и слепой приёмкой, сайты остаются на /maxmade-autopilot. Первый реальный прогон /ap2 считается пробным.
+---
+status: confirmed
+category: decisions
+scope: system-of-site
+source: Беседа 2026-09-29 (задание OPUS-B04-FOCUSED); ответ 2026-09-30; сверка 2026-11-10
+evidence: docs/site-project/reports/B04-FINAL-SEMANTICS-RESULT.md раздел 2026-09-30; commits cfff531, 49b163c, d811f5e; WORK-PLAN origin/b04-live-ai: B04/B05 done
+event_id: journal_system-of-site_05e6a53ce5f1b2c650f1cc1f
+---
+
+## Максим запросил точечную передачу Opus по истории ошибок и последнему сбою B04 с заданиями S1 (ясный формат принимается без зависимости от формы фразы) и S2 (реальная цитата не означает достаточность ответа). Задание выполнено: S1 исправлен на ноутбуке (app b1a88f5, 8 целевых / 167 полный Python PASS, 0 платных вызовов), позже B04 принят независимо и закрыт в WORK-PLAN.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User typography correction and local browser verification
+evidence: geo/web_assets/landing.html; HANDOFF.md; research/design/SECONDARY-HEADINGS-LIGHTER-2026-11-11.png
+event_id: journal_geo-tracker_d6ec7dc844fb68fea69dff98
+---
+
+## GEO, уточнение владельца 11.11.2026: уменьшена жирность второстепенных заголовков лендинга h2/h3 с 600 до 400. Шрифт остаётся Arial, главный h1 сохраняет 600. Основной текст Nunito, единые размеры надзаголовочных плашек сохранены. Edge 1366/390/320 px: веса 600/400 подтверждены, переполнения нет; 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User heading hierarchy clarification and browser checks
+evidence: geo/web_assets/landing.html; HANDOFF.md; research/design/SECTION-AND-CARD-HEADINGS-2026-11-11.png
+event_id: journal_geo-tracker_0d06c36198ed402d11a57ca8
+---
+
+## GEO, последнее уточнение владельца 11.11.2026: главный заголовок первого экрана и основные заголовки всех шести разделов имеют Arial 600; внутренние заголовки карточек, включая две карточки первого экрана и тарифы, Arial 400. Основной текст Nunito; надзаголовочные плашки 16/14 px. Проверено в Edge 1366/390/320 px без переполнения; 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User chips design request and browser checks
+evidence: geo/web_assets/landing.html; HANDOFF.md; research/design/EVIDENCE-CHIPS-2026-11-11.png
+event_id: journal_geo-tracker_dbfe578529f3af4421e21cf3
+---
+
+## GEO, 11.11.2026: по указанию владельца в карточке «Каждый вывод можно проверить» шесть плашек — «Запрос» первым, «Полный ответ», «Дата замера», «Источники», «Позиция», «Тональность». Цвета смешаны: голубая/белая заливки и прозрачные с белой обводкой; перенос по строкам. Edge 1366/1024/390/320 px: плашки внутри карточки, переполнения нет; 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User added neural network chip
+evidence: geo/web_assets/landing.html; HANDOFF.md; research/design/EVIDENCE-NEURAL-CHIP-2026-11-11.png
+event_id: journal_geo-tracker_f81577949d32f34758ac2edc
+---
+
+## GEO 11.11.2026: в карточку «Каждый вывод можно проверить» добавлена седьмая плашка «Нейросеть», отдельной третьей строкой на компьютере; прозрачная, белые текст и обводка. На телефоне строки адаптируются по ширине. Edge 1366/390/320 px без горизонтального переполнения.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User annotated chip color correction
+evidence: geo/web_assets/landing.html; HANDOFF.md; user annotated screenshot
+event_id: journal_geo-tracker_d61c7d8195025e7767b6ea93
+---
+
+## GEO 11.11.2026: по пометкам на скриншоте владелец уточнил цвета плашек карточки: «Полный ответ» — белая, «Дата замера» — голубая. Классы обновлены, цвета проверены в Edge.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User heading wording correction
+evidence: geo/web_assets/landing.html; HANDOFF.md
+event_id: journal_geo-tracker_e1c1f057f72a20abe6d6bd28
+---
+
+## GEO 11.11.2026: владелец изменил заголовок карточки первого экрана на «Каждый ответ можно проверить» вместо «Каждый вывод можно проверить». Текст обновлён, локальный сервер отдаёт новую формулировку.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User competitor block and sticky header requests
+evidence: geo/web_assets/landing.html; HANDOFF.md; research/design/COMPETITORS-AND-GROWTH-2026-11-11.png; research/design/STICKY-LANDING-HEADER-2026-11-11.png
+event_id: journal_geo-tracker_ea63e1097ad888925d171a0b
+---
+
+## GEO 11.11.2026: левая карточка первого экрана переделана под анализ конкурентов и рекомендации: «Изучайте конкурентов. Находите точки роста», строки «Сравнение с конкурентами», «Источники упоминаний», «Рекомендации по видимости». По следующему указанию шапка лендинга sticky сверху с белым фоном на всю ширину; якоря учитывают шапку (90 px). Edge 1366/1024/390/320 px: шапка остаётся сверху, якоря видимы, переполнения нет; 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User heading punctuation correction
+evidence: geo/web_assets/landing.html; HANDOFF.md
+event_id: journal_geo-tracker_34955334a979893c756e4056
+---
+
+## GEO 11.11.2026: по просьбе владельца убраны обе точки из заголовка левой карточки первого экрана: «Изучайте конкурентов / Находите точки роста», перенос строки сохранён. Ответ локального сервера проверен.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User auth close and prechecked consent requests; local browser and unittest checks
+evidence: HANDOFF.md; geo/web_assets/auth-close.js; geo/web_assets/auth.js; geo/web_assets/login.html; geo/web_assets/app.html; geo/web_assets/app.css; research/design/AUTH-CLOSE-CONSENT-dark-900-2026-11-11.png
+event_id: journal_geo-tracker_5625b8da2b4427948af4edd3
+---
+
+## GEO 11.11.2026: в форме входа/регистрации добавлен крестик; общий auth-close.js возвращает назад внутри сайта с восстановлением прокрутки, при прямом/внешнем входе ведёт /home. По явному указанию владельца в регистрации добавлено согласие на обработку персональных данных с галочкой по умолчанию; снятая галочка блокирует отправку в интерфейсе. Серверный учёт согласий не добавлен. Edge светлая/тёмная темы 1366/900/390/320 px, возврат из тарифов, клавиатура, обе формы и блокировка/отправка проверены; без ошибок JS и переполнения. 311 тестов OK, 3 skip.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User hero logo illustration request; official assets and browser checks
+evidence: HANDOFF.md; geo/web_assets/landing.html; geo/web_assets/ai-logos/sources.json; research/design/AI-LOGOS-HERO-1352-2026-11-11.png
+event_id: journal_geo-tracker_0f6853f942122a2bb29fd26e
+---
+
+## GEO 11.11.2026: по скриншоту владельца добавлена композиция справа от главного заголовка: оригинальные значки ChatGPT, Claude, Gemini, Алиса AI, GigaChat, Perplexity в белых карточках с голубыми связями и знаком GEO в центре. SVG/PNG локальные, официальные источники в ai-logos/sources.json; без перекрашивания и внешних запросов браузера. До 900 px — строка значков, на телефоне без подписей. Edge 12 размеров 320–1920 px: все картинки загружены, без пересечения карточек, переполнения и ошибок JS. Первый экран помещается 1280x720/1366x768. 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User orbital illustration sketch; local browser verification
+evidence: HANDOFF.md; geo/web_assets/landing.html; research/design/AI-ORBITS-COMPOSITION-2026-11-11.png; research/design/AI-ORBITS-HERO-1686-2026-11-11.png
+event_id: journal_geo-tracker_dfb2cbeff2da8e3f21649bee
+---
+
+## GEO 11.11.2026: по новому эскизу владельца композиция нейросетей первого экрана переделана в атом/планетную систему: три пересекающиеся эллиптические орбиты, 6 оригинальных логотипов в круглых планетах, голубое ядро GEO и звёзды. Прежние карточки и радиальные связи заменены. Цвета голубой/белый/графитовый; тексты и шрифты сохранены. До 900 px — компактная строка значков. Edge 9 размеров 320–1686 px: картинки загружены, значки не пересекаются, переполнения нет; 1280x720 и 1366x768 первый экран помещается. 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User minimal hero and larger rotated graphite illustration request
+evidence: HANDOFF.md; geo/web_assets/landing.html; research/design/MINIMAL-HERO-1461-2026-11-11.png; research/design/MINIMAL-HERO-320-2026-11-11.png
+event_id: journal_geo-tracker_12f5ad61c137ef572d4f5ac4
+---
+
+## GEO 11.11.2026: по последнему скриншоту владельца упрощён первый экран — убраны его CTA/ссылка примера/подпись триала и две нижние карточки. Остальные секции и шапка сохранены. Описание теперь сразу под заголовком. Композиция нейросетей увеличена до 300–400 px по высоте, повёрнута на -11 градусов; логотипы компенсируют наклон. Центральный GEO — графитовый #23282f с белым кольцом, 84 px. На телефоне полная композиция под текстом вместо полосы значков. Edge 9 размеров 320–1461 px без переполнения, картинки загружены; 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User raised hero and restored cards request
+evidence: HANDOFF.md; geo/web_assets/landing.html; research/design/RAISED-HERO-RESTORED-CARDS-1393-2026-11-11.png
+event_id: journal_geo-tracker_e1232440f5030520c9a99944
+---
+
+## GEO 11.11.2026: последнее уточнение владельца — поднять текст/иллюстрацию и вернуть две карточки первого экрана. Восстановлены «Изучайте конкурентов / Находите точки роста» и «Каждый ответ можно проверить» со всеми прежними строками и семью плашками. CTA остаются убранными. Вертикальное центрирование заменено верхним отступом 32 px; большая повёрнутая иллюстрация и графитовый GEO сохранены. Edge 10 размеров 320–1461 px без переполнения; на 1393x912 плашка y118, карточки до y756; 1280x720/1366x768 помещаются. 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User spacing, CTA caption, solid white icon, account menu and opaque animated gradient requests
+evidence: HANDOFF.md; geo/web_assets/landing.html; geo/web_assets/account-header.js; geo/web_assets/hero-orbits.js; geo/web.py; geo/billing.py; tests/test_landing.py; tests/test_onboarding.py; research/design/ORBIT-MOTION-QA-2026-11-11.json
+event_id: journal_geo-tracker_8c92ed77ee31dabe2d88af8e
+---
+
+## GEO 11.11.2026: единые интервалы лендинга 100/20/30/40 px (секции на телефоне 64); кнопка «Попробовать бесплатно» в голубой карточке, подпись «7 дней тестового режима», белая залитая звезда в графитовой. Общая шапка: гостю «Вход / регистрация», вошедшему «Личный кабинет» с меню почты/тарифа/срока, переходом и выходом; реальные session/billing API, access_until учитывает прежние триалы без изменения подписок. Шесть логотипов движутся по трём орбитам: средний оборот 90 с и индивидуальные ограниченные ускорения/замедления. Орбиты сплошные и непрозрачные, цветовой градиент 18 с; без белых исчезающих бликов. Reduced-motion и пауза вне экрана/вкладки. 14 размеров 320–1920 px без переполнения; аналитические минимальные зазоры полного цикла: логотипы 10.66 px, центр 4.22 px, карточки 8.08 px. Профиль/вход/выход/ошибки API/мобильный вид проверены. 311 тестов OK (3 skip), финальные 9 лендинга OK. Сервис работает, Git не коммитили.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User compact animation starting moment request
+evidence: geo/web_assets/hero-orbits.js; geo/web_assets/landing.html; HANDOFF.md; research/design/COMPACT-ANIMATION-START-2026-11-11.png
+event_id: journal_geo-tracker_a84344db40fa94a64d284a17
+---
+
+## GEO 11.11.2026: по просьбе владельца запуск анимации с момента, когда логотипы собраны ближе друг к другу. Начальная фаза 270.7 градуса (67.675 с исходного 90-секундного цикла), выбрана по минимальной сумме квадратов расстояний до центра за оборот с шагом 0.1 градуса. CSS-позиции до запуска JS также обновлены. Темпы, непрозрачный перелив и рассчитанные безопасные зазоры сохранены; старт и дальнейшее движение проверены в Edge 1366/390/320 px без переполнения.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User smaller logos, faster orbit motion, moving gradient and breathing stars request
+evidence: HANDOFF.md; geo/web_assets/landing.html; geo/web_assets/hero-orbits.js; research/design/SMALLER-LOGOS-STAR-MOTION-2026-11-11.png
+event_id: journal_geo-tracker_3f3e57d18d99720a62a2e2ab
+---
+
+## GEO 11.11.2026: по просьбе владельца логотипы/бейджи в анимации уменьшены примерно на 10–15%, центральный знак до 76/60 px; средний оборот ускорен 90→75 с (+20%), компактная начальная фаза сохранена. Градиент вращается вдоль орбит с циклом 14 с, линии непрозрачны. Звёзды и точки мягко меняют размер/яркость в разных ритмах 5.6–7.6 с. Reduced-motion и пауза вне экрана применяются ко всем эффектам. Edge 1366/1280/901/900/390/320: зазоры положительные, градиент/звёзды движутся и останавливаются, ошибок JS/переполнения нет; 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User alternating edge glow outside central 1440px request
+evidence: HANDOFF.md; geo/web_assets/landing.html; geo/web_assets/hero-orbits.js; research/design/EDGE-GLOW-LEFT-1920-2026-11-11.png; research/design/EDGE-GLOW-RIGHT-1920-2026-11-11.png
+event_id: journal_geo-tracker_975e84c113f7293a13f975ae
+---
+
+## GEO 11.11.2026: по просьбе владельца первому экрану добавлено мягкое голубое сияние по краям, попеременно слева/справа (18 с, сдвиг 9 с). Появляется только при окне шире 1440 px; основная зона вне центральных 1440 px, внутрь только затухающий хвост до 48 px, интенсивность ниже на 1441–1599 px. Не меняет сетку/клики. Пауза вне экрана/вкладки, статичный слабый вариант reduced-motion. Edge 9 размеров 320–2560 px, смена фаз/яркости и паузы проверены; переполнения/ошибок JS нет, 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User additional colored glint request
+evidence: HANDOFF.md; geo/web_assets/landing.html; research/design/EDGE-GLOW-TEAL-GLINT-1920-2026-11-11.png
+event_id: journal_geo-tracker_9258022b54a404a199553c3a
+---
+
+## GEO 11.11.2026: к голубому краевому сиянию первого экрана добавлен более узкий светло-бирюзовый блик (#a0efdd/#75e5d4). Он отдельно смещается по вертикали за 26 с с обратным ходом, стороны со сдвигом по времени. Зона прежняя — окно >1440 px, основное свечение вне центральных 1440 px; пауза вне экрана и reduced-motion сохранены. Проверены оба слоя и их движение, ширины 320–2560 px без переполнения; 9 тестов лендинга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: User white auth card, original blue backdrop, site logo, default offer/data consent and pointer-responsive code decoration requests
+evidence: HANDOFF.md; geo/web_assets/login.html; geo/web_assets/app.html; geo/web_assets/app.css; geo/web_assets/auth.js; geo/web_assets/app.js; geo/web_assets/auth-background.js; research/design/WHITE-AUTH-BLUE-BACKGROUND-login-1366-2026-11-11.png
+event_id: journal_geo-tracker_f8b7730dd9942e1a49500f37
+---
+
+## GEO 11.11.2026: форма входа/регистрации белая, фон по уточнению владельца восстановлен тёмно-синим #101b2a с синим градиентом. Локальная светлая тема формы не меняет тему кабинета. Внутри логотип сайта GEO / трекер со ссылкой на главную. Во входе/регистрации и встроенном /app — по умолчанию отмеченное согласие с офертой и обработкой персональных данных; снятое блокирует отправку в интерфейсе. Серверный учёт/документы не добавлялись. На синем фоне 8 декоративных элементов кода/нейрографов: мягкий отклик на мышь, подсветка и параллакс, aria-hidden/pointer-events none; reduced-motion и touch учитываются. Edge 1366/900/390/320, обе схемы и тёмный кабинет: белая форма/синий фон, без переполнения; мышь, согласия и логотип проверены, без JS ошибок. 9 лендинга + 4 онбординга OK.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Запросы владельца: форма проекта, конкуренты, кнопки ИИ, быстрое сохранение и прогресс
+evidence: Поручения владельца и эскизы 12.11.2026; E:/GEO-рассылка/HANDOFF.md; tests/test_brand_profile.py; research/design/BRAND-PROFILE-QA-2026-11-12.json и qa_brand_profile.py
+event_id: journal_geo-tracker_7844595592cdc9b06399f3c7
+---
+
+## GEO 12.11.2026: реализовано окно настройки проекта по эскизам владельца. Слева голубая плашка, пояснение и прогресс Шаг N из 3. Первый этап: проект, бренд, сайт, единые варианты написания, описание, две отдельные кнопки Заполнить ИИ и все 7 нейросетей отмечены изначально. Сохранить проект работает по одному сайту: пустое имя проекта Проект 1, далее свободный номер; пустой бренд домен. Сохранение сразу, затем конкуренты с сайтами и редактируемыми предложениями ИИ, затем экран готовности. Выбор моделей учитывается до лимита/оценки в web, rerun, CLI и daily. Добавлено удаление бренда с подтверждением и tenant-изоляцией. Схема v8, отдельный ledger черновиков с raw/cost/tokens, кэш по этапу/описанию и лимит 10 в сутки; публичные IP закреплены, редиректы проверяются, автоматических платных повторов нет. ИИ выбран настроенный GigaChat; живых платных запросов в QA не было. Браузер Edge 1366/390/320, отдельная временная база, редактирование во время генерации, сбой ИИ, создание по одному сайту и удаление проверены. 407 unittest OK, 3 skip; положительные контроли изоляции и приватного IP подтверждены. Live v8 integrity ok, сохранены 5 брендов/29 вопросов/69 прогонов/50 ответов, backup сделан, сервис 8000 обновлён. Код не закоммичен и не опубликован.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Последние уточнения: все поля необязательны, номер пустого проекта, ИИ и иконки; устранение устаревшего процесса 8099
+evidence: Запросы и эскизы владельца 12.11.2026; HANDOFF.md, geo/web_assets/brand-onboarding.js, tests/test_brand_profile.py, research/design/BRAND-PROFILE-QA-2026-11-12.json; сравнение живых API 8000/8099
+event_id: journal_geo-tracker_a162f21580f2d1d2fe280b25
+---
+
+## GEO 12.11.2026, последнее уточнение владельца: все поля формы необязательны, полностью пустой проект сохраняется сразу с именами Проект 1, Проект 2, Проект 3 по свободному номеру. Синяя приписка о возможной неточности появляется после нажатия Сохранить и не блокирует. Лишний список/пояснение слева убраны. Зелёные кнопки со звёздочкой у двух полей; успешное автозаполнение по сайту меняет текст на Заполнено ИИ, ручная правка снимает метку. Оба поля заполняются одним запросом после ввода сайта, старый ответ при смене сайта отбрасывается, новый ставится в очередь. Без сайта кнопка фокусирует адрес и не вызывает модель. 7 подлинных локальных логотипов с выбором мышью/клавиатурой, все отмечены изначально. Важный найденный дефект: старый процесс GEO на порту 8099 от 11.11 22:40 отдавал свежую статику, но старый API (404 brand-profile/options и требование хотя бы одного вопроса). Новый 8000 уже отвечал правильно. Обновлены оба сервера, у 8099 сохранены cwd и окружение с GEO_DB_PATH=state/geo.sqlite3; backup geo-8099-pre-update-20261112-010627.sqlite3, фоновый лог state/geo-8099.log. При следующих правках обновлять оба порта. Wondershare 8090 не трогать. API обоих портов options200/7 моделей/no-store; JSON и fetch формы не кэшируются. 410 unittest OK с 3 skip, браузер Edge1366/390/320 на временной базе и чтение живой формы без записи проекта/платных запросов. Код не закоммичен и не опубликован.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Новые экраны конкурентов и запросов по эскизам владельца
+evidence: Эскизы владельца: конкурент бренд-сайт-синонимы и запросы на третьем шаге; HANDOFF.md; tests/test_brand_profile.py; research/design/BRAND-PROFILE-QA-2026-11-12.json и PNG
+event_id: journal_geo-tracker_7a53f2213cc59de33a4c47ac
+---
+
+## GEO 12.11.2026, следующие эскизы владельца: на втором шаге зелёная кнопка со звёздочкой как на первом справа от заголовка, первая карточка конкурента сразу на экране; бренд/сайт/синонимы, Добавить ещё конкурента. Поля необязательные. Синонимы сохраняются в competitor_profiles_json, модель также предлагает варианты; runner и CLI recount распознают алиасы/hostname с одной канонической сущностью конкурента. Третий шаг вместо Готово теперь Запросы для поиска: ввод по строкам, редактирование перед сохранением, можно пропустить. Batch API сохраняет новые вопросы атомарно, удаляет дубли, проверяет tenant и лимит всего набора; пустой набор не блокируется. Вопросы видны в кабинете до первого прогона (renderQuestions до empty-return). 413 unittest OK, 3 skip; браузер Edge1366/390/320, карточка по умолчанию/добавление/синонимы/три шага/назад/вопросы/дубли/пустые поля проверены без платных запросов. Положительный контроль batch-изоляции подтверждён. Оба сервера 8000/8099 обновлены и проверены: актуальный batch200 с пустым набором без записи, новая форма отдаётся. Схема v8 без новых миграций. Код не закоммичен и не отправлен.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Кнопка ИИ у запросов для поиска по эскизу владельца
+evidence: Последний эскиз владельца: кнопка ИИ над запросами; HANDOFF.md; geo/brand_profile.py; geo/web_assets/brand-onboarding.js; tests/test_brand_profile.py; research/design/BRAND-PROFILE-QA-2026-11-12.json
+event_id: journal_geo-tracker_6056dd52a9a05f740b50da93
+---
+
+## GEO 12.11.2026: по просьбе владельца у запросов третьего шага справа добавлена зелёная кнопка со звёздочкой Заполнить ИИ. Модель предлагает до 8 конкретных вопросов по сайту или описанию; без обоих фокус сайта на первом шаге, без вызова модели. kind=questions в общем draft API/ledger: исходный ответ, токены, стоимость, отдельный кэш, прежний лимит 10/сутки; нет отдельной миграции. Дубли/каноническое имя бренда в предложениях отбрасываются, лимит добавления вопросов проверяется до траты. Генерация только заполняет редактируемый список, не сохраняет вопросы и не запускает измерения. Ручной ввод во время генерации защищён; сбой не блокирует ввод/сохранение; кнопка Заполнено ИИ после применения. 416 unittest OK, 3 skip, браузер Edge1366/390/320 с генерацией на фикстуре/правками/ошибкой/сохранением, платных запросов0. Обновлены оба сервера8000/8099 и проверены на живых адресах без записи проекта/платного вызова. Схема v8, код не закоммичен и не опубликован.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Сворачиваемые конкуренты и заголовок первого шага
+evidence: Эскиз владельца со сворачиванием карточек конкурентов и заголовок Заполните свой проект; HANDOFF.md; geo/web_assets/brand-onboarding.js и app.css; research/design/qa_brand_profile.py, BRAND-PROFILE-QA-2026-11-12.json, brand-competitors-accordion-*.png
+event_id: journal_geo-tracker_0e9df163436ac019cc680d48
+---
+
+## GEO 12.11.2026: владелец попросил сворачивать заполненных конкурентов в плашки с именем и внутреннюю прокрутку, затем поменял заголовок первого шага на Заполните свой проект. Реализованы native details/summary: при уходе фокуса из заполненной карточки или добавлении следующей карточка закрывается, клик/Enter/Space по имени открывает её с сохранёнными брендом/сайтом/синонимами. Переход между полями не закрывает карточку. Удаление доступно на плашке, последняя удалённая заменяется пустой. Новая карточка получает фокус, список прокручивается к ней; высота списка ограничена, прокрутка внутри модального окна, вне списка остаются кнопки. Значения свёрнутых полей сохраняются. Только статика, без изменений backend/БД/платных вызовов. Полный browser QA Edge1366/390/320 на временной базе: раскрытие/сворачивание, правка имени/синонимов, клавиатура, удаление, длинный список и видимость полей новой карточки, прежний трёхшаговый сценарий и сохранение без JS ошибок. Новые статика/заголовок отдаются обоими серверами8000/8099 без их перезапуска. Предыдущий полный unittest416 OK,3skip; новый полный набор не повторялся для правки статики. Код не закоммичен и не опубликован.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Кнопка сохранения карточки конкурента, убрать стрелку
+evidence: Эскиз владельца с кнопкой Сохранить и без стрелки в карточке конкурента; HANDOFF.md; geo/web_assets/brand-onboarding.js, app.css; research/design/qa_brand_profile.py и BRAND-PROFILE-QA-2026-11-12.json
+event_id: journal_geo-tracker_ccd80738f5fa4102fd5af66b
+---
+
+## GEO 12.11.2026: по эскизу владельца в карточке конкурента под полями справа добавлена кнопка Сохранить. Она применяет введённое в текущей форме, обновляет название плашки, сворачивает карточку и переводит фокус на summary; общая Сохранить проект по-прежнему записывает карточки в проект. Кастомная стрелка раскрытия удалена, нативный маркер скрыт; название кликабельное, Enter/Space, автосворачивание и удаление сохранены. Кнопка type=button, не отправляет весь wizard; поля необязательны. Только статика, без backend/миграций. Browser QA Edge1366/390/320: кнопка, отсутствие стрелки, сохранение полей при раскрытии и общем сохранении, длинный список и все прежние шаги без JS ошибок и платных вызовов. Оба сервера8000/8099 отдают текущий скрипт, перезапуск не потребовался. Предыдущий полный unittest416 OK,3skip, для этой правки не повторялся. Код не закоммичен и не опубликован.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Кнопка карточки на всю ширину
+evidence: Запрос владельца сохранить на всю ширину; geo/web_assets/app.css; проверка геометрии в браузере на обоих портах
+event_id: journal_geo-tracker_5f796543010c0f68967d132f
+---
+
+## GEO 12.11.2026: по следующему уточнению владельца кнопка Сохранить внутри карточки конкурента растянута на всю ширину (width100%). Проверена геометрия в Edge1366/390/320 на обоих живых адресах8000/8099: ширина кнопки равна ширине контейнера. Только CSS, без записей данных/платных вызовов; HANDOFF обновлён.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Подтверждение удаления конкурента
+evidence: Запрос владельца о подтверждении при крестике; geo/web_assets/brand-onboarding.js; HANDOFF.md; research/design/qa_brand_profile.py и BRAND-PROFILE-QA-2026-11-12.json
+event_id: journal_geo-tracker_0b261062a97faf990905b276
+---
+
+## GEO 12.11.2026: крестик удаления карточки/плашки конкурента теперь требует подтверждения Точно удалить конкурента с названием, либо Точно удалить этого конкурента для пустой карточки. Отмена сохраняет карточку и поля; подтверждение удаляет её из текущей формы, общая Сохранить проект по-прежнему записывает изменения. Крестик закрытия всего диалога не менялся. Browser QA на временной базе проверил отмену с сохранёнными синонимами, подтверждение, последнюю карточку и прежний сценарий1366/390/320 без JS ошибок и платных вызовов. Актуальный скрипт на обоих портах8000/8099. Только JS, backend/БД не менялись, коммита/публикации нет.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: project editing and 30-day archive
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/project_archive.py; tests/test_project_archive.py; research/design/BRAND-PROFILE-QA-2026-11-12.json
+event_id: journal_geo-tracker_42ce8aa02c352da4077f756c
+---
+
+## GEO 2026-11-12: в списке проектов графитовый карандаш открывает первый экран с Сохранить изменения. Удалить проект внутри формы требует белого подтверждения и переносит в архив на 30 дней; восстановление и окончательное удаление доступны в архиве. Схема9, фоновая очистка60с и при старте/чтении архива; архив исключён из активных прогонов/расписания. Каскадное удаление сохраняет анонимный агрегат расходов/лимитов. Тестирование запросов на третьем шаге сохраняет выбранные ID, проверяет лимиты до трат; недостающие название, сайт или описание, конкурент и запрос показаны белой формой. Обычное пустое сохранение остаётся Проект N. 427 unittest OK, 3 skip; Edge1366/390/320, положительный контроль изоляции архива. Оба порта8000/8099 обновлены, integrity OK; живые5брендов/28вопросов/61прогон/47ответов/4пользователя сохранены. Бэкап до миграции state/backups/geo-20261112-100916.sqlite3. Платных QA обращений, коммита и push не было.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: archive modal UI refinement
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/web_assets/app.html; geo/web_assets/app.js; geo/web_assets/app.css; research/design/qa_brand_profile.py; research/design/project-archive-dialog-1366.png
+event_id: journal_geo-tracker_a4674679c75de41be3111305
+---
+
+## GEO 2026-11-12 уточнение архива: вместо постоянного блока под списком брендов кнопка Архив рядом с Добавить бренд открывает отдельное белое окно, фон60%. У удалённых проектов справа две круглые графитовые кнопки: стрелка восстановить и крестик удалить окончательно. Подтверждение центрируется над окном архива; Escape/крестик/фон закрывают архив, фокус возвращается. Срок30 дней и backend не менялись. Браузер Edge1366/390/320 на временной базе: открытие, круглые кнопки, восстановление, отмена и удаление, отсутствие переполнения/JS ошибок. Оба порта8000/8099 отдают свежую статику, реальные проекты не менялись.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: project search and scrollable archive
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/web_assets/app.html; geo/web_assets/app.js; geo/web_assets/app.css; research/design/qa_brand_profile.py; research/design/project-archive-scroll-1366.png
+event_id: journal_geo-tracker_500becf9870eea60dabdd15c
+---
+
+## GEO 2026-11-12: независимый мгновенный поиск по названию проекта, бренду и сайту добавлен в Бренды и Архив. Регистр и ё/е игнорируются, пустой результат объясняется, очистка возвращает список, фильтр применяется после обновления. В архиве прокручивается только список карточек, поиск/заголовок/закрытие остаются сверху. Восстановление — голубой круг, удаление — белая корзина на графитовом круге с прежним подтверждением. Edge QA на временной базе: поиск по3 полям, пустой результат/очистка,30 архивных фикстур, скролл1366/390/320 без переполнения/JS ошибок. Статика обоих портов8000/8099 актуальна; живые данные не менялись.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: restore brand menu styling, preserve scoped navigation
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/web_assets/app.html; geo/web_assets/app.css; geo/web_assets/app.js; research/design/qa_brand_navigation.py; research/design/brand-navigation-1366.png; ответ владельца о возврате нового меню до Мои компании
+event_id: journal_geo-tracker_8b6ac649b00d6ba96e9fbb7d
+---
+
+## GEO 2026-11-12: владелец уточнил возврат нового меню до замены на Мои компании. Сохранён логотип сайта, Бренды с графитовым плюсом справа, список брендов с одиночной галочкой, спокойная голубая плашка, вложенные разделы выбранного бренда. Отменены Мои компании/синий плюс рядом/яркая плашка. Тариф аккаунта внизу отдельно. Выбор сохраняется на пользователя в sessionStorage; старые ответы dashboard не перетирают новый выбор. Исправлена передача brand_id при записи действия и brand у readiness; очистка старых источников/задач/действий при переходе к пустому бренду, отчёты готовности отдельно по бренду. 427 unittest OK,3skip; полный старый QA и новый qa_brand_navigation.py с двумя брендами/1366/390/320 без JS ошибок, сети и платных вызовов. Оба8000/8099 актуальны, реальные проекты не менялись.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: branch connectors from user reference
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/web_assets/app.css; research/design/qa_brand_navigation.py; research/design/brand-navigation-1366.png; пояснение владельца к последнему фото
+event_id: journal_geo-tracker_ba14d49dde0c5066d6f4077a
+---
+
+## GEO 2026-11-12: владелец пояснил последнее фото — подразделы выбранного бренда соединить вертикальной линией с короткими горизонтальными полосками к иконкам. Добавлено CSS-дерево меню с тонкими серо-голубыми линиями у7 подразделов; от нижнего края списка брендов до последней ветки. Декоративные линии не перехватывают клики; мобильная горизонтальная навигация сохранена. Browser QA с двумя брендами1366/390/320 пройден, PNG brand-navigation-1366.png. Свежая CSS на8000/8099, живые данные не менялись.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: section label My brands
+evidence: E:\GEO-рассылка\geo\web_assets\app.html; HANDOFF.md; прямое указание владельца мои бренды напиши в разделе
+event_id: journal_geo-tracker_39947d4736c1888f28b99ce6
+---
+
+## GEO 2026-11-12: по прямому уточнению владельца название раздела в меню и заголовок страницы изменены с Бренды на Мои бренды. Плюс, спокойная плашка и дерево подразделов сохранены. Оба порта8000/8099 отдают новое название.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: portfolio dashboard above brand list
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/portfolio.py; geo/web.py; geo/web_assets/app.html; geo/web_assets/app.js; geo/web_assets/app.css; tests/test_portfolio.py; research/design/PORTFOLIO-QA-2026-11-12.json
+event_id: journal_geo-tracker_dcd5c223b4f6c99a2f75ab5b
+---
+
+## GEO 2026-11-12: перед списком Мои бренды добавлены KPI активных брендов/видимости/упоминаний, дневной график и графитовая CTA добавить бренд; ниже прежние поиск/список/архив. Неделя7/Месяц30 независимы от обзора бренда. Новый read-only GET/api/brands/overview, geo/portfolio.py: только tenant/активные бренды, веса по успешным ответам, алиасы дедуплицированы, ошибки отдельно, mock/архив исключены; точные окна с сегодняшним днём и предшествующим периодом, без данных null, без прошлого delta null, разрывы графика на пустых днях. Схема9 без миграции. 432 unittest OK,3skip; положительный контроль tenant SQL падает без защиты. QA пустого/заполненного аккаунта и CTA/периодов/поиска/архива1366/768/390/320 без переполнения/JS ошибок/платных вызовов, прежние wizard/navigation QA пройдены. Оба8000/8099 обновлены, integrity OK, живые5брендов/28вопросов/61прогон/47ответов/4пользователя сохранены. Коммита и push не было.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: brand list caption
+evidence: E:\GEO-рассылка\geo\web_assets\app.html; HANDOFF.md; указание владельца список брендов
+event_id: journal_geo-tracker_cf378ea9d41e7c73a9266b74
+---
+
+## GEO 2026-11-12: заголовок панели под сводкой заменён с Ваши бренды на Список брендов по уточнению владельца. Название страницы и меню Мои бренды сохранено. Статика8000/8099 проверена.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: explicitly requested fictional design preview
+evidence: E:\GEO-рассылка\HANDOFF.md; scripts/build_design_preview.py; geo/web_assets/design-preview.js; geo/web_assets/design-preview.json; research/design/qa_design_preview.py; research/design/DESIGN-PREVIEW-QA-2026-11-12.json
+event_id: journal_geo-tracker_c95837db5b414046af876fa8
+---
+
+## GEO 2026-11-12 по явному запросу владельца добавлены вымышленные бренды/статистика для дизайна в отдельном /design, тот же app UI с постоянной плашкой вымышленных данных. Север Кофе рост, Листва снижение, Пиксель Бюро умеренно, Новый проект пустой.60 дней/3 модели,7/30/90, конкуренты/источники/задачи/действия/готовность/архив. scripts/build_design_preview.py строит временную SQLite и JSON (~307KB), рабочую БД/ключи/сеть не использует. design-preview.js appFetch читает фикстуру только на /design; мутации409, модели/экспорт выключены; на /app обычный fetch. Вход из ссылки Мои бренды, выход из плашки. Неверсионированная статика revalidate для импортов.433 unittest OK,3skip; QA1440/390/320 без JS ошибок и реальных API-запросов, мутации не меняют БД. Положительный контроль обхода адаптера вызывает реальный GET session. Оба8000/8099/design HTTP200, проверен живой макет;5реальныхбрендов/28вопросов/61прогон/47ответов/4пользователя сохранены, integrity OK. Коммита/push не было.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: research and proposed navigation, not yet adopted
+evidence: E:\GEO-рассылка\HANDOFF.md; research/design/NAVIGATION-PROPOSAL-2026-11-12.md; geo/web_assets/menu-concept.html; geo/web_assets/menu-concept.js; research/design/menu-proposal-1440.png
+event_id: journal_geo-tracker_b8fc65728ddc804d34458e4f
+---
+
+## GEO 2026-11-12 исследование меню по запросу владельца: официальные Peec AI/OtterlyAI/Semrush, NN/g единственный выбор, Carbon вложенность. Рекомендация: Мои бренды отдельно, компактный переключатель одного бренда с поиском/добавлением,6 разделов Обзор/Запросы и ответы/Конкуренты/Источники/План улучшений/Проверка сайта; План включает Рекомендации/Задачи/История работ; Настройки бренда отдельно, Тариф и оплата/Помощь снизу. Линии сохранены, единые SVG, на телефоне выезжающее меню. Создан отдельный /static/menu-concept.html +JS, документация NAVIGATION-PROPOSAL-2026-11-12.md со ссылками. Статус только предложение, владельцем ещё не принято; рабочее меню не менялось. Browser1440/390/320 поиск/смена бренда с сохранением раздела/вкладки/локальное добавление/Escape/mobile без JS ошибок/переполнения/API запросов. Клиентские данные не менялись.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: approved navigation implemented in app and design preview
+evidence: E:\GEO-рассылка\HANDOFF.md; geo/web_assets/app-navigation.js; geo/web_assets/app.html; geo/web_assets/app.js; geo/web_assets/app.css; geo/web_assets/brand-onboarding.js; research/design/NAVIGATION-INSTALLED-QA-2026-11-12.json; подтверждение владельца да внедри
+event_id: journal_geo-tracker_76e8589ac5208d1ae3f17b12
+---
+
+## GEO 2026-11-12 владелец утвердил меню командой да внедри. Новая навигация внедрена в /app и /design: Мои бренды, один бренд в поисковом переключателе с добавлением,6 разделов Обзор/Запросы и ответы/Конкуренты/Источники/План улучшений/Проверка сайта. В План перенесены прежние рекомендации/задачи/история, старые view алиасы работают. Настройки открывают прежнюю форму, успешное сохранение возвращает в текущую вкладку; архив сохранён. Общие SVG/линии/счётчик реальных задач/строка навигации. Тариф и оплата/Помощь снизу, справка реализована. Мобильное выезжающее меню с inert фоном, удержанием/возвратом фокуса; поиск/Escape и сохранение вкладки при смене бренда. 433 unittest OK,3skip; wizard/navigation/design/portfolio QA пройдены на временных базах,34бренда1440/390/320/высота568 со скроллом/кнопкой добавления. Живые8000/8099 актуальны, новый макет проверен без API вызовов;5реальныхбрендов/28вопросов/61прогон/47ответов/4пользователя сохранены. Backend/схема не менялись, коммита/push не было.
+---
+status: observation
+category: decisions
+scope: geo-tracker
+source: Codex: competitor comparison charts
+evidence: E:\GEO-рассылка\HANDOFF.md; E:\GEO-рассылка\research\design\COMPETITOR-COMPARISON-2026-11-12.md; E:\GEO-рассылка\research\design\COMPETITOR-CHARTS-QA-2026-11-12.json
+event_id: journal_geo-tracker_67c641abfa30c9bf7125c752
+---
+
+## В GEO внедрён экран сравнения конкурентов в общих /app и /design: KPI доли ответов, места и лидера; столбцы процентов/числа упоминаний, кольцо долей, динамика с переключателями линий и таблица ролей. Источник существующий timeline с DISTINCT успешными ответами: повторные цитаты не удваивают счётчик, ошибки вне знаменателя, пропущенные даты разрывают линии, отсутствие замеров не подменяется нулём. Доля ответов прямо отделена от взвешенной mention_rate обзора и от доли упоминаний кольца. Периоды 7/30/90 синхронны с обзором, добавление и роли конкурентов сохранены. Свой бренд голубой. Ориентиры официальные Semrush/OtterlyAI/Peec. Проверены 433 unittest OK (3 skip), qa_competitor_charts, qa_brand_navigation, qa_design_preview, ширины 1440/768/390/320. Живые /design 8000/8099 работают без продуктовых API; рабочая база не наполнялась. Коммит и push не выполнялись.
